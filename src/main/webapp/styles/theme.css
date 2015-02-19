@@ -1,0 +1,49 @@
+/*******************************/
+/* GLOBAL STYLES               */
+/*******************************/
+
+body {
+    background: linear-gradient(#333, #222);
+}
+
+body, h2, h3, h4, h5, p, li {
+    font-family:Lato;
+    color:#fff;
+}
+
+h1 {
+       
+}
+
+.light {
+    color:#fff !important;;   
+}
+
+
+/***********************/
+/* DATA LIST           */
+/***********************/
+#data-list {
+    background-color: #eee;
+}
+
+#data-list-header {
+    background: linear-gradient(#58bde8, #389dc8);
+}
+
+#data-list-header h2.service {
+
+}
+
+#data-list-body {
+
+}
+
+#data-list-body ul,
+#data-list-body li {
+
+}
+
+#data-list-body li div {
+
+}

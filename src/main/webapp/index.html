@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html data-ng-app="bulkloaderApp">
+
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Site Properities -->
+    <title>Wise.io BulkLoader Mockup</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-semantic-ui-master/semantic.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-tree/angular-ui-tree.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/theme.css">
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-touch/angular-touch.js"></script>
+  <script src="bower_components/angular-ui-tree/angular-ui-tree.min.js"></script>
+  <script src="bower_components/angular-semantic-ui-master/semantic.js"></script>
+
+
+  <script src="scripts/base/class.js"></script>
+  <script src="scripts/base/namespace.js"></script>
+  <script src="scripts/base/BaseController.js"></script>
+  <script src="scripts/base/EventDispatcher.js"></script>
+  <script src="scripts/base/Notifications.js"></script>
+  <script src="scripts/common/CloudElementsUtils.js"></script>
+
+  <!--Loading the module bulkLoaderApp-->
+  <script src="scripts/app.js"></script>
+
+  <script src="scripts/services/Service.js"></script>
+  <script src="scripts/services/ElementsService.js"></script>
+  <script src="scripts/services/BulkloaderService.js"></script>
+
+  <script src="scripts/picker/Picker.js"></script>
+  <script src="scripts/picker/PickerController.js"></script>
+
+  <script src="scripts/datalist/Datalist.js"></script>
+  <script src="scripts/datalist/DatalistController.js"></script>
+
+  <!-- endbower -->
+  <!-- endbuild -->
+
+
+</head>
+
+<body>
+
+  <div>
+    <div ng-view=""></div>
+  </div>
+
+</body>
+
+</html>

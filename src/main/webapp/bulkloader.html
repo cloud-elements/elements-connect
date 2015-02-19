@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Site Properities -->
+    <title>Wise.io BulkLoader Mockup</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-semantic-ui-master/semantic.css">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="styles/theme.css">
+  <!-- build:js(.) scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-touch/angular-touch.js"></script>
+  <script src="bower_components/angular-semantic-ui-master/semantic.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+    <!-- BASE LIBRARIES -->
+    <script src="scripts/view.js"></script>
+    <!--<script src="lib/model.js"></script>-->
+</head>
+
+<body>
+
+    <!-- SERVICE PICKER -->
+    <section id="picker" class="vertical-align animated-card">
+        <h2 class="ui icon header">
+          <i class="settings icon light"></i>
+          <div class="content light">
+            Select a Service
+            <div class="sub header light">That you would like to use with BulkLoader:</div>
+          </div>
+        </h2>
+        <div class="services-selections">
+            <a href="#" class="salesforce" alt="SalesForce" data-instance="My New SFDC">
+                <i class="icon wait"></i>
+            </a>
+            <a href="#" class="hubspot" alt="HubSpot" data-instance="My HubSpot">
+                <i class="icon wait"></i>
+            </a>
+            <a href="#" class="eloqua" alt="Eloqua" data-instance="My Eloqua">
+                <i class="icon wait"></i>
+            </a>
+            <a href="#" class="marketo" alt="Marketo" data-instance="My Marketo">
+                <i class="icon wait"></i>
+            </a>
+            <a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>
+        </div>
+    </section>
+
+    <!-- LIST SELECTION -->
+    <section id="data-list" class="from-right animated-panel">
+        
+        <!-- FIXED LIST HEADER & SELECTION -->
+        <div id="data-list-header">
+            <div class="ui grid">
+                <div class="column eight wide">
+                    <div class="ui fluid dropdown white-gradient icon button">
+                        <i class="dropdown icon"></i>
+                        <div class="default text white">Accounts</div>
+                        <div class="menu">
+                        <div class="header"><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Bulk load all objects</label></div></div>
+                         <div class="ui fluid icon input">
+                            <i class="search icon"></i>
+                            <input type="text" name="search" placeholder="Search...">
+                          </div>
+                          <div class="item">Contacts</div>
+                          <div class="item">Leads</div>
+                          <div class="item">Accounts</div>
+                        </div>
+                      </div>
+                </div>
+                <div class="column eight wide">
+                    <div class="button-container pull-right">
+                        <div class="ui tiny">
+                          <div class="ui button tiny">Cancel</div>
+                          <div id="save" class="ui inverted button tiny">Save</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LIST BODY -->
+        <div id="data-list-body">
+            <div class="list">
+                <h1>Account Object</h1>
+                <ul>
+                    <li>
+                        <div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>
+                        <ul>
+                            <li><div class="ui toggle checkbox target"><input type="checkbox" name="public" ><label>Property1</label><span class="type">String</span></div></li>
+                            <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
+                            <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
+                            <li>
+                                <div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>
+                                <ul>
+                                    <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
+                                    <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
+                                    <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- SCHEDULING MODAL -->
+        <div class="ui basic modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Scheduling
+            </div>
+            <div class="content">
+                <div class="image">
+                    <i class="wait icon"></i>
+                </div>
+                <div class="description">
+                    <h2>Please select a frequency, and when you would like to run this procedure.</h2>
+                    <div class="ui grid">
+                    
+                        <div class="column eight wide">
+
+                            <div class="ui button dropdown fluid">
+                                <input type="hidden" name="gender">
+                                <div class="default text">Select a Frequency</div>
+                                <i class="dropdown icon"></i>
+                                <div class="menu">
+                                    <div class="item" data-value="0">15 Minutes</div>
+                                    <div class="item" data-value="1">30 Minutes</div>
+                                    <div class="item" data-value="2">Hourly</div>
+                                    <div class="item" data-value="3">Daily</div>
+                                    <div class="item" data-value="4">Weekly</div>
+                                    <div class="item" data-value="5">Monthly</div>
+                                    <div class="item" data-value="4">Yearly</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="column eight wide">
+                        
+                            <div class="ui button dropdown fluid">
+                                <input type="hidden" name="gender">
+                                    <i class="wait icon"></i>
+                                <div class="default text">Select a Start Time</div>
+                                <i class="dropdown icon"></i>
+
+                                <div class="menu fluid">
+                                  <div class="item" data-value="0">12:00PM</div>
+                                  <div class="item" data-value="1">1:00AM</div>
+                                  <div class="item" data-value="2">2:00AM</div>
+                                  <div class="item" data-value="3">3:00AM</div>
+                                  <div class="item" data-value="4">4:00AM</div>
+                                  <!-- CONTINUE LIST BASED ON HOURS -->
+                                </div>
+                              </div>
+                        
+                        </div>
+                    
+                    </div>
+                    <div class="ui grid">
+                        <div class="column eight wide">
+                            <div class="ui icon input fluid">
+                              <input type="text" class="datepicker" placeholder="Select a Start Date">
+                              <i class="calendar icon"></i>
+                            </div>
+                        </div>
+                        <div class="column eight wide">
+                            <div class="ui icon input fluid">
+                              <input type="text" class="datepicker" placeholder="Pull Data Since">
+                              <i class="calendar icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning">20,000 Records Found</div>            
+                </div>
+            </div>
+            <div class="actions">
+                <div class="two fluid ui inverted buttons">
+                    <div class="ui red basic inverted button">
+                        <i class="remove icon"></i>
+                        Cancel
+                    </div>
+                    <div class="ui green basic inverted button">
+                        <i class="checkmark icon"></i>
+                        Save
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    
+     <!-- DATEPICKER LIBRARY-->
+     <script src="bower_components/datepicker/picker.js"></script>
+    <script src="bower_components/datepicker/picker.date.js"></script>
+    <script src="bower_components/datepicker/legacy.js"></script>
+
+    <script type="text/javascript">
+
+        var $input = $( '.datepicker' ).pickadate({
+            formatSubmit: 'yyyy/mm/dd',
+            // min: [2015, 7, 14],
+            container: '#container',
+            // editable: true,
+            closeOnSelect: false,
+            closeOnClear: false
+        })
+
+        var picker = $input.pickadate('picker')
+        // picker.set('select', '14 October, 2014')
+        // picker.open()
+
+        // $('button').on('click', function() {
+        //     picker.set('disable', true);
+        // });
+
+    </script>
+
+</body>
+
+</html>
