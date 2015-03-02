@@ -32,6 +32,7 @@ var PickerController = BaseController.extend({
         var me = this;
 
         me.$scope.onSelect = me.onSelect.bind(me);
+        me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
     },
 
     defineListeners:function(){
@@ -58,6 +59,8 @@ var PickerController = BaseController.extend({
         } else {
             me._onElementInstanceSelect(me._instances[elementKey]);
         }
+
+
     },
 
     _handleOnOAuthUrl: function(oauthurl) {
@@ -76,7 +79,21 @@ var PickerController = BaseController.extend({
 
         //Notify about the VIEW Change
         me._notifications.notify(bulkloader.events.VIEW_CHANGE_DATALIST);
-    }
+    },
+
+    onSelectSchedule: function(instance){
+        var me = this;
+
+        if(me._cloudElementsUtils.isUndefinedOrNull(me._instances[elementKey])) {
+            me._picker.getOAuthUrl(elementKey)
+                .then(me._handleOnOAuthUrl.bind(me));
+
+        } else {
+            me._onElementInstanceSelect(me._instances[elementKey]);
+        }
+
+
+    },
 
 });
 

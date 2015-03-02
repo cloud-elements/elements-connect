@@ -1,24 +1,27 @@
 <!-- LIST SELECTION -->
-<section class="from-right animated-panel">
+<section id="data-list" class="animated-panel">
 
   <!-- FIXED LIST HEADER & SELECTION -->
   <div id="data-list-header">
     <div class="ui grid">
       <div class="column eight wide">
-        <div class="ui fluid dropdown white-gradient icon button">
-          <i class="dropdown icon"></i>
-          <div class="default text white">Accounts</div>
-          <div class="menu">
-            <div class="header"><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Bulk load all objects</label></div></div>
-            <div class="ui fluid icon input">
-              <i class="search icon"></i>
-              <input type="text" name="search" placeholder="Search...">
-            </div>
-            <div class="item">Contacts</div>
-            <div class="item">Leads</div>
-            <div class="item">Accounts</div>
-          </div>
-        </div>
+        <ui-select ng-model="selectedObject" theme="select2" ng-disabled="disabled" style="width: 100%;">
+
+          <ui-select-match placeholder="Select an Object">{{$select.selected.name}}</ui-select-match>
+          <ui-select-choices repeat="o as o for o in instanceObjects | propsFilter: {name: $select.search, age: $select.search}">
+            <div ng-bind-html="instanceObjects | highlight: $select.search"></div>
+            <small>
+              email: {{person.email}}
+              age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+        <!--<div id="select-dropdown-container" class="ui fluid dropdown white-gradient icon button" tabindex="0">-->
+          <!--<select class="" ng-model="selectedObject" ng-options="o as o for o in instanceObjects"-->
+                  <!--ng-change="refreshObjectMetaData()">-->
+            <!--<option value="">Select Object</option>-->
+          <!--</select>-->
+        <!--</div>-->
       </div>
       <div class="column eight wide">
         <div class="button-container pull-right">
@@ -33,27 +36,59 @@
 
   <!-- LIST BODY -->
   <div id="data-list-body">
-    <div class="list">
-      <h1>Account Object</h1>
-      <ul>
-        <li>
-          <div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>
-          <ul>
-            <li><div class="ui toggle checkbox target"><input type="checkbox" name="public" ><label>Property1</label><span class="type">String</span></div></li>
-            <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
-            <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
-            <li>
-              <div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>
-              <ul>
-                <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
-                <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
-                <li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>
-              </ul>
-            </li>
-          </ul>
+
+    <script type="text/ng-template" id="objectFields.html">
+      <div ui-tree-handle data-nodrop class="tree-node ui toggle checkbox">
+        <input type="checkbox" name="public" >
+        <label>{{metadata.vendorPath}}</label>
+        <span class="type">{{metadata.type}}</span>
+      </div>
+      <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
+        <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
+            collapsed="true">
         </li>
       </ul>
+    </script>
+
+    <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" class="list" data-drag-enabled="false" ng-show="showTree">
+      <h1>{{selectedObject}} Object</h1>
+      <li>
+        <div class="ui toggle checkbox">
+          <input type="checkbox" name="public">
+            <label>{{selectedObject}}</label>
+            <span class="type">object</span>
+        </div>
+        <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
+          <li ng-repeat="metadata in objectMetaData"
+              ui-tree-node data-nodrop ng-include="'objectFields.html'"
+              collapsed="true">
+          </li>
+        </ul>
+      </li>
     </div>
+
+
+    <!--<div class="list">-->
+      <!--<h1>Account Object</h1>-->
+      <!--<ul>-->
+        <!--<li>-->
+          <!--<div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>-->
+          <!--<ul>-->
+            <!--<li><div class="ui toggle checkbox target"><input type="checkbox" name="public" ><label>Property1</label><span class="type">String</span></div></li>-->
+            <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
+            <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
+            <!--<li>-->
+              <!--<div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>-->
+              <!--<ul>-->
+                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
+                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
+                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
+              <!--</ul>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</li>-->
+      <!--</ul>-->
+    <!--</div>-->
   </div>
 
 </section>

@@ -29,6 +29,15 @@ var DatalistController = BaseController.extend({
         var me = this;
 
         me.$scope.instanceObjects = [];
+        me.$scope.selectedObject = {};
+        me.$scope.objectMetaData = [];
+
+        //Mapping of UI actions to methods to be invoked
+        me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
+
+        // Handling Booleans to display and hide UI
+        me.$scope.showTree = false;
+
 
         me._loadInstanceObjects();
     },
@@ -39,6 +48,21 @@ var DatalistController = BaseController.extend({
 
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
         me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._loadInstanceObjects.bind(me));
+
+    },
+
+    refreshObjectMetaData: function() {
+        var me = this;
+
+        me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject)
+            .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
+    },
+
+    _handleOnMetadataLoad: function(objectname,data) {
+        var me = this;
+        me.$scope.objectMetaData = data.fields;
+        me.$scope.selectedObject = objectname;
+        me.$scope.showTree = true;
     },
 
     _loadInstanceObjects: function() {
@@ -50,9 +74,8 @@ var DatalistController = BaseController.extend({
 
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
-        me.$scope.instanceObjects = data
+        me.$scope.instanceObjects = data;
     }
-
 
 });
 

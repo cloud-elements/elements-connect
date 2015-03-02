@@ -21,8 +21,8 @@ namespace('bulkloader.Picker').element_config = {
     },
     'hubspot': {
         'apiKey': 'dc24e082-6d21-11e4-8c6e-6d3dcdc61a05',
-        //'apiSecret': 'uBdvo1WM2jTu2H33utjDd5v0',
-        'callbackUrl': 'http://localhost:5050/elements/bulkloader/src/main/webapp/callback.html'
+        'apiSecret': 'uBdvo1WM2jTu2H33utjDd5v0',
+        'callbackUrl': 'http://localhost:8080/elements/bulkloader/src/main/webapp/callback.html'
     },
     'eloqua': {
         'apiKey': '282923532784-mkr3pp81hpg3haqac31ki6fosbs66npk.apps.googleusercontent.com',

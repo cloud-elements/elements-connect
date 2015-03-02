@@ -10,18 +10,18 @@ var ElementsService = Class.extend({
     selectedObjectName: null,
     newobject: false,
 
-//    ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
-//    secrets:{
-//        'user' : '846708bb4a1da71d70286bc5bb0c51bf',
-//        'company': '98c89f16608df03b0248b74ecaf6a79b'
-//    },
-
-
-    ENV_URL: 'http://localhost:5050/elements/api-v2/',
+    ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
     secrets:{
-        'user' : 'CtRMK6ISlVJ0LH8pL8DX6I1lRVTDhMtF2Ofk7CTJuy8=',
-        'company': 'e8f910e423f9c34306027dfd147047e8'
+        'user' : 'ArYUEQB2btmd1Iv/Qo4FUNQ4mUKnz7+LTzhO8FMsDTo=',
+        'company': 'f2f501752017d656e69405a26cca4876'
     },
+
+
+//    ENV_URL: 'http://localhost:5050/elements/api-v2/',
+//    secrets:{
+//        'user' : 'CtRMK6ISlVJ0LH8pL8DX6I1lRVTDhMtF2Ofk7CTJuy8=',
+//        'company': 'e8f910e423f9c34306027dfd147047e8'
+//    },
 
 //    ENV_URL:null,
 //    secrets:null,

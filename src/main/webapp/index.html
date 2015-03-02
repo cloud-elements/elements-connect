@@ -1,5 +1,12 @@
 <!DOCTYPE html>
-<html data-ng-app="bulkloaderApp">
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie"  data-ng-app="datamapper"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 lt-ie"  data-ng-app="datamapper"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9 lt-ie"  data-ng-app="datamapper"> <![endif]-->
+<!--[if IE 9]>         <html class="no-js lt-ie9 lt-ie"  data-ng-app="datamapper"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"  data-ng-app="datamapper"> <!--<![endif]-->
+
+<html class="no-js" data-ng-app="bulkloaderApp">
 
 <head>
     <!-- Standard Meta -->
@@ -13,6 +20,12 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" type="text/css" href="bower_components/angular-semantic-ui-master/semantic.css">
     <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-tree/angular-ui-tree.min.css">
+
+    <!-- Select Style Component -->
+    <link rel="stylesheet" type="text/css" href="bower_components/ui-select/dist/select.css">
+    <!-- Select2 theme -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
     <link rel="stylesheet" type="text/css" href="styles/theme.css">
   <!-- build:js(.) scripts/vendor.js -->
@@ -29,6 +42,10 @@
   <script src="bower_components/angular-touch/angular-touch.js"></script>
   <script src="bower_components/angular-ui-tree/angular-ui-tree.min.js"></script>
   <script src="bower_components/angular-semantic-ui-master/semantic.js"></script>
+
+  <!-- Select JS Component -->
+  <script src="bower_components/ui-select/dist/select.js"></script>
+
 
 
   <script src="scripts/base/class.js"></script>
@@ -57,11 +74,9 @@
 
 </head>
 
-<body>
+<body ng-app="bulkloaderApp">
 
-  <div>
-    <div ng-view=""></div>
-  </div>
+    <div class="page {{ pageClass }}" ng-view></div>
 
 </body>
 
