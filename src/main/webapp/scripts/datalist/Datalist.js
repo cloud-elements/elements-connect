@@ -139,7 +139,7 @@ var Datalist = Class.extend({
             .filter(function (field) {
                 return field.vendorPath.indexOf('.') === -1;
             });
-    },
+    }
 });
 
 
