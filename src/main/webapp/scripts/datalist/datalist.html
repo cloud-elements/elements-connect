@@ -5,23 +5,23 @@
   <div id="data-list-header">
     <div class="ui grid">
       <div class="column eight wide">
-        <ui-select ng-model="selectedObject" theme="select2" ng-disabled="disabled" style="width: 100%;">
+        <!--<ui-select ng-model="selectedObject" theme="select2" ng-disabled="disabled" style="width: 100%;">-->
 
-          <ui-select-match placeholder="Select an Object">{{$select.selected.name}}</ui-select-match>
-          <ui-select-choices repeat="o as o for o in instanceObjects | propsFilter: {name: $select.search, age: $select.search}">
-            <div ng-bind-html="instanceObjects | highlight: $select.search"></div>
-            <small>
-              email: {{person.email}}
-              age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
-            </small>
-          </ui-select-choices>
-        </ui-select>
-        <!--<div id="select-dropdown-container" class="ui fluid dropdown white-gradient icon button" tabindex="0">-->
-          <!--<select class="" ng-model="selectedObject" ng-options="o as o for o in instanceObjects"-->
-                  <!--ng-change="refreshObjectMetaData()">-->
-            <!--<option value="">Select Object</option>-->
-          <!--</select>-->
-        <!--</div>-->
+          <!--<ui-select-match placeholder="Select an Object">{{$select.selected.name}}</ui-select-match>-->
+          <!--<ui-select-choices repeat="o as o for o in instanceObjects | propsFilter: {name: $select.search, age: $select.search}">-->
+            <!--<div ng-bind-html="instanceObjects | highlight: $select.search"></div>-->
+            <!--<small>-->
+              <!--email: {{person.email}}-->
+              <!--age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>-->
+            <!--</small>-->
+          <!--</ui-select-choices>-->
+        <!--</ui-select>-->
+        <div id="select-dropdown-container" class="ui fluid dropdown white-gradient icon button" tabindex="0">
+          <select class="" ng-model="selectedObject" ng-options="o as o for o in instanceObjects"
+                  ng-change="refreshObjectMetaData()">
+            <option value="">Select Object</option>
+          </select>
+        </div>
       </div>
       <div class="column eight wide">
         <div class="button-container pull-right">
