@@ -44,6 +44,9 @@ var PickerController = BaseController.extend({
         var me = this;
         me._instances = instances;
 
+        if (typeof instances.sfdcmarketingcloud == 'object') {
+            angular.element(document.querySelector('#salesforce')).addClass('highlightingElement');
+        }
         //TODO Handle highlighting of the elements on UI if there is an instance present
     },
 
