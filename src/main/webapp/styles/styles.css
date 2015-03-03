@@ -143,6 +143,12 @@ h1 {
     
     -webkit-transition: all 150ms ease-in;
 }
+#picker .services-selections > a.highlightingElement{
+    opacity:.75;
+    border: 1px solid #3498db;
+    -webkit-box-shadow: 0 0 5px rgba(52, 152, 219, 1);
+    box-shadow: 0 0 5px rgba(52, 152, 219, 1);
+}
 
 #picker .services-selections > a:hover {
     opacity:1;
@@ -513,8 +519,64 @@ h1 {
 }
 
 #select-dropdown-container{
-    padding: 0 30px;
+    padding: 0;
     margin: 0;
+}
+
+#select-dropdown-container .select2-container{
+    top: 10px;
+    left: 10px;
+}
+
+#select-dropdown-container .select2-container .select2-choice{
+    height: 56px;
+    border: none;
+    line-height: 3.5em;
+    color: #fff !important;
+    border-radius: 0px;
+    background: rgba(0,0,0,.1);
+    border-left: rgba(255,255,255,.5);
+    border-right: rgba(0,0,0,.5);
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#select-dropdown-container .select2-container .select2-choice .select2-arrow {
+    display: inline-block;
+    width: 30px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-left: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+#select-dropdown-container .select2-container .select2-choice .select2-arrow b {
+    background-image: url('../images/select2x2.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: 85px 75px !important;
+    background-position: 0px 8px;
+}
+
+#select-dropdown-container .select2-results {
+    padding: 0;
+    margin: 0;
+}
+
+#select-dropdown-container .select2-results li.ui-select-choices-group ul li{
+    color: rgba(0, 0, 0, 0.8);
+    padding: 0.65rem 1.25rem !important;
+    font-size: 1rem;
+    text-transform: none;
+    font-weight: normal;
+}
+
+#select-dropdown-container .select2-results li.select2-highlighted {
+    background: rgba(0, 0, 0, 0.03);
+    color: rgba(0, 0, 0, 0.8);
 }
 
 #select-dropdown-container > select{
@@ -529,6 +591,44 @@ h1 {
     height: 66px;
     cursor: pointer;
 
+}
+
+#select-dropdown-container .select2-drop-active {
+    cursor: auto;
+    background: #ffffff;
+    font-size: 1rem;
+    text-shadow: none;
+    text-align: left;
+    box-shadow: 0px 1px 4px 0px rgba(39, 41, 43, 0.15);
+    border: 1px solid rgba(39, 41, 43, 0.15);
+    border-radius: 0em 0em 0.2857rem 0.2857rem;
+}
+
+#select-dropdown-container .select2-search{
+    padding: 0.75rem 1.25rem;
+    background: rgba(0,0,0,.1);
+}
+
+#select-dropdown-container .select2-search input {
+    margin: 0em;
+    width: 100%;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    text-align: left;
+    line-height: 1.2142em;
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    padding: 0.67861em 1em;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.8);
+    border-radius: 0.2857rem;
+    -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    box-shadow: none;
+    background-image: url('../images/select2x2.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: 60px 49px !important;
+    background-position: 99% -17px !important;
 }
 
 #select-dropdown-container > select option{
