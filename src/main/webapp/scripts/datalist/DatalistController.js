@@ -55,19 +55,19 @@ var DatalistController = BaseController.extend({
 
         var instanceMeta = me._datalist.all[me._picker.selectedElementInstance.element.key].metadata;
         if(me._cloudElementsUtils.isEmpty(instanceMeta)
-            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject])) {
-            me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject)
-                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
+            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select])) {
 
+            me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select)
+                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject.select));
         } else {
-            me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject]);
+            me._handleOnMetadataLoad(me.$scope.selectedObject.select, instanceMeta[me.$scope.selectedObject.select]);
         }
     },
 
     _handleOnMetadataLoad: function(objectname,data) {
         var me = this;
         me.$scope.objectMetaData = data.fields;
-        me.$scope.selectedObject = objectname;
+        me.$scope.selectedObject.select = objectname;
         me.$scope.showTree = true;
     },
 

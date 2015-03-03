@@ -38,6 +38,14 @@ var PickerController = BaseController.extend({
     defineListeners:function(){
         var me = this;
         me._super();
+
+        me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
+
+    },
+
+    _onInstancesRefresh: function() {
+        var me = this;
+        me._handleInstanceLoad(me._picker._elementInstances);
     },
 
     _handleInstanceLoad: function(instances) {
@@ -47,7 +55,6 @@ var PickerController = BaseController.extend({
         if (typeof instances.sfdcmarketingcloud == 'object') {
             angular.element(document.querySelector('#salesforce')).addClass('highlightingElement');
         }
-        //TODO Handle highlighting of the elements on UI if there is an instance present
     },
 
     onSelect: function(elementKey) {

@@ -90,7 +90,7 @@ var Datalist = Class.extend({
     //----------------------------------------------------------------------------------------------------------------
     loadObjectMetaData:function(selectedInstance, selectedObject){
 
-        return this._elementsService.loadObjectMetaData(selectedInstance, selectedObject.select)
+        return this._elementsService.loadObjectMetaData(selectedInstance, selectedObject)
             .then(
             this._handleLoadObjectMetadata.bind(this, selectedInstance, selectedObject),
             this._handleLoadErrorObjectMetadata.bind(this) );

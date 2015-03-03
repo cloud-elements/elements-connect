@@ -13,11 +13,16 @@ namespace('bulkloader.Picker').oauth_elementkey = null;
 
 //TODO Handle this in getting from server ? or BETTER PLACE
 namespace('bulkloader.Picker').element_config = {
+//    'sfdcmarketingcloud': {
+//        'apiKey': '3MVG9A2kN3Bn17huqpbZ.99EPdg6iSfUR6FDLPLdNNvH7GR4VwtTxeXp5lwZ0d0T2VvCONC9.9IAoK.AhQ1z5',
+//        'apiSecret': '195234918550961596',
+//        //'callbackUrl': 'http://localhost:5050/elements/bulkloader/src/main/webapp/callback.html'
+//        'callbackUrl': 'http://localhost:8080/elements/jsp/home.jsp'
+//    },
     'sfdcmarketingcloud': {
-        'apiKey': '3MVG9A2kN3Bn17huqpbZ.99EPdg6iSfUR6FDLPLdNNvH7GR4VwtTxeXp5lwZ0d0T2VvCONC9.9IAoK.AhQ1z5',
-        'apiSecret': '195234918550961596',
-        //'callbackUrl': 'http://localhost:5050/elements/bulkloader/src/main/webapp/callback.html'
-        'callbackUrl': 'http://localhost:8080/elements/jsp/home.jsp'
+        'apiKey': '3MVG9A2kN3Bn17huqpbZ.99EPdnzcp5leL0mj3PVpla3.O4Og_EXtlXB5mqHLu2AfxEddiEePAZeLJnVtPOCt',
+        'apiSecret': '6296652270040031879',
+        'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
     },
     'hubspot': {
         'apiKey': 'dc24e082-6d21-11e4-8c6e-6d3dcdc61a05',
@@ -40,7 +45,7 @@ var Picker = Class.extend({
     _elementsService:null,
     _notifications: null,
     _cloudElementsUtils: null,
-
+    _elementInstances: null,
     selectedElementInstance: null,
 
     _handleLoadError:function(error){
