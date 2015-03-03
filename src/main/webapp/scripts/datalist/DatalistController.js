@@ -38,8 +38,7 @@ var DatalistController = BaseController.extend({
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
 
-
-        me._loadInstanceObjects();
+        me._seedDatalist();
     },
 
     defineListeners:function(){
@@ -47,15 +46,22 @@ var DatalistController = BaseController.extend({
         me._super();
 
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
-        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._loadInstanceObjects.bind(me));
+        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me));
 
     },
 
     refreshObjectMetaData: function() {
         var me = this;
 
-        me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject)
-            .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
+        var instanceMeta = me._datalist.all[me._picker.selectedElementInstance.element.key].metadata;
+        if(me._cloudElementsUtils.isEmpty(instanceMeta)
+            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject])) {
+            me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject)
+                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
+
+        } else {
+            me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject]);
+        }
     },
 
     _handleOnMetadataLoad: function(objectname,data) {
@@ -65,8 +71,14 @@ var DatalistController = BaseController.extend({
         me.$scope.showTree = true;
     },
 
-    _loadInstanceObjects: function() {
+    _seedDatalist: function() {
         var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+            me.$location.path('/');
+            return;
+        }
+
         //Load the objects for the element
         me._datalist.loadInstanceObjects(me._picker.selectedElementInstance)
             .then(me._handleOnInstanceObjectsLoad.bind(me));

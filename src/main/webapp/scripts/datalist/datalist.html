@@ -37,10 +37,19 @@
   <!-- LIST BODY -->
   <div id="data-list-body">
 
+      <div>
+        <md-switch  class="md-primary" md-no-ink aria-label="Finished?">
+          Finished ?
+        </md-switch>
+      </div>
+
+
     <script type="text/ng-template" id="objectFields.html">
-      <div ui-tree-handle data-nodrop class="tree-node ui toggle checkbox">
-        <input type="checkbox" name="public" >
-        <label>{{metadata.vendorPath}}</label>
+      <div ui-tree-handle data-nodrop class="tree-node ui toggle">
+          <md-switch ng-model="metadata.transform" class="md-primary" md-no-ink aria-label="metadata.vendorPath">
+              <label>{{metadata.vendorPath}}</label>
+          </md-switch>
+
         <span class="type">{{metadata.type}}</span>
       </div>
       <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
@@ -50,12 +59,13 @@
       </ul>
     </script>
 
-    <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" class="list" data-drag-enabled="false" ng-show="showTree">
+    <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree">
       <h1>{{selectedObject}} Object</h1>
       <li>
-        <div class="ui toggle checkbox">
-          <input type="checkbox" name="public">
-            <label>{{selectedObject}}</label>
+        <div>
+            <md-switch class="md-primary" md-no-ink aria-label="Enable Object">
+                <label>{{selectedObject}}</label>
+            </md-switch>
             <span class="type">object</span>
         </div>
         <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">

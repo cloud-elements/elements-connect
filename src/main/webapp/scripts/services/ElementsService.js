@@ -12,8 +12,8 @@ var ElementsService = Class.extend({
 
     ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
     secrets:{
-        'user' : 'ArYUEQB2btmd1Iv/Qo4FUNQ4mUKnz7+LTzhO8FMsDTo=',
-        'company': 'f2f501752017d656e69405a26cca4876'
+        'user' : '846708bb4a1da71d70286bc5bb0c51bf',
+        'company': '98c89f16608df03b0248b74ecaf6a79b'
     },
 
 
@@ -37,47 +37,47 @@ var ElementsService = Class.extend({
 
         //Read the URL arguments for Orgnaization and User secrets and selected element instanceId
         var pageParameters = this._cloudElementsUtils.pageParameters();
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.secrets)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.secrets)) {
             this.secrets = angular.fromJson(pageParameters.secrets);
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.user)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.user)) {
             this.secrets.user = pageParameters.user;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.company)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.company)) {
             this.secrets.company = pageParameters.company;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.defaultAccount)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.defaultAccount)) {
             this.secrets.defaultAccount = pageParameters.defaultAccount;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.accountName)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.accountName)) {
             this.secrets.accountName = decodeURI(pageParameters.accountName);
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.accountId)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.accountId)) {
             this.secrets.accountId = pageParameters.accountId;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.instanceId)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.instanceId)) {
             this.instanceId = pageParameters.instanceId;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.objectName)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.objectName)) {
             this.selectedObjectName = pageParameters.objectName;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.env)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.env)) {
             this.ENV_URL = pageParameters.env;
         }
 
-        if(this._cloudElementsUtils.isUndefinedOrNull(this.ENV_URL)) {
+        if(this._cloudElementsUtils.isEmpty(this.ENV_URL)) {
             this.ENV_URL = '/elements/api-v2/';
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.newobject)) {
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.newobject)) {
             this.newobject = pageParameters.newobject;
         }
     },
@@ -250,7 +250,7 @@ var ElementsService = Class.extend({
 
     },
 
-    saveObjectTransformation: function(elementInstance, account, objectName, objectTransformation, scope, methodType) {
+    saveObjectTransformation: function(elementInstance, objectName, objectTransformation, scope, methodType) {
 
         //  /organizations/elements/{key}/transformations
         //  /accounts/{id}/elements/{key}/transformations

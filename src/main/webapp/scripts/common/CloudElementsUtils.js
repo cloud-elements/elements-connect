@@ -12,7 +12,7 @@ var CloudElementsUtils = Class.extend({
      * @param obj
      * @returns {boolean}
      */
-    isUndefinedOrNull: function(obj) {
+    isEmpty: function(obj) {
         return !angular.isDefined(obj) || obj===null;
     },
 
@@ -64,11 +64,11 @@ var CloudElementsUtils = Class.extend({
     orderObjects: function(dataStore, sortBy) {
         dataStore = this.orderBy(dataStore, sortBy);
 
-        if(!this.isUndefinedOrNull(dataStore)) {
+        if(!this.isEmpty(dataStore)) {
             for(var i=0; i< dataStore.length; i++) {
                 var dObj = dataStore[i];
 
-                if(!this.isUndefinedOrNull(dObj.fields) && dObj.fields.length > 0) {
+                if(!this.isEmpty(dObj.fields) && dObj.fields.length > 0) {
                     dObj.fields = this.orderObjects(dObj.fields, sortBy);
                 }
             }

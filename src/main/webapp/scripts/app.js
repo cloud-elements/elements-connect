@@ -19,6 +19,7 @@ var bulkloaderApp = angular
         'ngTouch',
         'ui.tree',
         'ui.select',
+        'ngMaterial',
         'notifications',
         'CloudElementsUtils'
     ]);

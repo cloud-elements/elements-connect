@@ -52,8 +52,8 @@ var PickerController = BaseController.extend({
         //Check to see if the element instance is created, if so then move the view to dataselect
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
 
-        if(me._cloudElementsUtils.isUndefinedOrNull(me._instances) ||
-            me._cloudElementsUtils.isUndefinedOrNull(me._instances[elementKey])) {
+        if(me._cloudElementsUtils.isEmpty(me._instances) ||
+            me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
             me._picker.getOAuthUrl(elementKey)
                 .then(me._handleOnOAuthUrl.bind(me));
         } else {
@@ -82,7 +82,7 @@ var PickerController = BaseController.extend({
     onSelectSchedule: function(instance){
         var me = this;
 
-        if(me._cloudElementsUtils.isUndefinedOrNull(me._instances[elementKey])) {
+        if(me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
             me._picker.getOAuthUrl(elementKey)
                 .then(me._handleOnOAuthUrl.bind(me));
 
