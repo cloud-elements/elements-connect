@@ -35,8 +35,8 @@
   <div id="data-list-body">
 
     <script type="text/ng-template" id="objectFields.html">
-      <div ui-tree-handle data-nodrop class="tree-node ui toggle">
-          <md-switch ng-model="metadata.transform" class="md-primary" md-no-ink aria-label="metadata.vendorPath">
+      <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
+          <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink aria-label="metadata.vendorPath">
               <label>{{metadata.vendorPath}}</label>
           </md-switch>
 
@@ -49,11 +49,11 @@
       </ul>
     </script>
 
-    <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree">
+    <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree" class="list">
       <h1>{{selectedObject.select}} Object</h1>
-      <li>
-        <div>
-            <md-switch class="md-primary" md-no-ink aria-label="Enable Object">
+      <li class="tree-root-li">
+        <div class="tree-root-li-container">
+            <md-switch class="md-primary-green" md-no-ink aria-label="Enable Object">
                 <label>{{selectedObject.select}}</label>
             </md-switch>
             <span class="type">object</span>
