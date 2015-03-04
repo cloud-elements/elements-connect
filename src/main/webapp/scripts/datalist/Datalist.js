@@ -460,6 +460,8 @@ var Datalist = Class.extend({
 
     _constructDeeperTransformation: function(objectTransformation, objectMapperData, objectName) {
 
+        var me = this;
+
         if(objectMapperData.type == 'array') {
             objectName = objectName+'[*]';
         }
@@ -473,7 +475,8 @@ var Datalist = Class.extend({
 
             var mapperType = mapperData.type.toLowerCase();
 
-            if(this._isLiteral(mapperType))
+            if(this._isLiteral(mapperType)
+                || this._isDateFormat(mapperData.type))
             {
                 var p = mapperData.vendorPath;
                 if(this._isLiteralArray(mapperData.type)) {
@@ -496,7 +499,11 @@ var Datalist = Class.extend({
             }
             else
             {
-                this._constructDeeperTransformation(objectTransformation, mapperData, objectName+'.'+mapperData.vendorPath)
+                var newObjectName = mapperData.vendorPath;
+                if(me._cloudElementsUtils.isEmpty(objectName)) {
+                    newObjectName = objectName+'.'+mapperData.vendorPath;
+                }
+                this._constructDeeperTransformation(objectTransformation, mapperData,newObjectName);
             }
         }
     },
@@ -518,45 +525,7 @@ var Datalist = Class.extend({
             ],
             fields:[]
         };
-
-        for(var i = 0; i < metaData.fields.length; i++){
-            var mapperData = metaData.fields[i];
-
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
-                continue;
-            }
-
-            if(this._isLiteral(mapperData.type.toLowerCase())
-                || this._isDateFormat(mapperData.type))
-            {
-                var p = mapperData.vendorPath;
-                if(this._isLiteralArray(mapperData.type)) {
-                    p = p+'[*]';
-                }
-
-                //TODO Handle for dates
-//                if(!this._cloudElementsUtils.isEmpty(mapperData.configuration)) {
-//                    objectTransformation.fields.push({
-//                        'path': p,
-//                        'vendorPath': mapperData.vendorPath,
-//                        'configuration':mapperData.configuration
-//                    });
-//                }
-//                else {
-
-                    objectTransformation.fields.push({
-                        'path': mapperData.actualVendorPath,
-                        'vendorPath': mapperData.actualVendorPath
-                    });
-//                }
-            }
-            else
-            {
-                this._constructDeeperTransformation(objectTransformation, mapperData, mapperData.vendorPath)
-            }
-        }
-
+        me._constructDeeperTransformation(objectTransformation, metaData)
         transformationArray[vendorName]=objectTransformation;
     },
 
