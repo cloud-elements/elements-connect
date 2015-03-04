@@ -148,7 +148,7 @@ h1 {
     border: 1px solid #3498db;
     -webkit-box-shadow: 0 0 5px rgba(52, 152, 219, 1);
     box-shadow: 0 0 5px rgba(52, 152, 219, 1);
-    -webkit-transform: scale(1.1);
+    -webkit-transform: scale(1.05);
 }
 
 #picker .services-selections > a:hover {
@@ -673,17 +673,6 @@ div#data-list-body.disabled:after {
     margin-bottom: -15px;
     text-align: center;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 #selected {
     width: 100%;

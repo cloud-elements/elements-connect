@@ -31,6 +31,9 @@ var DatalistController = BaseController.extend({
         me.$scope.instanceObjects = [];
         me.$scope.selectedObject = {};
         me.$scope.objectMetaData = [];
+        me.$scope.cbObject = {
+            checked: false
+        };
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
@@ -42,6 +45,8 @@ var DatalistController = BaseController.extend({
         me.$scope.save = me.save.bind(this);
         me.$scope.cancel = me.cancel.bind(this);
 
+        me.$scope.checkAllInstance = me.checkAllInstance.bind(this);
+        me.$scope.unCheckObject = me.unCheckObject.bind(this);
         me._seedDatalist();
     },
 
@@ -114,6 +119,20 @@ var DatalistController = BaseController.extend({
 
     _onDatalistError: function() {
         var me = this;
+    },
+
+    checkAllInstance: function(cbState) {
+        var me = this;
+        for (var i = 0; i < me.$scope.objectMetaData.length; i++) {
+            me.$scope.objectMetaData[i].transform = cbState;
+        }
+    },
+
+    unCheckObject: function(cbState){
+        var me = this;
+        if (cbState == false){
+            me.$scope.cbObject.checked = false;
+        }
     }
 });
 

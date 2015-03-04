@@ -24,7 +24,7 @@
         <div class="button-container pull-right">
           <div class="ui tiny">
              <button type="submit" class="ui button tiny" ng-click="cancel()">Cancel</button>
-             <button type="submit" class="ui inverted button tiny" ng-click="save()">Save</button>
+             <button type="submit" class="ui inverted button tiny" ng-click="save()">Next</button>
           </div>
         </div>
       </div>
@@ -36,7 +36,8 @@
 
     <script type="text/ng-template" id="objectFields.html">
       <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
-          <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink aria-label="metadata.vendorPath">
+          <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink
+                     aria-label="metadata.vendorPath" ng-change="unCheckObject(metadata.transform)">
               <label>{{metadata.vendorPath}}</label>
           </md-switch>
 
@@ -53,7 +54,8 @@
       <h1>{{selectedObject.select}} Object</h1>
       <li class="tree-root-li">
         <div class="tree-root-li-container">
-            <md-switch class="md-primary-green" md-no-ink aria-label="Enable Object">
+            <md-switch class="md-primary-green" aria-label="Enable Object" ng-change="checkAllInstance(cbObject.checked)"
+                       ng-model="cbObject.checked">
                 <label>{{selectedObject.select}}</label>
             </md-switch>
             <span class="type">object</span>
