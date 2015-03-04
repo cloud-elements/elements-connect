@@ -38,6 +38,10 @@ var DatalistController = BaseController.extend({
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
 
+        //Handling Action Methods
+        me.$scope.save = me.save.bind(this);
+        me.$scope.cancel = me.cancel.bind(this);
+
         me._seedDatalist();
     },
 
@@ -47,6 +51,9 @@ var DatalistController = BaseController.extend({
 
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
         me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me));
+
+        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me));
+        me._notifications.addEventListener(bulkloader.events.DATALIST_ERROR, me._onDatalistError.bind(me));
 
     },
 
@@ -87,8 +94,27 @@ var DatalistController = BaseController.extend({
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
         me.$scope.instanceObjects = data;
-    }
+    },
 
+    cancel: function() {
+        var me = this;
+        me.$location.path('/');
+    },
+
+    save: function() {
+        var me = this;
+        me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance);
+    },
+
+    _onTransformationSave: function() {
+        //TODO Show the scheduler
+
+        console.log('Saved');
+    },
+
+    _onDatalistError: function() {
+        var me = this;
+    }
 });
 
 DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', '$window', '$location', '$filter', '$route'];

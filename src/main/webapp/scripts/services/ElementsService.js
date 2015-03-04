@@ -10,6 +10,12 @@ var ElementsService = Class.extend({
     selectedObjectName: null,
     newobject: false,
 
+//    ENV_URL: 'https://staging.cloud-elements.com/elements/api-v2/',
+//    secrets:{
+//        'user' : 'd40be3adf0245cfda60ec696ffd95338',
+//        'company': '98c89f16608df03b0248b74ecaf6a79b'
+//    },
+
     ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
     secrets:{
         'user' : '846708bb4a1da71d70286bc5bb0c51bf',
@@ -235,8 +241,7 @@ var ElementsService = Class.extend({
             url = this.ENV_URL+'organizations/objects/{objectName}/definitions';
         }
         else {
-            url = this.ENV_URL+'accounts/{id}/objects/{objectName}/definitions';
-            url = url.replace('{id}', scope); //The scope that comes is account id
+            url = this.ENV_URL+'accounts/objects/{objectName}/definitions';
         }
 
         url = url.replace('{objectName}', objectName);

@@ -1,10 +1,12 @@
 /**
- * Picker factor class as an helper to picker controller.
+ * Datalist factor class as an helper to picker controller.
  *
  *
  * @author Ramana
  */
 
+bulkloader.events.TRANSFORMATION_SAVED = "Datalist.TRANSFORMATION_SAVED";
+bulkloader.events.DATALIST_ERROR = "Datalist.ERROR";
 
 var Datalist = Class.extend({
     _elementsService:null,
@@ -20,6 +22,43 @@ var Datalist = Class.extend({
     _handleLoadError:function(error){
         //Ignore as these can be ignored or 404's
         console.log('Loading error' + error);
+    },
+
+    _isLiteral: function(type) {
+        if(type == 'string' || type == 'number'
+            || type == 'date' || type == 'boolean'
+            || this._isDateFormat(type)
+            || this._isLiteralArray(type))
+        {
+            return true;
+        }
+
+        return false;
+    },
+
+    _isLiteralArray: function(type) {
+        if(type == 'array[string]' || type == 'array[number]'
+            || type == 'array[boolean]')
+        {
+            return true;
+        }
+
+        return false;
+    },
+
+    _isDateFormat: function(type) {
+        if(type == "yyyy-MM-dd'T'HH:mm:ssXXX"
+            || type == "yyyy-MM-dd"
+            || type == "MM/dd/yyy'T'HH:mm:ssXXX"
+            || type == "MM/dd/yyy"
+            || type == "dd/MM/yyy'T'HH:mm:ssXXX"
+            || type ==  "dd/MM/yyy"
+            || type ==  "milliseconds"
+            || type ==  "Vendor date format")
+        {
+            return true;
+        }
+        return false;
     },
 
     //----------------------------------------------------------------------------------------------------------------
@@ -264,23 +303,18 @@ var Datalist = Class.extend({
         }
     },
 
+    //----------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------
+    // Construct and Save Definitions
+    // Construct and Save transformations
+    //----------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------
     saveDefinitionAndTransformation: function(selectedInstance) {
         var me = this;
 
         //Construct the Object Definition and inner Object definitions
         //Save all the definitions at instance level
-        var done = me._constructAndSaveObjectDefinition(selectedInstance);
-
-        //Construct the transformation and save at instance level
-        if(done == true) {
-            ////Save transformation
-            done = me._constructAndSaveObjectTransformation(selectedInstance);
-        } else {
-            //Might be an error, return an error from here
-            //TODO Notify ERROR
-        }
-
-        return done;
+        me._constructAndSaveObjectDefinition(selectedInstance);
     },
 
     _constructDefinition: function(definitionArray, objectName, mData) {
@@ -305,7 +339,7 @@ var Datalist = Class.extend({
                 || this._isDateFormat(mapperData.type))
             {
                 var t = mapperData.type;
-                var p = mapperData.path;
+                var p = mapperData.vendorPath;
 
                 if(this._isDateFormat(t)) {
                     t = 'date';
@@ -325,7 +359,7 @@ var Datalist = Class.extend({
                 // and also add it to the base definition
                 var name = mapperData.vendorPath;
                 if(this._cloudElementsUtils.isUndefinedOrNull(name) || name.length == 0) {
-                    name = mapperData.path
+                    name = mapperData.vendorPath
                 }
 
                 if(mapperData.type == 'array') {
@@ -335,7 +369,7 @@ var Datalist = Class.extend({
                 this._constructDefinition(definitionArray, name, mapperData);
 
                 var t = mapperData.vendorPath;
-                var p = mapperData.path;
+                var p = mapperData.vendorPath;
                 if(mapperData.type == 'array') {
                     t = 'array['+mapperData.vendorPath.replace('[*]', '')+']';
                     p = p+'[*]';
@@ -363,7 +397,6 @@ var Datalist = Class.extend({
         }
 
         var definitionSaveCounter = 0;
-        var defArraykeys = Object.keys(definitionArray);
         return me._saveDefinitionFromArray(selectedInstance, definitionArray, definitionSaveCounter);
     },
 
@@ -381,7 +414,8 @@ var Datalist = Class.extend({
         var defs = me.all[selectedInstance.element.key].definitions;
 
         if (!me._cloudElementsUtils.isEmpty(defs)
-            && !me._cloudElementsUtils.isEmpty(defs[key]))
+            && !me._cloudElementsUtils.isEmpty(defs[key])
+            && defs[key].level == 'account') //TODO Modify this to instance
         {
             methodType = 'PUT';
         }
@@ -412,6 +446,7 @@ var Datalist = Class.extend({
         }
         else
         {
+            this._notifications.notify(bulkloader.events.DATALIST_ERROR, error.data.message);
             return error;
         }
     },
@@ -421,10 +456,15 @@ var Datalist = Class.extend({
         var me = this;
 
         var keys = Object.keys(definitionArray);
+
+        //Setting the saved definition in case used for multiple save
+        var savedkey = keys[definitionSaveCounter-1];
+        me.all[selectedInstance.element.key].definitions[savedkey] = definitionArray[savedkey];
+
         //Save transformations once all the definitions are stored
         if(definitionSaveCounter == keys.length)
         {
-            return true;
+            return me._constructAndSaveObjectTransformation(selectedInstance);
         }
         else
         {
@@ -449,7 +489,7 @@ var Datalist = Class.extend({
 
             if(this._isLiteral(mapperType))
             {
-                var p = mapperData.path;
+                var p = mapperData.vendorPath;
                 if(this._isLiteralArray(mapperData.type)) {
                     p = p+'[*]';
                 }
@@ -470,7 +510,7 @@ var Datalist = Class.extend({
             }
             else
             {
-                this._constructDeeperTransformation(objectTransformation, mapperData, objectName+'.'+mapperData.path)
+                this._constructDeeperTransformation(objectTransformation, mapperData, objectName+'.'+mapperData.vendorPath)
             }
         }
     },
@@ -504,7 +544,7 @@ var Datalist = Class.extend({
             if(this._isLiteral(mapperData.type.toLowerCase())
                 || this._isDateFormat(mapperData.type))
             {
-                var p = mapperData.path;
+                var p = mapperData.vendorPath;
                 if(this._isLiteralArray(mapperData.type)) {
                     p = p+'[*]';
                 }
@@ -527,9 +567,11 @@ var Datalist = Class.extend({
             }
             else
             {
-                this._constructDeeperTransformation(objectTransformation, mapperData, mapperData.path)
+                this._constructDeeperTransformation(objectTransformation, mapperData, mapperData.vendorPath)
             }
         }
+
+        transformationArray[vendorName]=objectTransformation;
     },
 
     _constructAndSaveObjectTransformation: function(selectedInstance) {
@@ -574,7 +616,7 @@ var Datalist = Class.extend({
         transformationSaveCounter++;
 
 
-        return me._datamapperService.saveObjectTransformation(selectedInstance,
+        return me._elementsService.saveObjectTransformation(selectedInstance,
             key, transformationArray[key], 'instance', methodType)
             .then(
                 this._handleOnSaveTransformation.bind(this, selectedInstance, transformationArray, transformationSaveCounter),
@@ -592,6 +634,7 @@ var Datalist = Class.extend({
             return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'PUT');
         }
         else {
+            this._notifications.notify(bulkloader.events.DATALIST_ERROR, error.data.message);
             return false;
         }
     },
@@ -603,6 +646,7 @@ var Datalist = Class.extend({
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length)
         {
+            this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
             return true;
         }
         else

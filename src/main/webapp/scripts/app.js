@@ -21,8 +21,19 @@ var bulkloaderApp = angular
         'ui.select',
         'ngMaterial',
         'notifications',
+//        'cgBusy',
         'CloudElementsUtils'
     ]);
+
+//bulkloaderApp.value('cgBusyDefaults',{
+//    message:'Loading...',
+//    backdrop: false,
+//    templateUrl: 'my_custom_template.html'
+////    ,delay: 300,
+////    minDuration: 700,
+////    wrapperClass: 'my-class my-class2'
+//});
+
 
 bulkloaderApp.config(function($routeProvider) {
     $routeProvider

@@ -45,15 +45,20 @@ var PickerController = BaseController.extend({
 
     _onInstancesRefresh: function() {
         var me = this;
-        me._handleInstanceLoad(me._picker._elementInstances);
+
+        me._instances = me._picker._elementInstances;
+        me.onSelect(bulkloader.Picker.oauth_elementkey);
     },
 
     _handleInstanceLoad: function(instances) {
         var me = this;
         me._instances = instances;
 
-        if (typeof instances.sfdcmarketingcloud == 'object') {
-            angular.element(document.querySelector('#salesforce')).addClass('highlightingElement');
+        if(!me._cloudElementsUtils.isEmpty(me._instances)) {
+            var keys = Object.keys(me._instances);
+            for(var i = 0; i< keys.length; i++) {
+                angular.element(document.querySelector('#'+keys[i])).addClass('highlightingElement');
+            }
         }
     },
 
