@@ -234,20 +234,6 @@ var Datalist = Class.extend({
                 }
                 else
                 {
-                    var innerObjField = fieldParts.split('.')[0];
-                    var newDeepInnerMetaData = this._getObjectInMetaData(newInnerMetaData, innerObjField);
-                    if(this._cloudElementsUtils.isEmpty(newDeepInnerMetaData)) {
-                        newDeepInnerMetaData = new Object;
-                        newDeepInnerMetaData['vendorPath'] = innerObjField;
-                        newDeepInnerMetaData['fields'] = [];
-                        var t = 'object';
-                        if(innerObjField.indexOf('[*]') !== -1) {
-                            t = 'array';
-                        }
-                        newDeepInnerMetaData['type'] = t;
-                        newInnerMetaData.fields.push(newDeepInnerMetaData);
-                    }
-
                     this._structureInnerObjectMetadata(newInnerMetaData, fieldParts, field);
                 }
             }
