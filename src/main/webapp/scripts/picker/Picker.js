@@ -8,6 +8,7 @@
 
 bulkloader.events.ELEMENT_INSTANCES_LOAD = 'ELEMENT_INSTANCES_LOAD';
 bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED = 'NEW_ELEMENT_INSTANCE_CREATED';
+bulkloader.events.SHOW_SCHEDULER = 'SHOW_SCHEDULER';
 
 namespace('bulkloader.Picker').oauth_elementkey = null;
 

@@ -21,6 +21,7 @@ var bulkloaderApp = angular
         'ui.select',
         'ngMaterial',
         'notifications',
+        'ui.bootstrap',
 //        'cgBusy',
         'CloudElementsUtils'
     ]);
@@ -45,17 +46,4 @@ bulkloaderApp.config(function($routeProvider) {
             templateUrl: 'scripts/datalist/datalist.html',
             controller: 'DatalistController'
         });
-});
-
-// CONTROLLERS ============================================
-// This is for transitions
-
-// picker page controller
-bulkloaderApp.controller('PickerController', function($scope) {
-    $scope.pageClass = 'page-picker';
-});
-
-// datalist page controller
-bulkloaderApp.controller('DatalistController', function($scope) {
-    $scope.pageClass = 'page-datalist';
 });

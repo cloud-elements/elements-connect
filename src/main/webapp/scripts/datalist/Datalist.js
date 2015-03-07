@@ -115,6 +115,7 @@ var Datalist = Class.extend({
             .then(
             this._handleLoadInstanceDefinitions.bind(this, selectedInstance),
             this._handleLoadError.bind(this) );
+
     },
 
     _handleLoadInstanceDefinitions:function(selectedInstance, result){
@@ -181,6 +182,11 @@ var Datalist = Class.extend({
         for(var i=0; i< objectTransformation.fields.length; i++) {
             var f = objectTransformation.fields[i];
             me._setTransformValue(objectMetadata, f.vendorPath);
+        }
+
+        // Mark the object as All Instances with transformation
+        if (objectMetadata.fields.length == objectTransformation.fields.length){
+           return  objectMetadata.objectTransformation = true;
         }
 
     },
@@ -602,7 +608,7 @@ var Datalist = Class.extend({
         if(transformationSaveCounter == keys.length)
         {
             this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
-            return true;
+            //return true;
         }
         else
         {

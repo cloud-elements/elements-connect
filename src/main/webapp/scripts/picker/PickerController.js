@@ -30,6 +30,8 @@ var PickerController = BaseController.extend({
 
     defineScope:function() {
         var me = this;
+        // This is for transitions
+        me.$scope.pageClass = 'page-picker';
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
@@ -94,15 +96,15 @@ var PickerController = BaseController.extend({
         me._notifications.notify(bulkloader.events.VIEW_CHANGE_DATALIST);
     },
 
-    onSelectSchedule: function(instance){
+    onSelectSchedule: function(instance, $event){
         var me = this;
 
-        if(me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
-            me._picker.getOAuthUrl(elementKey)
+        if(me._cloudElementsUtils.isEmpty(me._instances[instance])) {
+            me._picker.getOAuthUrl(instance)
                 .then(me._handleOnOAuthUrl.bind(me));
 
         } else {
-            me._onElementInstanceSelect(me._instances[elementKey]);
+            $event.stopPropagation();
         }
     }
 

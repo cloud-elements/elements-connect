@@ -12,16 +12,16 @@
     <div class="services-selections">
       <a href ng-click="onSelect('sfdcmarketingcloud')" id="sfdcmarketingcloud" class="salesforce" alt="SalesForce"
          data-instance="My New SFDC">
-        <i class="icon wait" ng-click="onSelectSchedule()"></i>
+        <i class="icon wait" ng-click="onSelectSchedule('sfdcmarketingcloud', $event)"></i>
       </a>
       <a href ng-click="onSelect('hubspot')" id="hubspot" class="hubspot" alt="HubSpot" data-instance="My HubSpot">
         <i class="icon wait" ng-click="onSelectSchedule()"></i>
       </a>
       <a href ng-click="onSelect('eloqua')" id="eloqua" class="eloqua" alt="Eloqua" data-instance="My Eloqua">
-        <i class="icon wait"></i>
+        <i class="icon wait" ng-click="onSelectSchedule()"></i>
       </a>
       <a href ng-click="onSelect('marketo')" id="marketo" class="marketo" alt="Marketo" data-instance="My Marketo">
-        <i class="icon wait"></i>
+        <i class="icon wait" ng-click="onSelectSchedule()"></i>
       </a>
       <!--<a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>-->
     </div>

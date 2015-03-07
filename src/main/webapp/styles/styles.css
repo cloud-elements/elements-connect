@@ -851,3 +851,22 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     text-shadow: none;
 }
 
+
+/* ------- Modal Window --------*/
+
+.bulkloaderModalbackdrop.in{
+    opacity: .9;
+    filter: alpha(opacity=90);
+}
+
+.bulkloaderModalWindow.in{
+    top: 50%;
+    margin-top: -200px;
+}
+.bulkloaderModalWindow .modal-content{
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+}
+
