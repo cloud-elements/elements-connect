@@ -14,11 +14,15 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
+  //
+  // HTML5 Enabling
+  var modRewrite = require('connect-modrewrite');
 
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'webapp',
-    dist: 'dist'
+    dist: 'dist',
+    bower_components : 'bower_components'
   };
 
   // Define the configuration for all the tasks
@@ -76,14 +80,13 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
+              modRewrite([
+                '!\\.html|\\.js|\\.css|\\.png|\\.eot|\\.otf|\\.svg|\\.ttf|\\.woff$ /index.html [L]'
+              ]),
               connect.static('.tmp'),
               connect().use(
-                '/webapp/bower_components',
-                connect.static('./webapp/bower_components')
-              ),
-              connect().use(
-                '/webapp/styles',
-                connect.static('./webapp/styles')
+                '/bower_components',
+                connect.static('./bower_components')
               ),
               connect.static(appConfig.app)
             ];
@@ -98,8 +101,8 @@ module.exports = function (grunt) {
               connect.static('.tmp'),
               connect.static('test'),
               connect().use(
-                '/webapp/bower_components',
-                connect.static('./webapp/bower_components')
+                '/bower_components',
+                connect.static('./bower_components')
               ),
               connect.static(appConfig.app)
             ];
@@ -149,21 +152,22 @@ module.exports = function (grunt) {
       server: '.tmp'
     },
 
+//      server: {
+//        options: {
+//          map: true,
+//        },
+//        files: [{
+//          expand: true,
+//          cwd: '.tmp/styles/',
+//          src: '{,*/}*.css',
+//          dest: '.tmp/styles/'
+//        }]
+//      },
+
     // Add vendor prefixed styles
     autoprefixer: {
       options: {
         browsers: ['last 1 version']
-      },
-      server: {
-        options: {
-          map: true,
-        },
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
       },
       dist: {
         files: [{
@@ -237,8 +241,7 @@ module.exports = function (grunt) {
       options: {
         assetsDirs: [
           '<%= yeoman.dist %>',
-          '<%= yeoman.dist %>/images',
-          '<%= yeoman.dist %>/styles'
+          '<%= yeoman.dist %>/images'
         ]
       }
     },
@@ -316,7 +319,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '.tmp/concat/scripts',
-          src: '*.js',
+          src: ['*.js', '!oldieshim.js'],
           dest: '.tmp/concat/scripts'
         }]
       }
@@ -343,18 +346,13 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'styles/fonts/{,*/}*.*'
+            'fonts/{,*/}*.*'
           ]
         }, {
           expand: true,
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
-        }, {
-          expand: true,
-          cwd: 'webapp/bower_components/bootstrap/dist',
-          src: 'fonts/*',
-          dest: '<%= yeoman.dist %>'
         }]
       },
       styles: {
@@ -362,6 +360,12 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      mvfonts: {
+        expand: true,
+        cwd: '<%= yeoman.bower_components %>/semantic-ui/dist',
+        src: ['themes/default/assets/fonts/{,*/}*.*'],
+        dest: '<%= yeoman.dist %>/styles'
       }
     },
 
@@ -433,7 +437,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'copy:mvfonts'
   ]);
 
   grunt.registerTask('default', [

@@ -20,8 +20,8 @@ var bulkloaderApp = angular
         'ui.tree',
         'ui.select',
         'ngMaterial',
-        'notifications',
         'ui.bootstrap',
+        'notifications',
 //        'cgBusy',
         'CloudElementsUtils'
     ]);
@@ -39,11 +39,11 @@ var bulkloaderApp = angular
 bulkloaderApp.config(function($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'scripts/picker/picker.html',
+            templateUrl: 'picker.html',
             controller: 'PickerController'
         })
         .when('/datalist', {
-            templateUrl: 'scripts/datalist/datalist.html',
+            templateUrl: 'datalist.html',
             controller: 'DatalistController'
         });
 });

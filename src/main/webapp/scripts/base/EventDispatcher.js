@@ -13,7 +13,7 @@ var EventDispatcher = Class.extend({
     * Add a listener on the object
     * @param type : Event type
     * @param listener : Listener callback
-    */  
+    */
     addEventListener:function(type,listener){
         if(!this._listeners[type]){
             this._listeners[type] = [];
@@ -26,7 +26,7 @@ var EventDispatcher = Class.extend({
        * Remove a listener on the object
        * @param type : Event type
        * @param listener : Listener callback
-       */  
+       */
     removeEventListener:function(type,listener){
       if(this._listeners[type]){
         var index = this._listeners[type].indexOf(listener);
@@ -41,7 +41,7 @@ var EventDispatcher = Class.extend({
     /**
     * Dispatch an event to all registered listener
     * @param Mutiple params available, first must be string
-    */ 
+    */
     dispatchEvent:function(){
         var listeners;
 
@@ -56,6 +56,7 @@ var EventDispatcher = Class.extend({
             }
         }
     }
-})
+});
+
 
 
