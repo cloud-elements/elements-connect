@@ -11,6 +11,7 @@ var ScheduleController = BaseController.extend({
     _cloudElementsUtils: null,
     _picker: null,
     _datalist: null,
+    _schedule: null,
     _instances: null,
     $modal: null,
 
@@ -21,6 +22,7 @@ var ScheduleController = BaseController.extend({
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
         me._datalist = Datalist;
+        me._schedule = Schedule;
         me.$modal = $modal;
         me.$window = $window;
         me.$location = $location;
@@ -29,9 +31,11 @@ var ScheduleController = BaseController.extend({
 
     defineScope:function() {
         var me = this;
+
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
 
+        // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
     },
 
     defineListeners:function(){
@@ -45,19 +49,19 @@ var ScheduleController = BaseController.extend({
 
     },
 
-
     cancel: function() {
         var me = this;
-        me.$modal.dismiss();
-//        me.$location.path('/datalist');
+
+        me._schedule.closeSchedule();
+        me.$location.path('/datalist');
     },
 
     save: function() {
         var me = this;
 
-        me.$modal.close();
+        me._schedule.closeSchedule();
+        me.$location.path('/');
     }
-
 });
 
 ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', '$window', '$location', '$filter', '$route', '$modal'];

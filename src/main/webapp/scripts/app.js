@@ -45,5 +45,9 @@ bulkloaderApp.config(function($routeProvider) {
         .when('/datalist', {
             templateUrl: 'datalist.html',
             controller: 'DatalistController'
+        })
+        .when('/schedule', {
+          templateUrl: 'schedule.html',
+          controller: 'ScheduleController'
         });
 });

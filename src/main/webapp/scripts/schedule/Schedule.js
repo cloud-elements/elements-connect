@@ -23,13 +23,18 @@ var Schedule = Class.extend({
 
     openSchedule: function () {
         var me = this;
-        me.$modal.open({
-            templateUrl: 'scripts/schedule/schedule.html',
+        me.$modal = me.$modal.open({
+            templateUrl: 'schedule.html',
             controller: 'ScheduleController',
             windowClass: 'bulkloaderModalWindow',
             backdropClass: 'bulkloaderModalbackdrop',
             size: 'lg'
         });
+    },
+
+    closeSchedule: function () {
+        var me = this;
+        me.$modal.close();
     }
 
 

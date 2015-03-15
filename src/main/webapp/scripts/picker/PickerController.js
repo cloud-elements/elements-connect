@@ -59,7 +59,8 @@ var PickerController = BaseController.extend({
         if(!me._cloudElementsUtils.isEmpty(me._instances)) {
             var keys = Object.keys(me._instances);
             for(var i = 0; i< keys.length; i++) {
-                angular.element(document.querySelector('#'+keys[i])).addClass('highlightingElement');
+                angular.element(document.querySelector('#' + keys[i])).addClass('highlightingElement');
+                angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].name);
             }
         }
     },

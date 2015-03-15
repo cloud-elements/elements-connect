@@ -350,7 +350,7 @@ var Datalist = Class.extend({
                 //This is where its of type Object so create a definition out of it
                 // and also add it to the base definition
                 var name = mapperData.vendorPath;
-                if(this._cloudElementsUtils.isUndefinedOrNull(name) || name.length == 0) {
+                if(this._cloudElementsUtils.isEmpty(name) || name.length == 0) {
                     name = mapperData.vendorPath
                 }
 

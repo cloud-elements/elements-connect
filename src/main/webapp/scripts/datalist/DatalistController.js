@@ -113,7 +113,8 @@ var DatalistController = BaseController.extend({
 
     save: function() {
         var me = this;
-        me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance);
+        var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance);
+
     },
 
     _onTransformationSave: function() {
