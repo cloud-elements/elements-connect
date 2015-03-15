@@ -47,6 +47,8 @@ var DatalistController = BaseController.extend({
         //Handling Action Methods
         me.$scope.save = me.save.bind(this);
         me.$scope.cancel = me.cancel.bind(this);
+        me.$scope.showTreeToggle = me.showTreeToggle.bind(this);
+        me.$scope.toggle = me.toggle.bind(this);
 
         me.$scope.checkAllInstance = me.checkAllInstance.bind(this);
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
@@ -77,6 +79,23 @@ var DatalistController = BaseController.extend({
         } else {
             me._handleOnMetadataLoad(me.$scope.selectedObject.select, instanceMeta[me.$scope.selectedObject.select]);
         }
+    },
+
+    showTreeToggle: function(mapperdata) {
+        var me = this;
+
+        if(!me._cloudElementsUtils.isEmpty(mapperdata)
+            && ((!me._cloudElementsUtils.isEmpty(mapperdata.fields)
+                && mapperdata.fields.length > 0) || !me._datalist._isLiteral(mapperdata.type)))
+            return true;
+        else
+            return false;
+    },
+
+    toggle: function(uitree) {
+        var me = this;
+
+        uitree.toggle();
     },
 
     _handleOnMetadataLoad: function(objectname,data) {

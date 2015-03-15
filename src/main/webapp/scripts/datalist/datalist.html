@@ -35,6 +35,9 @@
   <div id="data-list-body">
 
     <script type="text/ng-template" id="objectFields.html">
+        <button type="submit"  ng-show="showTreeToggle(metadata)" class="pull-left btn btn-success btn-xs" data-nodrag ng-click="toggle(this)"><span class="glyphicon glyphicon-remove" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
+        <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer" data-nodrag> </div>
+
       <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
           <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink
                      aria-label="metadata.vendorPath" ng-change="unCheckObject(metadata.transform)">
@@ -43,7 +46,7 @@
 
         <span class="type">{{metadata.type}}</span>
       </div>
-      <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
+      <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields">
         <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
             collapsed="true">
         </li>
@@ -69,28 +72,6 @@
       </li>
     </div>
 
-
-    <!--<div class="list">-->
-      <!--<h1>Account Object</h1>-->
-      <!--<ul>-->
-        <!--<li>-->
-          <!--<div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>-->
-          <!--<ul>-->
-            <!--<li><div class="ui toggle checkbox target"><input type="checkbox" name="public" ><label>Property1</label><span class="type">String</span></div></li>-->
-            <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-            <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-            <!--<li>-->
-              <!--<div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>-->
-              <!--<ul>-->
-                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-              <!--</ul>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</li>-->
-      <!--</ul>-->
-    <!--</div>-->
   </div>
 
 </section>
