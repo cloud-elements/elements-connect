@@ -160,8 +160,6 @@ var DatalistController = BaseController.extend({
             me.$scope.cbObject.checked = false;
         }
     }
-
-
 });
 
 DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', '$window', '$location', '$filter', '$route'];

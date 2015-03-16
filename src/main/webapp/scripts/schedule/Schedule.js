@@ -13,6 +13,9 @@ var Schedule = Class.extend({
     _objectMetadata: null,
     _objectMetadataFlat: null,
 
+    _openedModal: null,
+    _jobs: new Array(),
+
     //An Object which holds all the data at instance Level
     all: new Object,
 
@@ -23,7 +26,8 @@ var Schedule = Class.extend({
 
     openSchedule: function () {
         var me = this;
-        me.$modal = me.$modal.open({
+
+        me._openedModal = me.$modal.open({
             templateUrl: 'schedule.html',
             controller: 'ScheduleController',
             windowClass: 'bulkloaderModalWindow',
@@ -34,10 +38,64 @@ var Schedule = Class.extend({
 
     closeSchedule: function () {
         var me = this;
-        me.$modal.close();
+        me._openedModal.close();
+        me._openedModal = null;
+    },
+
+    runScheduledJob: function (selectedInstance, allObjects, startDate) {
+        var me = this;
+
+      // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
+        var transformations = allObjects[selectedInstance.element.key].transformations;
+
+		    if (me._cloudElementsUtils.isEmpty(transformations)) {
+		        return;
+		    }
+
+        var objects = Object.keys(transformations);
+
+		    if (me._cloudElementsUtils.isEmpty(objects)) {
+            return;
+        }
+
+        var fieldList = '';
+
+		    for (var i = 0; i < objects.length; i++) {
+            var fields = transformations[objects[i]].fields;
+
+            if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+                continue;
+            }
+
+            for (var j = 0; j < fields.length; j++) {
+                fieldList = fieldList + fields[j].path;
+
+                if (j < fields.length - 1) {
+                    fieldList = fieldList + ', '
+                }
+            }
+
+            var query = "select " + fieldList + " from " + objects[i] + " where lastRunDate = '" + startDate + "'";
+
+            console.log('Query: ' + query);
+
+            me._elementsService.runBulkQuery(selectedInstance, query)
+              .then(me._handleJobScheduled.bind(this, selectedInstance),
+                    me._handleJobSchedulingError.bind(this, selectedInstance));
+        }
+
+        me.closeSchedule();
+    },
+
+    _handleJobScheduled: function(selectedInstance, job) {
+        var me = this;
+
+        me._jobs.push(job);
+    },
+
+    _handleJobSchedulingError: function(selectedInstance, error) {
+        var me = this;
     }
-
-
 });
 
 

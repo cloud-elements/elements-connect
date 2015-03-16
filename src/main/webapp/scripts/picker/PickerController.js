@@ -13,19 +13,20 @@ var PickerController = BaseController.extend({
     _picker: null,
     _instances: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Notifications, $window, $location, $filter, $route){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, $window, $location, $interval, $filter, $route){
         var me = this;
 
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
+        me._schedule = Schedule;
         me.$window = $window;
         me.$location = $location;
+        me.$interval = $interval;
         me._super($scope);
 
         me._picker.loadElementInstances()
             .then(me._handleInstanceLoad.bind(me));
-
     },
 
     defineScope:function() {
@@ -35,14 +36,24 @@ var PickerController = BaseController.extend({
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
+        me.$scope.checkStatus = me.checkStatus.bind(me);
     },
 
-    defineListeners:function(){
+    defineListeners:function() {
         var me = this;
         me._super();
 
         me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
+    },
 
+    checkStatus: function() {
+        var me = this;
+
+        var keys = Object.keys(me._instances);
+
+        for(var i = 0; i < keys.length; i++) {
+            console.log('Checking jobs for element instance ID: ' + me._instances[keys[i]].id + '...');
+        }
     },
 
     _onInstancesRefresh: function() {
@@ -63,6 +74,8 @@ var PickerController = BaseController.extend({
                 angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].name);
             }
         }
+
+        // VSJ me.$interval(me.$scope.checkStatus, 5000);
     },
 
     onSelect: function(elementKey) {
@@ -111,7 +124,7 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker','Notifications', '$window', '$location', '$filter', '$route'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', '$window', '$location', '$interval', '$filter', '$route'];
 
 
 angular.module('bulkloaderApp')

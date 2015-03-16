@@ -32,10 +32,10 @@ var ScheduleController = BaseController.extend({
     defineScope:function() {
         var me = this;
 
+        me.$scope.queryStartDate = null;
+
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
-
-        // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
     },
 
     defineListeners:function(){
@@ -59,7 +59,8 @@ var ScheduleController = BaseController.extend({
     save: function() {
         var me = this;
 
-        me._schedule.closeSchedule();
+        me._schedule.runScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
+                                     me.$scope.queryStartDate.toISOString());
         me.$location.path('/');
     }
 });

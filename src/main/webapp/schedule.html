@@ -67,7 +67,7 @@
       </div>-->
 
       <div class="ui icon input fluid">
-        <input type="text" class="datepicker" placeholder="January 1, 2015">
+        <input type="date" class="datepicker" ng-model="queryStartDate" placeholder="yyyy-mm-dd">
         <i class="calendar icon"></i>
       </div>
       <div class="warning">
@@ -94,7 +94,7 @@
       </div>
       <div class="ui green basic inverted button">
         <i class="checkmark icon"></i>
-        <button type="submit" class="ui inverted button tiny" ng-click="save()">Next</button>
+        <button type="submit" class="ui inverted button tiny" ng-click="save()">Schedule Job</button>
       </div>
     </div>
   </div>

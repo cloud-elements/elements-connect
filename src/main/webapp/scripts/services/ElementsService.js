@@ -320,6 +320,17 @@ var ElementsService = Class.extend({
         return this._httpDelete(url, this._getHeaders());
     },
 
+	  /**
+	   * Query server and returns Object metadata
+	   * @return Service handler
+	   */
+	  runBulkQuery: function(elementInstance, query){
+
+		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/query' + '?q=' + query;
+
+		    return this._httpPost(url, this._getHeaders(elementInstance.token));
+	  },
+
     _httpGet: function(url, headers, data) {
 
         return this.$http({
