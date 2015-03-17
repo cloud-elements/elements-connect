@@ -26,13 +26,16 @@ var ElementsService = Class.extend({
   configuration: {
       'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
       'company': '672aa88bb4e3235091de77900e3e299b',
-      'targetToken': 'e494d18d1d24f65bbf90677c89f37eeb',
-      'targetFolder': '/CloudElements',
       'targetPath': '/hubs/documents/files',
+      'targetToken': 'ptfOxwGhwAw0gvZdOL78DCFEzjJpzD1Dv97pCPNzioc=',
+      'targetFolder': '/Bulkloader.io',
       'targetMethod': 'POST',
       'notificationToken': 'BahpG+SAcP3LnuD7F96QjXYHCMyrY7hObiHI7Gf7lMw=',
       'notificationEmail': 'vineet@cloud-elements.com'
   },
+
+//   'targetToken': 'e494d18d1d24f65bbf90677c89f37eeb',
+//  'targetFolder': '/CloudElements',
 
 
 //  ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',

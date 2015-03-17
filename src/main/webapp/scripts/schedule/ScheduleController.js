@@ -14,8 +14,9 @@ var ScheduleController = BaseController.extend({
     _schedule: null,
     _instances: null,
     $modal: null,
+    $mdDialog: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Schedule, Notifications, $window, $location, $filter, $route, $modal){
+    init:function($scope, CloudElementsUtils, Picker, Datalist, Schedule, Notifications, $window, $location, $filter, $route, $modal, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -24,6 +25,7 @@ var ScheduleController = BaseController.extend({
         me._datalist = Datalist;
         me._schedule = Schedule;
         me.$modal = $modal;
+        me.$mdDialog = $mdDialog;
         me.$window = $window;
         me.$location = $location;
         me._super($scope);
@@ -92,7 +94,7 @@ var ScheduleController = BaseController.extend({
 
 });
 
-ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', '$window', '$location', '$filter', '$route', '$modal'];
+ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')
