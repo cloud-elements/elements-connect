@@ -26,19 +26,19 @@ namespace('bulkloader.Picker').element_config = {
         'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
     },
     'hubspot': {
-        'apiKey': 'dc24e082-6d21-11e4-8c6e-6d3dcdc61a05',
-        'apiSecret': 'uBdvo1WM2jTu2H33utjDd5v0',
-        'callbackUrl': 'http://localhost:8080/elements/bulkloader/src/main/webapp/callback.html'
+        'apiKey': 'b3cfc27a-c1eb-11e4-bfd2-dfe79242b34f',
+        'apiSecret': '437644',
+        'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
     },
     'eloqua': {
-        'apiKey': '282923532784-mkr3pp81hpg3haqac31ki6fosbs66npk.apps.googleusercontent.com',
-        'apiSecret': 'uBdvo1WM2jTu2H33utjDd5v0',
-        'callbackUrl': 'http://localhost:5050/elements/bulkloader/src/main/webapp/callback.html'
+        'apiKey': '5f372670-c31f-42d4-a2d6-a28d09ec9cf1',
+        'apiSecret': '1~Aix3X30ZkqqL6qxgp00hCg1NEcBVCPtsR7VE3WtgyPeDdg9fwzqw9g8Qb~c0iwICOI0S7~6ff72vVcw-bJ7KO7hJhkkFkM9-wB',
+        'callbackUrl': 'https://eloqua.ngrok.com/bulkloader.io/src/main/webapp/callback.html'
     },
     'marketo' : {
         'apiKey': '282923532784-mkr3pp81hpg3haqac31ki6fosbs66npk.apps.googleusercontent.com',
         'apiSecret': 'uBdvo1WM2jTu2H33utjDd5v0',
-        'callbackUrl': 'http://localhost:5050/elements/bulkloader/src/main/webapp/callback.html'
+        'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
     }
 };
 

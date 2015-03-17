@@ -83,10 +83,11 @@ var Schedule = Class.extend({
 
             job.query = query;
             job.objectName = objects[i];
+            job.statusCheckInterval = 1000;
 
             var targetConfiguration = new Object();
 
-            targetConfiguration.instanceId = 82;
+            // targetConfiguration.instanceId = 52;
             targetConfiguration.path = '/hubs/documents/files';
             targetConfiguration.method = 'POST';
 
@@ -97,6 +98,12 @@ var Schedule = Class.extend({
             targetConfiguration.parameters = parameters;
 
             job.targetConfiguration = targetConfiguration;
+
+            var notificationConfiguration = new Object();
+
+            notificationConfiguration.to = "vineet@cloud-elements.com";
+
+            job.notificationConfiguration = notificationConfiguration;
 
             me._elementsService.scheduleJob(selectedInstance, job)
               .then(me._handleJobScheduled.bind(this, selectedInstance),

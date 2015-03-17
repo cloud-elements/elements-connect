@@ -25,8 +25,23 @@ var ElementsService = Class.extend({
   ENV_URL: 'http://localhost:4040/elements/api-v2/',
   secrets:{
       'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
-      'company': '672aa88bb4e3235091de77900e3e299b'
+      'company': '672aa88bb4e3235091de77900e3e299b',
+      'target': 'e494d18d1d24f65bbf90677c89f37eeb',
+      'notification': 'BahpG+SAcP3LnuD7F96QjXYHCMyrY7hObiHI7Gf7lMw='
   },
+
+
+//  ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
+//  secrets:{
+//    'user' : 'df41a24b433da95c47b5ccb1cd69cf84',
+//    'company': '6f508ec692ae0d6c410698903f32d1a2'
+//  },
+    // Ramana's keys
+    // secrets:{
+        // 'user' : '846708bb4a1da71d70286bc5bb0c51bf',
+        // 'company': '98c89f16608df03b0248b74ecaf6a79b'
+    // },
+
 
 
 //    ENV_URL: 'http://localhost:5050/elements/api-v2/',
@@ -327,6 +342,10 @@ var ElementsService = Class.extend({
 	  scheduleJob: function(elementInstance, job){
 
 		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/workflows';
+
+        job.targetConfiguration.token = this.secrets.target;
+
+        job.notificationConfiguration.token = this.secrets.notification;
 
 		    return this._httpPost(url, this._getHeaders(elementInstance.token), job);
 	  },
