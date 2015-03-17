@@ -16,9 +16,6 @@ var Schedule = Class.extend({
     _openedModal: null,
     _jobs: new Array(),
 
-    //An Object which holds all the data at instance Level
-    all: new Object,
-
     _handleLoadError:function(error){
         //Ignore as these can be ignored or 404's
         console.log('Loading error' + error);
@@ -27,13 +24,16 @@ var Schedule = Class.extend({
     openSchedule: function () {
         var me = this;
 
-        me._openedModal = me.$modal.open({
-            templateUrl: 'schedule.html',
-            controller: 'ScheduleController',
-            windowClass: 'bulkloaderModalWindow',
-            backdropClass: 'bulkloaderModalbackdrop',
-            size: 'lg'
-        });
+        if(me._cloudElementsUtils.isEmpty(me._openedModal)) {
+            me._openedModal = me.$modal.open({
+                templateUrl: 'schedule.html',
+                controller: 'ScheduleController',
+                windowClass: 'bulkloaderModalWindow',
+                backdropClass: 'bulkloaderModalbackdrop',
+                backdrop: 'static',
+                size: 'lg'
+            });
+        }
     },
 
     closeSchedule: function () {
@@ -122,6 +122,7 @@ var Schedule = Class.extend({
     _handleJobSchedulingError: function(selectedInstance, error) {
         var me = this;
     }
+
 });
 
 

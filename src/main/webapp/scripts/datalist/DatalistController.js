@@ -116,11 +116,14 @@ var DatalistController = BaseController.extend({
         //Load the objects for the element
         me._datalist.loadInstanceObjects(me._picker.selectedElementInstance)
             .then(me._handleOnInstanceObjectsLoad.bind(me));
+
     },
 
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
         me.$scope.instanceObjects = data;
+        me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
+        me.refreshObjectMetaData(me.$scope.selectedObject.select);
     },
 
     cancel: function() {

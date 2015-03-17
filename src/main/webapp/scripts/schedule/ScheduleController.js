@@ -36,6 +36,19 @@ var ScheduleController = BaseController.extend({
 
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
+
+        // Datepicker Actions
+        me.$scope.open = me.open.bind(this);
+        me.$scope.clear = me.clear.bind(this);
+        me.$scope.dateOptions = {
+            formatYear: 'yy',
+            startingDay: 1,
+            showWeeks: false
+        };
+        me.$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate', 'MMMM dd, yyyy'];
+        me.$scope.format = me.$scope.formats[4];
+
+
     },
 
     defineListeners:function(){
@@ -62,7 +75,21 @@ var ScheduleController = BaseController.extend({
         me._schedule.runScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
                                      me.$scope.queryStartDate.toISOString());
         me.$location.path('/');
+    },
+
+    clear: function () {
+        var me = this;
+        me.$scope.queryStartDate = null;
+    },
+
+    open: function($event) {
+        var me = this;
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        me.$scope.opened = true;
     }
+
 });
 
 ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', '$window', '$location', '$filter', '$route', '$modal'];
