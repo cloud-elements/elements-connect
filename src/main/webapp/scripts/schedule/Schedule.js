@@ -79,7 +79,26 @@ var Schedule = Class.extend({
 
             console.log('Query: ' + query);
 
-            me._elementsService.runBulkQuery(selectedInstance, query)
+            var job = new Object();
+
+            job.query = query;
+            job.objectName = objects[i];
+
+            var targetConfiguration = new Object();
+
+            targetConfiguration.instanceId = 82;
+            targetConfiguration.path = '/hubs/documents/files';
+            targetConfiguration.method = 'POST';
+
+            var parameters = new Object();
+
+            parameters.path = '/CloudElements/bulkdata-' + objects[i] + '.txt';
+
+            targetConfiguration.parameters = parameters;
+
+            job.targetConfiguration = targetConfiguration;
+
+            me._elementsService.scheduleJob(selectedInstance, job)
               .then(me._handleJobScheduled.bind(this, selectedInstance),
                     me._handleJobSchedulingError.bind(this, selectedInstance));
         }

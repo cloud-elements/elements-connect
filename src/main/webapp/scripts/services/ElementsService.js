@@ -324,11 +324,11 @@ var ElementsService = Class.extend({
 	   * Query server and returns Object metadata
 	   * @return Service handler
 	   */
-	  runBulkQuery: function(elementInstance, query){
+	  scheduleJob: function(elementInstance, job){
 
-		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/query' + '?q=' + query;
+		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
-		    return this._httpPost(url, this._getHeaders(elementInstance.token));
+		    return this._httpPost(url, this._getHeaders(elementInstance.token), job);
 	  },
 
     _httpGet: function(url, headers, data) {
