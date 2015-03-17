@@ -14,17 +14,17 @@
 
 
         <!--<div id="select-dropdown-container" class="ui fluid dropdown white-gradient icon button" tabindex="0">-->
-          <!--<select class="" ng-model="selectedObject" ng-options="o as o for o in instanceObjects"-->
-                  <!--ng-change="refreshObjectMetaData()">-->
-            <!--<option value="">Select Object</option>-->
-          <!--</select>-->
+        <!--<select class="" ng-model="selectedObject" ng-options="o as o for o in instanceObjects"-->
+        <!--ng-change="refreshObjectMetaData()">-->
+        <!--<option value="">Select Object</option>-->
+        <!--</select>-->
         <!--</div>-->
       </div>
       <div class="column eight wide">
         <div class="button-container pull-right">
           <div class="ui tiny">
-             <button type="submit" class="ui button tiny" ng-click="cancel()">Cancel</button>
-             <button type="submit" class="ui inverted button tiny" ng-click="save()">Next</button>
+            <button type="submit" class="ui button tiny" ng-click="cancel()">Cancel</button>
+            <button type="submit" class="ui inverted button tiny" ng-click="save()">Next</button>
           </div>
         </div>
       </div>
@@ -35,17 +35,25 @@
   <div id="data-list-body">
 
     <script type="text/ng-template" id="objectFields.html">
+
+
+
       <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
-          <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink
-                     aria-label="metadata.vendorPath" ng-change="unCheckObject(metadata.transform)">
-              <label>{{metadata.vendorPath}}</label>
-          </md-switch>
+        <button type="submit" ng-show="showTreeToggle(metadata)"
+                class="pull-left btn btn-success btn-xs toogle-tree-btn" data-nodrag ng-click="toggle(this)"><span
+                class="glyphicon glyphicon-remove"
+                ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
+        <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer" data-nodrag> </div>
+        <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink
+                   aria-label="metadata.vendorPath" ng-change="unCheckObject(metadata.transform)">
+          <label>{{metadata.vendorPath}}</label>
+        </md-switch>
 
         <span class="type">{{metadata.type}}</span>
       </div>
       <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
         <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
-            collapsed="true">
+            collapsed="false">
         </li>
       </ul>
     </script>
@@ -54,11 +62,11 @@
       <h1>{{selectedObject.select}} Object</h1>
       <li class="tree-root-li">
         <div class="tree-root-li-container">
-            <md-switch class="md-primary-green" aria-label="Enable Object" ng-change="checkAllInstance(cbObject.checked)"
-                       ng-model="cbObject.checked">
-                <label>{{selectedObject.select}}</label>
-            </md-switch>
-            <span class="type">object</span>
+          <md-switch class="md-primary-green" aria-label="Enable Object" ng-change="checkAllInstance(cbObject.checked)"
+                     ng-model="cbObject.checked">
+            <label>{{selectedObject.select}}</label>
+          </md-switch>
+          <span class="type">object</span>
         </div>
         <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
           <li ng-repeat="metadata in objectMetaData"
@@ -67,30 +75,9 @@
           </li>
         </ul>
       </li>
+
     </div>
 
-
-    <!--<div class="list">-->
-      <!--<h1>Account Object</h1>-->
-      <!--<ul>-->
-        <!--<li>-->
-          <!--<div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>-->
-          <!--<ul>-->
-            <!--<li><div class="ui toggle checkbox target"><input type="checkbox" name="public" ><label>Property1</label><span class="type">String</span></div></li>-->
-            <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-            <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-            <!--<li>-->
-              <!--<div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">object</span></div>-->
-              <!--<ul>-->
-                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-                <!--<li><div class="ui toggle checkbox"><input type="checkbox" name="public"><label>Property1</label><span class="type">String</span></div></li>-->
-              <!--</ul>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</li>-->
-      <!--</ul>-->
-    <!--</div>-->
   </div>
 
 </section>

@@ -484,7 +484,7 @@ h1 {
     background:#333;   
 }
 
-#data-list-body li div span {
+#data-list-body li div span.type {
     float:right;
     font-size: 80%;
     background: rgba(0,0,0,.1);
@@ -495,7 +495,7 @@ h1 {
     right: 10px;
 }
 
-#data-list-body li li div span {
+#data-list-body li li div span.type {
     background: rgba(0,0,0,.5);
 }
 
@@ -525,7 +525,12 @@ h1 {
     top: 0;
     bottom: 0;
 }
-
+#data-list-body li li div.tree-root-li-li-container .toogle-tree-btn.pull-left{
+    margin-right: 15px;
+}
+#data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes{
+    padding-left: 15px;
+}
 #data-list-body li div {
     
 }

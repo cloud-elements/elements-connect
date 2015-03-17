@@ -48,7 +48,7 @@ var DatalistController = BaseController.extend({
         me.$scope.save = me.save.bind(this);
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.showTreeToggle = me.showTreeToggle.bind(this);
-        me.$scope.toggle = me.toggle.bind(this);
+        me.$scope.toggle = this.toggle.bind(this);
 
         me.$scope.checkAllInstance = me.checkAllInstance.bind(this);
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
@@ -93,8 +93,6 @@ var DatalistController = BaseController.extend({
     },
 
     toggle: function(uitree) {
-        var me = this;
-
         uitree.toggle();
     },
 

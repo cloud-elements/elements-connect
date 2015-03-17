@@ -1,6 +1,6 @@
 <!-- SCHEDULING MODAL -->
 <div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0;">
-  <i class="close icon"></i>
+  <i class="close icon" ng-click="cancel()"></i>
   <div class="header">
     Export Data
   </div>
@@ -88,14 +88,10 @@
   </div>
   <div class="actions">
     <div class="two fluid ui inverted buttons">
-      <div class="ui red basic inverted button">
-        <i class="remove icon"></i>
-        <button type="submit" class="ui button tiny" ng-click="cancel()">Cancel</button>
-      </div>
-      <div class="ui green basic inverted button">
-        <i class="checkmark icon"></i>
-        <button type="submit" class="ui inverted button tiny" ng-click="save()">Schedule Job</button>
-      </div>
+      <button type="submit" class="ui red basic inverted button tiny" ng-click="cancel()">
+        <i class="remove icon"></i> Cancel</button>
+      <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
+        <i class="checkmark icon"></i> Schedule Job</button>
     </div>
   </div>
 </div>
