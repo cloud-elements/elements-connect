@@ -890,3 +890,18 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
 .bulkloaderModalWindow .dropdown-menu thead tr th .pull-right{
     margin: 0;
 }
+
+.md-dialog-container .md-default-theme h2{
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+.md-dialog-container{z-index:1300;}
+.md-dialog-container .md-default-theme h2, .md-dialog-container .md-default-theme p{
+    color: #444;
+}
+
+.md-dialog-container .md-default-theme button{
+    background-color: #e8e8e8;
+    background-image: none;
+    color: rgba(0, 0, 0, 0.8);
+}

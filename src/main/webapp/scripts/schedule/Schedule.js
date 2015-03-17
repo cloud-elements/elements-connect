@@ -14,11 +14,25 @@ var Schedule = Class.extend({
     _objectMetadataFlat: null,
 
     _openedModal: null,
+    _mdDialog: null,
     _jobs: new Array(),
 
     _handleLoadError:function(error){
         //Ignore as these can be ignored or 404's
         console.log('Loading error' + error);
+    },
+
+    scheduledConfirmation: function(ev) {
+        var me = this;
+
+        var confirm = me.$mdDialog.alert()
+            .title('Your job has been scheduled')
+            .content('You will receive an email when the job is completed."')
+            .ariaLabel('Password notification')
+            .ok('OK')
+            .targetEvent(ev);
+
+        me.$mdDialog.show(confirm).then(me.closeSchedule.bind(me));
     },
 
     openSchedule: function () {
@@ -45,22 +59,22 @@ var Schedule = Class.extend({
     runScheduledJob: function (selectedInstance, allObjects, startDate) {
         var me = this;
 
-      // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
+        // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
         var transformations = allObjects[selectedInstance.element.key].transformations;
 
-		    if (me._cloudElementsUtils.isEmpty(transformations)) {
-		        return;
-		    }
+        if (me._cloudElementsUtils.isEmpty(transformations)) {
+            return;
+        }
 
         var objects = Object.keys(transformations);
 
-		    if (me._cloudElementsUtils.isEmpty(objects)) {
+        if (me._cloudElementsUtils.isEmpty(objects)) {
             return;
         }
 
         var fieldList = '';
 
-		    for (var i = 0; i < objects.length; i++) {
+        for (var i = 0; i < objects.length; i++) {
             var fields = transformations[objects[i]].fields;
 
             if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
@@ -106,11 +120,13 @@ var Schedule = Class.extend({
             job.notificationConfiguration = notificationConfiguration;
 
             me._elementsService.scheduleJob(selectedInstance, job)
-              .then(me._handleJobScheduled.bind(this, selectedInstance),
-                    me._handleJobSchedulingError.bind(this, selectedInstance));
+                .then(me._handleJobScheduled.bind(this, selectedInstance),
+                me._handleJobSchedulingError.bind(this, selectedInstance));
         }
 
-        me.closeSchedule();
+
+        me.scheduledConfirmation();
+//        me.closeSchedule();
     },
 
     _handleJobScheduled: function(selectedInstance, job) {
@@ -139,11 +155,12 @@ var Schedule = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications', '$modal', function(CloudElementsUtils, ElementsService, Notifications, $modal){
+        $get:['CloudElementsUtils', 'ElementsService','Notifications', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, $modal, $mdDialog){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
             this.instance.$modal = $modal;
+            this.instance.$mdDialog = $mdDialog;
 
             return this.instance;
         }]
