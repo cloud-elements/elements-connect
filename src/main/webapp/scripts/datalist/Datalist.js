@@ -82,7 +82,7 @@ var Datalist = Class.extend({
         return this._elementsService.loadInstanceObjects(selectedInstance)
             .then(
             this._handleLoadIntanceObjects.bind(this, selectedInstance),
-            this._handleLoadIntanceObjectError.bind(this) );
+            this._handleLoadIntanceObjectError.bind(this));
     },
 
     _handleLoadIntanceObjects:function(selectedInstance, result){
