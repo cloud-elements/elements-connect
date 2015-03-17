@@ -866,7 +866,7 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
 
 .bulkloaderModalWindow.in{
     top: 50%;
-    margin-top: -200px;
+    margin-top: -300px;
 }
 .bulkloaderModalWindow .modal-content{
     background-color: transparent;
@@ -875,3 +875,18 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     border: none;
 }
 
+.bulkloaderModalWindow .dropdown-menu{
+    width: 100%;
+    padding: 15px;}
+
+.bulkloaderModalWindow .dropdown-menu table{
+    width: 100%;
+}
+
+.bulkloaderModalWindow .dropdown-menu thead tr th{
+    vertical-align:middle;
+}
+
+.bulkloaderModalWindow .dropdown-menu thead tr th .pull-right{
+    margin: 0;
+}

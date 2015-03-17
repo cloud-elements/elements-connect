@@ -1,5 +1,5 @@
 <!-- SCHEDULING MODAL -->
-<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0;">
+<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
   <i class="close icon" ng-click="cancel()"></i>
   <div class="header">
     Export Data
@@ -10,65 +10,16 @@
     </div>
     <div class="description">
       <h2>How far back would you like to pull data from? Last recent successful pull: January 1, 2015</h2>
-      <!--<div class="ui grid">
-
-          <div class="column eight wide">
-
-              <div class="ui button dropdown fluid">
-                  <input type="hidden" name="gender">
-                  <div class="default text">Select a Frequency</div>
-                  <i class="dropdown icon"></i>
-                  <div class="menu">
-                      <div class="item" data-value="0">15 Minutes</div>
-                      <div class="item" data-value="1">30 Minutes</div>
-                      <div class="item" data-value="2">Hourly</div>
-                      <div class="item" data-value="3">Daily</div>
-                      <div class="item" data-value="4">Weekly</div>
-                      <div class="item" data-value="5">Monthly</div>
-                      <div class="item" data-value="4">Yearly</div>
-                  </div>
-              </div>
-
-          </div>
-          <div class="column eight wide">
-
-              <div class="ui button dropdown fluid">
-                  <input type="hidden" name="gender">
-                      <i class="wait icon"></i>
-                  <div class="default text">Select a Start Time</div>
-                  <i class="dropdown icon"></i>
-
-                  <div class="menu fluid">
-                    <div class="item" data-value="0">12:00PM</div>
-                    <div class="item" data-value="1">1:00AM</div>
-                    <div class="item" data-value="2">2:00AM</div>
-                    <div class="item" data-value="3">3:00AM</div>
-                    <div class="item" data-value="4">4:00AM</div>
-                    <!-- CONTINUE LIST BASED ON HOURS
-                  </div>
-                </div>
-
-          </div>
-
-      </div>
-      <div class="ui grid">
-          <div class="column eight wide">
-              <div class="ui icon input fluid">
-                <input type="text" class="datepicker" placeholder="Select a Start Date">
-                <i class="calendar icon"></i>
-              </div>
-          </div>
-          <div class="column eight wide">
-              <div class="ui icon input fluid">
-                <input type="text" class="datepicker" placeholder="Pull Data Since">
-                <i class="calendar icon"></i>
-              </div>
-          </div>
-      </div>-->
 
       <div class="ui icon input fluid">
-        <input type="date" class="datepicker" ng-model="queryStartDate" placeholder="yyyy-mm-dd">
-        <i class="calendar icon"></i>
+        <input type="text" class="datepicker"  datepicker-popup="{{format}}" ng-model="queryStartDate"
+               placeholder="MMMM dd, yyyy" is-open="opened" min-date="minDate" datepicker-options="dateOptions"
+               show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+        <span class="input-group-btn"  style="position: absolute;top: 0;right: 39px;">
+          <button type="button" class="btn btn-default" ng-click="open($event)"
+                  style="padding: 10px 11px 11px 13px;"><i class="calendar icon"></i></button>
+        </span>
+
       </div>
       <div class="warning">
                         <span>

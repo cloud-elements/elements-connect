@@ -115,6 +115,7 @@ var Schedule = Class.extend({
     _handleJobSchedulingError: function(selectedInstance, error) {
         var me = this;
     }
+
 });
 
 
