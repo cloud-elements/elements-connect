@@ -23,11 +23,15 @@ var ElementsService = Class.extend({
     //},
 
   ENV_URL: 'http://localhost:4040/elements/api-v2/',
-  secrets:{
+  configuration: {
       'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
       'company': '672aa88bb4e3235091de77900e3e299b',
-      'target': 'e494d18d1d24f65bbf90677c89f37eeb',
-      'notification': 'BahpG+SAcP3LnuD7F96QjXYHCMyrY7hObiHI7Gf7lMw='
+      'targetToken': 'e494d18d1d24f65bbf90677c89f37eeb',
+      'targetFolder': '/CloudElements',
+      'targetPath': '/hubs/documents/files',
+      'targetMethod': 'POST',
+      'notificationToken': 'BahpG+SAcP3LnuD7F96QjXYHCMyrY7hObiHI7Gf7lMw=',
+      'notificationEmail': 'vineet@cloud-elements.com'
   },
 
 
@@ -64,28 +68,28 @@ var ElementsService = Class.extend({
 
         //Read the URL arguments for Orgnaization and User secrets and selected element instanceId
         var pageParameters = this._cloudElementsUtils.pageParameters();
-        if(!this._cloudElementsUtils.isEmpty(pageParameters.secrets)) {
-            this.secrets = angular.fromJson(pageParameters.secrets);
+        if(!this._cloudElementsUtils.isEmpty(pageParameters.configuration)) {
+            this.configuration = angular.fromJson(pageParameters.configuration);
         }
 
         if(!this._cloudElementsUtils.isEmpty(pageParameters.user)) {
-            this.secrets.user = pageParameters.user;
+            this.configuration.user = pageParameters.user;
         }
 
         if(!this._cloudElementsUtils.isEmpty(pageParameters.company)) {
-            this.secrets.company = pageParameters.company;
+            this.configuration.company = pageParameters.company;
         }
 
         if(!this._cloudElementsUtils.isEmpty(pageParameters.defaultAccount)) {
-            this.secrets.defaultAccount = pageParameters.defaultAccount;
+            this.configuration.defaultAccount = pageParameters.defaultAccount;
         }
 
         if(!this._cloudElementsUtils.isEmpty(pageParameters.accountName)) {
-            this.secrets.accountName = decodeURI(pageParameters.accountName);
+            this.configuration.accountName = decodeURI(pageParameters.accountName);
         }
 
         if(!this._cloudElementsUtils.isEmpty(pageParameters.accountId)) {
-            this.secrets.accountId = pageParameters.accountId;
+            this.configuration.accountId = pageParameters.accountId;
         }
 
         if(!this._cloudElementsUtils.isEmpty(pageParameters.instanceId)) {
@@ -115,14 +119,14 @@ var ElementsService = Class.extend({
         if(token == null || token== undefined)
         {
             headers = {
-                'Authorization' : 'User '+this.secrets.user+', Organization '+ this.secrets.company,
+                'Authorization' : 'User '+this.configuration.user+', Organization '+ this.configuration.company,
                 'Content-Type'  : 'application/json'
             }
         }
         else
         {
             headers = {
-                'Authorization' : 'Element '+token+', User '+this.secrets.user+', Organization '+ this.secrets.company,
+                'Authorization' : 'Element '+token+', User '+this.configuration.user+', Organization '+ this.configuration.company,
                 'Content-Type'  : 'application/json'
             }
         }
@@ -343,9 +347,9 @@ var ElementsService = Class.extend({
 
 		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
-        job.targetConfiguration.token = this.secrets.target;
+        // job.targetConfiguration.token = this.configuration.targetToken;
 
-        job.notificationConfiguration.token = this.secrets.notification;
+        // job.notificationConfiguration.token = this.configuration.notificationToken;
 
 		    return this._httpPost(url, this._getHeaders(elementInstance.token), job);
 	  },

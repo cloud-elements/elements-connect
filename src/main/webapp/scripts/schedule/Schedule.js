@@ -77,8 +77,6 @@ var Schedule = Class.extend({
 
             var query = "select " + fieldList + " from " + objects[i] + " where lastRunDate = '" + startDate + "'";
 
-            console.log('Query: ' + query);
-
             var job = new Object();
 
             job.query = query;
@@ -87,13 +85,16 @@ var Schedule = Class.extend({
 
             var targetConfiguration = new Object();
 
-            // targetConfiguration.instanceId = 52;
-            targetConfiguration.path = '/hubs/documents/files';
-            targetConfiguration.method = 'POST';
+            // targetConfiguration.path = '/hubs/documents/files';
+            targetConfiguration.path = me._elementsService.configuration.targetPath;
+            // targetConfiguration.method = 'POST';
+            targetConfiguration.method = me._elementsService.configuration.targetMethod;
+            targetConfiguration.token = me._elementsService.configuration.targetToken;
 
             var parameters = new Object();
 
-            parameters.path = '/CloudElements/bulkdata-' + objects[i] + '.txt';
+            // parameters.folder = '/CloudElements';
+            parameters.folder = me._elementsService.configuration.targetFolder;
 
             targetConfiguration.parameters = parameters;
 
@@ -101,13 +102,15 @@ var Schedule = Class.extend({
 
             var notificationConfiguration = new Object();
 
-            notificationConfiguration.to = "vineet@cloud-elements.com";
+            notificationConfiguration.token = me._elementsService.configuration.notificationToken;
+            notificationConfiguration.to = me._elementsService.configuration.notificationEmail;
+            // notificationConfiguration.to = "vineet@cloud-elements.com";
 
             job.notificationConfiguration = notificationConfiguration;
 
             me._elementsService.scheduleJob(selectedInstance, job)
-              .then(me._handleJobScheduled.bind(this, selectedInstance),
-                    me._handleJobSchedulingError.bind(this, selectedInstance));
+              .then(me._handleJobScheduled.bind(me, selectedInstance),
+                    me._handleJobSchedulingError.bind(me, selectedInstance));
         }
 
         me.closeSchedule();
