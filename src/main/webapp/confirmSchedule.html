@@ -1,4 +1,4 @@
-<!-- SCHEDULING MODAL -->
+<!-- SCHEDULING Confirmation -->
 <div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
   <i class="close icon" ng-click="cancel()"></i>
   <div class="header">
@@ -13,7 +13,7 @@
 
       <div class="ui icon input fluid">
         <input type="text" class="datepicker"  datepicker-popup="{{format}}" ng-model="queryStartDate"
-               placeholder="January 01, 2015" is-open="opened" min-date="minDate" datepicker-options="dateOptions"
+               placeholder="MMMM dd, yyyy" is-open="opened" min-date="minDate" datepicker-options="dateOptions"
                show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
         <span class="input-group-btn"  style="position: absolute;top: 0;right: 39px;">
           <button type="button" class="btn btn-default" ng-click="open($event)"
@@ -40,7 +40,7 @@
   <div class="actions">
     <div class="two fluid ui inverted buttons">
       <button type="submit" class="ui red basic inverted button tiny" ng-click="cancel()">
-        <i class="remove icon"></i> Back</button>
+        <i class="remove icon"></i> Cancel</button>
       <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
         <i class="checkmark icon"></i> Schedule Job</button>
     </div>

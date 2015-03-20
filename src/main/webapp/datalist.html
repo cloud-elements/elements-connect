@@ -6,7 +6,7 @@
     <div class="ui grid">
       <div class="column eight wide" id="select-dropdown-container">
         <ui-select ng-model="selectedObject.select" theme="select2" ng-disabled="disabled" style="width: 100%;" ng-change="refreshObjectMetaData()">
-          <ui-select-match placeholder="Select Object">{{$select.selected}}</ui-select-match>
+          <ui-select-match>{{$select.selected}}</ui-select-match>
           <ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">
             <div ng-bind-html="selectedObject | highlight: $select.search"></div>
           </ui-select-choices>
@@ -15,8 +15,8 @@
       <div class="column eight wide">
         <div class="button-container pull-right">
           <div class="ui tiny">
-            <button type="submit" class="ui button tiny" ng-click="cancel()">Cancel</button>
-            <button type="submit" class="ui inverted button tiny" ng-click="save()">Next</button>
+            <button type="submit" class="ui button tiny" ng-click="cancel()">Back</button>
+            <button type="submit" class="ui inverted button tiny" ng-click="save()">Schedule Job</button>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@
     </script>
 
     <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree" class="list">
-      <h1>{{selectedObject.select}} Object</h1>
+      <h1>{{selectedObject.select}}</h1>
       <li class="tree-root-li">
         <div class="tree-root-li-container">
           <md-switch class="md-primary-green" aria-label="Enable Object" ng-change="checkAllInstance(cbObject.checked)"
