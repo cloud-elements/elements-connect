@@ -111,7 +111,7 @@ var Datalist = Class.extend({
 
     //Based on the selected instance get all the instance definitions
     loadInstanceDefinitions: function(selectedInstance) {
-        this._elementsService.loadAccountObjectDefinitions(selectedInstance)
+        this._elementsService.loadInstanceObjectDefinitions(selectedInstance)
             .then(
             this._handleLoadInstanceDefinitions.bind(this, selectedInstance),
             this._handleLoadError.bind(this) );
@@ -377,6 +377,47 @@ var Datalist = Class.extend({
         definitionArray[objectName]=objDefinition;
     },
 
+    _anyFieldSelected: function(object) {
+
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(object)) {
+          return false;
+        }
+
+        if (me._cloudElementsUtils.isEmpty(object.fields)) {
+          return false;
+        }
+
+        if (object.fields.length <= 0) {
+          return false;
+        }
+
+        for (var i = 0; i < object.fields.length; i++) {
+            var field = object.fields[i];
+
+            if ((field instanceof Object) == false) {
+              continue;
+            }
+
+            if ('fields' in field) {
+              if (me._anyFieldSelected(field) == false) {
+                  continue;
+              } else {
+                  return true;
+              }
+            } else {
+                if ('transform' in field) {
+                    if (field.transform == true) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    },
+
     _constructAndSaveObjectDefinition: function(selectedInstance) {
         var me = this;
 
@@ -384,11 +425,18 @@ var Datalist = Class.extend({
         var mKeys = Object.keys(mData);
 
         var definitionArray = new Object;
-        for(var i=0; i< mKeys.length; i++) {
+
+        for (var i = 0; i < mKeys.length; i++) {
+
+            if (me._anyFieldSelected(mData[mKeys[i]]) == false) {
+                continue;
+            }
+
             me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
         }
 
         var definitionSaveCounter = 0;
+
         return me._saveDefinitionFromArray(selectedInstance, definitionArray, definitionSaveCounter);
     },
 
@@ -407,7 +455,7 @@ var Datalist = Class.extend({
 
         if (!me._cloudElementsUtils.isEmpty(defs)
             && !me._cloudElementsUtils.isEmpty(defs[key])
-            && defs[key].level == 'account') //TODO Modify this to instance
+            && defs[key].level == 'instance') //TODO Modify this to instance
         {
             methodType = 'PUT';
         }
@@ -418,7 +466,7 @@ var Datalist = Class.extend({
 
         definitionSaveCounter++;
 
-        return me._elementsService.saveObjectDefinition(key, definitionArray[key], 'account', methodType)
+        return me._elementsService.saveObjectDefinition(selectedInstance, key, definitionArray[key], 'instance', methodType)
             .then(
             me._handleOnSaveObjectDefinition.bind(this, selectedInstance, definitionArray, definitionSaveCounter),
             me._handleOnSaveObjectDefinitionError.bind(this, selectedInstance, definitionArray, definitionSaveCounter) );
@@ -543,7 +591,12 @@ var Datalist = Class.extend({
 
         var transformationArray = new Object;
 
-        for(var i=0; i< mKeys.length; i++) {
+        for (var i = 0; i < mKeys.length; i++) {
+
+            if (me._anyFieldSelected(mData[mKeys[i]]) == false) {
+                continue;
+            }
+
             me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]]);
         }
 

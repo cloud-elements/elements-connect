@@ -91,6 +91,8 @@ var Schedule = Class.extend({
 
             var query = "select " + fieldList + " from " + objects[i] + " where lastRunDate = '" + startDate + "'";
 
+            console.log(query);
+
             var job = new Object();
 
             job.query = query;

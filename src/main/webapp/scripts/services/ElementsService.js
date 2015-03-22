@@ -27,14 +27,15 @@ var ElementsService = Class.extend({
       'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
       'company': '672aa88bb4e3235091de77900e3e299b',
       'targetPath': '/hubs/documents/files',
-      'targetToken': 'ptfOxwGhwAw0gvZdOL78DCFEzjJpzD1Dv97pCPNzioc=',
+      'targetToken': 'MGcqvE/UnTtLJix9xj5QZPXpbJ5IG/fKMYjUw8oW0Rc=',
       'targetFolder': '/Bulkloader.io',
       'targetMethod': 'POST',
-      'notificationToken': 'BahpG+SAcP3LnuD7F96QjXYHCMyrY7hObiHI7Gf7lMw=',
+      'notificationToken': '8rOB/2d6CeDN7dBBY/cxGZeQ7gK8GDReADYBWpsv/ho=',
       'notificationEmail': 'vineet@cloud-elements.com'
   },
 
-//   'targetToken': 'e494d18d1d24f65bbf90677c89f37eeb',
+  // S3 token
+  // 'targetToken': 'ptfOxwGhwAw0gvZdOL78DCFEzjJpzD1Dv97pCPNzioc=',
 //  'targetFolder': '/CloudElements',
 
 
@@ -141,7 +142,7 @@ var ElementsService = Class.extend({
      * @return Service handler
      */
     loadElementInstances:function(){
-        var url = this.ENV_URL+'instances';
+        var url = this.ENV_URL + 'instances';
         return this._httpGet(url,this._getHeaders());
     },
 
@@ -154,7 +155,7 @@ var ElementsService = Class.extend({
             'callbackUrl': callbackUrl
         };
 
-        var url = this.ENV_URL+'elements/'+elementKey+'/oauth/url';
+        var url = this.ENV_URL+ 'elements/' + elementKey + '/oauth/url';
 
         return this._httpGet(url,this._getHeaders(), parameters);
     },
@@ -176,11 +177,11 @@ var ElementsService = Class.extend({
             'name': elementKey
         };
 
-        return this._httpPost(this.ENV_URL+'instances/', this._getHeaders(), elementProvision);
+        return this._httpPost(this.ENV_URL + 'instances/', this._getHeaders(), elementProvision);
     },
 
     loadElementDefaultTransformations:function(elementInstance){
-        var url = this.ENV_URL+'elements/'+elementInstance.element.key+'/transformations';
+        var url = this.ENV_URL + 'elements/' + elementInstance.element.key + '/transformations';
         return this._httpGet(url,this._getHeaders());
     },
 
@@ -191,22 +192,27 @@ var ElementsService = Class.extend({
      */
     loadInstanceObjects:function(elementInstance){
 
-        var url = this.ENV_URL+'hubs/'+elementInstance.element.hub+'/objects';
+        var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/objects';
         return this._httpGet(url,this._getHeaders(elementInstance.token));
     },
 
+    loadInstanceObjectDefinitions: function(elementInstance) {
+      var url = this.ENV_URL + 'instances/' + elementInstance.id + '/objects/definitions';
+      return this._httpGet(url, this._getHeaders());
+    },
+
     loadAccountObjectDefinitions: function() {
-        var url = this.ENV_URL+'accounts/objects/definitions';
+        var url = this.ENV_URL + 'accounts/objects/definitions';
         return this._httpGet(url,this._getHeaders());
     },
 
     loadOrganizationsObjectDefinitions: function() {
-        var url = this.ENV_URL+'organizations/objects/definitions';
+        var url = this.ENV_URL + 'organizations/objects/definitions';
         return this._httpGet(url,this._getHeaders());
     },
 
     loadAccounts: function() {
-        var url = this.ENV_URL+'accounts?where=type=\'CompanyAccount\'';
+        var url = this.ENV_URL + 'accounts?where=type=\'CompanyAccount\'';
         return this._httpGet(url,this._getHeaders());
     },
 
@@ -216,7 +222,7 @@ var ElementsService = Class.extend({
      */
     loadObjectMetaData:function(elementInstance, objectName){
 
-        var url = this.ENV_URL+'hubs/'+elementInstance.element.hub+'/objects/'+objectName+'/metadata';
+        var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/objects/' + objectName + '/metadata';
 
         return this._httpGet(url,this._getHeaders(elementInstance.token));
     },
@@ -224,7 +230,7 @@ var ElementsService = Class.extend({
     loadInstanceTransformations:function(elementInstance){
 
         // /instances/{id}/transformations
-        var url = this.ENV_URL+'instances/{id}/transformations';
+        var url = this.ENV_URL + 'instances/{id}/transformations';
         url = url.replace('{id}', elementInstance.id);
 
         return this._httpGet(url,this._getHeaders());
@@ -233,7 +239,7 @@ var ElementsService = Class.extend({
     loadAccountTransformations:function(elementInstance, account){
 
         //  /accounts/{id}/elements/{key}/transformations
-        var url = this.ENV_URL+'accounts/{id}/elements/{key}/transformations';
+        var url = this.ENV_URL + 'accounts/{id}/elements/{key}/transformations';
         url = url.replace('{id}', account.id);
         url = url.replace('{key}', elementInstance.element.key);
         return this._httpGet(url,this._getHeaders());
@@ -241,7 +247,7 @@ var ElementsService = Class.extend({
 
     loadOrganizationTransformations:function(elementInstance){
         //  /organizations/elements/{key}/transformations
-        var url = this.ENV_URL+'organizations/elements/{key}/transformations';
+        var url = this.ENV_URL + 'organizations/elements/{key}/transformations';
         url = url.replace('{key}', elementInstance.element.key);
 
         return this._httpGet(url,this._getHeaders());
@@ -249,27 +255,33 @@ var ElementsService = Class.extend({
 
     findAllObjectTransformations: function(objectName, scope, account) {
 
-        var url = this.ENV_URL+'organizations/objects/{objectName}/transformations';
-        if(scope !='organization') {
-            url = this.ENV_URL+'accounts/{id}/objects/{objectName}/transformations';
+        var url = this.ENV_URL + 'organizations/objects/{objectName}/transformations';
+
+        if (scope !='organization') {
+            url = this.ENV_URL + 'accounts/{id}/objects/{objectName}/transformations';
             url = url.replace('{id}', account.id);
         }
+
         url = url.replace('{objectName}', objectName);
 
         return this._httpGet(url,this._getHeaders());
     },
 
-    saveObjectDefinition: function(objectName, objectDefinition, scope, methodType) {
+    saveObjectDefinition: function(selectedInstance, objectName, objectDefinition, scope, methodType) {
 
         // /organizations/objects/{objectName}/definitions
         // /accounts/{id}/objects/{objectName}/definitions
 
         var url;
-        if(scope == 'organization') {
-            url = this.ENV_URL+'organizations/objects/{objectName}/definitions';
+
+        if (scope == 'organization') {
+            url = this.ENV_URL + 'organizations/objects/{objectName}/definitions';
         }
-        else {
-            url = this.ENV_URL+'accounts/objects/{objectName}/definitions';
+        else if (scope == 'account') {
+            url = this.ENV_URL + 'accounts/objects/{objectName}/definitions';
+        }
+        else if (scope == 'instance') {
+          url = this.ENV_URL + 'instances/' + selectedInstance.id + '/objects/{objectName}/definitions';
         }
 
         url = url.replace('{objectName}', objectName);
@@ -280,7 +292,6 @@ var ElementsService = Class.extend({
         else {
             return this._httpPut(url, this._getHeaders(), objectDefinition);
         }
-
     },
 
     saveObjectTransformation: function(elementInstance, objectName, objectTransformation, scope, methodType) {
@@ -291,17 +302,17 @@ var ElementsService = Class.extend({
 
         var url = null;
         if(scope == 'organization') {
-            url = this.ENV_URL+'organizations/elements/{key}/transformations/{objectName}';
+            url = this.ENV_URL + 'organizations/elements/{key}/transformations/{objectName}';
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
         }
         else if(scope == 'instance') {
-            url = this.ENV_URL+'instances/{id}/transformations/{objectName}';
+            url = this.ENV_URL + 'instances/{id}/transformations/{objectName}';
             url = url.replace('{id}', elementInstance.id);
             url = url.replace('{objectName}', objectName);
         }
         else {
-            url = this.ENV_URL+'accounts/{id}/elements/{key}/transformations/{objectName}';
+            url = this.ENV_URL + 'accounts/{id}/elements/{key}/transformations/{objectName}';
             url = url.replace('{id}', scope); //The scope that comes is account id
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
@@ -323,17 +334,17 @@ var ElementsService = Class.extend({
 
         var url = null;
         if(scope == 'organization') {
-            url = this.ENV_URL+'organizations/elements/{key}/transformations/{objectName}';
+            url = this.ENV_URL + 'organizations/elements/{key}/transformations/{objectName}';
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
         }
         else if(scope == 'instance') {
-            url = this.ENV_URL+'instances/{id}/transformations/{objectName}';
+            url = this.ENV_URL + 'instances/{id}/transformations/{objectName}';
             url = url.replace('{id}', elementInstance.id);
             url = url.replace('{objectName}', objectName);
         }
         else {
-            url = this.ENV_URL+'accounts/{id}/elements/{key}/transformations/{objectName}';
+            url = this.ENV_URL + 'accounts/{id}/elements/{key}/transformations/{objectName}';
             url = url.replace('{id}', scope); //The scope that comes is account id
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
@@ -349,10 +360,6 @@ var ElementsService = Class.extend({
 	  scheduleJob: function(elementInstance, job){
 
 		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/workflows';
-
-        // job.targetConfiguration.token = this.configuration.targetToken;
-
-        // job.notificationConfiguration.token = this.configuration.notificationToken;
 
 		    return this._httpPost(url, this._getHeaders(elementInstance.token), job);
 	  },
