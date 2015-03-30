@@ -905,3 +905,20 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     background-image: none;
     color: rgba(0, 0, 0, 0.8);
 }
+
+
+.select-md-switch-container {
+    background: #1e6280;
+    margin: -1px 0 0px 0;
+    color: #fff !important;
+    padding: 15px 30px;
+    border-top: 1px solid rgba(255,255,255,.3);
+}
+
+.select-md-switch-container md-switch.md-default-theme .md-bar {
+    background-color: rgba(0,0,0, .2);
+}
+
+.select-md-switch-container md-switch .md-label{
+    font-weight: bold;
+}

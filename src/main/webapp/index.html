@@ -64,7 +64,7 @@
   <script src="bower_components/angular-touch/angular-touch.js"></script>
   <script src="bower_components/angular-busy/dist/angular-busy.js"></script>
   <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
-  <script src="bower_components/angular-ui-select/dist/select.js"></script>
+  <script src="scripts/ux/select.js"></script>
   <script src="bower_components/angular-aria/angular-aria.js"></script>
   <script src="bower_components/angular-material/angular-material.js"></script>
   <!-- endbower -->
@@ -101,6 +101,8 @@
 <body ng-app="bulkloaderApp">
 
     <div class="page {{ pageClass }}" ng-view></div>
+
+    <div class="mask-loader" ng-show="maskLoader"><span class="text">{{maskName}}</span></div>
 
 </body>
 
