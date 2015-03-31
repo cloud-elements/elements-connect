@@ -13,8 +13,9 @@ var DatalistController = BaseController.extend({
     _datalist: null,
     _instances: null,
     _schedule: null,
+    _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, $window, $location, $filter, $route){
+    init:function($scope, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route){
         var me = this;
 
         me._notifications = Notifications;
@@ -24,6 +25,7 @@ var DatalistController = BaseController.extend({
         me._schedule = Schedule;
         me.$window = $window;
         me.$location = $location;
+        me._maskLoader = MaskLoader;
         me._super($scope);
     },
 
@@ -113,6 +115,7 @@ var DatalistController = BaseController.extend({
             return;
         }
 
+        me._maskLoader.show('Loading Objects...');
         //Load the objects for the element
         me._datalist.loadInstanceObjects(me._picker.selectedElementInstance)
             .then(me._handleOnInstanceObjectsLoad.bind(me));
@@ -121,6 +124,7 @@ var DatalistController = BaseController.extend({
 
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
+        me._maskLoader.hide();
         me.$scope.instanceObjects = data;
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
         me.refreshObjectMetaData(me.$scope.selectedObject.select);
@@ -133,6 +137,7 @@ var DatalistController = BaseController.extend({
 
     save: function() {
         var me = this;
+        me._maskLoader.show('Saving...');
         var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance);
 
     },
@@ -140,6 +145,7 @@ var DatalistController = BaseController.extend({
     _onTransformationSave: function() {
         //Show the scheduler
         var me = this;
+        me._maskLoader.hide();
         //me._notifications.notify(bulkloader.events.SHOW_SCHEDULER);
         me._schedule.openSchedule();
     },
@@ -163,7 +169,7 @@ var DatalistController = BaseController.extend({
     }
 });
 
-DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', '$window', '$location', '$filter', '$route'];
+DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route'];
 
 
 angular.module('bulkloaderApp')

@@ -15,8 +15,9 @@ var ScheduleController = BaseController.extend({
     _instances: null,
     $modal: null,
     $mdDialog: null,
+    _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Schedule, Notifications, $window, $location, $filter, $route, $modal, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Datalist, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -27,6 +28,7 @@ var ScheduleController = BaseController.extend({
         me.$modal = $modal;
         me.$mdDialog = $mdDialog;
         me.$window = $window;
+        me._maskLoader = MaskLoader;
         me.$location = $location;
         me._super($scope);
     },
@@ -74,8 +76,10 @@ var ScheduleController = BaseController.extend({
     save: function() {
         var me = this;
 
+        me._maskLoader.show('Scheduling...');
         me._schedule.runScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
                                      me.$scope.queryStartDate.toISOString());
+        me._maskLoader.hide();
         me.$location.path('/');
     },
 
@@ -94,7 +98,7 @@ var ScheduleController = BaseController.extend({
 
 });
 
-ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
+ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

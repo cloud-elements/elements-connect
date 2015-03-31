@@ -12,11 +12,13 @@ var PickerController = BaseController.extend({
     _cloudElementsUtils: null,
     _picker: null,
     _instances: null,
+    _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, $window, $location, $interval, $filter, $route){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, $window, $location, $interval, $filter, $route){
         var me = this;
 
         me._notifications = Notifications;
+        me._maskLoader = MaskLoader;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
         me._schedule = Schedule;
@@ -25,6 +27,7 @@ var PickerController = BaseController.extend({
         me.$interval = $interval;
         me._super($scope);
 
+        me._maskLoader.show(me.$scope, 'Loading Instances...');
         me._picker.loadElementInstances()
             .then(me._handleInstanceLoad.bind(me));
     },
@@ -65,6 +68,7 @@ var PickerController = BaseController.extend({
 
     _handleInstanceLoad: function(instances) {
         var me = this;
+        me._maskLoader.hide();
         me._instances = instances;
 
         if(!me._cloudElementsUtils.isEmpty(me._instances)) {
@@ -85,6 +89,7 @@ var PickerController = BaseController.extend({
 
         if(me._cloudElementsUtils.isEmpty(me._instances) ||
             me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
+            me._maskLoader.show('Creating Instance...');
             me._picker.getOAuthUrl(elementKey)
                 .then(me._handleOnOAuthUrl.bind(me));
         } else {
@@ -94,12 +99,14 @@ var PickerController = BaseController.extend({
 
     _handleOnOAuthUrl: function(oauthurl) {
         var me = this;
+        me._maskLoader.hide();
         me.$window.open(oauthurl, '_blank');
     },
 
     _onElementInstanceSelect: function(instance) {
         var me = this;
 
+        me._maskLoader.show('Opening Instance...');
         // Set the instance details to factory class to be used in datalist
         me._picker.selectedElementInstance = instance;
 
@@ -108,6 +115,7 @@ var PickerController = BaseController.extend({
 
         //Notify about the VIEW Change
         me._notifications.notify(bulkloader.events.VIEW_CHANGE_DATALIST);
+        me._maskLoader.hide();
     },
 
     onSelectSchedule: function(instance, $event){
@@ -124,7 +132,7 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', '$window', '$location', '$interval', '$filter', '$route'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route'];
 
 
 angular.module('bulkloaderApp')
