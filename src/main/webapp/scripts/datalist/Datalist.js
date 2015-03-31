@@ -27,6 +27,7 @@ var Datalist = Class.extend({
     _isLiteral: function(type) {
         if(type == 'string' || type == 'number'
             || type == 'date' || type == 'boolean'
+            || type == 'unknown' || type == null
             || this._isDateFormat(type)
             || this._isLiteralArray(type))
         {

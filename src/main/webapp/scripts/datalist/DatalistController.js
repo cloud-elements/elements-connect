@@ -72,6 +72,7 @@ var DatalistController = BaseController.extend({
     refreshObjectMetaData: function() {
         var me = this;
 
+        me._maskLoader.show(me.$scope, "Loading Object ...");
         var instanceMeta = me._datalist.all[me._picker.selectedElementInstance.element.key].metadata;
         if(me._cloudElementsUtils.isEmpty(instanceMeta)
             || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select])) {
@@ -104,6 +105,7 @@ var DatalistController = BaseController.extend({
         me.$scope.selectedObject.select = objectname;
         me.$scope.cbObject.checked = data.objectTransformation;
         me.$scope.showTree = true;
+        me._maskLoader.hide();
 
     },
 
@@ -115,7 +117,7 @@ var DatalistController = BaseController.extend({
             return;
         }
 
-        me._maskLoader.show('Loading Objects...');
+        me._maskLoader.show(me.$scope, 'Loading Objects...');
         //Load the objects for the element
         me._datalist.loadInstanceObjects(me._picker.selectedElementInstance)
             .then(me._handleOnInstanceObjectsLoad.bind(me));
@@ -124,7 +126,6 @@ var DatalistController = BaseController.extend({
 
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
-        me._maskLoader.hide();
         me.$scope.instanceObjects = data;
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
         me.refreshObjectMetaData(me.$scope.selectedObject.select);
@@ -137,7 +138,7 @@ var DatalistController = BaseController.extend({
 
     save: function() {
         var me = this;
-        me._maskLoader.show('Saving...');
+        me._maskLoader.show(me.$scope, 'Saving...');
         var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance);
 
     },

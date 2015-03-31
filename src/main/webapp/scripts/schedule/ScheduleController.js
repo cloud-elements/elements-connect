@@ -76,7 +76,7 @@ var ScheduleController = BaseController.extend({
     save: function() {
         var me = this;
 
-        me._maskLoader.show('Scheduling...');
+        me._maskLoader.show(me.$scope, 'Scheduling...');
         me._schedule.runScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
                                      me.$scope.queryStartDate.toISOString());
         me._maskLoader.hide();

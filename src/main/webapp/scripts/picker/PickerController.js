@@ -89,7 +89,7 @@ var PickerController = BaseController.extend({
 
         if(me._cloudElementsUtils.isEmpty(me._instances) ||
             me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
-            me._maskLoader.show('Creating Instance...');
+            me._maskLoader.show(me.$scope, 'Creating Instance...');
             me._picker.getOAuthUrl(elementKey)
                 .then(me._handleOnOAuthUrl.bind(me));
         } else {
@@ -106,7 +106,7 @@ var PickerController = BaseController.extend({
     _onElementInstanceSelect: function(instance) {
         var me = this;
 
-        me._maskLoader.show('Opening Instance...');
+        me._maskLoader.show(me.$scope, 'Opening Instance...');
         // Set the instance details to factory class to be used in datalist
         me._picker.selectedElementInstance = instance;
 

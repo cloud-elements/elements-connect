@@ -6,7 +6,7 @@ angular.module('bulkloaderApp')
             scope: {
                 message: '@'
             },
-            template: '<div class="mask-loader" style="height: '+ window.innerHeight +'px;"><span class="text">{{message}}</span></div>'
+            template: '<div class="mask-loader" style="height:'+ window.innerHeight +'px;"><span class="loader-animation">{{message}}</span><span class="text">{{message}}</span></div>'
 //            template: '<div style="background-color: #000777; position: absolute; top: 0; left: 0; z-index: 999999999;" class="mask-loader" ><span class="text">{{message}}</span></div>'
         }
     });
@@ -35,7 +35,7 @@ var MaskLoader = Class.extend({
 
     show:function(scope, message){
         var me  = this;
-
+//        me._createMaskingElement(scope, message);
         if(me._cloudElementsUtils.isEmpty(me._modalDomEl)) {
             me._createMaskingElement(scope, message);
         }
@@ -45,6 +45,7 @@ var MaskLoader = Class.extend({
         var me  = this;
         if(!me._cloudElementsUtils.isEmpty(me._modalDomEl)) {
             me._modalDomEl.remove();
+            me._modalDomEl = null;
         }
     }
 });
