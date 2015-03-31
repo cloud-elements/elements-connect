@@ -37,7 +37,8 @@
                 ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
         <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer" data-nodrag> </div>
         <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink
-                   aria-label="metadata.vendorPath" ng-change="unCheckObject(metadata.transform)">
+                   aria-label="metadata.vendorPath"
+                   ng-change="unCheckObject(metadata.transform, metadata, objectMetaData)">
           <label>{{metadata.vendorPath}}</label>
         </md-switch>
 
@@ -54,7 +55,8 @@
       <h1>{{selectedObject.select}}</h1>
       <li class="tree-root-li">
         <div class="tree-root-li-container">
-          <md-switch class="md-primary-green" aria-label="Enable Object" ng-change="checkAllInstance(cbObject.checked)"
+          <md-switch class="md-primary-green" aria-label="Enable Object"
+                     ng-change="checkAllInstance(cbObject.checked, objectMetaData)"
                      ng-model="cbObject.checked">
             <label>{{selectedObject.select}}</label>
           </md-switch>

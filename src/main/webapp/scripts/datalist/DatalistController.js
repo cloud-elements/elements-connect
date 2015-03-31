@@ -154,17 +154,47 @@ var DatalistController = BaseController.extend({
         var me = this;
     },
 
-    checkAllInstance: function(cbState) {
+    checkAllInstance: function(cbState, cbObject) {
         var me = this;
         for (var i = 0; i < me.$scope.objectMetaData.length; i++) {
             me.$scope.objectMetaData[i].transform = cbState;
+            if(me.$scope.objectMetaData[i].type == "object" || me.$scope.objectMetaData[i].type == "array"){
+                var obj = me.$scope.objectMetaData[i].fields;
+                for(var metadata in obj){
+                    var metoo = obj[metadata];
+                    metoo.transform = cbState;
+                }
+            }
         }
     },
 
-    unCheckObject: function(cbState){
+    unCheckObject: function(cbState, metadata, obj){
         var me = this;
-        if (cbState == false){
-            me.$scope.cbObject.checked = false;
+        var o = obj.length;
+        var ownerData;
+
+        while(o--) {
+            var n = metadata.actualVendorPath.indexOf(".");
+            if(metadata.actualVendorPath.slice(0,n) == obj[o].vendorPath || metadata.actualVendorPath == obj[o].vendorPath) {
+                ownerData = obj[o];
+                break;
+            }
+        }
+
+        if(metadata.type == "object" || metadata.type == "array") {
+            for (var i = 0; i < metadata.fields.length; i++) {
+                metadata.fields[i].transform = cbState;
+                if(ownerData.type == "object" && cbState == false){
+                    ownerData.transform = cbState;
+                }
+            }
+        }else{
+            metadata.transform = cbState;
+            if(cbState == false){
+                ownerData.transform = cbState;
+                me.$scope.cbObject.checked = cbState;
+            }
+
         }
     }
 });

@@ -6,7 +6,7 @@ angular.module('bulkloaderApp')
             scope: {
                 message: '@'
             },
-            template: '<div class="mask-loader" ><span class="text">{{message}}</span></div>'
+            template: '<div class="mask-loader" style="height: '+ window.innerHeight +'px;"><span class="text">{{message}}</span></div>'
 //            template: '<div style="background-color: #000777; position: absolute; top: 0; left: 0; z-index: 999999999;" class="mask-loader" ><span class="text">{{message}}</span></div>'
         }
     });

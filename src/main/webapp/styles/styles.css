@@ -922,3 +922,12 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
 .select-md-switch-container md-switch .md-label{
     font-weight: bold;
 }
+
+.mask-loader{
+    background-color: rgba(0,0,0,.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999999;
+}
