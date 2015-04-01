@@ -82,18 +82,46 @@ var Datalist = Class.extend({
 
         return this._elementsService.loadInstanceObjects(selectedInstance)
             .then(
-            this._handleLoadIntanceObjects.bind(this, selectedInstance),
-            this._handleLoadIntanceObjectError.bind(this));
+            this._handleLoadInstanceObjects.bind(this, selectedInstance),
+            this._handleLoadInstanceObjectError.bind(this));
     },
 
-    _handleLoadIntanceObjects:function(selectedInstance, result){
+    _handleLoadInstanceObjects:function(selectedInstance, result){
         var me = this;
 
-        me.all[selectedInstance.element.key].objects = result.data;
-        return result.data;
+        if(me.all[selectedInstance.element.key].transformationsLoaded == true) {
+
+            me.all[selectedInstance.element.key].objects = result.data;
+
+            var objectsAndTransformation = new Array();
+            if(!me._cloudElementsUtils.isEmpty(result.data)) {
+                for(var i=0; i< result.data.length; i++) {
+                    var objName = result.data[i];
+                    objectsAndTransformation.push({
+                        name: objName,
+                        transformed: me._isObjectTransformed(objName, selectedInstance)
+                    });
+                }
+            }
+            me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
+
+            return me.all[selectedInstance.element.key].objectsAndTransformation;
+        } else {
+            // Defer code for calling _handleLoadInstanceObjects after 100ms
+        }
     },
 
-    _handleLoadIntanceObjectError: function(result) {
+    _isObjectTransformed: function(objectName, selectedInstance) {
+        var me = this;
+
+        if(!me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)
+            && !me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations[objectName])) {
+            return true;
+        }
+        return false;
+    },
+
+    _handleLoadInstanceObjectError: function(result) {
         return "Error getting the discovery object";
     },
 
@@ -107,6 +135,7 @@ var Datalist = Class.extend({
 
     _handleLoadInstanceTransformations:function(selectedInstance,result){
         var me = this;
+        me.all[selectedInstance.element.key].transformationsLoaded = true;
         me.all[selectedInstance.element.key].transformations = result.data;
     },
 
@@ -302,8 +331,16 @@ var Datalist = Class.extend({
     // Construct and Save transformations
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    saveDefinitionAndTransformation: function(selectedInstance) {
+    saveDefinitionAndTransformation: function(selectedInstance, objects) {
         var me = this;
+
+        //Convert objects to map of objectName key and transformed value
+        var objectsAndTrans = objects.reduce(function ( total, objects ) {
+            total[ objects.name ] = objects.transformed;
+            return total;
+        }, {});
+
+        me.all[selectedInstance.element.key].objectsAndTrans = objectsAndTrans;
 
         //Construct the Object Definition and inner Object definitions
         //Save all the definitions at instance level
@@ -423,13 +460,15 @@ var Datalist = Class.extend({
         var me = this;
 
         var mData = me.all[selectedInstance.element.key].metadata;
+        var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
         var mKeys = Object.keys(mData);
 
         var definitionArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
 
-            if (me._anyFieldSelected(mData[mKeys[i]]) == false) {
+            if(objectsAndTrans[mKeys[i]] == false
+                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
                 continue;
             }
 
@@ -588,13 +627,15 @@ var Datalist = Class.extend({
         var me = this;
 
         var mData = me.all[selectedInstance.element.key].metadata;
+        var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
         var mKeys = Object.keys(mData);
 
         var transformationArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
 
-            if (me._anyFieldSelected(mData[mKeys[i]]) == false) {
+            if (objectsAndTrans[mKeys[i]] ==false
+                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
                 continue;
             }
 

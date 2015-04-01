@@ -5,10 +5,16 @@
   <div id="data-list-header">
     <div class="ui grid">
       <div class="column eight wide" id="select-dropdown-container">
-        <ui-select ng-model="selectedObject.select" theme="select2" ng-disabled="disabled" style="width: 100%;" ng-change="refreshObjectMetaData()">
-          <ui-select-match>{{$select.selected}}</ui-select-match>
+        <ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"
+                   style="width: 100%;"
+                   ng-change="refreshObjectMetaData()">
+          <ui-select-match>{{$select.selected.name}}</ui-select-match>
           <ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">
-            <div ng-bind-html="selectedObject | highlight: $select.search"></div>
+            <md-switch class="md-primary-green" aria-label="Enable Object"
+                       ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">
+            </md-switch>
+            <div ng-bind-html="selectedObject.name | highlight: $select.search">
+            </div>
           </ui-select-choices>
         </ui-select>
       </div>
@@ -52,13 +58,13 @@
     </script>
 
     <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree" class="list">
-      <h1>{{selectedObject.select}}</h1>
+      <h1>{{selectedObject.select.name}}</h1>
       <li class="tree-root-li">
         <div class="tree-root-li-container">
           <md-switch class="md-primary-green" aria-label="Enable Object"
                      ng-change="checkAllInstance(cbObject.checked, objectMetaData)"
                      ng-model="cbObject.checked">
-            <label>{{selectedObject.select}}</label>
+            <label>{{selectedObject.select.name}}</label>
           </md-switch>
           <span class="type">object</span>
         </div>

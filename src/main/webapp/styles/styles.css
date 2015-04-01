@@ -543,6 +543,7 @@ h1 {
 #select-dropdown-container .select2-container{
     top: 10px;
     left: 10px;
+    width: 100%;
 }
 
 #select-dropdown-container .select2-container .select2-choice{
@@ -585,15 +586,28 @@ h1 {
 
 #select-dropdown-container .select2-results li.ui-select-choices-group ul li{
     color: rgba(0, 0, 0, 0.8);
-    padding: 0.65rem 1.25rem !important;
+    padding: 10px !important;
     font-size: 1rem;
     text-transform: none;
     font-weight: normal;
+    float: left;
+    width: 100%;
+    line-height: 1.5em;
+}
+
+#select-dropdown-container .select2-results li.ui-select-choices-group ul li md-switch{
+    display: block;
+    float: left;
 }
 
 #select-dropdown-container .select2-results li.select2-highlighted {
     background: rgba(0, 0, 0, 0.03);
     color: rgba(0, 0, 0, 0.8);
+}
+
+.select2-results .select2-result-label{
+    float: left;
+    width: 100%
 }
 
 #select-dropdown-container > select{

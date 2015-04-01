@@ -39,6 +39,7 @@ var DatalistController = BaseController.extend({
         me.$scope.selectedObject = {};
         me.$scope.objectMetaData = [];
         me.$scope.cbObject = {};
+        me.$scope.cbInstance = {};
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
@@ -53,6 +54,8 @@ var DatalistController = BaseController.extend({
         me.$scope.toggle = this.toggle.bind(this);
 
         me.$scope.checkAllInstance = me.checkAllInstance.bind(this);
+        me.$scope.checkAllObjects = me.checkAllObjects.bind(this);
+
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
         me._seedDatalist();
     },
@@ -75,12 +78,12 @@ var DatalistController = BaseController.extend({
         me._maskLoader.show(me.$scope, "Loading Object ...");
         var instanceMeta = me._datalist.all[me._picker.selectedElementInstance.element.key].metadata;
         if(me._cloudElementsUtils.isEmpty(instanceMeta)
-            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select])) {
+            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select.name])) {
 
-            me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select)
-                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject.select));
+            me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name)
+                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
         } else {
-            me._handleOnMetadataLoad(me.$scope.selectedObject.select, instanceMeta[me.$scope.selectedObject.select]);
+            me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject.select.name]);
         }
     },
 
@@ -99,14 +102,13 @@ var DatalistController = BaseController.extend({
         uitree.toggle();
     },
 
-    _handleOnMetadataLoad: function(objectname,data) {
+    _handleOnMetadataLoad: function(obj,data) {
         var me = this;
         me.$scope.objectMetaData = data.fields;
-        me.$scope.selectedObject.select = objectname;
-        me.$scope.cbObject.checked = data.objectTransformation;
+//        me.$scope.selectedObject.select = objectname;
+        me.$scope.cbObject.checked = obj.select.transformed;
         me.$scope.showTree = true;
         me._maskLoader.hide();
-
     },
 
     _seedDatalist: function() {
@@ -126,9 +128,10 @@ var DatalistController = BaseController.extend({
 
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
+
         me.$scope.instanceObjects = data;
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
-        me.refreshObjectMetaData(me.$scope.selectedObject.select);
+        me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
     },
 
     cancel: function() {
@@ -139,7 +142,7 @@ var DatalistController = BaseController.extend({
     save: function() {
         var me = this;
         me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance);
+        var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
 
     },
 
@@ -195,7 +198,13 @@ var DatalistController = BaseController.extend({
                 ownerData.transform = cbState;
                 me.$scope.cbObject.checked = cbState;
             }
+        }
+    },
 
+    checkAllObjects: function(cbState, cbObject) {
+        var me = this;
+        for (var i = 0; i < me.$scope.instanceObjects.length; i++) {
+            me.$scope.instanceObjects[i].transformed = cbState;
         }
     }
 });
