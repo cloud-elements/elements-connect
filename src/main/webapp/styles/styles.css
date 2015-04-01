@@ -248,14 +248,17 @@ h1 {
 
 #picker a i.wait {
     opacity: 0;
-    
+    visibility: hidden;
     -webkit-transform: scale(.8);
     -webkit-transition: all 350ms ease-in;
 }
 
+#picker a.highlightingElement:hover i.wait{
+    visibility: visible;
+}
+
 #picker a:hover i.wait {
-    opacity: 1;   
-    
+    opacity: 1;
     -webkit-transform: scale(1);
 
 }

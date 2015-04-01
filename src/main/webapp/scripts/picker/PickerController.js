@@ -120,15 +120,12 @@ var PickerController = BaseController.extend({
 
     onSelectSchedule: function(instance, $event){
         var me = this;
-
-        if(me._cloudElementsUtils.isEmpty(me._instances[instance])) {
-            me._picker.getOAuthUrl(instance)
-                .then(me._handleOnOAuthUrl.bind(me));
-
-        } else {
-            $event.stopPropagation();
-        }
+        event.preventDefault();
+        event.stopPropagation();
+//        me._maskLoader.show(me.$scope, 'Scheduling Job...');
+        me._schedule.openSchedule();
     }
+
 
 });
 

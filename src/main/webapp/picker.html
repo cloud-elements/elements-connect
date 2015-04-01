@@ -16,14 +16,14 @@
       </a>
       <a href ng-click="onSelect('hubspot')" id="hubspot" class="hubspot" alt="HubSpot"
          data-instance="Connect to Hubspot">
-        <i class="icon wait" ng-click="onSelectSchedule()"></i>
+        <i class="icon wait" ng-click="onSelectSchedule('hubspot', $event)"></i>
       </a>
       <a href ng-click="onSelect('eloqua')" id="eloqua" class="eloqua" alt="Eloqua" data-instance="Connect to Eloqua">
-        <i class="icon wait" ng-click="onSelectSchedule()"></i>
+        <i class="icon wait" ng-click="onSelectSchedule('eloqua', $event)"></i>
       </a>
       <a href ng-click="onSelect('marketo')" id="marketo" class="marketo" alt="Marketo"
          data-instance="Connect to Marketo">
-        <i class="icon wait" ng-click="onSelectSchedule()"></i>
+        <i class="icon wait" ng-click="onSelectSchedule('marketo', $event)"></i>
       </a>
       <!--<a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>-->
     </div>
