@@ -9,6 +9,7 @@ var ElementsService = Class.extend({
     _cloudElementsUtils:null,
     selectedObjectName: null,
     newobject: false,
+    configuration: null,
 
 //    ENV_URL: 'https://staging.cloud-elements.com/elements/api-v2/',
 //    secrets:{
@@ -22,17 +23,23 @@ var ElementsService = Class.extend({
     //    'company': '98c89f16608df03b0248b74ecaf6a79b'
     //},
 
+  // Pull this from the URL or header
+  USER_ID: 'system',
+
+  // These are configured via ngConstants
+  APP_KEY: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
   ENV_URL: 'http://localhost:4040/elements/api-v2/',
-  configuration: {
-      'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
-      'company': '672aa88bb4e3235091de77900e3e299b',
-      'targetPath': '/hubs/documents/files',
-      'targetToken': 'MGcqvE/UnTtLJix9xj5QZPXpbJ5IG/fKMYjUw8oW0Rc=',
-      'targetFolder': '/Bulkloader.io',
-      'targetMethod': 'POST',
-      'notificationToken': '8rOB/2d6CeDN7dBBY/cxGZeQ7gK8GDReADYBWpsv/ho=',
-      'notificationEmail': 'vineet@cloud-elements.com'
-  },
+
+//  configuration: {
+//      'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
+//      'company': '672aa88bb4e3235091de77900e3e299b',
+//      'targetPath': '/hubs/documents/files',
+//      'targetToken': 'MGcqvE/UnTtLJix9xj5QZPXpbJ5IG/fKMYjUw8oW0Rc=',
+//      'targetFolder': '/Bulkloader.io',
+//      'targetMethod': 'POST',
+//      'notificationToken': '8rOB/2d6CeDN7dBBY/cxGZeQ7gK8GDReADYBWpsv/ho=',
+//      'notificationEmail': 'vineet@cloud-elements.com'
+//  },
 
   // S3 token
   // 'targetToken': 'ptfOxwGhwAw0gvZdOL78DCFEzjJpzD1Dv97pCPNzioc=',
@@ -64,11 +71,11 @@ var ElementsService = Class.extend({
     /**
      * Initialize Service Properties
      */
-    init:function(){
-
+    init: function(){
     },
 
     populateServiceDetails: function() {
+
 
         //Read the URL arguments for Orgnaization and User secrets and selected element instanceId
         var pageParameters = this._cloudElementsUtils.pageParameters();
@@ -116,6 +123,34 @@ var ElementsService = Class.extend({
             this.newobject = pageParameters.newobject;
         }
     },
+
+    loadOrgConfiguration: function() {
+        var me = this;
+
+        var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + me.APP_KEY
+        }
+
+        var url = me.ENV_URL + 'applications';
+
+        return me._httpGet(url, headers);
+    },
+
+    loadUserConfiguration: function() {
+
+        var me = this;
+
+        var headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Organization ' + me.configuration.company + ', UserId ' + me.USER_ID
+        }
+
+        var url = me.ENV_URL + 'applications/users';
+
+        return me._httpGet(url, headers);
+    },
+
 
     _getHeaders: function(token) {
         var headers = null;
@@ -421,9 +456,12 @@ var ElementsService = Class.extend({
      	*/
 		$get:['$http', 'CloudElementsUtils', function($http, CloudElementsUtils){
 			this.instance.$http = $http;
-            this.instance._cloudElementsUtils = CloudElementsUtils;
+      this.instance._cloudElementsUtils = CloudElementsUtils;
 
-            this.instance.populateServiceDetails();
+//      this.instance._loadOrgConfiguration(this.instance.APP_KEY).then(
+//        this.instance._loadOrgConfigurationSucceeded.bind(this.instance),
+//        this.instance._loadOrgConfigurationFailed.bind(this.instance));
+
 			return this.instance;
 		}]
 	})

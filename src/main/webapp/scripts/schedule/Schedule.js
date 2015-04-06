@@ -89,27 +89,24 @@ var Schedule = Class.extend({
                 }
             }
 
-            var query = "select " + fieldList + " from " + objects[i] + " where lastRunDate = '" + startDate + "'";
-
-            console.log(query);
+            // var query = "select " + fieldList + " from " + objects[i] + " where lastRunDate = '" + startDate + "'";
+            var query = "select " + fieldList + " from " + objects[i];
 
             var job = new Object();
 
             job.query = query;
+            job.from = startDate;
             job.objectName = objects[i];
             job.statusCheckInterval = 1000;
 
             var targetConfiguration = new Object();
 
-            // targetConfiguration.path = '/hubs/documents/files';
             targetConfiguration.path = me._elementsService.configuration.targetPath;
-            // targetConfiguration.method = 'POST';
             targetConfiguration.method = me._elementsService.configuration.targetMethod;
             targetConfiguration.token = me._elementsService.configuration.targetToken;
 
             var parameters = new Object();
 
-            // parameters.folder = '/CloudElements';
             parameters.folder = me._elementsService.configuration.targetFolder;
 
             targetConfiguration.parameters = parameters;

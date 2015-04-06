@@ -60,16 +60,42 @@ var Picker = Class.extend({
     // Load all the instances and from it get the defaultinstance and also set it to _selectedElementInstance
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    /**
-     * Start loading element instances
-     */
-    loadElementInstances:function(){
-        var me  = this;
+    loadConfiguration: function() {
+        var me = this;
 
-        return me._elementsService.loadElementInstances()
-            .then(
+        return me._elementsService.loadOrgConfiguration().then(
+          me._loadOrgConfigurationSucceeded.bind(me),
+          me._loadOrgConfigurationFailed.bind(me));
+    },
+
+    _loadOrgConfigurationSucceeded: function(result) {
+        var me = this;
+
+        me._elementsService.configuration = result.data.userData.configuration;
+        me._elementsService.configuration.company = result.data.company.secret;
+
+        return me._elementsService.loadUserConfiguration().then(
+          me._loadUserConfigurationSucceeded.bind(me),
+          me._loadUserConfigurationFailed.bind(me));
+    },
+
+    _loadOrgConfigurationFailed: function(error) {
+        console.log(error);
+    },
+
+    _loadUserConfigurationSucceeded: function(result) {
+        var me = this;
+
+        me._elementsService.configuration.user = result.data.secret;
+        me._elementsService.populateServiceDetails();
+
+        return me._elementsService.loadElementInstances().then(
             me._handleLoadElementIntanceSuccess.bind(me),
             me._handleLoadError.bind(me) );
+    },
+
+    _loadUserConfigurationFailed: function(error) {
+        console.log(error);
     },
 
     _handleLoadElementIntanceSuccess:function(result){

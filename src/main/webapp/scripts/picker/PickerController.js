@@ -28,8 +28,7 @@ var PickerController = BaseController.extend({
         me._super($scope);
 
         me._maskLoader.show(me.$scope, 'Loading Instances...');
-        me._picker.loadElementInstances()
-            .then(me._handleInstanceLoad.bind(me));
+        me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
     },
 
     defineScope:function() {
@@ -66,7 +65,7 @@ var PickerController = BaseController.extend({
         me.onSelect(bulkloader.Picker.oauth_elementkey);
     },
 
-    _handleInstanceLoad: function(instances) {
+    _handleConfigurationLoad: function(instances) {
         var me = this;
         me._maskLoader.hide();
         me._instances = instances;
