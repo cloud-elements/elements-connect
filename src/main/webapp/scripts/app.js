@@ -46,6 +46,10 @@ bulkloaderApp.config(function($routeProvider) {
             templateUrl: 'datalist.html',
             controller: 'DatalistController'
         })
+        .when('/mapper', {
+            templateUrl: 'mapper.html',
+            controller: 'MapperController'
+        })
         .when('/schedule', {
           templateUrl: 'schedule.html',
           controller: 'ScheduleController'

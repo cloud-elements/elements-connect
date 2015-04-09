@@ -91,6 +91,7 @@ var PickerController = BaseController.extend({
 
         //Check if the target instance is created, if not inform user to create one
         if(me._picker._elementsService.configuration.targetElement != elementKey
+            && !me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)
             && me._cloudElementsUtils.isEmpty(me._instances[me._picker._elementsService.configuration.targetElement])) {
 
             var confirm = me.$mdDialog.alert()
@@ -129,7 +130,12 @@ var PickerController = BaseController.extend({
         me._picker.selectedElementInstance = instance;
 
         //TODO Refer http://embed.plnkr.co/uW4v9T/preview for adding animation while switching the view
-        me.$location.path('/datalist');
+
+        if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
+            me.$location.path('/mapper');
+        } else {
+            me.$location.path('/datalist');
+        }
 
         //Notify about the VIEW Change
         me._notifications.notify(bulkloader.events.VIEW_CHANGE_DATALIST);
