@@ -103,7 +103,6 @@ var Mapper = Class.extend({
         var me = this;
 
         if(me.all[selectedInstance.element.key].transformationsLoaded == true) {
-
             me.all[selectedInstance.element.key].objects = result.data;
 
             var objectsAndTransformation = new Array();
@@ -149,7 +148,12 @@ var Mapper = Class.extend({
         this._elementsService.loadInstanceTransformations(selectedInstance)
             .then(
             this._handleLoadInstanceTransformations.bind(this, selectedInstance),
-            this._handleLoadError.bind(this) );
+            this._handleLoadInstanceTransformationsError.bind(this) );
+    },
+
+    _handleLoadInstanceTransformations:function(selectedInstance,result){
+        var me = this;
+        me.all[selectedInstance.element.key].transformationsLoaded = true;
     },
 
     _handleLoadInstanceTransformations:function(selectedInstance,result){

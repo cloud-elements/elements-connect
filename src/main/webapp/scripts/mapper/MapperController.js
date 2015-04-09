@@ -68,7 +68,7 @@ var MapperController = BaseController.extend({
         me._super();
 
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
-        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedMapper.bind(me));
+        //me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedMapper.bind(me));
 
         me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me));
         me._notifications.addEventListener(bulkloader.events.DATALIST_ERROR, me._onDatalistError.bind(me));

@@ -43,7 +43,8 @@ namespace('bulkloader.Picker').element_config = {
     'zendesk' : {
         'apiKey': 'cloud_elements_dev',
         'apiSecret': '3faac7d75a836174d3de00b5c0274be6585ccb82b1540d0d486918756d6e3576',
-        'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
+        'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html',
+        'siteAddress': 'cloudelementsdev'
     }
 };
 
