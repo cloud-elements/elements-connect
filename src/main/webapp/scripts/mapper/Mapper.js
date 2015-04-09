@@ -151,7 +151,7 @@ var Mapper = Class.extend({
             this._handleLoadInstanceTransformationsError.bind(this) );
     },
 
-    _handleLoadInstanceTransformations:function(selectedInstance,result){
+    _handleLoadInstanceTransformationsError:function(selectedInstance,result){
         var me = this;
         me.all[selectedInstance.element.key].transformationsLoaded = true;
     },
