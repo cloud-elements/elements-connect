@@ -125,7 +125,7 @@ h1 {
     text-align:center;
 }
 
-#picker .services-selections > a {
+#picker .services-selections > a{
     background-size:80%;
     background-position: center center;
     background-repeat:no-repeat;
@@ -142,6 +142,30 @@ h1 {
     position:relative;
     
     -webkit-transition: all 150ms ease-in;
+}
+#picker .picker-source{
+    margin-bottom: 5em;
+}
+#picker .picker-source .services-selections > a{
+    background-size:80%;
+    background-position: center center;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:11vw;
+    height:9vw;
+    min-width:120px;
+    min-height:120px;
+    background-color:#fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.5);
+    margin:15px;
+    border-radius:5px;
+    opacity:.5;
+    position:relative;
+
+    -webkit-transition: all 150ms ease-in;
+}
+#picker .picker-target.disabled{
+    opacity: .4;
 }
 #picker .services-selections > a.highlightingElement{
     opacity:1;

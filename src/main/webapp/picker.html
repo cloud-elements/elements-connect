@@ -1,5 +1,22 @@
 <!-- SERVICE PICKER -->
 <section id="picker" class="vertical-align animated-card">
+  <div class="picker-source">
+    <h2 class="ui icon header">
+      <div class="content light">
+        Select a Source
+        <div class="sub header light">That you would like to use with BulkLoader:</div>
+      </div>
+    </h2>
+
+    <div class="services-selections">
+      <a href ng-click="onSelectSource()" id="" class="">Source
+      </a>
+    </div>
+
+
+  </div>
+
+  <div class="picker-target">
     <h2 class="ui icon header">
       <i class="settings icon light"></i>
 
@@ -9,7 +26,7 @@
       </div>
     </h2>
 
-    <div class="services-selections">
+    <div class="services-selections" ng-init="isDisabled = false">
       <a href ng-click="onSelect('sfdcmarketingcloud')" id="sfdcmarketingcloud" class="salesforce" alt="SalesForce"
          data-instance="Connect to Salesforce.com">
         <i class="icon wait" ng-click="onSelectSchedule('sfdcmarketingcloud', $event)"></i>
@@ -27,5 +44,6 @@
       </a>
       <!--<a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>-->
     </div>
+</div>
 </section>
 
