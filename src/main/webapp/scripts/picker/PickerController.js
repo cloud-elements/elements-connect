@@ -130,8 +130,8 @@ var PickerController = BaseController.extend({
         me._picker.selectedElementInstance = instance;
 
         //TODO Refer http://embed.plnkr.co/uW4v9T/preview for adding animation while switching the view
-
         if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
+            me._picker.targetElementInstance = me._instances[me._picker._elementsService.configuration.targetElement];
             me.$location.path('/mapper');
         } else {
             me.$location.path('/datalist');

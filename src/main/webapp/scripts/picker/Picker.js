@@ -53,6 +53,7 @@ var Picker = Class.extend({
     _cloudElementsUtils: null,
     _elementInstances: null,
     selectedElementInstance: null,
+    targetElementInstance: null,
 
     _handleLoadError:function(error){
         //Ignore as these can be ignored or 404's

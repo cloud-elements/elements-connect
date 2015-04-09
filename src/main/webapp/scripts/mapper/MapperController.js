@@ -37,6 +37,7 @@ var MapperController = BaseController.extend({
         // This is for transitions
         me.$scope.pageClass = 'page-datalist';
 
+        me.$scope.targetObjects = [];
         me.$scope.instanceObjects = [];
         me.$scope.selectedObject = {};
         me.$scope.objectMetaData = [];
@@ -59,7 +60,7 @@ var MapperController = BaseController.extend({
         me.$scope.checkAllObjects = me.checkAllObjects.bind(this);
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
-        me._seedDatalist();
+        me._seedMapper();
     },
 
     defineListeners:function(){
@@ -67,7 +68,7 @@ var MapperController = BaseController.extend({
         me._super();
 
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
-        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me));
+        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedMapper.bind(me));
 
         me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me));
         me._notifications.addEventListener(bulkloader.events.DATALIST_ERROR, me._onDatalistError.bind(me));
@@ -78,11 +79,11 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me._maskLoader.show(me.$scope, "Loading Object ...");
-        var instanceMeta = me._datalist.all[me._picker.selectedElementInstance.element.key].metadata;
+        var instanceMeta = me._mapper.all[me._picker.selectedElementInstance.element.key].metadata;
         if(me._cloudElementsUtils.isEmpty(instanceMeta)
             || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select.name])) {
 
-            me._datalist.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name)
+            me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name)
                 .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
         } else {
             me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject.select.name]);
@@ -113,17 +114,20 @@ var MapperController = BaseController.extend({
         me._maskLoader.hide();
     },
 
-    _seedDatalist: function() {
+    _seedMapper: function() {
         var me = this;
 
-        if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+        if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)
+            || me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
+
             me.$location.path('/');
             return;
         }
 
         me._maskLoader.show(me.$scope, 'Loading Objects...');
+
         //Load the objects for the element
-        me._datalist.loadInstanceObjects(me._picker.selectedElementInstance)
+        me._mapper.loadInstanceObjects(me._picker.selectedElementInstance, me._picker.targetElementInstance)
             .then(me._handleOnInstanceObjectsLoad.bind(me));
 
     },
@@ -132,6 +136,7 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me.$scope.instanceObjects = data;
+        me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objects;
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
         me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
     },

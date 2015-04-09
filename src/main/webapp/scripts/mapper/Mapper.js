@@ -67,18 +67,31 @@ var Mapper = Class.extend({
     // Load selected Instance Objects
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    loadInstanceObjects:function(selectedInstance){
+    loadInstanceObjects:function(selectedInstance, targetInstance){
         var me = this;
 
         var selectedInstance = angular.fromJson(selectedInstance);
+        var targetInstance = angular.fromJson(targetInstance);
 
         if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key])) {
             me.all[selectedInstance.element.key] = new Object;
             me.all[selectedInstance.element.key].instance = selectedInstance;
         }
 
+        if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key])) {
+            me.all[targetInstance.element.key] = new Object;
+            me.all[targetInstance.element.key].instance = targetInstance;
+        }
+
         me.loadInstanceTransformations(selectedInstance);
         me.loadInstanceDefinitions(selectedInstance);
+
+        //loading the target Instance Objects
+        this._elementsService.loadInstanceObjects(targetInstance)
+            .then(
+            this._handleLoadTargetInstanceObjects.bind(this, targetInstance),
+            this._handleLoadInstanceObjectError.bind(this));
+
 
         return this._elementsService.loadInstanceObjects(selectedInstance)
             .then(
@@ -109,6 +122,12 @@ var Mapper = Class.extend({
         } else {
             // Defer code for calling _handleLoadInstanceObjects after 100ms
         }
+    },
+
+    _handleLoadTargetInstanceObjects:function(targetInstance, result){
+        var me = this;
+
+        me.all[targetInstance.element.key].objects = result.data;
     },
 
     _isObjectTransformed: function(objectName, selectedInstance) {
