@@ -130,8 +130,12 @@ var DatalistController = BaseController.extend({
         var me = this;
 
         me.$scope.instanceObjects = data;
-        me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
-        me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.instanceObjects) && me.$scope.instanceObjects.length > 0) {
+            me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
+            me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
+        } else {
+            me._maskLoader.hide();
+        }
     },
 
     cancel: function() {

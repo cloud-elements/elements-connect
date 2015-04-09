@@ -14,7 +14,7 @@ var PickerController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, $window, $location, $interval, $filter, $route){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -25,6 +25,7 @@ var PickerController = BaseController.extend({
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
+        me.$mdDialog = $mdDialog;
         me._super($scope);
 
         me._maskLoader.show(me.$scope, 'Loading Instances...');
@@ -62,7 +63,11 @@ var PickerController = BaseController.extend({
         var me = this;
 
         me._instances = me._picker._elementInstances;
-        me.onSelect(bulkloader.Picker.oauth_elementkey);
+
+        if(bulkloader.Picker.oauth_elementkey != me._picker._elementsService.configuration.targetElement) {
+            me.onSelect(bulkloader.Picker.oauth_elementkey);
+        }
+
     },
 
     _handleConfigurationLoad: function(instances) {
@@ -83,9 +88,23 @@ var PickerController = BaseController.extend({
 
     onSelect: function(elementKey) {
         var me = this;
+
+        //Check if the target instance is created, if not inform user to create one
+        if(me._picker._elementsService.configuration.targetElement != elementKey
+            && me._cloudElementsUtils.isEmpty(me._instances[me._picker._elementsService.configuration.targetElement])) {
+
+            var confirm = me.$mdDialog.alert()
+                .title('Missing target')
+                .content('Provision your target to proceed forward."')
+                //.ariaLabel('Password notification')
+                .ok('OK');
+
+            me.$mdDialog.show(confirm);
+            return;
+        }
+
         //Check to see if the element instance is created, if so then move the view to dataselect
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
-
         if(me._cloudElementsUtils.isEmpty(me._instances) ||
             me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
             me._maskLoader.show(me.$scope, 'Creating Instance...');
@@ -128,7 +147,7 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

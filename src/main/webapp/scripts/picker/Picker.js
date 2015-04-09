@@ -39,6 +39,11 @@ namespace('bulkloader.Picker').element_config = {
         'apiKey': '282923532784-mkr3pp81hpg3haqac31ki6fosbs66npk.apps.googleusercontent.com',
         'apiSecret': 'uBdvo1WM2jTu2H33utjDd5v0',
         'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
+    },
+    'zendesk' : {
+        'apiKey': 'cloud_elements_dev',
+        'apiSecret': '3faac7d75a836174d3de00b5c0274be6585ccb82b1540d0d486918756d6e3576',
+        'callbackUrl': 'http://localhost:63342/bulkloader.io/src/main/webapp/callback.html'
     }
 };
 
@@ -104,7 +109,7 @@ var Picker = Class.extend({
         this._elementInstances = new Object;
         for(var i=0; i <result.data.length; i++){
             var inst = result.data[i];
-            if(inst.element.hub == 'marketing') {
+            if(inst.element.hub == 'marketing' || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
                 this._elementInstances[inst.element.key] = inst;
             }
         }

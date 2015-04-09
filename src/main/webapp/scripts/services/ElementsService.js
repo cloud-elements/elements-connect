@@ -27,8 +27,12 @@ var ElementsService = Class.extend({
   USER_ID: 'system',
 
   // These are configured via ngConstants
-  APP_KEY: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
-  ENV_URL: 'http://localhost:4040/elements/api-v2/',
+    //Vineet's  Local
+//  APP_KEY: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+//  ENV_URL: 'http://localhost:4040/elements/api-v2/',
+
+    APP_KEY: '2wHu7zDoItzY74zNjKKQdWgcAyqcq+c8hqT2s/I9JgXqCLjtqJLRRmL8ReyddNef',
+    ENV_URL: 'http://localhost:5050/elements/api-v2/',
 
 //  configuration: {
 //      'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
@@ -182,6 +186,7 @@ var ElementsService = Class.extend({
     },
 
     getOAuthUrl: function(elementKey, apiKey, apiSec, callbackUrl) {
+        var me = this;
 
         var parameters = {
             'elementKeyOrId': elementKey,
@@ -190,12 +195,17 @@ var ElementsService = Class.extend({
             'callbackUrl': callbackUrl
         };
 
+        if(!me._cloudElementsUtils.isEmpty(me.configuration.siteAddress)) {
+            parameters['siteAddress'] = me.configuration.siteAddress;
+        }
+
         var url = this.ENV_URL+ 'elements/' + elementKey + '/oauth/url';
 
         return this._httpGet(url,this._getHeaders(), parameters);
     },
 
     createInstance: function(elementKey, code, apiKey, apiSec, callbackUrl) {
+        var me = this;
 
         var elementProvision = {
             'configuration': {
@@ -211,6 +221,10 @@ var ElementsService = Class.extend({
             },
             'name': elementKey
         };
+
+        if(!me._cloudElementsUtils.isEmpty(me.configuration.siteAddress)) {
+            elementProvision.configuration['zendesk.subdomain'] = me.configuration.siteAddress; //TODO Hardcoded for zendesk
+        }
 
         return this._httpPost(this.ENV_URL + 'instances/', this._getHeaders(), elementProvision);
     },
@@ -456,7 +470,7 @@ var ElementsService = Class.extend({
      	*/
 		$get:['$http', 'CloudElementsUtils', function($http, CloudElementsUtils){
 			this.instance.$http = $http;
-      this.instance._cloudElementsUtils = CloudElementsUtils;
+            this.instance._cloudElementsUtils = CloudElementsUtils;
 
 //      this.instance._loadOrgConfiguration(this.instance.APP_KEY).then(
 //        this.instance._loadOrgConfigurationSucceeded.bind(this.instance),
