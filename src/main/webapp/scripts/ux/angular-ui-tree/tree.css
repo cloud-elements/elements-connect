@@ -1,0 +1,155 @@
+.tree-node {
+    border: 1px solid #dae2ea;
+    background: #f8faff;
+    color: #7c9eb2;
+}
+.tree-node-content {
+    margin: 7px;
+}
+.tree-handle {
+    padding: 10px;
+    background: #428bca;
+    color: #FFF;
+    margin-right: 10px;
+}
+
+.angular-ui-tree-handle:hover {
+}
+
+.angular-ui-tree-placeholder {
+    background: #e2f7e2 !important;
+    border: 2px dashed #b3e0b3;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    
+    /*width:100% !important;*/
+}
+
+li.angular-ui-tree-placeholder-2{
+    height: 1px !important;
+    border: none;
+    border-top: 2px solid #12B5EA;
+    font: normal normal normal 16px/1 FontAwesome;
+    overflow: visible;
+    color: #12B5EA;}
+    
+li.angular-ui-tree-placeholder-2:before{
+    content: "\f0da";
+    font: normal normal normal 30px/1 FontAwesome;
+    position: absolute;
+    top: -15px;
+    left: -10px;}
+
+.sourceList .angular-ui-tree-placeholder,
+.mapperTreeOptions > ol > li {
+    height: 43px;
+    width: 100%;
+    background: #333 !important;
+    border: 1px dashed #666 !important;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 4px rgba(0,0,0,.4);
+}
+
+li li.angular-ui-tree-placeholder {
+    margin-left:10px;
+}
+
+li li.angular-ui-tree-placeholder {
+    background-color: #999 !important;
+    border-color: #bbb;
+    display: none;
+}
+
+li li li.angular-ui-tree-placeholder {
+    background-color:#333;
+    margin-left:10px;
+}
+
+.angular-ui-tree-placeholder-mapping-hover {
+   /* background: #ccc;
+    border-radius: 6px;
+    -webkit-transition: all 250ms ease-in;
+    border: 3px solid #ccc;
+    padding: 0;*/
+    outline: thin dotted;
+	outline: 3px auto #a1e2a1;
+	outline-offset: -3px;
+}
+
+.angular-ui-tree-placeholder-mapping-hover > div {
+    /*background: none !important;*/
+}
+
+.angular-ui-tree-placeholder-mapping-hover ~ ol li,
+.literal-mapping li.angular-ui-tree-placeholder {
+    margin-left: 0 !important;
+    background:#000 !important;
+    display:none !important;
+}
+
+.angular-ui-tree-placeholder-mapping-hover li.angular-ui-tree-placeholder {
+    background: #aaa !important;
+    /*height: 4px !important;*/
+    padding: 0;
+    margin: 0;
+    border: 0;
+    display: none;
+}
+.angular-ui-tree-placeholder-mapping-hover li.angular-ui-tree-placeholder-2{
+	display: none;}
+
+.destination .angular-ui-tree-placeholder-mapping-hover > div:before {
+    content: 'Map Field to Here';
+    position: absolute;
+    left: 10%;
+    width: 120px;
+    background: #999;
+    margin-left: -60px;
+    top: 11px;
+    border-radius: 15px;
+    text-align: center;
+    text-indent: 0;
+    text-shadow: none;
+    color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.destination .angular-ui-tree-placeholder-mapping-hover-object{
+    outline: thin dotted;
+	outline: 3px auto #a1e2a1;
+	outline-offset: -3px;
+}
+.destination .angular-ui-tree-placeholder-mapping-hover-object > div:before {
+    content: 'Drop Field to add under this object';
+    position: absolute;
+    left: 71px;
+    width: 200px;
+    background: linear-gradient(#58bde8,#389DCA);
+    margin-left: -60px;
+    top: 6px;
+    border-radius: 5px;
+    text-align: center;
+    text-indent: 0;
+    text-shadow: none;
+    color: #fff;
+    box-shadow: 0 2px 3px rgba(0,0,0,.2);
+    padding: 3px;
+    z-index:100;
+}
+
+#right .btn-success { 
+    margin: 8px;
+}
+
+#right li li.ng-scope.angular-ui-tree-node:after {
+    content: '';
+    display: block;
+    background: #555;
+    position: absolute;
+    left: -19px;
+    width: 2px;
+    height: 120%;
+    top: -4px;
+    border-radius: 6px;
+}

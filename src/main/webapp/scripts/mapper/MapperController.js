@@ -64,6 +64,12 @@ var MapperController = BaseController.extend({
         me.$scope.checkAllObjects = me.checkAllObjects.bind(this);
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
+
+        this.$scope.mapperTreeOptions = {
+//            dropped: this.onMetadataTreeDropped.bind(this),
+//            dragMove: this.onMetadataDragMove.bind(this)
+        };
+
         me._seedMapper();
     },
 
