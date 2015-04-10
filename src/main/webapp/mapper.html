@@ -37,6 +37,59 @@
         </ui-select>
       </div>
 
+
+
+
+
+      <script type="text/ng-template" id="objectFields.html">
+
+        <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
+          <button type="submit" ng-show="showTreeToggle(metadata)"
+                  class="pull-left btn btn-success btn-xs toogle-tree-btn" data-nodrag ng-click="toggle(this)"><span
+                  class="glyphicon glyphicon-remove"
+                  ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
+          <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer" data-nodrag> </div>
+          <label>{{metadata.vendorPath}}</label>
+          <span class="type">{{metadata.type}}</span>
+        </div>
+
+        <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
+          <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
+              collapsed="false">
+          </li>
+        </ul>
+
+      </script>
+
+      <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree"
+           class="list">
+        <li class="tree-root-li">
+          <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
+            <li ng-repeat="metadata in objectMetaData"
+                ui-tree-node data-nodrop ng-include="'objectFields.html'"
+                collapsed="true">
+            </li>
+          </ul>
+        </li>
+
+      </div>
+
+
+
+
+
+    </div>
+
+
+    <!-- LIST BODY -->
+    <div id="mapper-data-list-target" class="column ten wide ui grid">
+      <select
+              data-ng-model="selectedTargetObject"
+              ng-options="o as o for o in targetObjects"
+              ng-change="refreshTargetObject()" class="column eight wide">
+      </select>
+
+
       <script type="text/ng-template" id="mapperFields.html">
 
         <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
@@ -60,6 +113,7 @@
 
       <div ui-tree="fieldsTreeOptions" data-nodrop id="tree2-root" data-drag-enabled="true" ng-show="showTree"
            class="list">
+        <h1>{{selectedTargetObject.select.name}}</h1>
         <li class="tree-root-li">
           <ul ui-tree-nodes="" data-nodrop ng-model="mapperdata">
             <li ng-repeat="metadata in mapperdata"
@@ -71,50 +125,6 @@
 
       </div>
 
-    </div>
-
-
-    <select
-            data-ng-model="selectedTargetObject"
-            ng-options="o as o for o in targetObjects"
-            ng-change="refreshTargetObject()">
-    </select>
-    <br>
-    <!-- LIST BODY -->
-    <div id="mapper-data-list-target" class="column ten wide ui grid">
-      <script type="text/ng-template" id="objectFields.html">
-
-        <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
-          <button type="submit" ng-show="showTreeToggle(metadata)"
-                  class="pull-left btn btn-success btn-xs toogle-tree-btn" data-nodrag ng-click="toggle(this)"><span
-                  class="glyphicon glyphicon-remove"
-                  ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
-          <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer" data-nodrag> </div>
-          <label>{{metadata.vendorPath}}</label>
-          <span class="type">{{metadata.type}}</span>
-        </div>
-
-        <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
-          <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
-              collapsed="false">
-          </li>
-        </ul>
-
-      </script>
-
-      <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree"
-           class="list">
-        <h1>{{selectedObject.select.name}}</h1>
-        <li class="tree-root-li">
-          <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
-            <li ng-repeat="metadata in objectMetaData"
-                ui-tree-node data-nodrop ng-include="'objectFields.html'"
-                collapsed="true">
-            </li>
-          </ul>
-        </li>
-
-      </div>
 
     </div>
 
