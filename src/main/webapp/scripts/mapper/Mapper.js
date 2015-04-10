@@ -204,23 +204,24 @@ var Mapper = Class.extend({
         var objectMetadata = result.data;
         var objectMetadataFlat = new Object;
 
-        //Check to see if there is a transformation available for the object and handle transform flag setting
-        me._addTransformFlag(selectedInstance, selectedObject, objectMetadata);
-
-        angular.copy(objectMetadata, objectMetadataFlat);
+        angular.extend(objectMetadata, objectMetadataFlat);
         me.all[selectedInstance.element.key].metadataflat[selectedObject] = objectMetadataFlat;
 
         me._restructureObjectMetadata(objectMetadata);
         me.all[selectedInstance.element.key].metadata[selectedObject] = objectMetadata;
 
+        //Check to see if there is a transformation available for the object and create a mapping for the transformations
+        //TODO Create a mapping if there is one already exists
+        //me._createMapping(selectedInstance, selectedObject, objectMetadata);
+
         return objectMetadata;
     },
 
     //Check to see if there is a transformation available for the object and set the transform flag for the metadata
-    //Set true if the vendorpath is in transformation, else set False
-    _addTransformFlag: function(selectedInstance, selectedObject, objectMetadata) {
+    _createMapping: function(selectedInstance, selectedObject, objectMetadata) {
         var me  = this;
 
+        //No Transformations, MAppppp to create one
         if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
             return;
         }
@@ -244,6 +245,67 @@ var Mapper = Class.extend({
 
     },
 
+    _findObjectDefinition: function(definition, objectName, innerObjectDefinitonNames) {
+
+        if(this._cloudElementsUtils.isEmpty(definition)) {
+            return null;
+        }
+
+        var objDef = definition[objectName];
+
+        if(this._cloudElementsUtils.isEmpty(objDef)) {
+            return null;
+        }
+
+        return this._getKeyVal(objDef, definition, innerObjectDefinitonNames);
+    },
+
+    _getKeyVal: function(objDef, definition, innerObjectDefinitonNames, superName, superType) {
+        var me = this;
+
+        var keyValObj = new Object;
+
+        if(me._cloudElementsUtils.isEmpty(objDef)) {
+            return keyValObj;
+        }
+
+        for(var i=0; i< objDef.fields.length; i++) {
+            var o = objDef.fields[i];
+
+            if(me._isLiteral(o.type))
+            {
+                keyValObj[o.path] = o.type;
+            }
+            else
+            {
+                var innerDef = definition[o.type];
+                if(o.type.indexOf('array[') != -1) {
+                    //This of type array object, construct the key/val pair such that mapping is easy to build
+                    innerDef = definition[o.type.replace('array[', '').replace(']', '')];
+                }
+
+                //If an Object is embedded in same object then constructing the _getKeyVal will go into infinite loop
+                //Not sure the best way to handle the scenario, but killing the stack here and modify when we come up with better solution
+                if(!this._cloudElementsUtils.isEmpty(superType) && superType == o.type) {
+                    break;
+                }
+
+                var sName = superName;
+                if(this._ceUtils.isEmpty(superName))
+                    sName = o.path;
+                else
+                    sName = sName+'.'+o.path;
+
+                keyValObj[o.path] = this._getKeyVal(innerDef, definition, innerObjectDefinitonNames, sName, o.type);
+                innerObjectDefinitonNames[sName] = o.type;
+            }
+        }
+
+        return keyValObj;
+    },
+
+
+
     _setTransformValue: function(objectMetadata, vendorPath) {
         for(var i=0; i< objectMetadata.fields.length; i++) {
             var f = objectMetadata.fields[i];
@@ -254,11 +316,15 @@ var Mapper = Class.extend({
         }
     },
 
-    _restructureObjectMetadata: function(objectMetadata) {
+    _restructureObjectMetadata: function(objectMetadata, pathName) {
 
         if(this._cloudElementsUtils.isEmpty(objectMetadata)
             || this._cloudElementsUtils.isEmpty(objectMetadata.fields)) {
             return;
+        }
+
+        if(this._cloudElementsUtils.isEmpty(pathName)) {
+            pathName = 'vendorPath';
         }
 
         for(var i=0; i < objectMetadata.fields.length; i++) {
@@ -273,7 +339,8 @@ var Mapper = Class.extend({
                 var newInnerMetaData = this._getObjectInMetaData(objectMetadata, objField);
                 if(this._cloudElementsUtils.isEmpty(newInnerMetaData)) {
                     newInnerMetaData = new Object;
-                    newInnerMetaData['vendorPath'] = objField;
+                    newInnerMetaData[pathName] = objField;
+                    newInnerMetaData.vendorPath = objField;
                     newInnerMetaData['fields'] = [];
                     var t = 'object';
                     if(objField.indexOf('[*]') !== -1) {
@@ -288,22 +355,29 @@ var Mapper = Class.extend({
                 {
                     var newInnerField = angular.copy(field);
                     newInnerField.actualVendorPath = field.vendorPath;
-                    newInnerField.vendorPath = fieldParts;
+                    newInnerField[pathName] = fieldParts;
                     newInnerMetaData.fields.push(newInnerField);
                 }
                 else
                 {
-                    this._structureInnerObjectMetadata(newInnerMetaData, fieldParts, field);
+                    this._structureInnerObjectMetadata(newInnerMetaData, fieldParts, field, pathName);
                 }
             }
             else {
                 field['actualVendorPath'] = field.vendorPath;
+                field.vendorPath = null;
+                field[pathName] = field['actualVendorPath'];
             }
         }
 
         objectMetadata.fields = objectMetadata.fields
             .filter(function (field) {
-                return field.vendorPath.indexOf('.') === -1;
+                if(field[pathName] != null) {
+                    return field[pathName].indexOf('.') === -1;
+                } else {
+                    return field.vendorPath.indexOf('.') === -1;
+                }
+
             });
     },
 
@@ -317,15 +391,16 @@ var Mapper = Class.extend({
         }
     },
 
-    _structureInnerObjectMetadata: function(metadata, fieldParts, field) {
+    _structureInnerObjectMetadata: function(metadata, fieldParts, field, pathName) {
 
         var innerfieldParts = fieldParts.split('.').slice(1).join('.');
         var objField = fieldParts.split('.')[0];
 
         var newInnerMetaData = this._getObjectInMetaData(metadata, objField);
-        if(this._cloudElementsUtils.isUndefinedOrNull(newInnerMetaData)) {
+        if(this._cloudElementsUtils.isEmpty(newInnerMetaData)) {
             newInnerMetaData = new Object;
-            newInnerMetaData['vendorPath'] = objField;
+            newInnerMetaData[pathName] = objField;
+            newInnerMetaData.vendorPath = objField;
             newInnerMetaData['fields'] = [];
             var t = 'object';
             if(objField.indexOf('[*]') !== -1) {
@@ -339,13 +414,58 @@ var Mapper = Class.extend({
         {
             var newInnerField = angular.copy(field);
             newInnerField.actualVendorPath = field.vendorPath;
-            newInnerField.vendorPath = innerfieldParts;
+            newInnerField[pathName] = innerfieldParts;
             newInnerMetaData.fields.push(newInnerField);
         }
         else
         {
-            this._structureInnerObjectMetadata(newInnerMetaData, innerfieldParts, field);
+            this._structureInnerObjectMetadata(newInnerMetaData, innerfieldParts, field, pathName);
         }
+    },
+
+
+    loadTargetObjectMetaMapping:function(targetInstance, selectedObject){
+        var me = this;
+
+        return me._elementsService.loadObjectMetaData(targetInstance, selectedObject)
+            .then(
+            me._handleTargetLoadObjectMetadata.bind(me, targetInstance, selectedObject),
+            me._handleTargetLoadErrorObjectMetadata.bind(me) );
+    },
+
+    _handleTargetLoadErrorObjectMetadata: function(result) {
+        return "Error getting the discovery object";
+    },
+
+    _handleTargetLoadObjectMetadata: function(targetInstance, selectedObject, result) {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
+            me.all[targetInstance.element.key].metadata = new Object;
+            me.all[targetInstance.element.key].metadataflat = new Object;
+            me.all[targetInstance.element.key].metamapping = new Object;
+        }
+
+        var objectMetadata = result.data;
+        var objectMetadataFlat = new Object;
+
+        angular.extend(objectMetadata, objectMetadataFlat);
+        me.all[targetInstance.element.key].metadataflat[selectedObject] = objectMetadataFlat;
+
+        me._restructureObjectMetadata(objectMetadata, 'path');
+        me.all[targetInstance.element.key].metadata[selectedObject] = objectMetadata;
+
+        //Create an empty mapping, basically the definition from metadata and return it
+        return me._createEmptyMapping(targetInstance, selectedObject, objectMetadata)
+    },
+
+    _createEmptyMapping: function(targetInstance, selectedObject, objectMetadata) {
+        var me = this;
+        var newMapping = new Object;
+        newMapping['name'] = selectedObject;
+        newMapping['fields'] = objectMetadata.fields;
+        me.all[targetInstance.element.key].metamapping[selectedObject] = newMapping;
+        return newMapping;
     },
 
     //----------------------------------------------------------------------------------------------------------------

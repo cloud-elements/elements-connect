@@ -40,12 +40,15 @@ var MapperController = BaseController.extend({
         me.$scope.targetObjects = [];
         me.$scope.instanceObjects = [];
         me.$scope.selectedObject = {};
+        me.$scope.selectedTargetObject = {};
         me.$scope.objectMetaData = [];
+        me.$scope.mapperdata = [];
         me.$scope.cbObject = {};
         me.$scope.cbInstance = {};
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
+        me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
@@ -75,21 +78,6 @@ var MapperController = BaseController.extend({
 
     },
 
-    refreshObjectMetaData: function() {
-        var me = this;
-
-        me._maskLoader.show(me.$scope, "Loading Object ...");
-        var instanceMeta = me._mapper.all[me._picker.selectedElementInstance.element.key].metadata;
-        if(me._cloudElementsUtils.isEmpty(instanceMeta)
-            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select.name])) {
-
-            me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name)
-                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
-        } else {
-            me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject.select.name]);
-        }
-    },
-
     showTreeToggle: function(mapperdata) {
         var me = this;
 
@@ -105,11 +93,55 @@ var MapperController = BaseController.extend({
         uitree.toggle();
     },
 
+    refreshObjectMetaData: function() {
+        var me = this;
+
+        me._maskLoader.show(me.$scope, "Loading Object ...");
+        var instanceMeta = me._mapper.all[me._picker.selectedElementInstance.element.key].metadata;
+        if(me._cloudElementsUtils.isEmpty(instanceMeta)
+            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select.name])) {
+
+            me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name)
+                .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
+        } else {
+            me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject.select.name]);
+        }
+    },
+
     _handleOnMetadataLoad: function(obj,data) {
         var me = this;
         me.$scope.objectMetaData = data.fields;
-//        me.$scope.selectedObject.select = objectname;
-        me.$scope.cbObject.checked = obj.select.transformed;
+        me.$scope.showTree = true;
+
+        //TODO
+        //Now Check to see if there is a mapping already exists for the object
+        //if so just set the target mapper
+
+        me._maskLoader.hide();
+    },
+
+
+    refreshTargetObject: function() {
+        var me = this;
+
+        me._maskLoader.show(me.$scope, "Loading mapping...");
+
+        var targetMetaMapping = me._mapper.all[me._picker.targetElementInstance.element.key].metamapping;
+        if(me._cloudElementsUtils.isEmpty(targetMetaMapping)
+            || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
+
+            me._mapper.loadTargetObjectMetaMapping(me._picker.targetElementInstance, me.$scope.selectedTargetObject)
+                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+        } else {
+            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, instanceMeta[me.$scope.selectedTargetObject]);
+        }
+
+    },
+
+    _handleOnTargetMetamappingLoad: function(obj, data) {
+        var me = this;
+
+        me.$scope.mapperdata = data.fields;
         me.$scope.showTree = true;
         me._maskLoader.hide();
     },
