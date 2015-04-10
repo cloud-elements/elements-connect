@@ -367,6 +367,9 @@ var Mapper = Class.extend({
                 field['actualVendorPath'] = field.vendorPath;
                 field.vendorPath = null;
                 field[pathName] = field['actualVendorPath'];
+                if(pathName != 'vendorPath') {
+                    field.fields = [];
+                }
             }
         }
 
@@ -415,6 +418,9 @@ var Mapper = Class.extend({
             var newInnerField = angular.copy(field);
             newInnerField.actualVendorPath = field.vendorPath;
             newInnerField[pathName] = innerfieldParts;
+            if(pathName != 'vendorPath') {
+                newInnerField.fields = [];
+            }
             newInnerMetaData.fields.push(newInnerField);
         }
         else

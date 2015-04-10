@@ -66,8 +66,9 @@ var MapperController = BaseController.extend({
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
 
         this.$scope.mapperTreeOptions = {
-//            dropped: this.onMetadataTreeDropped.bind(this),
+            dropped: this.onMetadataTreeDropped.bind(this),
 //            dragMove: this.onMetadataDragMove.bind(this)
+            accept: this.onMetadataAccept.bind(this)
         };
 
         me._seedMapper();
@@ -85,15 +86,54 @@ var MapperController = BaseController.extend({
 
     },
 
+    onMetadataAccept: function(sourceNodeScope, destNodesScope, destIndex) {
+        if(destNodesScope.$parent.$element[0].id == "tree1-root"
+            || destNodesScope.$parent.$element[0].id == "tree1-root-node") {
+            return false;
+        }
+
+        return true;
+    },
+
+    onMetadataTreeDropped: function(event) {
+
+        var me = this;
+
+        if(event.dest.nodesScope.$parent.$element[0].id == "tree1-root"
+            || event.dest.nodesScope.$parent.$element[0].id == "tree1-root-node") {
+            return false;
+        }
+
+        // Cleaning up any object literal mapping classes on drop
+        $('.angular-ui-tree-placeholder-mapping-hover').removeClass('angular-ui-tree-placeholder-mapping-hover');
+        $('.showMapper').removeClass('literal-mapping');
+
+        //Checking to see if the parent type is a literal if so just merge the vendor path to the parent and remove the
+        //newly added node from source
+        //If the Parent is an object or null, then its a new mapping field so enable it for editable
+
+        var modelVal = event.source.nodeScope.$modelValue;
+        var parentModelVal = event.dest.nodesScope.$parent.$modelValue;
+
+        if(me._cloudElementsUtils.isEmpty(parentModelVal)) {
+            return false;
+        }
+        else{
+            parentModelVal.vendorPath = modelVal.actualVendorPath;
+        }
+    },
+
     showTreeToggle: function(mapperdata) {
         var me = this;
 
         if(!me._cloudElementsUtils.isEmpty(mapperdata)
-            && ((!me._cloudElementsUtils.isEmpty(mapperdata.fields)
-                && mapperdata.fields.length > 0) || !me._datalist._isLiteral(mapperdata.type)))
+            && !me._mapper._isLiteral(mapperdata.type)) {
             return true;
-        else
+        }
+        else {
             return false;
+        }
+
     },
 
     toggle: function(uitree) {
