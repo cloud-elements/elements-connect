@@ -51,7 +51,7 @@
         </div>
 
         <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
-          <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
+          <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'mapperFields.html'"
               collapsed="false">
           </li>
         </ul>
@@ -61,8 +61,8 @@
       <div ui-tree="fieldsTreeOptions" data-nodrop id="tree2-root" data-drag-enabled="true" ng-show="showTree"
            class="list">
         <li class="tree-root-li">
-          <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
-            <li ng-repeat="metadata in objectMetaData"
+          <ul ui-tree-nodes="" data-nodrop ng-model="mapperdata">
+            <li ng-repeat="metadata in mapperdata"
                 ui-tree-node data-nodrop ng-include="'mapperFields.html'"
                 collapsed="true">
             </li>
@@ -73,6 +73,13 @@
 
     </div>
 
+
+    <select
+            data-ng-model="selectedTargetObject"
+            ng-options="o as o for o in targetObjects"
+            ng-change="refreshTargetObject()">
+    </select>
+    <br>
     <!-- LIST BODY -->
     <div id="mapper-data-list-target" class="column ten wide ui grid">
       <script type="text/ng-template" id="objectFields.html">
