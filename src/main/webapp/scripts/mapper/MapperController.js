@@ -52,6 +52,7 @@ var MapperController = BaseController.extend({
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
+        me.$scope.showTargetTree = false;
 
         //Handling Action Methods
         me.$scope.save = me.save.bind(this);
@@ -142,7 +143,7 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me.$scope.mapperdata = data.fields;
-        me.$scope.showTree = true;
+        me.$scope.showTargetTree = true;
         me._maskLoader.hide();
     },
 
