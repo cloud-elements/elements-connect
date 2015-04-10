@@ -415,21 +415,17 @@ h1 {
     text-transform: capitalize;
 }
 
-#data-list-body, #mapper-data-list-body {
+#data-list-body{
     padding: 15px;
     overflow-y: auto;
     position: absolute;
     top: 55px;
     bottom: 0;
     right: 0;
-    width: 50%;
 }
 
-#mapper-data-list-body{
-    left: 0;
-    padding: 5px;}
 
-#data-list-body h1, #mapper-data-list-body h1 {
+#data-list-body h1{
     text-align: left;
     margin-bottom: 0px;
     padding-bottom: 15px;
@@ -444,7 +440,7 @@ h1 {
     text-shadow:none;
 }
 
-#data-list-body .list, #mapper-data-list-body .list {
+#data-list-body .list{
     background: #fff;
     padding: 15px;
     box-shadow: 0 1px 2px rgba(0,0,0,.5);
@@ -457,18 +453,14 @@ h1 {
 }
 
 #data-list-body ul,
-#data-list-body li,
-#mapper-data-list-body ul,
-#mapper-data-list-body li{}
+#data-list-body li{}
 
-#data-list-body li.tree-root-li, #mapper-data-list-body li.tree-root-li{
+#data-list-body li.tree-root-li{
     list-style: none;
 }
 
 #data-list-body li .ui.toggle.checkbox .box,
-#data-list-body li .ui.toggle.checkbox label,
-#mapper-data-list-body li .ui.toggle.checkbox .box,
-#mapper-data-list-body li .ui.toggle.checkbox label{
+#data-list-body li .ui.toggle.checkbox label{
     color: #999;
     font-weight: bold;
     font-size: 100%;
@@ -476,16 +468,13 @@ h1 {
 }
 
 #data-list-body li li .ui.toggle.checkbox .box,
-#data-list-body li li .ui.toggle.checkbox label,
-#mapper-data-list-body li li .ui.toggle.checkbox .box,
-#mapper-data-list-body li li .ui.toggle.checkbox label{
+#data-list-body li li .ui.toggle.checkbox label{
     color:#fff;
     text-shadow: none;
     font-size: 84%;
 }
 
-#data-list-body li div.tree-root-li-container,
-#mapper-data-list-body li div.tree-root-li-container{
+#data-list-body li div.tree-root-li-container{
     background: linear-gradient(#fff, #eee);
     padding: 13px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
@@ -497,56 +486,45 @@ h1 {
     display:block !important;
 }
 
-#data-list-body li div label,
-#mapper-data-list-body li div label{
+#data-list-body li div label{
     display:inline;
 }
 
 #data-list-body .ui.toggle.checkbox .box:before, #data-list-body .ui.toggle.checkbox label:before,
-#data-list-body .ui.toggle.checkbox .box:after, #data-list-body .ui.toggle.checkbox label:after,
-#mapper-data-list-body .ui.toggle.checkbox .box:before, #mapper-data-list-body .ui.toggle.checkbox label:before,
-#mapper-data-list-body .ui.toggle.checkbox .box:after, #mapper-data-list-body .ui.toggle.checkbox label:after{
+#data-list-body .ui.toggle.checkbox .box:after, #data-list-body .ui.toggle.checkbox label:after{
     top:10px;
     margin-left:15px;
 }
 
-#data-list-body .ui.toggle.checkbox label:before,
-#mapper-data-list-body .ui.toggle.checkbox label:before{
+#data-list-body .ui.toggle.checkbox label:before{
     background-color: rgba(0,0,0,.2);
 }
 
-#data-list-body .ui.toggle.checkbox.checked label:before,
-#mapper-data-list-body .ui.toggle.checkbox.checked label:before{
+#data-list-body .ui.toggle.checkbox.checked label:before{
     background-color: #5BBD6F;
 }
 
-#data-list-body .ui.toggle.checkbox label:hover:before,
-#mapper-data-list-body .ui.toggle.checkbox label:hover:before{
+#data-list-body .ui.toggle.checkbox label:hover:before{
     background-color: rgba(0,0,0,.4);
 }
 
-#data-list-body .ui.toggle.checkbox.checked label:hover:before,
-#mapper-data-list-body .ui.toggle.checkbox.checked label:hover:before{
+#data-list-body .ui.toggle.checkbox.checked label:hover:before{
     background-color: #5BBD6F;
 }
 
-#data-list-body .ui.toggle.checkbox.checked label:after,
-#mapper-data-list-body .ui.toggle.checkbox.checked label:after{
+#data-list-body .ui.toggle.checkbox.checked label:after{
     left: 2.05rem;
 }
 
-#data-list-body .ui.toggle.checkbox label:after,
-#mapper-data-list-body .ui.toggle.checkbox label:after{
+#data-list-body .ui.toggle.checkbox label:after{
     left: -0.05rem;
 }
 
-#data-list-body ul,
-#mapper-data-list-body ul{
+#data-list-body ul{
     background:#333;
 }
 
-#data-list-body li div span.type,
-#mapper-data-list-body li div span.type{
+#data-list-body li div span.type{
     float:right;
     font-size: 80%;
     background: rgba(0,0,0,.1);
@@ -557,18 +535,15 @@ h1 {
     right: 10px;
 }
 
-#data-list-body li li div span.type,
-#mapper-data-list-body li li div span.type{
+#data-list-body li li div span.type{
     background: rgba(0,0,0,.5);
 }
 
-#data-list-body li li li,
-#mapper-data-list-body li li li{
+#data-list-body li li li{
     margin-left:10px;
 }
 
-#data-list-body li li div.tree-root-li-li-container,
-#mapper-data-list-body li li div.tree-root-li-li-container{
+#data-list-body li li div.tree-root-li-li-container{
     background: linear-gradient(#777, #666);
     color: #fff;
     text-shadow: 0 1px 0 #333;
@@ -582,8 +557,7 @@ h1 {
     display:block !important;
 }
 
-#data-list-body li li div.tree-root-li-li-container:before,
-#mapper-data-list-body li li div.tree-root-li-li-container:before{
+#data-list-body li li div.tree-root-li-li-container:before{
     content: '';
     position: absolute;
     left: -10px;
@@ -591,16 +565,13 @@ h1 {
     top: 0;
     bottom: 0;
 }
-#data-list-body li li div.tree-root-li-li-container .toogle-tree-btn.pull-left,
-#mapper-data-list-body li li div.tree-root-li-li-container .toogle-tree-btn.pull-left{
+#data-list-body li li div.tree-root-li-li-container .toogle-tree-btn.pull-left{
     margin-right: 15px;
 }
-#data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes,
-#mapper-data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes{
+#data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes{
     padding-left: 15px;
 }
-#data-list-body li div,
-#mapper-data-list-body li div{
+#data-list-body li div{
 
 }
 
@@ -627,6 +598,449 @@ h1 {
     text-align: center;
     font-weight: bold;
     cursor: pointer;
+}
+
+#select-dropdown-container .select2-container .select2-choice .select2-arrow {
+    display: inline-block;
+    width: 30px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-left: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+#select-dropdown-container .select2-container .select2-choice .select2-arrow b {
+    background-image: url('../images/select2x2.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: 85px 75px !important;
+    background-position: 0px 8px;
+}
+
+#select-dropdown-container .select2-results {
+    padding: 0;
+    margin: 0;
+}
+
+#select-dropdown-container .select2-results li.ui-select-choices-group ul li{
+    color: rgba(0, 0, 0, 0.8);
+    padding: 10px !important;
+    font-size: 1rem;
+    text-transform: none;
+    font-weight: normal;
+    float: left;
+    width: 100%;
+    line-height: 1.5em;
+}
+#mapper-data-list-source #select-dropdown-container ul.ui-select-choices{
+    background-color: #fff;
+}
+#select-dropdown-container .select2-results li.ui-select-choices-group ul li md-switch{
+    display: block;
+    float: left;
+}
+
+#select-dropdown-container .select2-results li.select2-highlighted {
+    background: rgba(0, 0, 0, 0.03);
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.select2-results .select2-result-label{
+    float: left;
+    width: 100%
+}
+
+#select-dropdown-container > select{
+    display: block !important;
+    width: 100%;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1;
+    border: 0;
+    border-radius: 0;
+    color: #fff;
+    height: 66px;
+    cursor: pointer;
+
+}
+
+#select-dropdown-container .select2-drop-active {
+    cursor: auto;
+    background: #ffffff;
+    font-size: 1rem;
+    text-shadow: none;
+    text-align: left;
+    box-shadow: 0px 1px 4px 0px rgba(39, 41, 43, 0.15);
+    border: 1px solid rgba(39, 41, 43, 0.15);
+    border-radius: 0em 0em 0.2857rem 0.2857rem;
+}
+
+#select-dropdown-container .select2-search{
+    padding: 0.75rem 1.25rem;
+    background: rgba(0,0,0,.1);
+}
+
+#select-dropdown-container .select2-search input {
+    margin: 0em;
+    width: 100%;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    text-align: left;
+    line-height: 1.2142em;
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    padding: 0.67861em 1em;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.8);
+    border-radius: 0.2857rem;
+    -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    box-shadow: none;
+    background-image: url('../images/select2x2.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: 60px 49px !important;
+    background-position: 99% -17px !important;
+}
+
+#select-dropdown-container > select option{
+    text-align: center;
+}
+
+div#data-list-body.disabled:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    z-index: 10;
+    opacity: .4;
+    -webkit-filter: blur(0px);
+}
+
+/***********************/
+/* END DATA LIST           */
+/***********************/
+
+
+/***********************/
+/* MAPPER           */
+/***********************/
+#mapper {
+    background-color: #eee;
+}
+
+#mapper-header {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 55px;
+    background: rgba(0,0,0,.5);
+    padding: 5px;
+}
+
+#mapper-header.blue-gradient {
+    background: linear-gradient(#7dcbec, #389dc8);
+    height:45px;
+    border-bottom:1px solid rgba(255,255,255,.5);
+    border-top: 1px solid rgba(0,0,0,.2);
+    box-shadow:inset -1px -1px 2px rgba(0,0,0,.1);
+}
+
+#mapper-header .white-gradient {
+    height: 66px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    background: rgba(0,0,0,.1);
+    border-left: rgba(255,255,255,.5);
+    border-right: rgba(0,0,0,.5);
+    color: #fff;
+    line-height: 46px;
+    text-align: center;
+}
+
+#mapper-header .white-gradient i.dropdown.icon {
+    line-height: 51px;
+    margin-right: 7px;
+}
+
+#mapper-header .item.disabled {
+    display:none;
+}
+
+#mapper-header h2.service {
+    font-size: 150%;
+    line-height: 47px;
+    margin-left: 12px;
+    height:55px;
+    overflow:hidden;
+}
+
+#mapper-header .header {
+    background: #1e6280;
+    margin: -1px 0 20px 0;
+    color: #fff !important;
+    padding: 7px 30px;
+    border-top: 1px solid rgba(255,255,255,.3);
+    box-shadow: 0 61px 0px rgba(0,0,0,.1);
+    margin-bottom: 8px;
+}
+
+#mapper-header .header label {
+    color:#fff;
+    text-transform: capitalize;
+}
+
+#mapping-data-list-body{
+    padding: 0px;
+    overflow-y: auto;
+    position: absolute;
+    top: 70px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 0;
+    position: absolute;
+}
+
+
+#mapping-data-list-body h1{
+    text-align: left;
+    margin-bottom: 0px;
+    padding-bottom: 15px;
+    box-shadow: 0 2px 3px #999;
+    border-radius: 5px 5px 0 0;
+    padding: 15px 15px;
+    background-color: #ecf0f1;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+    float:none;
+    color: #95a5a6;
+    text-shadow:none;
+}
+
+#mapping-data-list-body .list {
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.5);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 40px;
+    min-height: 400px;
+    bottom: 35px;
+}
+#mapping-data-list-body #mapper-data-list-source{
+    background-color: #333;
+}
+#mapping-data-list-body #mapper-data-list-source .list{
+    background: transparent;
+    padding: 0px;
+    box-shadow: none;
+    position: absolute;
+    min-height: initial;
+    margin-bottom: 0;
+    left: 16px;
+    top: 56px;
+    bottom: 0;
+    right: 0;
+    overflow: scroll;
+}
+
+#mapping-data-list-body ul,
+#mapping-data-list-body li{}
+
+#mapping-data-list-body li.tree-root-li{
+    list-style: none;
+    overflow: scroll;
+    position: absolute;
+    top: 72px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+}
+#mapping-data-list-body #mapper-data-list-source li.tree-root-li{
+    top: 20px;
+}
+
+#mapping-data-list-body li .ui.toggle.checkbox .box,
+#mapping-data-list-body li .ui.toggle.checkbox label{
+    color: #999;
+    font-weight: bold;
+    font-size: 100%;
+    text-shadow: 0 1px 0 #fff;
+}
+
+#mapping-data-list-body li li .ui.toggle.checkbox .box,
+#mapping-data-list-body li li .ui.toggle.checkbox label{
+    color:#fff;
+    text-shadow: none;
+    font-size: 84%;
+}
+
+#mapping-data-list-body li div.tree-root-li-container{
+    background: linear-gradient(#fff, #eee);
+    padding: 13px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+    color: #999;
+    font-weight: bold;
+    font-size: 84%;
+    text-shadow: 0 1px 0 #fff;
+    position:relative;
+    display:block !important;
+}
+
+#mapping-data-list-body li div label{
+    display:inline;
+}
+
+#mapping-data-list-body .ui.toggle.checkbox .box:before, #mapping-data-list-body .ui.toggle.checkbox label:before,
+#mapping-data-list-body .ui.toggle.checkbox .box:after, #mapping-data-list-body .ui.toggle.checkbox label:after{
+    top:10px;
+    margin-left:15px;
+}
+
+#mapping-data-list-body .ui.toggle.checkbox label:before{
+    background-color: rgba(0,0,0,.2);
+}
+
+#mapping-data-list-body .ui.toggle.checkbox.checked label:before{
+    background-color: #5BBD6F;
+}
+
+#mapping-data-list-body .ui.toggle.checkbox label:hover:before{
+    background-color: rgba(0,0,0,.4);
+}
+
+#mapping-data-list-body .ui.toggle.checkbox.checked label:hover:before{
+    background-color: #5BBD6F;
+}
+
+#mapping-data-list-body .ui.toggle.checkbox.checked label:after{
+    left: 2.05rem;
+}
+
+#mapping-data-list-body .ui.toggle.checkbox label:after{
+    left: -0.05rem;
+}
+
+#mapping-data-list-body ul{
+    background:#333;
+}
+
+#mapping-data-list-body li div span.type{
+    float:right;
+    font-size: 80%;
+    background: rgba(0,0,0,.1);
+    padding: 4px 9px;
+    border-radius: 20px;
+    position: absolute;
+    top: 12px;
+    right: 10px;
+}
+
+#mapping-data-list-body li li div span.type{
+    background: rgba(0,0,0,.5);
+}
+
+#mapping-data-list-body #mapper-data-list-source li li div span.type{
+    margin-right: 45px;
+    margin-top: -2px;
+    background-color: rgba(255,255,255,0.2);
+    text-shadow: none;
+}
+
+#mapping-data-list-body li li li{
+    margin-left:10px;
+}
+
+#mapping-data-list-body li li div.tree-root-li-li-container{
+    background: linear-gradient(#777, #666);
+    color: #fff;
+    text-shadow: 0 1px 0 #333;
+    margin-left: 10px;
+    padding: 13px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+    font-weight: bold;
+    font-size: 84%;
+    position:relative;
+    display:block !important;
+}
+
+#mapping-data-list-body #mapper-data-list-source li li div.tree-root-li-li-container, #mapping-data-list-body #mapper-data-list-source li li li{
+    margin-left: 0;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    background-image: none;
+    background-color: #444;
+}
+#mapping-data-list-body #mapper-data-list-source li li div.tree-root-li-li-container:hover, #mapping-data-list-body #mapper-data-list-source li li li:hover{
+    background-color: #555;
+}
+
+#mapping-data-list-body li li div.tree-root-li-li-container:before{
+    content: '';
+    position: absolute;
+    left: -10px;
+    border-left: 10px solid #444;
+    top: 0;
+    bottom: 0;
+}
+#mapping-data-list-body li li div.tree-root-li-li-container .toogle-tree-btn.pull-left{
+    margin-right: 15px;
+}
+#mapping-data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes{
+    padding-left: 15px;
+}
+#mapping-data-list-body li div{
+
+}
+
+#mapper #select-dropdown-container{
+    padding: 0;
+    margin: 0;
+}
+
+#mapper #select-dropdown-container .select2-container{
+    top: 0px;
+    left: 0px;
+    width: 100%;
+}
+
+#mapper-data-list-source, #mapper-data-list-target{
+    margin: 0;
+    left: 0;
+    padding: 0;
+}
+
+#select-dropdown-container .select2-container .select2-choice{
+    height: 56px;
+    border: none;
+    line-height: 3.5em;
+    color: #fff !important;
+    border-radius: 0px;
+    background: rgba(0,0,0,.1);
+    border-left: rgba(255,255,255,.5);
+    border-right: rgba(0,0,0,.5);
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#mapper-data-list-source #select-dropdown-container .select2-container .select2-choice{
+    border: 2px solid #282828;
 }
 
 #select-dropdown-container .select2-container .select2-choice .select2-arrow {
@@ -747,6 +1161,14 @@ div#data-list-body.disabled:after {
     opacity: .4;
     -webkit-filter: blur(0px);
 }
+
+.angular-ui-tree-placeholder{
+    background-color: #333;
+    border: 1px dashed #58bde8;
+}
+/***********************/
+/* END MAPPER           */
+/***********************/
 
 .ui.modal h2 {
     margin-bottom: 15px;
@@ -1004,6 +1426,10 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
 
 .select-md-switch-container md-switch .md-label{
     font-weight: bold;
+}
+
+#mapper-data-list-source .select-md-switch-container{
+    background-color: #aaaaaa;
 }
 
 .mask-loader{
