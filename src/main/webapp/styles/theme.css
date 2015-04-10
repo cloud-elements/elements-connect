@@ -27,11 +27,39 @@ h1 {
     background-color: #eee;
 }
 
-#data-list-header {
+#data-list-header, #mapper-header {
     background: linear-gradient(#58bde8, #389dc8);
 }
 
 #data-list-header h2.service {
+
+}
+
+#data-list-body {
+
+}
+
+#data-list-body ul,
+#data-list-body li {
+
+}
+
+#data-list-body li div {
+
+}
+
+/***********************/
+/* MAPPER           */
+/***********************/
+#mapper {
+    background-color: #eee;
+}
+
+#mapper-header {
+    background: linear-gradient(#58bde8, #389dc8);
+}
+
+#mapper-header h2.service {
 
 }
 
