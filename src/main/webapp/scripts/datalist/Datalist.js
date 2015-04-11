@@ -77,38 +77,30 @@ var Datalist = Class.extend({
             me.all[selectedInstance.element.key].instance = selectedInstance;
         }
 
-        me.loadInstanceTransformations(selectedInstance);
         me.loadInstanceDefinitions(selectedInstance);
 
-        return this._elementsService.loadInstanceObjects(selectedInstance)
-            .then(
-            this._handleLoadInstanceObjects.bind(this, selectedInstance),
-            this._handleLoadInstanceObjectError.bind(this));
+        return me.loadInstanceTransformations(selectedInstance);
     },
 
     _handleLoadInstanceObjects:function(selectedInstance, result){
         var me = this;
 
-        if(me.all[selectedInstance.element.key].transformationsLoaded == true) {
+        me.all[selectedInstance.element.key].objects = result.data;
 
-            me.all[selectedInstance.element.key].objects = result.data;
-
-            var objectsAndTransformation = new Array();
-            if(!me._cloudElementsUtils.isEmpty(result.data)) {
-                for(var i=0; i< result.data.length; i++) {
-                    var objName = result.data[i];
-                    objectsAndTransformation.push({
-                        name: objName,
-                        transformed: me._isObjectTransformed(objName, selectedInstance)
-                    });
-                }
+        var objectsAndTransformation = new Array();
+        if(!me._cloudElementsUtils.isEmpty(result.data)) {
+            for(var i=0; i< result.data.length; i++) {
+                var objName = result.data[i];
+                objectsAndTransformation.push({
+                    name: objName,
+                    transformed: me._isObjectTransformed(objName, selectedInstance)
+                });
             }
-            me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
-
-            return me.all[selectedInstance.element.key].objectsAndTransformation;
-        } else {
-            // Defer code for calling _handleLoadInstanceObjects after 100ms
         }
+
+        me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
+
+        return me.all[selectedInstance.element.key].objectsAndTransformation;
     },
 
     _isObjectTransformed: function(objectName, selectedInstance) {
@@ -127,7 +119,7 @@ var Datalist = Class.extend({
 
     //Based on the selected instance get all the object transformation
     loadInstanceTransformations: function(selectedInstance) {
-        this._elementsService.loadInstanceTransformations(selectedInstance)
+        return this._elementsService.loadInstanceTransformations(selectedInstance)
             .then(
             this._handleLoadInstanceTransformations.bind(this, selectedInstance),
             this._handleLoadError.bind(this) );
@@ -137,6 +129,11 @@ var Datalist = Class.extend({
         var me = this;
         me.all[selectedInstance.element.key].transformationsLoaded = true;
         me.all[selectedInstance.element.key].transformations = result.data;
+
+        return this._elementsService.loadInstanceObjects(selectedInstance)
+            .then(
+            this._handleLoadInstanceObjects.bind(this, selectedInstance),
+            this._handleLoadInstanceObjectError.bind(this));
     },
 
     //Based on the selected instance get all the instance definitions
