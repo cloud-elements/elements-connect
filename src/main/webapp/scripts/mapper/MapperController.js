@@ -49,6 +49,7 @@ var MapperController = BaseController.extend({
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
+        me.$scope.removeMapPath = me.removeMapPath.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
@@ -159,6 +160,10 @@ var MapperController = BaseController.extend({
         var me = this;
         me.$scope.objectMetaData = data.fields;
         me.$scope.showTree = true;
+
+        me.$scope.mapperdata = null;
+        me.$scope.selectedTargetObject = null;
+        me.$scope.showTargetTree = false;
 
         //TODO
         //Now Check to see if there is a mapping already exists for the object
@@ -292,6 +297,11 @@ var MapperController = BaseController.extend({
         for (var i = 0; i < me.$scope.instanceObjects.length; i++) {
             me.$scope.instanceObjects[i].transformed = cbState;
         }
+    },
+
+    removeMapPath: function() {
+        var me = this;
+
     }
 });
 

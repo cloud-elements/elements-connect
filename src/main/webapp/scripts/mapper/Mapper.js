@@ -743,7 +743,7 @@ var Mapper = Class.extend({
         }
     },
 
-    _constructTransformation: function(selectedInstance, transformationArray, vendorName, metaData) {
+    _constructTransformation: function(selectedInstance, transformationArray, name, vendorName, metaData) {
         var me = this;
 
         var objectTransformation = {
@@ -761,7 +761,7 @@ var Mapper = Class.extend({
             fields:[]
         };
         me._constructDeeperTransformation(objectTransformation, metaData);
-        transformationArray[vendorName]=objectTransformation;
+        transformationArray[name]=objectTransformation;
     },
 
     _constructAndSaveObjectTransformation: function(selectedInstance) {
@@ -774,7 +774,7 @@ var Mapper = Class.extend({
         var transformationArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
-            me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]]);
+            me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]].vendorName, mData[mKeys[i]]);
         }
 
         var transformationSaveCounter = 0;
