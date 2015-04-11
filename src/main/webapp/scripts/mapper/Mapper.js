@@ -430,12 +430,12 @@ var Mapper = Class.extend({
     },
 
 
-    loadTargetObjectMetaMapping:function(targetInstance, selectedObject){
+    loadTargetObjectMetaMapping:function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject){
         var me = this;
 
         return me._elementsService.loadObjectMetaData(targetInstance, selectedObject)
             .then(
-            me._handleTargetLoadObjectMetadata.bind(me, targetInstance, selectedObject),
+            me._handleTargetLoadObjectMetadata.bind(me, selectedInstance, selectedInstanceObject, targetInstance, selectedObject),
             me._handleTargetLoadErrorObjectMetadata.bind(me) );
     },
 
@@ -443,13 +443,16 @@ var Mapper = Class.extend({
         return "Error getting the discovery object";
     },
 
-    _handleTargetLoadObjectMetadata: function(targetInstance, selectedObject, result) {
+    _handleTargetLoadObjectMetadata: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, result) {
         var me = this;
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
             me.all[targetInstance.element.key].metadata = new Object;
             me.all[targetInstance.element.key].metadataflat = new Object;
-            me.all[targetInstance.element.key].metamapping = new Object;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metamapping)) {
+            me.all[selectedInstance.element.key].metamapping = new Object;
         }
 
         var objectMetadata = result.data;
@@ -462,15 +465,16 @@ var Mapper = Class.extend({
         me.all[targetInstance.element.key].metadata[selectedObject] = objectMetadata;
 
         //Create an empty mapping, basically the definition from metadata and return it
-        return me._createEmptyMapping(targetInstance, selectedObject, objectMetadata)
+        return me._createEmptyMapping(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata)
     },
 
-    _createEmptyMapping: function(targetInstance, selectedObject, objectMetadata) {
+    _createEmptyMapping: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata) {
         var me = this;
         var newMapping = new Object;
         newMapping['name'] = selectedObject;
+        newMapping['vendorName'] = selectedInstanceObject;
         newMapping['fields'] = objectMetadata.fields;
-        me.all[targetInstance.element.key].metamapping[selectedObject] = newMapping;
+        me.all[selectedInstance.element.key].metamapping[selectedObject] = newMapping;
         return newMapping;
     },
 
@@ -506,26 +510,18 @@ var Mapper = Class.extend({
         for(var i = 0; i < mData.fields.length; i++){
             var mapperData = mData.fields[i];
 
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
-                continue;
-            }
-
-            if(me._cloudElementsUtils.isEmpty(mapperData.type))
+            if(me._cloudElementsUtils.isEmpty(mapperData.type)) {
                 mapperData.type = 'string'; //this is dirty fix for setting a type value by default
+            }
 
             if(this._isLiteral(mapperData.type.toLowerCase())
                 || this._isDateFormat(mapperData.type))
             {
                 var t = mapperData.type;
-                var p = mapperData.vendorPath;
+                var p = mapperData.path;
 
                 if(this._isDateFormat(t)) {
                     t = 'date';
-                }
-
-                if(this._isLiteralArray(mapperData.type)) {
-                    p = p+'[*]';
                 }
 
                 objDefinition.fields.push({
@@ -536,7 +532,7 @@ var Mapper = Class.extend({
             else{
                 //This is where its of type Object so create a definition out of it
                 // and also add it to the base definition
-                var name = mapperData.vendorPath;
+                var name = mapperData.path;
                 if(this._cloudElementsUtils.isEmpty(name) || name.length == 0) {
                     name = mapperData.vendorPath
                 }
@@ -548,7 +544,7 @@ var Mapper = Class.extend({
                 this._constructDefinition(definitionArray, name, mapperData);
 
                 var t = mapperData.vendorPath;
-                var p = mapperData.vendorPath;
+                var p = mapperData.path;
                 if(mapperData.type == 'array') {
                     t = 'array['+mapperData.vendorPath.replace('[*]', '')+']';
                     p = p+'[*]';
@@ -608,19 +604,14 @@ var Mapper = Class.extend({
     _constructAndSaveObjectDefinition: function(selectedInstance) {
         var me = this;
 
-        var mData = me.all[selectedInstance.element.key].metadata;
+        var mData = me.all[selectedInstance.element.key].metamapping;
         var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
+
         var mKeys = Object.keys(mData);
 
         var definitionArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
-
-            if(objectsAndTrans[mKeys[i]] == false
-                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
-                continue;
-            }
-
             me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
         }
 
@@ -711,11 +702,6 @@ var Mapper = Class.extend({
 
         for(var i = 0; i < objectMapperData.fields.length; i++){
             var mapperData = objectMapperData.fields[i];
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
-                continue;
-            }
-
             var mapperType = mapperData.type.toLowerCase();
 
             if(this._isLiteral(mapperType)
@@ -726,25 +712,31 @@ var Mapper = Class.extend({
                     p = p+'[*]';
                 }
 
-//                if(!this._cloudElementsUtils.isEmpty(mapperData.configuration)) {
-//                    objectTransformation.fields.push({
-//                        'path': objectName+'.'+p,
-//                        'vendorPath': mapperData.vendorPath,
-//                        'configuration':mapperData.configuration
-//                    });
-//                }
-//                else {
+                if(me._cloudElementsUtils.isEmpty(mapperData.vendorPath)) {
                     objectTransformation.fields.push({
-                        'path': mapperData.actualVendorPath,
-                        'vendorPath': mapperData.actualVendorPath
+                        'path': mapperData.path,
+                        'configuration':[
+                            {
+                                "type": "passThrough",
+                                "properties": {
+                                    "fromVendor": false,
+                                    "toVendor": false
+                                }
+                            }
+                        ]
                     });
-//                }
+                } else {
+                    objectTransformation.fields.push({
+                        'path': mapperData.path,
+                        'vendorPath': mapperData.vendorPath
+                    });
+                }
             }
             else
             {
-                var newObjectName = mapperData.vendorPath;
+                var newObjectName = mapperData.path;
                 if(me._cloudElementsUtils.isEmpty(objectName)) {
-                    newObjectName = objectName+'.'+mapperData.vendorPath;
+                    newObjectName = objectName+'.'+mapperData.path;
                 }
                 this._constructDeeperTransformation(objectTransformation, mapperData,newObjectName);
             }
@@ -756,7 +748,7 @@ var Mapper = Class.extend({
 
         var objectTransformation = {
             'vendorName':  vendorName,
-            //For setting ignore unmapped, only the ones which are selected will be returned
+            //For setting ignore unmapped, only the ones which are mapped will be returned
             'configuration':[
                 {
                     "type": "passThrough",
@@ -768,26 +760,20 @@ var Mapper = Class.extend({
             ],
             fields:[]
         };
-        me._constructDeeperTransformation(objectTransformation, metaData)
+        me._constructDeeperTransformation(objectTransformation, metaData);
         transformationArray[vendorName]=objectTransformation;
     },
 
     _constructAndSaveObjectTransformation: function(selectedInstance) {
         var me = this;
 
-        var mData = me.all[selectedInstance.element.key].metadata;
+        var mData = me.all[selectedInstance.element.key].metamapping;
         var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
         var mKeys = Object.keys(mData);
 
         var transformationArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
-
-            if (objectsAndTrans[mKeys[i]] ==false
-                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
-                continue;
-            }
-
             me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]]);
         }
 

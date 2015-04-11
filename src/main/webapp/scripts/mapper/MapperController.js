@@ -173,14 +173,14 @@ var MapperController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, "Loading mapping...");
 
-        var targetMetaMapping = me._mapper.all[me._picker.targetElementInstance.element.key].metamapping;
+        var targetMetaMapping = me._mapper.all[me._picker.selectedElementInstance.element.key].metamapping;
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)
             || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
 
-            me._mapper.loadTargetObjectMetaMapping(me._picker.targetElementInstance, me.$scope.selectedTargetObject)
+            me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
                 .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
         } else {
-            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, instanceMeta[me.$scope.selectedTargetObject]);
+            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping[me.$scope.selectedTargetObject]);
         }
 
     },
@@ -228,7 +228,7 @@ var MapperController = BaseController.extend({
     save: function() {
         var me = this;
         me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
+        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
 
     },
 
