@@ -122,13 +122,23 @@ var Datalist = Class.extend({
         return this._elementsService.loadInstanceTransformations(selectedInstance)
             .then(
             this._handleLoadInstanceTransformations.bind(this, selectedInstance),
-            this._handleLoadError.bind(this) );
+            this._handleLoadInstanceTransformationsError.bind(this) );
     },
 
     _handleLoadInstanceTransformations:function(selectedInstance,result){
         var me = this;
         me.all[selectedInstance.element.key].transformationsLoaded = true;
         me.all[selectedInstance.element.key].transformations = result.data;
+
+        return this._elementsService.loadInstanceObjects(selectedInstance)
+            .then(
+            this._handleLoadInstanceObjects.bind(this, selectedInstance),
+            this._handleLoadInstanceObjectError.bind(this));
+    },
+
+    _handleLoadInstanceTransformationsError:function(selectedInstance,result){
+        var me = this;
+        me.all[selectedInstance.element.key].transformationsLoaded = true;
 
         return this._elementsService.loadInstanceObjects(selectedInstance)
             .then(
