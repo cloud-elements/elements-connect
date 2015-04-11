@@ -422,6 +422,7 @@ h1 {
     top: 55px;
     bottom: 0;
     right: 0;
+    left: 0;
 }
 
 
@@ -1170,6 +1171,19 @@ div#data-list-body.disabled:after {
 .angular-ui-tree-placeholder{
     background-color: #333;
     border: 1px dashed #58bde8;
+}
+
+#mapper-header .target-source-link-img {
+    background-size: 90%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.5);
+    margin: 2px;
+    border-radius: 2px;
+    position: relative;
+    -webkit-transition: all 150ms ease-in;
 }
 /***********************/
 /* END MAPPER           */
