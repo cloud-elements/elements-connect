@@ -5,9 +5,11 @@
   <div id="mapper-header" class="sixteen">
     <div class="ui grid">
       <div class="column ten wide">
-        <div class="zendesk" style="width: 40px;height: 40px;"></div>
-        <i class="exchange icon light"></i>
-        <div class="zendesk" style="width: 40px;height: 40px;"></div>
+        <div class="zendesk target-source-link-img"></div>
+        <div class="target-source-icon">
+          <i class="exchange icon"></i>
+        </div>
+        <div class="target-source-link-img" ng-class="sourceLogo"></div>
       </div>
       <div class="column six wide">
         <div class="button-container pull-right">
@@ -20,10 +22,10 @@
     </div>
   </div>
 
-  <div id="mapping-data-list-body" class="mapping-data-list ui grid">
+ <div id="mapping-data-list-body" class="mapping-data-list ui grid">
 
-    <!-- mapper BODY -->
-    <div id="mapper-data-list-source" class="column six wide ui grid">
+  <!-- mapper BODY -->
+  <div id="mapper-data-list-source" class="column six wide ui grid">
 
     <div class="column sixteen wide" id="select-dropdown-container">
         <ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"
@@ -41,7 +43,7 @@
       </div>
 
 
-    <script type="text/ng-template" id="objectFields.html">
+  <script type="text/ng-template" id="objectFields.html">
 
     <div ui-tree-handle class="tree-node ui toggle tree-root-li-li-container">
       <button type="submit" ng-show="showTreeToggle(metadata)"
@@ -61,7 +63,7 @@
 
   </script>
 
-    <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
+  <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
        class="list">
     <li class="tree-root-li">
       <ul ui-tree-nodes="" ng-model="objectMetaData">
@@ -128,7 +130,6 @@
 
 
   </div>
-
 
 </section>
 

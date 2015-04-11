@@ -66,6 +66,8 @@ var MapperController = BaseController.extend({
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
 
+        me.$scope.sourceLogo = me._picker.selectedElementInstance.name;
+
         this.$scope.mapperTreeOptions = {
             dropped: this.onMetadataTreeDropped.bind(this),
 //            dragMove: this.onMetadataDragMove.bind(this)

@@ -40,6 +40,9 @@ var PickerController = BaseController.extend({
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
+
+        // Add this class to show Target section
+        me.$scope.withTarget = 'show-target';
     },
 
     defineListeners:function() {
