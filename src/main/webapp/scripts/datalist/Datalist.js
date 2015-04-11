@@ -122,7 +122,7 @@ var Datalist = Class.extend({
         return this._elementsService.loadInstanceTransformations(selectedInstance)
             .then(
             this._handleLoadInstanceTransformations.bind(this, selectedInstance),
-            this._handleLoadInstanceTransformationsError.bind(this) );
+            this._handleLoadInstanceTransformationsError.bind(this, selectedInstance) );
     },
 
     _handleLoadInstanceTransformations:function(selectedInstance,result){
