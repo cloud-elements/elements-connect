@@ -166,11 +166,11 @@ var MapperController = BaseController.extend({
         me.$scope.selectedTargetObject = null;
         me.$scope.showTargetTree = false;
 
-        //TODO
         //Now Check to see if there is a mapping already exists for the object
         //if so just set the target mapper
-
-        me._maskLoader.hide();
+        me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
+                                     me._picker.targetElementInstance, me.$scope.objectMetaData)
+            .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedObject));
     },
 
 
@@ -194,8 +194,15 @@ var MapperController = BaseController.extend({
     _handleOnTargetMetamappingLoad: function(obj, data) {
         var me = this;
 
-        me.$scope.mapperdata = data.fields;
-        me.$scope.showTargetTree = true;
+        if(!me._cloudElementsUtils.isEmpty(data)) {
+            me.$scope.mapperdata = data.fields;
+            me.$scope.showTargetTree = true;
+
+            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
+                me.$scope.selectedTargetObject = data.name;
+            }
+        }
+
         me._maskLoader.hide();
     },
 
