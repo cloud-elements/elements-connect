@@ -118,7 +118,7 @@ var Picker = Class.extend({
             }
         }
 
-      return null
+        return null;
     },
 
     getOAuthUrl: function(elementKey) {
