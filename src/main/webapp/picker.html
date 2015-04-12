@@ -13,6 +13,7 @@
       <div class="services-selections">
         <a href ng-click="onSelect('zendesk')" id="zendesk" class="zendesk" data-instance="Connect to Zendesk">
         </a>
+        </a>
       </div>
     </div>
   </div>
@@ -43,6 +44,14 @@
         <a href ng-click="onSelect('marketo')" id="marketo" class="marketo" alt="Marketo"
            data-instance="Connect to Marketo">
           <i class="icon wait" ng-click="onSelectSchedule('marketo', $event)"></i>
+        </a>
+        <a href ng-click="onSelect('jira')" id="jira" class="jira" alt="Jira"
+           data-instance="Connect to Jira">
+          <i class="icon wait" ng-click="onSelectSchedule('jira', $event)"></i>
+        </a>
+        <a href ng-click="onSelect('sfdcservicecloud')" id="sfdcservicecloud" class="sfdcservicecloud" alt="SalesForce"
+           data-instance="Connect to Salesforce.com">
+          <i class="icon wait" ng-click="onSelectSchedule('sfdcservicecloud', $event)"></i>
         </a>
         <!--<a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>-->
       </div>
