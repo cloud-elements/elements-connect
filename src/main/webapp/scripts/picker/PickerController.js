@@ -67,8 +67,9 @@ var PickerController = BaseController.extend({
 
         me._instances = me._picker._elementInstances;
 
-        if(bulkloader.Picker.oauth_elementkey != me._picker._elementsService.configuration.targetElement) {
-            me.onSelect(bulkloader.Picker.oauth_elementkey);
+        // VSJ if(bulkloader.Picker.oauthElementKey != me._picker._elementsService.configuration.targetElement) {
+        if (bulkloader.Picker.oauthElementKey != me._picker.getTargetElementKey()) {
+            me.onSelect(bulkloader.Picker.oauthElementKey);
         }
 
     },
@@ -77,10 +78,13 @@ var PickerController = BaseController.extend({
         var me = this;
         me._maskLoader.hide();
         me._instances = instances;
-        if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
+
+        // VSJ if (!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
+        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me.$scope.withTarget = 'show-target';
         }
-        if(!me._cloudElementsUtils.isEmpty(me._instances)) {
+
+        if (!me._cloudElementsUtils.isEmpty(me._instances)) {
             var keys = Object.keys(me._instances);
             for(var i = 0; i< keys.length; i++) {
                 angular.element(document.querySelector('#' + keys[i])).addClass('highlightingElement');
@@ -95,9 +99,10 @@ var PickerController = BaseController.extend({
         var me = this;
 
         //Check if the target instance is created, if not inform user to create one
-        if(me._picker._elementsService.configuration.targetElement != elementKey
-            && !me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)
-            && me._cloudElementsUtils.isEmpty(me._instances[me._picker._elementsService.configuration.targetElement])) {
+        // VSJ if(me._picker._elementsService.configuration.targetElement != elementKey
+        // VSJ && !me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)
+        if (me._picker.getTargetElementKey() != elementKey
+            && me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing target')
@@ -135,8 +140,10 @@ var PickerController = BaseController.extend({
         me._picker.selectedElementInstance = instance;
 
         //TODO Refer http://embed.plnkr.co/uW4v9T/preview for adding animation while switching the view
-        if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
-            me._picker.targetElementInstance = me._instances[me._picker._elementsService.configuration.targetElement];
+        // VSJ if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
+        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+            // VSJ me._picker.targetElementInstance = me._instances[me._picker._elementsService.configuration.targetElement];
+            me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
             me.$location.path('/mapper');
         } else {
             me.$location.path('/datalist');

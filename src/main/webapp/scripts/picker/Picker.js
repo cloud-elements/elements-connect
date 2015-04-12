@@ -18,7 +18,7 @@ var Picker = Class.extend({
     _cloudElementsUtils: null,
     _elementInstances: null,
     _sources: null,
-    _targets: null,
+    _target: null,
     selectedElementInstance: null,
     targetElementInstance: null,
 
@@ -48,11 +48,17 @@ var Picker = Class.extend({
         me._elementsService.configuration.company = result.data.company.secret;
 
         me._sources = result.data.userData.configuration.sources;
-        me._targets = result.data.userData.configuration.targets;
+        me._target = result.data.userData.configuration.target;
 
         if (me._cloudElementsUtils.isEmpty(me._sources)) {
             // TODO: Throw an error here.
-            console.log("No sources found.");
+            console.log("No source elements configured.");
+            return;
+        }
+
+        if (me._cloudElementsUtils.isEmpty(me._target)) {
+            // TODO: Throw an error here.
+            console.log("No target element configured.");
             return;
         }
 
@@ -104,17 +110,15 @@ var Picker = Class.extend({
 
         var me = this;
 
+        if (me._target.elementKey == elementKey) {
+            return me._target;
+        }
+
         for (var i in me._sources) {
           var source = me._sources[i];
 
             if (source.elementKey == elementKey) {
-                var elementConfig = new Object();
-
-                elementConfig.apiKey = source.apiKey;
-                elementConfig.apiSecret = source.apiSecret;
-                elementConfig.callbackUrl = source.callbackUrl;
-
-                return elementConfig;
+                return source;
             }
         }
 
@@ -134,11 +138,7 @@ var Picker = Class.extend({
             return;
         }
 
-        return me._elementsService.getOAuthUrl(
-                elementKey,
-                elementConfig.apiKey,
-                elementConfig.apiSecret,
-                elementConfig.callbackUrl).then(
+        return me._elementsService.getOAuthUrl(elementConfig).then(
             me._handleGetOauthUrl.bind(me),
             me._handleLoadError.bind(me) );
     },
@@ -167,13 +167,13 @@ var Picker = Class.extend({
             return;
         }
 
-        return me._elementsService.createInstance(
-                elementKey,
-                pageParameters.code,
-                elementConfig.apiKey,
-                elementConfig.apiSecret,
-                elementConfig.callbackUrl)
-            .then(
+        // VSJ return me._elementsService.createInstance(
+                // VSJ elementKey,
+                // VSJ pageParameters.code,
+                // VSJ elementConfig.apiKey,
+                // VSJ elementConfig.apiSecret,
+                // VSJ elementConfig.callbackUrl)
+        return me._elementsService.createInstance(elementConfig, pageParameters.code).then(
             me._handleOnCreateInstance.bind(me),
             me._handleLoadError.bind(me) );
     },
@@ -188,6 +188,16 @@ var Picker = Class.extend({
         me._notifications.notify(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED);
 
         return response.data;
+    },
+
+    getTargetElementKey: function() {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(me._target) == false) {
+            return me._target.elementKey;
+        } else {
+            return null;
+        }
     }
 });
 
