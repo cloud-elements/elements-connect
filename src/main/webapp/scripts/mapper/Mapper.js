@@ -103,10 +103,11 @@ var Mapper = Class.extend({
         if(!me._cloudElementsUtils.isEmpty(result.data)) {
             for(var i=0; i< result.data.length; i++) {
                 var objName = result.data[i];
-                objectsAndTransformation.push({
-                    name: objName,
-                    transformed: me._isObjectTransformed(objName, selectedInstance)
-                });
+                var obj = {
+                    name: objName
+                };
+                obj = me._findAndUpdateTransformation(obj, objName, selectedInstance)
+                objectsAndTransformation.push(obj);
             }
         }
         me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
@@ -120,14 +121,32 @@ var Mapper = Class.extend({
         me.all[targetInstance.element.key].objects = result.data;
     },
 
-    _isObjectTransformed: function(objectName, selectedInstance) {
+    _findAndUpdateTransformation: function(obj, objectName, selectedInstance) {
         var me = this;
 
-        if(!me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)
-            && !me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations[objectName])) {
-            return true;
+        var trans = me.all[selectedInstance.element.key].transformations;
+        if(me._cloudElementsUtils.isEmpty(trans)) {
+            return obj;
         }
-        return false;
+
+        var transformationKeys = Object.keys(trans);
+        var transformedObject = null;
+        var targetObject  = null;
+
+        for(var i=0; i< transformationKeys.length; i++) {
+            targetObject = transformationKeys[i];
+            transformedObject = trans[targetObject];
+            if(transformedObject.vendorName == objectName) {
+                obj.vendorName = targetObject;
+                obj.transformed = true;
+                break;
+            }
+            else {
+                transformedObject = null;
+            }
+        }
+
+        return obj;
     },
 
     _handleLoadInstanceObjectError: function(result) {
