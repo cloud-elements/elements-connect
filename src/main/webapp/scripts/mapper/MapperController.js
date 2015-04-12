@@ -307,6 +307,10 @@ var MapperController = BaseController.extend({
 
         var obj = treenode.$nodeScope.$modelValue;
 
+        if(me._cloudElementsUtils.isEmpty(obj.vendorPath)) {
+            return;
+        }
+
         this._populateBackToMetaData(obj.vendorPath, obj.targetVendorType, obj.vendorPath, me.$scope.objectMetaData);
         obj.vendorPath = null;
         obj.targetVendorType = null;
