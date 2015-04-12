@@ -136,8 +136,8 @@ h1 {
     background-position: center center;
     background-repeat:no-repeat;
     display:inline-block;
-    width:16vw;
-    height:10vw;
+    width:14vw;
+    height:8vw;
     min-width:180px;
     min-height:140px;
     background-color:#fff;
@@ -158,8 +158,8 @@ h1 {
     background-position: center center;
     background-repeat:no-repeat;
     display:inline-block;
-    width: 16vw;
-    height: 10vw;
+    width: 14vw;
+    height: 8vw;
     min-width: 180px;
     min-height: 140px;
     background-color:#fff;
@@ -271,7 +271,7 @@ h1 {
     background-image:url(../images/zendesk_logo.png);
 }
 #picker .salesforce, #mapper .sfdcmarketingcloud {
-    background-image:url(../images/sfdc_logo.jpg);
+    background-image:url(../images/sfdcmarketingcloud.png);
 }
 
 #picker .hubspot, #mapper .hubspot {
@@ -286,6 +286,13 @@ h1 {
     background-image:url(../images/marketo-logo.jpg);
 }
 
+#picker .jira, #mapper .jira {
+    background-image:url(../images/jira_logo.png);
+}
+
+#picker .sfdcservicecloud, #mapper .sfdcservicecloud {
+    background-image:url(../images/sfdcservicecloud.png);
+}
 #picker .add-new {
     background-color: transparent !important;
     box-shadow: 0px 3px 5px rgba(0,0,0,.5) !important;
