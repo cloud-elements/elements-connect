@@ -31,6 +31,80 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
+    // Environment specific constants
+    ngconstant: {
+      options: {
+        name: 'config',
+        wrap: '\'use strict\';\n\n{%= __ngModule %}',
+        space: '  '
+      },
+      local: {
+        options: {
+          dest: '<%= yeoman.app %>/scripts/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'local',
+            userId: 'system',
+            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            elementsUrl: 'http://localhost:4040/elements/api-v2'
+          }
+        }
+      },
+      snapshot: {
+        options: {
+          dest: '<%= yeoman.app %>/scripts/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'snapshot',
+            userId: 'bulkloaderio@cloud-elements.com',
+            apiKey: 'qC5p0oLhoE6rmgpr/42LoZqmP/G8RIuLmm6C6vNYYhN0awR0jySAIyjLRXkKoAQI',
+            elementsUrl: 'https://snapshot.cloud-elements.com/api-v2'
+          }
+        }
+      },
+      qa: {
+        options: {
+          dest: '<%= yeoman.app %>/scripts/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'qa',
+            userId: 'bulkloaderio@cloud-elements.com',
+            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            elementsUrl: 'https://qa.cloud-elements.com/api-v2'
+          }
+        }
+      },
+      staging: {
+        options: {
+          dest: '<%= yeoman.app %>/scripts/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'staging',
+            userId: 'bulkloaderio@cloud-elements.com',
+            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            elementsUrl: 'https://staging.cloud-elements.com/api-v2'
+          }
+        }
+      },
+      production: {
+        options: {
+          dest: '<%= yeoman.app %>/scripts/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'production',
+            userId: 'bulkloaderio@cloud-elements.com',
+            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            elementsUrl: 'https://api.cloud-elements.com/api-v2'
+          }
+        }
+      }
+    },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -401,9 +475,10 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'ngconstant:local',
       'wiredep',
       'concurrent:server',
-      'autoprefixer:server',
+      'autoprefixer',
       'connect:livereload',
       'watch'
     ]);
@@ -423,8 +498,85 @@ module.exports = function (grunt) {
     'karma'
   ]);
 
+  grunt.registerTask('local', [
+    'clean:dist',
+    'ngconstant:local',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:mvfonts'
+  ]);
+
+  grunt.registerTask('snapshot', [
+    'clean:dist',
+    'ngconstant:snapshot',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:mvfonts'
+  ]);
+
+  grunt.registerTask('qa', [
+    'clean:dist',
+    'ngconstant:qa',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:mvfonts'
+  ]);
+
+  grunt.registerTask('staging', [
+    'clean:dist',
+    'ngconstant:staging',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:mvfonts'
+  ]);
+
   grunt.registerTask('build', [
     'clean:dist',
+    'ngconstant:production',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

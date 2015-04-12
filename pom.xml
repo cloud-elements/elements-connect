@@ -77,6 +77,7 @@
                         <gruntOptions>
                             <gruntOption>--force</gruntOption>
                             <gruntOption>--verbose</gruntOption>
+                            <gruntOption>${environment}</gruntOption>
                         </gruntOptions>
 
                         <ignoreTasksErrors>true</ignoreTasksErrors>

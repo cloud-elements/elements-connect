@@ -22,6 +22,7 @@ var bulkloaderApp = angular
         'ngMaterial',
         'ui.bootstrap',
         'notifications',
+        'config',
 //        'cgBusy',
         'CloudElementsUtils'
     ]);

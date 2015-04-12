@@ -7,70 +7,10 @@ var ElementsService = Class.extend({
 
     instanceId: null,
     _cloudElementsUtils:null,
+    _environment: null,
     selectedObjectName: null,
     newobject: false,
     configuration: null,
-
-//    ENV_URL: 'https://staging.cloud-elements.com/elements/api-v2/',
-//    secrets:{
-//        'user' : 'd40be3adf0245cfda60ec696ffd95338',
-//        'company': '98c89f16608df03b0248b74ecaf6a79b'
-//    },
-
-    //ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
-    //secrets:{
-    //    'user' : '846708bb4a1da71d70286bc5bb0c51bf',
-    //    'company': '98c89f16608df03b0248b74ecaf6a79b'
-    //},
-
-  // Pull this from the URL or header
-  USER_ID: 'system',
-
-  // These are configured via ngConstants
-    //Vineet's  Local
-//  APP_KEY: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
-//  ENV_URL: 'http://localhost:4040/elements/api-v2/',
-
-    APP_KEY: '2wHu7zDoItzY74zNjKKQdWgcAyqcq+c8hqT2s/I9JgXqCLjtqJLRRmL8ReyddNef',
-    ENV_URL: 'http://localhost:5050/elements/api-v2/',
-
-//  configuration: {
-//      'user' : '73dc58d0c8e5230dc4f59384ba0ead3e',
-//      'company': '672aa88bb4e3235091de77900e3e299b',
-//      'targetPath': '/hubs/documents/files',
-//      'targetToken': 'MGcqvE/UnTtLJix9xj5QZPXpbJ5IG/fKMYjUw8oW0Rc=',
-//      'targetFolder': '/Bulkloader.io',
-//      'targetMethod': 'POST',
-//      'notificationToken': '8rOB/2d6CeDN7dBBY/cxGZeQ7gK8GDReADYBWpsv/ho=',
-//      'notificationEmail': 'vineet@cloud-elements.com'
-//  },
-
-  // S3 token
-  // 'targetToken': 'ptfOxwGhwAw0gvZdOL78DCFEzjJpzD1Dv97pCPNzioc=',
-//  'targetFolder': '/CloudElements',
-
-
-//  ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
-//  secrets:{
-//    'user' : 'df41a24b433da95c47b5ccb1cd69cf84',
-//    'company': '6f508ec692ae0d6c410698903f32d1a2'
-//  },
-    // Ramana's keys
-    // secrets:{
-        // 'user' : '846708bb4a1da71d70286bc5bb0c51bf',
-        // 'company': '98c89f16608df03b0248b74ecaf6a79b'
-    // },
-
-
-
-//    ENV_URL: 'http://localhost:5050/elements/api-v2/',
-//    secrets:{
-//        'user' : 'CtRMK6ISlVJ0LH8pL8DX6I1lRVTDhMtF2Ofk7CTJuy8=',
-//        'company': 'e8f910e423f9c34306027dfd147047e8'
-//    },
-
-//    ENV_URL:null,
-//    secrets:null,
 
     /**
      * Initialize Service Properties
@@ -133,10 +73,10 @@ var ElementsService = Class.extend({
 
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + me.APP_KEY
+            'Authorization': 'Bearer ' + me._environment.apiKey
         }
 
-        var url = me.ENV_URL + 'applications';
+        var url = me._environment.elementsUrl + '/applications';
 
         return me._httpGet(url, headers);
     },
@@ -147,10 +87,10 @@ var ElementsService = Class.extend({
 
         var headers = {
           'Content-Type': 'application/json',
-          'Authorization': 'Organization ' + me.configuration.company + ', UserId ' + me.USER_ID
+          'Authorization': 'Organization ' + me.configuration.company + ', UserId ' + me._environment.userId
         }
 
-        var url = me.ENV_URL + 'applications/users';
+        var url = me._environment.elementsUrl + '/applications/users';
 
         return me._httpGet(url, headers);
     },
@@ -181,7 +121,7 @@ var ElementsService = Class.extend({
      * @return Service handler
      */
     loadElementInstances:function(){
-        var url = this.ENV_URL + 'instances';
+        var url = this._environment.elementsUrl + '/instances';
         return this._httpGet(url,this._getHeaders());
     },
 
@@ -195,11 +135,11 @@ var ElementsService = Class.extend({
             'callbackUrl': callbackUrl
         };
 
-        if(!me._cloudElementsUtils.isEmpty(me.configuration.siteAddress)) {
+        if (!me._cloudElementsUtils.isEmpty(me.configuration.siteAddress)) {
             parameters['siteAddress'] = me.configuration.siteAddress;
         }
 
-        var url = this.ENV_URL+ 'elements/' + elementKey + '/oauth/url';
+        var url = this._environment.elementsUrl + '/elements/' + elementKey + '/oauth/url';
 
         return this._httpGet(url,this._getHeaders(), parameters);
     },
@@ -226,11 +166,11 @@ var ElementsService = Class.extend({
             elementProvision.configuration['zendesk.subdomain'] = me.configuration.siteAddress; //TODO Hardcoded for zendesk
         }
 
-        return this._httpPost(this.ENV_URL + 'instances/', this._getHeaders(), elementProvision);
+        return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
     },
 
     loadElementDefaultTransformations:function(elementInstance){
-        var url = this.ENV_URL + 'elements/' + elementInstance.element.key + '/transformations';
+        var url = this._environment.elementsUrl + '/elements/' + elementInstance.element.key + '/transformations';
         return this._httpGet(url,this._getHeaders());
     },
 
@@ -241,27 +181,27 @@ var ElementsService = Class.extend({
      */
     loadInstanceObjects:function(elementInstance){
 
-        var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/objects';
+        var url = this._environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects';
         return this._httpGet(url,this._getHeaders(elementInstance.token));
     },
 
     loadInstanceObjectDefinitions: function(elementInstance) {
-      var url = this.ENV_URL + 'instances/' + elementInstance.id + '/objects/definitions';
-      return this._httpGet(url, this._getHeaders());
+        var url = this._environment.elementsUrl + '/instances/' + elementInstance.id + '/objects/definitions';
+        return this._httpGet(url, this._getHeaders());
     },
 
     loadAccountObjectDefinitions: function() {
-        var url = this.ENV_URL + 'accounts/objects/definitions';
+        var url = this._environment.elementsUrl + '/accounts/objects/definitions';
         return this._httpGet(url,this._getHeaders());
     },
 
     loadOrganizationsObjectDefinitions: function() {
-        var url = this.ENV_URL + 'organizations/objects/definitions';
+        var url = this._environment.elementsUrl + '/organizations/objects/definitions';
         return this._httpGet(url,this._getHeaders());
     },
 
     loadAccounts: function() {
-        var url = this.ENV_URL + 'accounts?where=type=\'CompanyAccount\'';
+        var url = this._environment.elementsUrl + '/accounts?where=type=\'CompanyAccount\'';
         return this._httpGet(url,this._getHeaders());
     },
 
@@ -271,7 +211,7 @@ var ElementsService = Class.extend({
      */
     loadObjectMetaData:function(elementInstance, objectName){
 
-        var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/objects/' + objectName + '/metadata';
+        var url = this._environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects/' + objectName + '/metadata';
 
         return this._httpGet(url,this._getHeaders(elementInstance.token));
     },
@@ -279,7 +219,7 @@ var ElementsService = Class.extend({
     loadInstanceTransformations:function(elementInstance){
 
         // /instances/{id}/transformations
-        var url = this.ENV_URL + 'instances/{id}/transformations';
+        var url = this._environment.elementsUrl + '/instances/{id}/transformations';
         url = url.replace('{id}', elementInstance.id);
 
         return this._httpGet(url,this._getHeaders());
@@ -288,7 +228,7 @@ var ElementsService = Class.extend({
     loadAccountTransformations:function(elementInstance, account){
 
         //  /accounts/{id}/elements/{key}/transformations
-        var url = this.ENV_URL + 'accounts/{id}/elements/{key}/transformations';
+        var url = this._environment.elementsUrl + '/accounts/{id}/elements/{key}/transformations';
         url = url.replace('{id}', account.id);
         url = url.replace('{key}', elementInstance.element.key);
         return this._httpGet(url,this._getHeaders());
@@ -296,7 +236,7 @@ var ElementsService = Class.extend({
 
     loadOrganizationTransformations:function(elementInstance){
         //  /organizations/elements/{key}/transformations
-        var url = this.ENV_URL + 'organizations/elements/{key}/transformations';
+        var url = this._environment.elementsUrl + '/organizations/elements/{key}/transformations';
         url = url.replace('{key}', elementInstance.element.key);
 
         return this._httpGet(url,this._getHeaders());
@@ -304,10 +244,10 @@ var ElementsService = Class.extend({
 
     findAllObjectTransformations: function(objectName, scope, account) {
 
-        var url = this.ENV_URL + 'organizations/objects/{objectName}/transformations';
+        var url = this._environment.elementsUrl + '/organizations/objects/{objectName}/transformations';
 
         if (scope !='organization') {
-            url = this.ENV_URL + 'accounts/{id}/objects/{objectName}/transformations';
+            url = this._environment.elementsUrl + '/accounts/{id}/objects/{objectName}/transformations';
             url = url.replace('{id}', account.id);
         }
 
@@ -324,13 +264,13 @@ var ElementsService = Class.extend({
         var url;
 
         if (scope == 'organization') {
-            url = this.ENV_URL + 'organizations/objects/{objectName}/definitions';
+            url = this._environment.elementsUrl + '/organizations/objects/{objectName}/definitions';
         }
         else if (scope == 'account') {
-            url = this.ENV_URL + 'accounts/objects/{objectName}/definitions';
+            url = this._environment.elementsUrl + '/accounts/objects/{objectName}/definitions';
         }
         else if (scope == 'instance') {
-          url = this.ENV_URL + 'instances/' + selectedInstance.id + '/objects/{objectName}/definitions';
+            url = this._environment.elementsUrl + '/instances/' + selectedInstance.id + '/objects/{objectName}/definitions';
         }
 
         url = url.replace('{objectName}', objectName);
@@ -351,17 +291,17 @@ var ElementsService = Class.extend({
 
         var url = null;
         if(scope == 'organization') {
-            url = this.ENV_URL + 'organizations/elements/{key}/transformations/{objectName}';
+            url = this._environment.elementsUrl + '/organizations/elements/{key}/transformations/{objectName}';
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
         }
         else if(scope == 'instance') {
-            url = this.ENV_URL + 'instances/{id}/transformations/{objectName}';
+            url = this._environment.elementsUrl + '/instances/{id}/transformations/{objectName}';
             url = url.replace('{id}', elementInstance.id);
             url = url.replace('{objectName}', objectName);
         }
         else {
-            url = this.ENV_URL + 'accounts/{id}/elements/{key}/transformations/{objectName}';
+            url = this._environment.elementsUrl + '/accounts/{id}/elements/{key}/transformations/{objectName}';
             url = url.replace('{id}', scope); //The scope that comes is account id
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
@@ -383,17 +323,17 @@ var ElementsService = Class.extend({
 
         var url = null;
         if(scope == 'organization') {
-            url = this.ENV_URL + 'organizations/elements/{key}/transformations/{objectName}';
+            url = this._environment.elementsUrl + '/organizations/elements/{key}/transformations/{objectName}';
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
         }
         else if(scope == 'instance') {
-            url = this.ENV_URL + 'instances/{id}/transformations/{objectName}';
+            url = this._environment.elementsUrl + '/instances/{id}/transformations/{objectName}';
             url = url.replace('{id}', elementInstance.id);
             url = url.replace('{objectName}', objectName);
         }
         else {
-            url = this.ENV_URL + 'accounts/{id}/elements/{key}/transformations/{objectName}';
+            url = this._environment.elementsUrl + '/accounts/{id}/elements/{key}/transformations/{objectName}';
             url = url.replace('{id}', scope); //The scope that comes is account id
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
@@ -408,7 +348,7 @@ var ElementsService = Class.extend({
 	   */
 	  scheduleJob: function(elementInstance, job){
 
-		    var url = this.ENV_URL + 'hubs/' + elementInstance.element.hub + '/bulk/workflows';
+        var url = this._environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
 		    return this._httpPost(url, this._getHeaders(elementInstance.token), job);
 	  },
@@ -468,13 +408,10 @@ var ElementsService = Class.extend({
 		/**
     	 * Initialize and configure
      	*/
-		$get:['$http', 'CloudElementsUtils', function($http, CloudElementsUtils){
+		$get:['$http', 'ENV', 'CloudElementsUtils', function($http, ENV, CloudElementsUtils){
 			this.instance.$http = $http;
-            this.instance._cloudElementsUtils = CloudElementsUtils;
-
-//      this.instance._loadOrgConfiguration(this.instance.APP_KEY).then(
-//        this.instance._loadOrgConfigurationSucceeded.bind(this.instance),
-//        this.instance._loadOrgConfigurationFailed.bind(this.instance));
+      this.instance._cloudElementsUtils = CloudElementsUtils;
+      this.instance._environment = ENV;
 
 			return this.instance;
 		}]
