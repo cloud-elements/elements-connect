@@ -66,8 +66,6 @@ var MapperController = BaseController.extend({
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
 
-        me.$scope.sourceLogo = me._picker.selectedElementInstance.name;
-
         this.$scope.mapperTreeOptions = {
             dropped: this.onMetadataTreeDropped.bind(this),
 //            dragMove: this.onMetadataDragMove.bind(this)
@@ -123,6 +121,7 @@ var MapperController = BaseController.extend({
         }
         else{
             parentModelVal.vendorPath = modelVal.actualVendorPath;
+            parentModelVal.targetVendorType= modelVal.type;
         }
     },
 
@@ -209,6 +208,8 @@ var MapperController = BaseController.extend({
             me.$location.path('/');
             return;
         }
+
+        me.$scope.sourceLogo = me._picker.selectedElementInstance.name;
 
         me._maskLoader.show(me.$scope, 'Loading Objects...');
 
@@ -301,9 +302,72 @@ var MapperController = BaseController.extend({
         }
     },
 
-    removeMapPath: function() {
+    removeMapPath: function(treenode) {
         var me = this;
 
+        var obj = treenode.$nodeScope.$modelValue;
+
+        this._populateBackToMetaData(obj.vendorPath, obj.targetVendorType, obj.vendorPath, me.$scope.objectMetaData);
+        obj.vendorPath = null;
+        obj.targetVendorType = null;
+    },
+
+    _findAndGetInnerMetadata: function(objField, metadatafields) {
+        for(var i=0; i< metadatafields.length; i++) {
+            var field = metadatafields[i];
+
+            if(field.vendorPath == objField) {
+                return field;
+            }
+        }
+    },
+
+    _populateBackToMetaData: function(targetVendorPath, targetVendorType, actualTargetVendorPath, metadatafields) {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(targetVendorType)) {
+            targetVendorType = 'string';
+        }
+
+        if(me._cloudElementsUtils.isEmpty(targetVendorPath)) {
+            return;
+        }
+
+        if(targetVendorPath.indexOf('.') != -1) {
+            //Find the inner object inside metadata and add it to it
+            var fieldParts = targetVendorPath.split('.').slice(1).join('.');
+            var objField = targetVendorPath.split('.')[0];
+
+            var innerMetadata = me._findAndGetInnerMetadata(objField, metadatafields);
+            if(this._cloudElementsUtils.isEmpty(innerMetadata)) {
+                var t = 'object';
+
+                if(objField.indexOf('[*]') != -1) {
+                    t = 'array';
+                }
+
+                innerMetadata = {
+                    fields : [],
+                    vendorPath: objField,
+                    actualVendorPath: objField,
+                    type: t
+                };
+
+                metadatafields.push(innerMetadata);
+            }
+
+            me._populateBackToMetaData(fieldParts, targetVendorType,  actualTargetVendorPath, innerMetadata.fields);
+        }
+        else{
+
+            var oldObj = {
+                vendorPath: targetVendorPath,
+                type: targetVendorType,
+                actualVendorPath: actualTargetVendorPath
+            };
+
+            metadatafields.push(oldObj);
+        }
     }
 });
 
