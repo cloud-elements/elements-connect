@@ -112,8 +112,13 @@ h1 {
 #picker {
     color: #fff;
     text-align:center;
-    padding:15px;
+    padding:0px;
     width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 #picker h1 {
@@ -124,6 +129,7 @@ h1 {
     margin:0 auto;
     text-align:center;
 }
+
 
 #picker .services-selections > a{
     background-size:80%;
@@ -144,17 +150,18 @@ h1 {
     -webkit-transition: all 150ms ease-in;
 }
 #picker .picker-source{
-    margin-bottom: 5em;
+    background-color: #58bde8;
+    display: none;
 }
 #picker .picker-source .services-selections > a{
     background-size:80%;
     background-position: center center;
     background-repeat:no-repeat;
     display:inline-block;
-    width:8vw;
-    height:6vw;
-    min-width:100px;
-    min-height:100px;
+    width: 16vw;
+    height: 10vw;
+    min-width: 180px;
+    min-height: 140px;
     background-color:#fff;
     box-shadow: 0 1px 2px rgba(0,0,0,.5);
     margin:15px;
@@ -244,7 +251,9 @@ h1 {
     text-shadow: 0 -1px 0 rgba(255,255,255,.5);
     z-index:100;
 }
-
+#picker .picker-target{
+    width: 100%;
+}
 #picker .picker-target.disabled{
     opacity: .2;
 }
@@ -258,10 +267,10 @@ h1 {
     opacity:0;
 }
 
-#picker .zendesk,#mapper .zendesk {
+#picker .zendesk, #mapper .zendesk {
     background-image:url(../images/zendesk_logo.png);
 }
-#picker .salesforce, #mapper .salesforce {
+#picker .salesforce, #mapper .sfdcmarketingcloud {
     background-image:url(../images/sfdc_logo.jpg);
 }
 
@@ -307,6 +316,24 @@ h1 {
     font-size: 400%;
     left: 50%;
     margin-left: -37px;
+}
+
+#picker.show-target .picker-source{
+    display:block;
+    flex: 2;
+    flex-direction: row;
+    position: relative;
+}
+
+#picker.show-target .picker-target {
+    width: 100%;
+    flex: 3;
+    flex-direction: row;
+    position: relative;
+}
+#picker.show-target .picker-source h2{
+}
+#picker.show-target .picker-target h2{
 }
 /************************/
 /* ANIMATION STYLES     */
@@ -556,6 +583,7 @@ h1 {
     font-size: 84%;
     position:relative;
     display:block !important;
+    border: none;
 }
 
 #data-list-body li li div.tree-root-li-li-container:before{
@@ -842,6 +870,7 @@ div#data-list-body.disabled:after {
     right: 40px;
     min-height: 400px;
     bottom: 35px;
+    overflow: scroll;
 }
 #mapping-data-list-body #mapper-data-list-source{
     background-color: #333;
@@ -968,6 +997,11 @@ div#data-list-body.disabled:after {
     margin-top: -2px;
 }
 
+#mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes{
+    position: absolute;
+    width: 100%;
+    overflow: scroll;}
+
 #mapping-data-list-body li li li{
     margin-left:10px;
 }
@@ -983,6 +1017,14 @@ div#data-list-body.disabled:after {
     font-size: 84%;
     position:relative;
     display:block !important;
+    border: none;
+}
+#mapping-data-list-body li li.mapped div.tree-root-li-li-container:before{
+    border-left: 10px solid #58bde8 !important;
+}
+#mapping-data-list-body li li.angular-ui-tree-placeholder-mapping-hover div.tree-root-li-li-container{
+    background: none;
+    background-color: #999;
 }
 
 #mapping-data-list-body #mapper-data-list-source li li div.tree-root-li-li-container, #mapping-data-list-body #mapper-data-list-source li li li{
@@ -1010,8 +1052,15 @@ div#data-list-body.disabled:after {
 #mapping-data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes{
     padding-left: 15px;
 }
+
 #mapping-data-list-body li div{
 
+}
+
+#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.target{
+}
+#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.source{
+    color: #58bde8;
 }
 
 #mapper #select-dropdown-container{
@@ -1168,9 +1217,12 @@ div#data-list-body.disabled:after {
     -webkit-filter: blur(0px);
 }
 
-.angular-ui-tree-placeholder{
-    background-color: #333;
+li li.angular-ui-tree-placeholder{
+    background-color: #333 !important;
     border: 1px dashed #58bde8;
+    display: block;
+    margin: 0 0 5px 0;
+    height: 46px;
 }
 
 #mapper-header .target-source-link-img {
@@ -1184,6 +1236,28 @@ div#data-list-body.disabled:after {
     border-radius: 2px;
     position: relative;
     -webkit-transition: all 150ms ease-in;
+    width: 40px;
+    height: 40px;
+    float: left;
+}
+#mapper-header .target-source-icon{
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    float: left;
+}
+#mapper-header .target-source-icon i{
+    width: 100%;
+    padding: 1em 0;
+}
+
+.tree-node.angular-ui-tree-handle {
+    border: none;
+    background: #58bde8;
+    color: #fff;
+    padding: 13px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
 }
 /***********************/
 /* END MAPPER           */

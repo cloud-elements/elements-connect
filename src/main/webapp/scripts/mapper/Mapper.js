@@ -210,108 +210,94 @@ var Mapper = Class.extend({
         me._restructureObjectMetadata(objectMetadata);
         me.all[selectedInstance.element.key].metadata[selectedObject] = objectMetadata;
 
-        //Check to see if there is a transformation available for the object and create a mapping for the transformations
-        //TODO Create a mapping if there is one already exists
-        //me._createMapping(selectedInstance, selectedObject, objectMetadata);
-
         return objectMetadata;
     },
 
-    //Check to see if there is a transformation available for the object and set the transform flag for the metadata
-    _createMapping: function(selectedInstance, selectedObject, objectMetadata) {
-        var me  = this;
-
-        //No Transformations, MAppppp to create one
-        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
-            return;
-        }
-
-        var objectTransformation = me.all[selectedInstance.element.key].transformations[selectedObject];
-
-        if(me._cloudElementsUtils.isEmpty(objectTransformation)
-            || me._cloudElementsUtils.isEmpty(objectTransformation.fields)) {
-            return;
-        }
-
-        for(var i=0; i< objectTransformation.fields.length; i++) {
-            var f = objectTransformation.fields[i];
-            me._setTransformValue(objectMetadata, f.vendorPath);
-        }
-
-        // Mark the object as All Instances with transformation
-        if (objectMetadata.fields.length == objectTransformation.fields.length){
-           return  objectMetadata.objectTransformation = true;
-        }
-
-    },
-
-    _findObjectDefinition: function(definition, objectName, innerObjectDefinitonNames) {
-
-        if(this._cloudElementsUtils.isEmpty(definition)) {
-            return null;
-        }
-
-        var objDef = definition[objectName];
-
-        if(this._cloudElementsUtils.isEmpty(objDef)) {
-            return null;
-        }
-
-        return this._getKeyVal(objDef, definition, innerObjectDefinitonNames);
-    },
-
-    _getKeyVal: function(objDef, definition, innerObjectDefinitonNames, superName, superType) {
+    loadObjectMapping: function(selectedInstance, selectedObject, targetInstance, objectMetadata) {
         var me = this;
 
-        var keyValObj = new Object;
-
-        if(me._cloudElementsUtils.isEmpty(objDef)) {
-            return keyValObj;
+        var trans = me.all[selectedInstance.element.key].transformations;
+        if(me._cloudElementsUtils.isEmpty(trans)) {
+            return;
         }
 
-        for(var i=0; i< objDef.fields.length; i++) {
-            var o = objDef.fields[i];
+        var transformationKeys = Object.keys(trans);
+        var transformedObject = null;
+        var targetObject  = null;
 
-            if(me._isLiteral(o.type))
-            {
-                keyValObj[o.path] = o.type;
+        for(var i=0; i< transformationKeys.length; i++) {
+            targetObject = transformationKeys[i];
+            transformedObject = trans[targetObject];
+            if(transformedObject.vendorName == selectedObject) {
+                transformedObject.name = targetObject;
+                break;
             }
-            else
-            {
-                var innerDef = definition[o.type];
-                if(o.type.indexOf('array[') != -1) {
-                    //This of type array object, construct the key/val pair such that mapping is easy to build
-                    innerDef = definition[o.type.replace('array[', '').replace(']', '')];
-                }
-
-                //If an Object is embedded in same object then constructing the _getKeyVal will go into infinite loop
-                //Not sure the best way to handle the scenario, but killing the stack here and modify when we come up with better solution
-                if(!this._cloudElementsUtils.isEmpty(superType) && superType == o.type) {
-                    break;
-                }
-
-                var sName = superName;
-                if(this._ceUtils.isEmpty(superName))
-                    sName = o.path;
-                else
-                    sName = sName+'.'+o.path;
-
-                keyValObj[o.path] = this._getKeyVal(innerDef, definition, innerObjectDefinitonNames, sName, o.type);
-                innerObjectDefinitonNames[sName] = o.type;
+            else {
+                transformedObject = null;
             }
         }
 
-        return keyValObj;
+        if(me._cloudElementsUtils.isEmpty(transformedObject)
+            || me._cloudElementsUtils.isEmpty(transformedObject.fields)) {
+            return null;
+        }
+
+        objectMetadata.objectTransformation = true;
+
+        return me.loadTargetObjectMetaMapping(selectedInstance, selectedObject, targetInstance, transformedObject.name)
+            .then(me._handleOnTargetEmptymappingLoad.bind(me, transformedObject));
     },
 
+    _handleOnTargetEmptymappingLoad: function(transformedObject, emptyMapping) {
 
+        var me = this;
 
-    _setTransformValue: function(objectMetadata, vendorPath) {
-        for(var i=0; i< objectMetadata.fields.length; i++) {
-            var f = objectMetadata.fields[i];
-            if(f.vendorPath == vendorPath) {
-                f.transform = true;
-                break;
+        //Populate the mapping with the vendorPath from transformation
+        me._populateVendorPath(emptyMapping, transformedObject);
+
+        return emptyMapping;
+    },
+
+    _populateVendorPath: function(mapping, transformation) {
+        var me = this;
+
+        for(var i=0; i < transformation.fields.length; i++) {
+            var t = transformation.fields[i];
+
+            if(!me._cloudElementsUtils.isEmpty(t.vendorPath)){
+                me._setVendorPathInMapping(mapping, t.path, t.vendorPath);
+            }
+        }
+    },
+
+    _setVendorPathInMapping: function(mapping, path, vendorPath, parentMap) {
+        var me = this;
+
+        var findIn = parentMap;
+        if(findIn == null) {
+            findIn = mapping;
+        }
+
+        if(path.indexOf('.') === -1) {
+
+            for(var i=0; i < findIn.fields.length; i++) {
+                var t = findIn.fields[i];
+                if(t.path == path) {
+                    t.vendorPath = vendorPath;
+                    break;
+                }
+            }
+        }
+        else {
+            var fieldParts = path.split('.').slice(1).join('.');
+            var objField = path.split('.')[0];
+
+            for(var i=0; i < findIn.fields.length; i++) {
+                var t = findIn.fields[i];
+                if(t.path == objField) {
+                    me._setVendorPathInMapping(mapping, fieldParts, vendorPath, t);
+                    break;
+                }
             }
         }
     },
@@ -430,12 +416,12 @@ var Mapper = Class.extend({
     },
 
 
-    loadTargetObjectMetaMapping:function(targetInstance, selectedObject){
+    loadTargetObjectMetaMapping:function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject){
         var me = this;
 
         return me._elementsService.loadObjectMetaData(targetInstance, selectedObject)
             .then(
-            me._handleTargetLoadObjectMetadata.bind(me, targetInstance, selectedObject),
+            me._handleTargetLoadObjectMetadata.bind(me, selectedInstance, selectedInstanceObject, targetInstance, selectedObject),
             me._handleTargetLoadErrorObjectMetadata.bind(me) );
     },
 
@@ -443,13 +429,16 @@ var Mapper = Class.extend({
         return "Error getting the discovery object";
     },
 
-    _handleTargetLoadObjectMetadata: function(targetInstance, selectedObject, result) {
+    _handleTargetLoadObjectMetadata: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, result) {
         var me = this;
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
             me.all[targetInstance.element.key].metadata = new Object;
             me.all[targetInstance.element.key].metadataflat = new Object;
-            me.all[targetInstance.element.key].metamapping = new Object;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metamapping)) {
+            me.all[selectedInstance.element.key].metamapping = new Object;
         }
 
         var objectMetadata = result.data;
@@ -462,15 +451,16 @@ var Mapper = Class.extend({
         me.all[targetInstance.element.key].metadata[selectedObject] = objectMetadata;
 
         //Create an empty mapping, basically the definition from metadata and return it
-        return me._createEmptyMapping(targetInstance, selectedObject, objectMetadata)
+        return me._createEmptyMapping(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata)
     },
 
-    _createEmptyMapping: function(targetInstance, selectedObject, objectMetadata) {
+    _createEmptyMapping: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata) {
         var me = this;
         var newMapping = new Object;
         newMapping['name'] = selectedObject;
+        newMapping['vendorName'] = selectedInstanceObject;
         newMapping['fields'] = objectMetadata.fields;
-        me.all[targetInstance.element.key].metamapping[selectedObject] = newMapping;
+        me.all[selectedInstance.element.key].metamapping[selectedObject] = newMapping;
         return newMapping;
     },
 
@@ -506,26 +496,18 @@ var Mapper = Class.extend({
         for(var i = 0; i < mData.fields.length; i++){
             var mapperData = mData.fields[i];
 
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
-                continue;
-            }
-
-            if(me._cloudElementsUtils.isEmpty(mapperData.type))
+            if(me._cloudElementsUtils.isEmpty(mapperData.type)) {
                 mapperData.type = 'string'; //this is dirty fix for setting a type value by default
+            }
 
             if(this._isLiteral(mapperData.type.toLowerCase())
                 || this._isDateFormat(mapperData.type))
             {
                 var t = mapperData.type;
-                var p = mapperData.vendorPath;
+                var p = mapperData.path;
 
                 if(this._isDateFormat(t)) {
                     t = 'date';
-                }
-
-                if(this._isLiteralArray(mapperData.type)) {
-                    p = p+'[*]';
                 }
 
                 objDefinition.fields.push({
@@ -536,7 +518,7 @@ var Mapper = Class.extend({
             else{
                 //This is where its of type Object so create a definition out of it
                 // and also add it to the base definition
-                var name = mapperData.vendorPath;
+                var name = mapperData.path;
                 if(this._cloudElementsUtils.isEmpty(name) || name.length == 0) {
                     name = mapperData.vendorPath
                 }
@@ -548,7 +530,7 @@ var Mapper = Class.extend({
                 this._constructDefinition(definitionArray, name, mapperData);
 
                 var t = mapperData.vendorPath;
-                var p = mapperData.vendorPath;
+                var p = mapperData.path;
                 if(mapperData.type == 'array') {
                     t = 'array['+mapperData.vendorPath.replace('[*]', '')+']';
                     p = p+'[*]';
@@ -608,19 +590,14 @@ var Mapper = Class.extend({
     _constructAndSaveObjectDefinition: function(selectedInstance) {
         var me = this;
 
-        var mData = me.all[selectedInstance.element.key].metadata;
+        var mData = me.all[selectedInstance.element.key].metamapping;
         var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
+
         var mKeys = Object.keys(mData);
 
         var definitionArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
-
-            if(objectsAndTrans[mKeys[i]] == false
-                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
-                continue;
-            }
-
             me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
         }
 
@@ -644,7 +621,7 @@ var Mapper = Class.extend({
 
         if (!me._cloudElementsUtils.isEmpty(defs)
             && !me._cloudElementsUtils.isEmpty(defs[key])
-            && defs[key].level == 'instance') //TODO Modify this to instance
+            && defs[key].level == 'instance')
         {
             methodType = 'PUT';
         }
@@ -711,11 +688,6 @@ var Mapper = Class.extend({
 
         for(var i = 0; i < objectMapperData.fields.length; i++){
             var mapperData = objectMapperData.fields[i];
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
-                continue;
-            }
-
             var mapperType = mapperData.type.toLowerCase();
 
             if(this._isLiteral(mapperType)
@@ -726,37 +698,43 @@ var Mapper = Class.extend({
                     p = p+'[*]';
                 }
 
-//                if(!this._cloudElementsUtils.isEmpty(mapperData.configuration)) {
-//                    objectTransformation.fields.push({
-//                        'path': objectName+'.'+p,
-//                        'vendorPath': mapperData.vendorPath,
-//                        'configuration':mapperData.configuration
-//                    });
-//                }
-//                else {
+                if(me._cloudElementsUtils.isEmpty(mapperData.vendorPath)) {
                     objectTransformation.fields.push({
-                        'path': mapperData.actualVendorPath,
-                        'vendorPath': mapperData.actualVendorPath
+                        'path': mapperData.path,
+                        'configuration':[
+                            {
+                                "type": "passThrough",
+                                "properties": {
+                                    "fromVendor": false,
+                                    "toVendor": false
+                                }
+                            }
+                        ]
                     });
-//                }
+                } else {
+                    objectTransformation.fields.push({
+                        'path': mapperData.path,
+                        'vendorPath': mapperData.vendorPath
+                    });
+                }
             }
             else
             {
-                var newObjectName = mapperData.vendorPath;
+                var newObjectName = mapperData.path;
                 if(me._cloudElementsUtils.isEmpty(objectName)) {
-                    newObjectName = objectName+'.'+mapperData.vendorPath;
+                    newObjectName = objectName+'.'+mapperData.path;
                 }
                 this._constructDeeperTransformation(objectTransformation, mapperData,newObjectName);
             }
         }
     },
 
-    _constructTransformation: function(selectedInstance, transformationArray, vendorName, metaData) {
+    _constructTransformation: function(selectedInstance, transformationArray, name, vendorName, metaData) {
         var me = this;
 
         var objectTransformation = {
             'vendorName':  vendorName,
-            //For setting ignore unmapped, only the ones which are selected will be returned
+            //For setting ignore unmapped, only the ones which are mapped will be returned
             'configuration':[
                 {
                     "type": "passThrough",
@@ -768,27 +746,21 @@ var Mapper = Class.extend({
             ],
             fields:[]
         };
-        me._constructDeeperTransformation(objectTransformation, metaData)
-        transformationArray[vendorName]=objectTransformation;
+        me._constructDeeperTransformation(objectTransformation, metaData);
+        transformationArray[name]=objectTransformation;
     },
 
     _constructAndSaveObjectTransformation: function(selectedInstance) {
         var me = this;
 
-        var mData = me.all[selectedInstance.element.key].metadata;
+        var mData = me.all[selectedInstance.element.key].metamapping;
         var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
         var mKeys = Object.keys(mData);
 
         var transformationArray = new Object;
 
         for (var i = 0; i < mKeys.length; i++) {
-
-            if (objectsAndTrans[mKeys[i]] ==false
-                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
-                continue;
-            }
-
-            me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]]);
+            me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]].vendorName, mData[mKeys[i]]);
         }
 
         var transformationSaveCounter = 0;

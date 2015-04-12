@@ -49,6 +49,7 @@ var MapperController = BaseController.extend({
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
+        me.$scope.removeMapPath = me.removeMapPath.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
@@ -107,7 +108,7 @@ var MapperController = BaseController.extend({
         // Cleaning up any object literal mapping classes on drop
         $('.angular-ui-tree-placeholder-mapping-hover').removeClass('angular-ui-tree-placeholder-mapping-hover');
         $('.showMapper').removeClass('literal-mapping');
-
+        event.dest.nodesScope.$parent.$element.addClass('mapped');
         //Checking to see if the parent type is a literal if so just merge the vendor path to the parent and remove the
         //newly added node from source
         //If the Parent is an object or null, then its a new mapping field so enable it for editable
@@ -120,6 +121,7 @@ var MapperController = BaseController.extend({
         }
         else{
             parentModelVal.vendorPath = modelVal.actualVendorPath;
+            parentModelVal.targetVendorType= modelVal.type;
         }
     },
 
@@ -160,11 +162,15 @@ var MapperController = BaseController.extend({
         me.$scope.objectMetaData = data.fields;
         me.$scope.showTree = true;
 
-        //TODO
+        me.$scope.mapperdata = null;
+        me.$scope.selectedTargetObject = null;
+        me.$scope.showTargetTree = false;
+
         //Now Check to see if there is a mapping already exists for the object
         //if so just set the target mapper
-
-        me._maskLoader.hide();
+        me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
+                                     me._picker.targetElementInstance, me.$scope.objectMetaData)
+            .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedObject));
     },
 
 
@@ -173,14 +179,14 @@ var MapperController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, "Loading mapping...");
 
-        var targetMetaMapping = me._mapper.all[me._picker.targetElementInstance.element.key].metamapping;
+        var targetMetaMapping = me._mapper.all[me._picker.selectedElementInstance.element.key].metamapping;
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)
             || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
 
-            me._mapper.loadTargetObjectMetaMapping(me._picker.targetElementInstance, me.$scope.selectedTargetObject)
+            me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
                 .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
         } else {
-            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, instanceMeta[me.$scope.selectedTargetObject]);
+            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping[me.$scope.selectedTargetObject]);
         }
 
     },
@@ -188,8 +194,15 @@ var MapperController = BaseController.extend({
     _handleOnTargetMetamappingLoad: function(obj, data) {
         var me = this;
 
-        me.$scope.mapperdata = data.fields;
-        me.$scope.showTargetTree = true;
+        if(!me._cloudElementsUtils.isEmpty(data)) {
+            me.$scope.mapperdata = data.fields;
+            me.$scope.showTargetTree = true;
+
+            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
+                me.$scope.selectedTargetObject = data.name;
+            }
+        }
+
         me._maskLoader.hide();
     },
 
@@ -202,6 +215,9 @@ var MapperController = BaseController.extend({
             me.$location.path('/');
             return;
         }
+
+        me.$scope.sourceLogo = me._picker.selectedElementInstance.name;
+        me.$scope.targetLogo = me._picker.targetElementInstance.name;
 
         me._maskLoader.show(me.$scope, 'Loading Objects...');
 
@@ -228,7 +244,7 @@ var MapperController = BaseController.extend({
     save: function() {
         var me = this;
         me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._datalist.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
+        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
 
     },
 
@@ -291,6 +307,78 @@ var MapperController = BaseController.extend({
         var me = this;
         for (var i = 0; i < me.$scope.instanceObjects.length; i++) {
             me.$scope.instanceObjects[i].transformed = cbState;
+        }
+    },
+
+    removeMapPath: function(treenode) {
+        var me = this;
+
+        var obj = treenode.$nodeScope.$modelValue;
+
+        if(me._cloudElementsUtils.isEmpty(obj.vendorPath)) {
+            return;
+        }
+
+        this._populateBackToMetaData(obj.vendorPath, obj.targetVendorType, obj.vendorPath, me.$scope.objectMetaData);
+        obj.vendorPath = null;
+        obj.targetVendorType = null;
+    },
+
+    _findAndGetInnerMetadata: function(objField, metadatafields) {
+        for(var i=0; i< metadatafields.length; i++) {
+            var field = metadatafields[i];
+
+            if(field.vendorPath == objField) {
+                return field;
+            }
+        }
+    },
+
+    _populateBackToMetaData: function(targetVendorPath, targetVendorType, actualTargetVendorPath, metadatafields) {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(targetVendorType)) {
+            targetVendorType = 'string';
+        }
+
+        if(me._cloudElementsUtils.isEmpty(targetVendorPath)) {
+            return;
+        }
+
+        if(targetVendorPath.indexOf('.') != -1) {
+            //Find the inner object inside metadata and add it to it
+            var fieldParts = targetVendorPath.split('.').slice(1).join('.');
+            var objField = targetVendorPath.split('.')[0];
+
+            var innerMetadata = me._findAndGetInnerMetadata(objField, metadatafields);
+            if(this._cloudElementsUtils.isEmpty(innerMetadata)) {
+                var t = 'object';
+
+                if(objField.indexOf('[*]') != -1) {
+                    t = 'array';
+                }
+
+                innerMetadata = {
+                    fields : [],
+                    vendorPath: objField,
+                    actualVendorPath: objField,
+                    type: t
+                };
+
+                metadatafields.push(innerMetadata);
+            }
+
+            me._populateBackToMetaData(fieldParts, targetVendorType,  actualTargetVendorPath, innerMetadata.fields);
+        }
+        else{
+
+            var oldObj = {
+                vendorPath: targetVendorPath,
+                type: targetVendorType,
+                actualVendorPath: actualTargetVendorPath
+            };
+
+            metadatafields.push(oldObj);
         }
     }
 });

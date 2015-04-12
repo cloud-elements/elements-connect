@@ -70,7 +70,6 @@ var ScheduleController = BaseController.extend({
         var me = this;
 
         me._schedule.closeSchedule();
-        me.$location.path('/datalist');
     },
 
     save: function() {
