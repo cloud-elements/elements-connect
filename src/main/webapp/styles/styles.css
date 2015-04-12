@@ -870,6 +870,7 @@ div#data-list-body.disabled:after {
     right: 40px;
     min-height: 400px;
     bottom: 35px;
+    overflow: scroll;
 }
 #mapping-data-list-body #mapper-data-list-source{
     background-color: #333;
@@ -996,6 +997,11 @@ div#data-list-body.disabled:after {
     margin-top: -2px;
 }
 
+#mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes{
+    position: absolute;
+    width: 100%;
+    overflow: scroll;}
+
 #mapping-data-list-body li li li{
     margin-left:10px;
 }
@@ -1012,6 +1018,9 @@ div#data-list-body.disabled:after {
     position:relative;
     display:block !important;
     border: none;
+}
+#mapping-data-list-body li li.mapped div.tree-root-li-li-container:before{
+    border-left: 10px solid #58bde8 !important;
 }
 #mapping-data-list-body li li.angular-ui-tree-placeholder-mapping-hover div.tree-root-li-li-container{
     background: none;
@@ -1043,8 +1052,15 @@ div#data-list-body.disabled:after {
 #mapping-data-list-body .angular-ui-tree-nodes .angular-ui-tree-nodes{
     padding-left: 15px;
 }
+
 #mapping-data-list-body li div{
 
+}
+
+#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.target{
+}
+#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.source{
+    color: #58bde8;
 }
 
 #mapper #select-dropdown-container{

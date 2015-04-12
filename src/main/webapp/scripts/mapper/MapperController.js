@@ -108,7 +108,7 @@ var MapperController = BaseController.extend({
         // Cleaning up any object literal mapping classes on drop
         $('.angular-ui-tree-placeholder-mapping-hover').removeClass('angular-ui-tree-placeholder-mapping-hover');
         $('.showMapper').removeClass('literal-mapping');
-
+        event.dest.nodesScope.$parent.$element.addClass('mapped');
         //Checking to see if the parent type is a literal if so just merge the vendor path to the parent and remove the
         //newly added node from source
         //If the Parent is an object or null, then its a new mapping field so enable it for editable
@@ -210,6 +210,7 @@ var MapperController = BaseController.extend({
         }
 
         me.$scope.sourceLogo = me._picker.selectedElementInstance.name;
+        me.$scope.targetLogo = me._picker.targetElementInstance.name;
 
         me._maskLoader.show(me.$scope, 'Loading Objects...');
 
