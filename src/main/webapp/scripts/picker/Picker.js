@@ -111,7 +111,9 @@ var Picker = Class.extend({
         this._elementInstances = new Object;
         for(var i=0; i <result.data.length; i++){
             var inst = result.data[i];
-            if(inst.element.hub == 'marketing' || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
+            if(inst.element.hub == 'marketing'
+                || inst.element.hub == 'helpdesk'
+                || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
                 this._elementInstances[inst.element.key] = inst;
             }
         }
