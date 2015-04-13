@@ -1008,6 +1008,11 @@ div#data-list-body.disabled:after {
     position: absolute;
     width: 100%;
     overflow: scroll;}
+#mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes ul{
+    position: relative;}
+#mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes .btn.pull-right{
+    margin-bottom: 0;
+}
 
 #mapping-data-list-body li li li{
     margin-left:10px;
