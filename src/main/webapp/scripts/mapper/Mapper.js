@@ -557,6 +557,10 @@ var Mapper = Class.extend({
                     p = p+'[*]';
                 }
 
+                if(this._cloudElementsUtils.isEmpty(t)) {
+                    t = mapperData.actualVendorPath;
+                }
+
                 objDefinition.fields.push({
                     'path': p,
                     'type': t
@@ -721,7 +725,7 @@ var Mapper = Class.extend({
 
                 if(me._cloudElementsUtils.isEmpty(mapperData.vendorPath)) {
                     objectTransformation.fields.push({
-                        'path': mapperData.path,
+                        'path': mapperData.actualVendorPath,
                         'configuration':[
                             {
                                 "type": "passThrough",
