@@ -43,6 +43,7 @@ var PickerController = BaseController.extend({
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
+        me.$scope.showSelectTarget = true;
     },
 
     defineListeners:function() {
@@ -79,7 +80,17 @@ var PickerController = BaseController.extend({
         me._instances = instances;
         if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
             me.$scope.withTarget = 'show-target';
+
+            if(!me._cloudElementsUtils.isEmpty(me._instances[me._picker._elementsService.configuration.targetElement])) {
+                me.$scope.showSelectTarget = false;
+            }
+            else {
+                me.$scope.showSelectTarget = true;
+            }
         }
+
+
+
         if(!me._cloudElementsUtils.isEmpty(me._instances)) {
             var keys = Object.keys(me._instances);
             for(var i = 0; i< keys.length; i++) {

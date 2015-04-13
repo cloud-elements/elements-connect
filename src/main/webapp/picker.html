@@ -4,9 +4,13 @@
     <div class="vertical-align" style="width: 100%;">
       <h2 class="ui icon header">
         <i class="bullseye icon light"></i>
-        <div class="content light">
+        <div class="content light" ng-show="showSelectTarget" >
           Select Target
           <div class="sub header light">That you would like to use with BulkLoader:</div>
+        </div>
+        <div class="content light" ng-show="!showSelectTarget">
+          Your Target
+          <div class="sub header light">That will be used with BulkLoader:</div>
         </div>
       </h2>
 
