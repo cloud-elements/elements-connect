@@ -96,9 +96,17 @@ var Picker = Class.extend({
 
             var inst = result.data[i];
 
-            if(inst.element.hub == 'marketing' || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
-                this._elementInstances[inst.element.key] = inst;
+            for (var j = 0; j <  me._sources.length; j++) {
+                var source = me._sources[j];
+
+                if (source.elementKey == inst.element.key) {
+                    this._elementInstances[inst.element.key] = inst;
+                }
             }
+
+            // if (inst.element.hub == 'marketing' || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
+                // this._elementInstances[inst.element.key] = inst;
+            // }
         }
 
         this._notifications.notify(bulkloader.events.ELEMENT_INSTANCES_LOAD);

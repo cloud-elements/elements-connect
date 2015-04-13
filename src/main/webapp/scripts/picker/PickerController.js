@@ -43,6 +43,7 @@ var PickerController = BaseController.extend({
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
+        me.$scope.showSelectTarget = false;
     },
 
     defineListeners:function() {
@@ -67,7 +68,6 @@ var PickerController = BaseController.extend({
 
         me._instances = me._picker._elementInstances;
 
-        // VSJ if(bulkloader.Picker.oauthElementKey != me._picker._elementsService.configuration.targetElement) {
         if (bulkloader.Picker.oauthElementKey != me._picker.getTargetElementKey()) {
             me.onSelect(bulkloader.Picker.oauthElementKey);
         }
@@ -79,9 +79,15 @@ var PickerController = BaseController.extend({
         me._maskLoader.hide();
         me._instances = instances;
 
-        // VSJ if (!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
         if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me.$scope.withTarget = 'show-target';
+
+            if(!me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
+                me.$scope.showSelectTarget = false;
+            }
+            else {
+                me.$scope.showSelectTarget = true;
+            }
         }
 
         if (!me._cloudElementsUtils.isEmpty(me._instances)) {
