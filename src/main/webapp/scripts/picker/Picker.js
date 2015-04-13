@@ -90,23 +90,25 @@ var Picker = Class.extend({
 
         var me = this;
 
-        //Filtering out only for Marketing
+        // Add only the sources and target to the instance list.
+
         me._elementInstances = new Object;
+
         for (var i = 0; i < result.data.length; i++){
 
             var inst = result.data[i];
-
             for (var j = 0; j <  me._sources.length; j++) {
                 var source = me._sources[j];
 
-                if (source.elementKey == inst.element.key) {
+                if (source.elementKey == inst.element.key || me._target.elementKey == inst.element.key) {
                     this._elementInstances[inst.element.key] = inst;
                 }
             }
 
-            // if (inst.element.hub == 'marketing' || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
-                // this._elementInstances[inst.element.key] = inst;
-            // }
+            // VSJ if(inst.element.hub == 'marketing'
+               // VSJ || inst.element.hub == 'helpdesk'
+               // VSJ || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
+                // VSJ this._elementInstances[inst.element.key] = inst;
         }
 
         this._notifications.notify(bulkloader.events.ELEMENT_INSTANCES_LOAD);

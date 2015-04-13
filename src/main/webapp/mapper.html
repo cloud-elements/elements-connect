@@ -46,7 +46,7 @@
   <script type="text/ng-template" id="objectFields.html">
 
     <div ui-tree-handle class="tree-node ui toggle tree-root-li-li-container">
-      <button type="submit" ng-show="showTreeToggle(metadata)"
+      <button type="submit" data-nodrag ng-show="showTreeToggle(metadata)"
               class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)"><span
               class="glyphicon glyphicon-remove"
               ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
@@ -92,7 +92,7 @@
 
       <div ui-tree-handle class="tree-node ui toggle tree-root-li-li-container">
 
-        <button type="submit" ng-show="showTreeToggle(metadata)"
+        <button type="submit" data-nodrag ng-show="showTreeToggle(metadata)"
                 class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)"><span
                 class="glyphicon glyphicon-remove"
                 ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
