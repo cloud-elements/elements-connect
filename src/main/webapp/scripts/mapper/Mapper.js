@@ -360,6 +360,7 @@ var Mapper = Class.extend({
                 {
                     var newInnerField = angular.copy(field);
                     newInnerField.actualVendorPath = field.vendorPath;
+                    newInnerField.vendorPath = null;
                     newInnerField[pathName] = fieldParts;
                     newInnerMetaData.fields.push(newInnerField);
                 }
@@ -372,7 +373,7 @@ var Mapper = Class.extend({
                 field['actualVendorPath'] = field.vendorPath;
                 field.vendorPath = null;
                 field[pathName] = field['actualVendorPath'];
-                if(pathName != 'vendorPath') {
+                if(pathName != 'vendorPath' && this._cloudElementsUtils.isEmpty(field.fields)) {
                     field.fields = [];
                 }
             }
@@ -407,8 +408,8 @@ var Mapper = Class.extend({
         var newInnerMetaData = this._getObjectInMetaData(metadata, objField);
         if(this._cloudElementsUtils.isEmpty(newInnerMetaData)) {
             newInnerMetaData = new Object;
-            newInnerMetaData[pathName] = objField;
             newInnerMetaData.vendorPath = objField;
+            newInnerMetaData[pathName] = objField;
             newInnerMetaData['fields'] = [];
             var t = 'object';
             if(objField.indexOf('[*]') !== -1) {
@@ -422,8 +423,9 @@ var Mapper = Class.extend({
         {
             var newInnerField = angular.copy(field);
             newInnerField.actualVendorPath = field.vendorPath;
+            newInnerField.vendorPath = null;
             newInnerField[pathName] = innerfieldParts;
-            if(pathName != 'vendorPath') {
+            if(pathName != 'vendorPath' && this._cloudElementsUtils.isEmpty(field.fields)) {
                 newInnerField.fields = [];
             }
             newInnerMetaData.fields.push(newInnerField);
