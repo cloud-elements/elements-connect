@@ -183,7 +183,6 @@ var MapperController = BaseController.extend({
         } catch (e) {
             me._maskLoader.hide();
         }
-
     },
 
 

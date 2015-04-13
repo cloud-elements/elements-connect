@@ -354,6 +354,8 @@ var ElementsService = Class.extend({
 
         var url = this._environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
+        console.log(JSON.stringify(job));
+
         return this._httpPost(url, this._getHeaders(elementInstance.token), job);
     },
 

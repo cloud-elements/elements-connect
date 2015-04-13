@@ -237,7 +237,7 @@ var Mapper = Class.extend({
 
         var trans = me.all[selectedInstance.element.key].transformations;
         if(me._cloudElementsUtils.isEmpty(trans)) {
-            return;
+            return "";
         }
 
         var transformationKeys = Object.keys(trans);

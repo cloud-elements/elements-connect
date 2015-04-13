@@ -112,6 +112,9 @@ var PickerController = BaseController.extend({
 
             me.$mdDialog.show(confirm);
             return;
+        } else if (me._picker.getTargetElementKey() == elementKey &&
+                   !me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
+            return;
         }
 
         //Check to see if the element instance is created, if so then move the view to dataselect

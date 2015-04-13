@@ -56,7 +56,111 @@ var Schedule = Class.extend({
         me._openedModal = null;
     },
 
-    runScheduledJob: function (selectedInstance, allObjects, startDate) {
+    _buildFieldList: function(fields, checkVendorPath) {
+        var me = this;
+
+        var fieldList = '';
+        var selectedFieldCount = 0;
+
+        for (var i = 0; i < fields.length; i++) {
+            if (checkVendorPath && me._cloudElementsUtils.isEmpty(fields[i].vendorPath)) {
+                continue;
+            }
+
+            if (selectedFieldCount > 0) {
+                fieldList = fieldList + ', '
+            }
+
+            fieldList = fieldList + fields[i].path;
+            selectedFieldCount++;
+        }
+
+        return fieldList;
+    },
+
+    _scheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, startDate, statusCheckInterval) {
+        var me = this;
+        var query = "select " + me._buildFieldList(fields, true) + " from " + objectName;
+        var job = new Object();
+
+        job.query = query;
+        job.from = startDate;
+        job.objectName = objectName;
+        job.statusCheckInterval = statusCheckInterval;
+
+        var targetConfiguration = new Object();
+
+        if (me._elementsService.configuration.target.appendObjectName == false) {
+            targetConfiguration.path = me._elementsService.configuration.target.path;
+        } else {
+            targetConfiguration.path = me._elementsService.configuration.target.path + '/' + objectName;
+        }
+
+        targetConfiguration.method = me._elementsService.configuration.target.method;
+
+        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.elementToken) == false) {
+            targetConfiguration.token = me._elementsService.configuration.target.elementToken;
+        } else {
+            targetConfiguration.token = targetInstance.token;
+        }
+
+        var parameters = new Object();
+
+        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.other) == false) {
+            for (key in me._elementsService.configuration.target.other) {
+                if (me._elementsService.configuration.target.other.hasOwnProperty(key)) {
+                    parameters[key] = me._elementsService.configuration.target.other[key];
+                }
+            }
+        }
+
+        targetConfiguration.parameters = parameters;
+
+        job.targetConfiguration = targetConfiguration;
+
+        var notificationConfiguration = new Object();
+
+        notificationConfiguration.token = me._elementsService.configuration.notificationToken;
+        notificationConfiguration.to = me._elementsService.configuration.notificationEmail;
+
+        job.notificationConfiguration = notificationConfiguration;
+
+        me._elementsService.scheduleJob(selectedInstance, job)
+            .then(me._handleJobScheduled.bind(me, selectedInstance),
+                  me._handleJobSchedulingError.bind(me, selectedInstance));
+    },
+
+    runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate) {
+        var me = this;
+
+        var mappings = allObjects[selectedInstance.element.key].metamapping;
+
+        if (me._cloudElementsUtils.isEmpty(mappings)) {
+            // TODO: VSJ: Show an error message here.
+            return;
+        }
+
+        var objects = Object.keys(mappings);
+
+        if (me._cloudElementsUtils.isEmpty(objects)) {
+            // TODO: VSJ: Show an error message here.
+            return;
+        }
+
+        for (var i = 0; i < objects.length; i++) {
+            var fields = mappings[objects[i]].fields;
+
+            if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+                continue;
+            }
+
+            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, startDate, 60000);
+        }
+
+        me._scheduledConfirmation();
+    },
+
+    runDatalistScheduledJob: function (selectedInstance, allObjects, startDate) {
         var me = this;
 
         // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
@@ -101,13 +205,19 @@ var Schedule = Class.extend({
 
             var targetConfiguration = new Object();
 
-            targetConfiguration.path = me._elementsService.configuration.targetPath;
-            targetConfiguration.method = me._elementsService.configuration.targetMethod;
-            targetConfiguration.token = me._elementsService.configuration.targetToken;
+            targetConfiguration.path = me._elementsService.configuration.target.path;
+            targetConfiguration.method = me._elementsService.configuration.target.method;
+            targetConfiguration.token = me._elementsService.configuration.target.elementToken;
 
             var parameters = new Object();
 
-            parameters.folder = me._elementsService.configuration.targetFolder;
+            if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.other) == false) {
+                for (key in me._elementsService.configuration.target.other) {
+                    if (me._elementsService.configuration.target.other.hasOwnProperty(key)) {
+                        parameters[key] = me._elementsService.configuration.target.other[key];
+                    }
+                }
+            }
 
             targetConfiguration.parameters = parameters;
 
@@ -125,7 +235,6 @@ var Schedule = Class.extend({
               .then(me._handleJobScheduled.bind(me, selectedInstance),
                     me._handleJobSchedulingError.bind(me, selectedInstance));
         }
-
 
         me._scheduledConfirmation();
     },

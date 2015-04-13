@@ -11,19 +11,21 @@ var ScheduleController = BaseController.extend({
     _cloudElementsUtils: null,
     _picker: null,
     _datalist: null,
+    _mapper: null,
     _schedule: null,
     _instances: null,
     $modal: null,
     $mdDialog: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
         me._datalist = Datalist;
+        me._mapper = Mapper;
         me._schedule = Schedule;
         me.$modal = $modal;
         me.$mdDialog = $mdDialog;
@@ -76,8 +78,15 @@ var ScheduleController = BaseController.extend({
         var me = this;
 
         me._maskLoader.show(me.$scope, 'Scheduling...');
-        me._schedule.runScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
-                                     me.$scope.queryStartDate.toISOString());
+
+        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+            me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+                                               me._mapper.all, me.$scope.queryStartDate.toISOString());
+        } else {
+            me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
+                                         me.$scope.queryStartDate.toISOString());
+        }
+
         me._maskLoader.hide();
         me.$location.path('/');
     },
@@ -97,7 +106,7 @@ var ScheduleController = BaseController.extend({
 
 });
 
-ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
+ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')
