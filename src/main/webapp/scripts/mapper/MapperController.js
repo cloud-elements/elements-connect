@@ -88,6 +88,8 @@ var MapperController = BaseController.extend({
     },
 
     onMetadataAccept: function(sourceNodeScope, destNodesScope, destIndex) {
+        var me = this;
+
         if(destNodesScope.$parent.$element[0].id == "tree1-root"
             || destNodesScope.$parent.$element[0].id == "tree1-root-node") {
             return false;
@@ -119,9 +121,13 @@ var MapperController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(parentModelVal)) {
             return false;
         }
-        else{
+        else {
             parentModelVal.vendorPath = modelVal.actualVendorPath;
             parentModelVal.targetVendorType= modelVal.type;
+
+            if(me.$scope.selectedObject.select.transformed == false) {
+                me.$scope.selectedObject.select.transformed = true;
+            }
         }
     },
 
@@ -168,9 +174,16 @@ var MapperController = BaseController.extend({
 
         //Now Check to see if there is a mapping already exists for the object
         //if so just set the target mapper
-        me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
-                                     me._picker.targetElementInstance, me.$scope.objectMetaData)
-            .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedObject));
+        //Very dirty fix, not sure how the angular promise is handled is it returns null,
+        // handling this in try catch until the angular promise for null is figured out
+        try{
+            me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
+                me._picker.targetElementInstance, me.$scope.objectMetaData)
+                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedObject));
+        } catch (e) {
+            me._maskLoader.hide();
+        }
+
     },
 
 
