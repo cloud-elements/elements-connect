@@ -362,6 +362,9 @@ var Mapper = Class.extend({
                     newInnerField.actualVendorPath = field.vendorPath;
                     newInnerField.vendorPath = null;
                     newInnerField[pathName] = fieldParts;
+                    if(pathName != 'vendorPath' && this._cloudElementsUtils.isEmpty(newInnerField.fields)) {
+                        newInnerField.fields = [];
+                    }
                     newInnerMetaData.fields.push(newInnerField);
                 }
                 else
@@ -738,7 +741,7 @@ var Mapper = Class.extend({
                     });
                 } else {
                     objectTransformation.fields.push({
-                        'path': mapperData.path,
+                        'path': mapperData.actualVendorPath,
                         'vendorPath': mapperData.vendorPath
                     });
                 }
