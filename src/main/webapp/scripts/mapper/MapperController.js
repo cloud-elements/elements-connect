@@ -165,7 +165,7 @@ var MapperController = BaseController.extend({
 
     _handleOnMetadataLoad: function(obj,data) {
         var me = this;
-        me.$scope.objectMetaData = data.fields;
+        me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'vendorPath');
         me.$scope.showTree = true;
 
         me.$scope.mapperdata = null;
@@ -207,7 +207,7 @@ var MapperController = BaseController.extend({
         var me = this;
 
         if(!me._cloudElementsUtils.isEmpty(data)) {
-            me.$scope.mapperdata = data.fields;
+            me.$scope.mapperdata =  me._cloudElementsUtils.orderObjects(data.fields, 'path');
             me.$scope.showTargetTree = true;
 
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
