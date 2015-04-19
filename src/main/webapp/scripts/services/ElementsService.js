@@ -120,8 +120,6 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders());
     },
 
-    // VSJ getOAuthUrl: function (elementKey, apiKey, apiSec, callbackUrl) {
-
     getOAuthUrl: function (elementConfig) {
         var me = this;
 
@@ -140,16 +138,11 @@ var ElementsService = Class.extend({
             }
         }
 
-        // VSJ if (!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)) {
-            // VSJ parameters['siteAddress'] = me.configuration.siteAddress;
-        // VSJ }
-
         var url = this._environment.elementsUrl + '/elements/' + elementConfig.elementKey + '/oauth/url';
 
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
-    // VSJ createInstance: function (elementKey, code, apiKey, apiSec, callbackUrl) {
     createInstance: function (elementConfig, code) {
         var me = this;
 
@@ -172,10 +165,6 @@ var ElementsService = Class.extend({
                 }
             }
         }
-
-        // VSJ if (!me._cloudElementsUtils.isEmpty(me.configuration.siteAddress)) {
-            // VSJ elementProvision.configuration['zendesk.subdomain'] = me.configuration.siteAddress; //TODO Hardcoded for zendesk
-        // VSJ }
 
         return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
     },

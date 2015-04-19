@@ -9,6 +9,7 @@
 bulkloader.events.ELEMENT_INSTANCES_LOAD = 'ELEMENT_INSTANCES_LOAD';
 bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED = 'NEW_ELEMENT_INSTANCE_CREATED';
 bulkloader.events.SHOW_SCHEDULER = 'SHOW_SCHEDULER';
+bulkloader.events.ERROR = 'PICKER_ERROR';
 
 namespace('bulkloader.Picker').oauthElementKey = null;
 
@@ -68,7 +69,10 @@ var Picker = Class.extend({
     },
 
     _loadOrgConfigurationFailed: function(error) {
-        console.log(error);
+        var me = this;
+
+        me._notifications.notify(bulkloader.events.ERROR,
+                                 "Could not retrieve application configuration for organization. " + error.data.message);
     },
 
     _loadUserConfigurationSucceeded: function(result) {
@@ -78,15 +82,18 @@ var Picker = Class.extend({
         me._elementsService.populateServiceDetails();
 
         return me._elementsService.loadElementInstances().then(
-            me._handleLoadElementIntanceSuccess.bind(me),
-            me._handleLoadError.bind(me) );
+            me._handleLoadElementIntancesSuccess.bind(me),
+            me._handleLoadElementInstancesFailed.bind(me) );
     },
 
     _loadUserConfigurationFailed: function(error) {
+        var me = this;
+
         console.log(error);
+        me._notifications.notify(bulkloader.events.ERROR, "Could not load user configuration. " + error.data.message);
     },
 
-    _handleLoadElementIntanceSuccess:function(result){
+    _handleLoadElementIntancesSuccess:function(result){
 
         var me = this;
 
@@ -101,19 +108,29 @@ var Picker = Class.extend({
                 var source = me._sources[j];
 
                 if (source.elementKey == inst.element.key || me._target.elementKey == inst.element.key) {
-                    this._elementInstances[inst.element.key] = inst;
+                    me._elementInstances[inst.element.key] = inst;
+
+                    if (me._cloudElementsUtils.isEmpty(me._target.token) == false && me._target.token == inst.token) {
+                        me.targetElementInstance = inst;
+                    }
                 }
             }
+        }
 
-            // VSJ if(inst.element.hub == 'marketing'
-               // VSJ || inst.element.hub == 'helpdesk'
-               // VSJ || inst.element.key == 'zendesk') { //TODO Hardcoding for zendesk, but need a better approach
-                // VSJ this._elementInstances[inst.element.key] = inst;
+        if (me._cloudElementsUtils.isEmpty(me.targetElementInstance)) {
+            me._notifications.notify(bulkloader.events.ERROR, "Configuration Error. A target element instance has not been configured.");
+            return null;
         }
 
         this._notifications.notify(bulkloader.events.ELEMENT_INSTANCES_LOAD);
 
         return this._elementInstances;
+    },
+
+    _handleLoadElementInstancesFailed: function(error) {
+        console.log(error);
+        me._notifications.notify(bulkloader.events.ERROR,
+                                 "Could not load the provisioned element instances. " + error.data.message);
     },
 
     _getElementConfig: function(elementKey) {
@@ -177,15 +194,9 @@ var Picker = Class.extend({
             return;
         }
 
-        // VSJ return me._elementsService.createInstance(
-                // VSJ elementKey,
-                // VSJ pageParameters.code,
-                // VSJ elementConfig.apiKey,
-                // VSJ elementConfig.apiSecret,
-                // VSJ elementConfig.callbackUrl)
         return me._elementsService.createInstance(elementConfig, pageParameters.code).then(
             me._handleOnCreateInstance.bind(me),
-            me._handleLoadError.bind(me) );
+            me._handleOnCreateInstanceFailed.bind(me) );
     },
 
     _handleOnCreateInstance: function(response) {
@@ -200,6 +211,12 @@ var Picker = Class.extend({
         return response.data;
     },
 
+    _handleOnCreateInstanceFailed: function(error) {
+        var me = this;
+
+        me._notifications.notify(bulkloader.events.ERROR, 'Provisioning failed. ' + error.data.message);
+    },
+
     getTargetElementKey: function() {
         var me = this;
 
@@ -208,6 +225,22 @@ var Picker = Class.extend({
         } else {
             return null;
         }
+    },
+
+    isTargetHidden: function() {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(me._target.hide) || me._target.hide == false) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+
+    getTargetToken: function() {
+        var me = this;
+
+        return me._target.token;
     }
 });
 
@@ -225,7 +258,7 @@ var Picker = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications',function(CloudElementsUtils, ElementsService, Notifications){
+        $get:['CloudElementsUtils', 'ElementsService','Notifications', function(CloudElementsUtils, ElementsService, Notifications){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;

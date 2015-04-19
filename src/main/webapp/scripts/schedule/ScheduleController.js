@@ -79,12 +79,13 @@ var ScheduleController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Scheduling...');
 
-        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) &&
+                !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                                                me._mapper.all, me.$scope.queryStartDate.toISOString());
         } else {
-            me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._datalist.all,
-                                         me.$scope.queryStartDate.toISOString());
+            me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+                                                 me._datalist.all, me.$scope.queryStartDate.toISOString());
         }
 
         me._maskLoader.hide();

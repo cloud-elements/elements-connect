@@ -1,6 +1,6 @@
 <!-- SERVICE PICKER -->
 <section id="picker" class="animated-card" ng-class="withTarget">
-  <div class="picker-source">
+  <div class="picker-source" ng-show="showTarget">
     <div class="vertical-align" style="width: 100%;">
       <h2 class="ui icon header">
         <i class="bullseye icon light"></i>
@@ -34,7 +34,6 @@
       </h2>
 
       <div class="services-selections" ng-init="isDisabled = false">
-        <!--
         <a href ng-click="onSelect('sfdcmarketingcloud')" id="sfdcmarketingcloud" class="salesforce" alt="SalesForce"
            data-instance="Connect to Salesforce.com">
           <i class="icon wait" ng-click="onSelectSchedule('sfdcmarketingcloud', $event)"></i>
@@ -50,8 +49,8 @@
            data-instance="Connect to Marketo">
           <i class="icon wait" ng-click="onSelectSchedule('marketo', $event)"></i>
         </a>
-        -->
 
+        <!--
         <a href ng-click="onSelect('jira')" id="jira" class="jira" alt="Jira"
            data-instance="Connect to Jira">
           <i class="icon wait" ng-click="onSelectSchedule('jira', $event)"></i>
@@ -60,6 +59,7 @@
            data-instance="Connect to Salesforce.com">
           <i class="icon wait" ng-click="onSelectSchedule('sfdcservicecloud', $event)"></i>
         </a>
+        -->
         <!--<a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>-->
       </div>
     </div>

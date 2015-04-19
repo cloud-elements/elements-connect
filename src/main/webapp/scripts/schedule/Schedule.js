@@ -56,31 +56,41 @@ var Schedule = Class.extend({
         me._openedModal = null;
     },
 
-    _buildFieldList: function(fields, checkVendorPath) {
+    _buildFieldList: function(fields, fieldCheckType) {
         var me = this;
 
         var fieldList = '';
         var selectedFieldCount = 0;
 
         for (var i = 0; i < fields.length; i++) {
-            if (checkVendorPath && me._cloudElementsUtils.isEmpty(fields[i].vendorPath)) {
+            if (fieldCheckType == 'vendorPath' && me._cloudElementsUtils.isEmpty(fields[i].vendorPath)) {
+                continue;
+            } else if (fieldCheckType == 'transform' &&
+                        (me._cloudElementsUtils.isEmpty(fields[i].transform) || fields[i].transform == false)) {
                 continue;
             }
+
 
             if (selectedFieldCount > 0) {
                 fieldList = fieldList + ', '
             }
 
-            fieldList = fieldList + fields[i].path;
+            if (fieldCheckType == 'vendorPath') {
+                fieldList = fieldList + fields[i].path;
+            } else if (fieldCheckType == 'transform') {
+                fieldList = fieldList + fields[i].vendorPath;
+            }
+
             selectedFieldCount++;
         }
 
         return fieldList;
     },
 
-    _scheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, startDate, statusCheckInterval) {
+    _scheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, fieldCheckType,
+                                 startDate, statusCheckInterval) {
         var me = this;
-        var query = "select " + me._buildFieldList(fields, true) + " from " + objectName;
+        var query = "select " + me._buildFieldList(fields, fieldCheckType) + " from " + objectName;
         var job = new Object();
 
         job.query = query;
@@ -90,7 +100,8 @@ var Schedule = Class.extend({
 
         var targetConfiguration = new Object();
 
-        if (me._elementsService.configuration.target.appendObjectName == false) {
+        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.appendObjectName) ||
+                me._elementsService.configuration.target.appendObjectName == false) {
             targetConfiguration.path = me._elementsService.configuration.target.path;
         } else {
             targetConfiguration.path = me._elementsService.configuration.target.path + '/' + objectName;
@@ -154,17 +165,17 @@ var Schedule = Class.extend({
                 continue;
             }
 
-            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, startDate, 60000);
+            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, 'vendorPath', startDate, 60000);
         }
 
         me._scheduledConfirmation();
     },
 
-    runDatalistScheduledJob: function (selectedInstance, allObjects, startDate) {
+    runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate) {
         var me = this;
 
         // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
-        var transformations = allObjects[selectedInstance.element.key].transformations;
+        var transformations = allObjects[selectedInstance.element.key].metadata;
 
         if (me._cloudElementsUtils.isEmpty(transformations)) {
             return;
@@ -172,6 +183,37 @@ var Schedule = Class.extend({
 
         var objects = Object.keys(transformations);
 
+        if (me._cloudElementsUtils.isEmpty(objects)) {
+            // TODO: VSJ: Show an error message here.
+            return;
+        }
+
+        var objectsAndTrans = allObjects[selectedInstance.element.key].objectsAndTrans;
+
+        if (me._cloudElementsUtils.isEmpty(objectsAndTrans)) {
+            // TODO: VSJ: Show an error message here.
+            return;
+        }
+
+        for (var i = 0; i < objects.length; i++) {
+            if (me._cloudElementsUtils.isEmpty(objectsAndTrans[objects[i]]) || objectsAndTrans[objects[i]] == false) {
+                continue;
+            }
+
+            var fields = transformations[objects[i]].fields;
+
+            if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+                continue;
+            }
+
+            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, 'transform', startDate, 60000);
+        }
+
+        me._scheduledConfirmation();
+
+
+
+        /* VSJ
         if (me._cloudElementsUtils.isEmpty(objects)) {
             return;
         }
@@ -237,6 +279,7 @@ var Schedule = Class.extend({
         }
 
         me._scheduledConfirmation();
+        */
     },
 
     _handleJobScheduled: function(selectedInstance, job) {

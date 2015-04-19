@@ -43,6 +43,7 @@ var PickerController = BaseController.extend({
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
+        me.$scope.showTarget = false;
         me.$scope.showSelectTarget = false;
     },
 
@@ -51,6 +52,7 @@ var PickerController = BaseController.extend({
         me._super();
 
         me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
     },
 
     checkStatus: function() {
@@ -61,6 +63,20 @@ var PickerController = BaseController.extend({
         for(var i = 0; i < keys.length; i++) {
             console.log('Checking jobs for element instance ID: ' + me._instances[keys[i]].id + '...');
         }
+    },
+
+    _handleError: function(event, error) {
+
+        var me = this;
+
+        me._maskLoader.hide();
+
+        var confirm = me.$mdDialog.alert()
+            .title('Error')
+            .content(error)
+            .ok('OK');
+
+        me.$mdDialog.show(confirm);
     },
 
     _onInstancesRefresh: function() {
@@ -74,10 +90,43 @@ var PickerController = BaseController.extend({
 
     },
 
+    /*
+    _addSources: function() {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(me._picker.sources)) {
+            return;
+        }
+
+        for (var i in me._picker.sources) {
+            var source = me._picker.sources[i];
+            var anchorElement = document.createElement('a');
+            var textElement = document.createElement('i');
+
+            angular.element(textElement)
+                .attr('class', 'icon wait')
+                .attr('ng-click', "onSelectSchedule('" + source.elementKey + "', $event)");
+
+            angular.element(anchorElement)
+                .attr('href', '')
+                .attr('ng-click', "onSelect('" + source.elementKey + "')")
+                .attr('id', source.elementKey)
+                .attr('class', source.elementKey)
+                .attr('alt', source.elementKey)
+                .attr('data-instance', "Connect to " + source.elementKey)
+                .text(textElement);
+        }
+    },
+    */
+
     _handleConfigurationLoad: function(instances) {
         var me = this;
         me._maskLoader.hide();
         me._instances = instances;
+
+        if (me._picker.isTargetHidden() == false) {
+            me.showTarget = true;
+        }
 
         if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me.$scope.withTarget = 'show-target';
@@ -97,16 +146,12 @@ var PickerController = BaseController.extend({
                 angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].name);
             }
         }
-
-        // VSJ me.$interval(me.$scope.checkStatus, 5000);
     },
 
     onSelect: function(elementKey) {
         var me = this;
 
-        //Check if the target instance is created, if not inform user to create one
-        // VSJ if(me._picker._elementsService.configuration.targetElement != elementKey
-        // VSJ && !me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)
+        // Check if the target instance is created, if not inform user to create one
         if (me._picker.getTargetElementKey() != elementKey
             && me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
 
@@ -144,14 +189,12 @@ var PickerController = BaseController.extend({
     _onElementInstanceSelect: function(instance) {
         var me = this;
 
-        me._maskLoader.show(me.$scope, 'Opening Instance...');
+        me._maskLoader.show(me.$scope, 'Loading Instance Data...');
         // Set the instance details to factory class to be used in datalist
         me._picker.selectedElementInstance = instance;
 
         //TODO Refer http://embed.plnkr.co/uW4v9T/preview for adding animation while switching the view
-        // VSJ if(!me._cloudElementsUtils.isEmpty(me._picker._elementsService.configuration.targetElement)) {
-        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
-            // VSJ me._picker.targetElementInstance = me._instances[me._picker._elementsService.configuration.targetElement];
+        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) && !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
             me.$location.path('/mapper');
         } else {
