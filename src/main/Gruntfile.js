@@ -502,19 +502,19 @@ module.exports = function (grunt) {
     'clean:dist',
     'ngconstant:local',
     'wiredep',
-    // 'useminPrepare',
+    'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    // 'concat',
-    // 'ngAnnotate',
-    'copy:dist'
-    // 'cdnify',
-    // 'cssmin',
-    // 'uglify',
-    // 'filerev',
-    // 'usemin',
-    // 'htmlmin',
-    // 'copy:mvfonts'
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:mvfonts'
   ]);
 
   grunt.registerTask('snapshot', [
