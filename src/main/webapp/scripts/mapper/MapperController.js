@@ -125,6 +125,10 @@ var MapperController = BaseController.extend({
             parentModelVal.vendorPath = modelVal.actualVendorPath;
             parentModelVal.targetVendorType= modelVal.type;
 
+            if(me._mapper._isLiteral(parentModelVal.type)) {
+                parentModelVal.fields=[];
+            }
+
             if(me.$scope.selectedObject.select.transformed == false) {
                 me.$scope.selectedObject.select.transformed = true;
             }
