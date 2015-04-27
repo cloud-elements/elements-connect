@@ -178,7 +178,7 @@ var MapperController = BaseController.extend({
 
         //Now Check to see if there is a mapping already exists for the object
         //if so just set the target mapper
-        //Very dirty fix, not sure how the angular promise is handled is it returns null,
+        //Very dirty fix, not sure how the angular promise is handled as it returns null,
         // handling this in try catch until the angular promise for null is figured out
         try{
             me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
@@ -199,8 +199,20 @@ var MapperController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)
             || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
 
-            me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
-                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+            //If the Objects are static and not needed to be loaded from API
+            if(!me._cloudElementsUtils.isEmpty(me._picker._target)
+                || !me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
+
+                var metaMapping = me._mapper._createEmptyMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
+                        me._picker.targetElementInstance, me.$scope.selectedTargetObject,
+                        me._mapper.all[me._picker.targetElementInstance.element.key].metadata[me.$scope.selectedTargetObject]);
+
+                me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, metaMapping);
+            } else {
+                //Calling the API to load the target objectmetadata and mapping
+                me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
+                    .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+            }
         } else {
             me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping[me.$scope.selectedTargetObject]);
         }

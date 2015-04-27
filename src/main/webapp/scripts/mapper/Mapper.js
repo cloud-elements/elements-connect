@@ -12,7 +12,7 @@ var Mapper = Class.extend({
     _elementsService:null,
     _notifications: null,
     _cloudElementsUtils: null,
-
+    _picker: null,
     _objectMetadata: null,
     _objectMetadataFlat: null,
 
@@ -85,11 +85,18 @@ var Mapper = Class.extend({
 
         me.loadInstanceDefinitions(selectedInstance);
 
-        //loading the target Instance Objects
-        this._elementsService.loadInstanceObjects(targetInstance)
-            .then(
-            this._handleLoadTargetInstanceObjects.bind(this, targetInstance),
-            this._handleLoadInstanceObjectError.bind(this));
+        //Check if the target instance objects needs to be loaded based on configuration
+        //If Objects are present in target config, just use that if not load it from server
+        if(me._cloudElementsUtils.isEmpty(me._picker._target)
+            || me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
+            //loading the target Instance Objects
+            me._elementsService.loadInstanceObjects(targetInstance)
+                .then(
+                me._handleLoadTargetInstanceObjects.bind(this, targetInstance),
+                me._handleLoadInstanceObjectError.bind(this));
+        } else {
+            me._loadTargetInstanceObjectsFromConfig(me._picker._target, targetInstance);
+        }
 
         return me.loadInstanceTransformations(selectedInstance);
     },
@@ -113,6 +120,35 @@ var Mapper = Class.extend({
         me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
 
         return me.all[selectedInstance.element.key].objectsAndTransformation;
+    },
+
+    _loadTargetInstanceObjectsFromConfig: function(target, targetInstance) {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
+            return;
+        }
+
+        var objects = new Array();
+        for(var i in me._picker._target.objects) {
+            var obj = me._picker._target.objects[i]
+            objects.push(obj.vendorPath);
+
+            if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
+                me.all[targetInstance.element.key].metadata = new Object;
+                me.all[targetInstance.element.key].metadataflat = new Object;
+            }
+
+            var objectMetadata = obj;
+            var objectMetadataFlat = new Object;
+
+            angular.extend(objectMetadata, objectMetadataFlat);
+            me.all[targetInstance.element.key].metadataflat[obj.vendorPath] = objectMetadataFlat;
+
+            me._restructureObjectMetadata(objectMetadata, 'path');
+            me.all[targetInstance.element.key].metadata[obj.vendorPath] = objectMetadata;
+        }
+
+        me.all[targetInstance.element.key].objects = objects;
     },
 
     _handleLoadTargetInstanceObjects:function(targetInstance, result){
@@ -484,6 +520,11 @@ var Mapper = Class.extend({
 
     _createEmptyMapping: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata) {
         var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metamapping)) {
+            me.all[selectedInstance.element.key].metamapping = new Object;
+        }
+
         var newMapping = new Object;
         newMapping['name'] = selectedObject;
         newMapping['vendorName'] = selectedInstanceObject;
@@ -881,10 +922,11 @@ var Mapper = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications',function(CloudElementsUtils, ElementsService, Notifications){
+        $get:['CloudElementsUtils', 'ElementsService','Notifications', 'Picker',function(CloudElementsUtils, ElementsService, Notifications, Picker){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
+            this.instance._picker = Picker;
             return this.instance;
         }]
     });
