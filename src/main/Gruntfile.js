@@ -60,7 +60,7 @@ module.exports = function (grunt) {
             name: 'snapshot',
             userId: 'bulkloaderio@cloud-elements.com',
             apiKey: 'qC5p0oLhoE6rmgpr/42LoZqmP/G8RIuLmm6C6vNYYhN0awR0jySAIyjLRXkKoAQI',
-            elementsUrl: 'https://snapshot.cloud-elements.com/api-v2'
+            elementsUrl: 'https://snapshot.cloud-elements.com/elements/api-v2'
           }
         }
       },
@@ -73,7 +73,7 @@ module.exports = function (grunt) {
             name: 'qa',
             userId: 'bulkloaderio@cloud-elements.com',
             apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
-            elementsUrl: 'https://qa.cloud-elements.com/api-v2'
+            elementsUrl: 'https://qa.cloud-elements.com/elements/api-v2'
           }
         }
       },
@@ -86,7 +86,7 @@ module.exports = function (grunt) {
             name: 'staging',
             userId: 'bulkloaderio@cloud-elements.com',
             apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
-            elementsUrl: 'https://staging.cloud-elements.com/api-v2'
+            elementsUrl: 'https://staging.cloud-elements.com/elements/api-v2'
           }
         }
       },
@@ -99,7 +99,7 @@ module.exports = function (grunt) {
             name: 'production',
             userId: 'bulkloaderio@cloud-elements.com',
             apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
-            elementsUrl: 'https://api.cloud-elements.com/api-v2'
+            elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
           }
         }
       }
@@ -502,19 +502,19 @@ module.exports = function (grunt) {
     'clean:dist',
     'ngconstant:local',
     'wiredep',
-    // 'useminPrepare',
+    'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    // 'concat',
-    // 'ngAnnotate',
-    'copy:dist'
-    // 'cdnify',
-    // 'cssmin',
-    // 'uglify',
-    // 'filerev',
-    // 'usemin',
-    // 'htmlmin',
-    // 'copy:mvfonts'
+    'concat',
+    'ngAnnotate',
+    'copy:dist',
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:mvfonts'
   ]);
 
   grunt.registerTask('snapshot', [
