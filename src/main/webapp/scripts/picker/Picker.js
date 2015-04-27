@@ -10,6 +10,7 @@ bulkloader.events.ELEMENT_INSTANCES_LOAD = 'ELEMENT_INSTANCES_LOAD';
 bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED = 'NEW_ELEMENT_INSTANCE_CREATED';
 bulkloader.events.SHOW_SCHEDULER = 'SHOW_SCHEDULER';
 bulkloader.events.ERROR = 'PICKER_ERROR';
+bulkloader.events.SHOW_CREATEINSTANCE = 'SHOW_CREATEINSTANCE';
 
 namespace('bulkloader.Picker').oauthElementKey = null;
 

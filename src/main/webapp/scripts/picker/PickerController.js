@@ -14,7 +14,7 @@ var PickerController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -22,6 +22,7 @@ var PickerController = BaseController.extend({
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
         me._schedule = Schedule;
+        me._createinstance = CreateInstance;
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
@@ -39,6 +40,7 @@ var PickerController = BaseController.extend({
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
+        me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
 
         // Add this class to show Target section
@@ -141,6 +143,8 @@ var PickerController = BaseController.extend({
             me._maskLoader.show(me.$scope, 'Creating Instance...');
             me._picker.getOAuthUrl(elementKey, selection)
                 .then(me._handleOnOAuthUrl.bind(me));
+            // TODO  Create Instance Window
+//            me.createInstance();
         } else if(selection == 'source') {
 
             // Check if the target instance is created, if not inform user to create one
@@ -155,11 +159,18 @@ var PickerController = BaseController.extend({
                 return;
             }
 
+            angular.element(document.querySelector('div.picker-source a.selectedTarget')).removeClass('selectedTarget');
+            angular.element(document.querySelector('div.picker-source #' + elementKey)).addClass('selectedTarget');
+
             me._onElementInstanceSelect(me._instances[elementKey]);
         }
         else if(selection == 'target') {
+            angular.element(document.querySelector('div.picker-target a.selectedTarget')).removeClass('selectedTarget');
+            angular.element(document.querySelector('div.picker-target #' + elementKey)).addClass('selectedTarget');
+
             me._picker.setTargetElement(elementKey);
             me._picker.setTargetElementInstance(me._instances[elementKey]);
+
         }
     },
 
@@ -195,12 +206,20 @@ var PickerController = BaseController.extend({
         event.stopPropagation();
 //        me._maskLoader.show(me.$scope, 'Scheduling Job...');
         me._schedule.openSchedule();
+    },
+
+    createInstance: function(instance, $event){
+        var me = this;
+//        event.preventDefault();
+//        event.stopPropagation();
+//        me._maskLoader.show(me.$scope, 'Scheduling Job...');
+        me._createinstance.openCreateInstance();
     }
 
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')
