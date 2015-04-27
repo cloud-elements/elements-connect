@@ -19,6 +19,7 @@ var Picker = Class.extend({
     _cloudElementsUtils: null,
     _elementInstances: null,
     _sources: null,
+    _targets: null,
     _target: null,
     selectedElementInstance: null,
     targetElementInstance: null,
@@ -49,7 +50,11 @@ var Picker = Class.extend({
         me._elementsService.configuration.company = result.data.company.secret;
 
         me._sources = result.data.userData.configuration.sources;
-        me._target = result.data.userData.configuration.target;
+        me._targets = result.data.userData.configuration.targets;
+
+        if(me._targets.length == 1) {
+            me._target = result.data.userData.configuration.targets[0];
+        }
 
         if (me._cloudElementsUtils.isEmpty(me._sources)) {
             // TODO: Throw an error here.
@@ -57,9 +62,9 @@ var Picker = Class.extend({
             return;
         }
 
-        if (me._cloudElementsUtils.isEmpty(me._target)) {
+        if (me._cloudElementsUtils.isEmpty(me._targets)) {
             // TODO: Throw an error here.
-            console.log("No target element configured.");
+            console.log("No target elements configured.");
             return;
         }
 
@@ -81,9 +86,7 @@ var Picker = Class.extend({
         me._elementsService.configuration.user = result.data.secret;
         me._elementsService.populateServiceDetails();
 
-        return me._elementsService.loadElementInstances().then(
-            me._handleLoadElementIntancesSuccess.bind(me),
-            me._handleLoadElementInstancesFailed.bind(me) );
+        return true;
     },
 
     _loadUserConfigurationFailed: function(error) {
@@ -93,34 +96,59 @@ var Picker = Class.extend({
         me._notifications.notify(bulkloader.events.ERROR, "Could not load user configuration. " + error.data.message);
     },
 
+    loadElementInstances: function(result) {
+        var me = this;
+
+        return me._elementsService.loadElementInstances().then(
+            me._handleLoadElementIntancesSuccess.bind(me),
+            me._handleLoadElementInstancesFailed.bind(me) );
+    },
+
     _handleLoadElementIntancesSuccess:function(result){
 
         var me = this;
 
-        // Add only the sources and target to the instance list.
-
+        // Add only the sources and targets to the instance list.
         me._elementInstances = new Object;
 
         for (var i = 0; i < result.data.length; i++){
-
+            var continueNext = true;
             var inst = result.data[i];
             for (var j = 0; j <  me._sources.length; j++) {
                 var source = me._sources[j];
 
-                if (source.elementKey == inst.element.key || me._target.elementKey == inst.element.key) {
+                if (source.elementKey == inst.element.key) {
                     me._elementInstances[inst.element.key] = inst;
+                    continueNext = false;
+                    break;
+                }
+            }
 
-                    if (me._cloudElementsUtils.isEmpty(me._target.token) == false && me._target.token == inst.token) {
-                        me.targetElementInstance = inst;
+            if(continueNext == true) {
+                for (var j = 0; j <  me._targets.length; j++) {
+                    var target = me._targets[j];
+
+                    if (target.elementKey == inst.element.key) {
+                        me._elementInstances[inst.element.key] = inst;
+
+                        if (!me._cloudElementsUtils.isEmpty(me._target)
+                            && me._cloudElementsUtils.isEmpty(me._target.token) == false
+                            && me._target.token == inst.token) {
+                            me.targetElementInstance = inst;
+                        }
+
+                        break;
                     }
                 }
             }
         }
 
-        if (me._cloudElementsUtils.isEmpty(me.targetElementInstance)) {
-            me._notifications.notify(bulkloader.events.ERROR, "Configuration Error. A target element instance has not been configured.");
-            return null;
-        }
+//        if (!me._cloudElementsUtils.isEmpty(me._target)
+//              &&  me._target.hide == true
+//              && me._cloudElementsUtils.isEmpty(me.targetElementInstance)) {
+//            me._notifications.notify(bulkloader.events.ERROR, "Configuration Error. A target element instance has not been configured.");
+//            return null;
+//        }
 
         this._notifications.notify(bulkloader.events.ELEMENT_INSTANCES_LOAD);
 
@@ -128,36 +156,46 @@ var Picker = Class.extend({
     },
 
     _handleLoadElementInstancesFailed: function(error) {
+        var me = this;
         console.log(error);
         me._notifications.notify(bulkloader.events.ERROR,
                                  "Could not load the provisioned element instances. " + error.data.message);
     },
 
-    _getElementConfig: function(elementKey) {
+    _getElementConfig: function(elementKey, selection) {
 
         var me = this;
 
-        if (me._target.elementKey == elementKey) {
+        if (!me._cloudElementsUtils.isEmpty(me._target)
+            && me._target.elementKey == elementKey) {
             return me._target;
         }
 
-        for (var i in me._sources) {
-          var source = me._sources[i];
-
-            if (source.elementKey == elementKey) {
-                return source;
+        if(selection == 'source') {
+            for (var i in me._sources) {
+                var source = me._sources[i];
+                if (source.elementKey == elementKey) {
+                    return source;
+                }
+            }
+        } else {
+            for (var i in me._targets) {
+                var target = me._targets[i];
+                if (target.elementKey == elementKey) {
+                    return target;
+                }
             }
         }
 
         return null;
     },
 
-    getOAuthUrl: function(elementKey) {
+    getOAuthUrl: function(elementKey, selection) {
         var me = this;
 
         namespace('bulkloader.Picker').oauthElementKey = elementKey;
 
-        var elementConfig = me._getElementConfig(elementKey);
+        var elementConfig = me._getElementConfig(elementKey, selection);
 
         if (me._cloudElementsUtils.isEmpty(elementConfig)) {
             // TODO: Throw an error
@@ -205,6 +243,9 @@ var Picker = Class.extend({
         //Adding the newly created instance to _elementInstances
         me._elementInstances[bulkloader.Picker.oauthElementKey] = response.data;
 
+        //Check to see if the instance is from target, if so set it to the target
+        me.setTargetElement(bulkloader.Picker.oauthElementKey);
+
         //Notifying for new element instance creation
         me._notifications.notify(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED);
 
@@ -217,10 +258,27 @@ var Picker = Class.extend({
         me._notifications.notify(bulkloader.events.ERROR, 'Provisioning failed. ' + error.data.message);
     },
 
+    setTargetElement: function(elementKey) {
+        var me = this;
+
+        for (var i in me._targets) {
+            var target = me._targets[i];
+            if (target.elementKey == elementKey) {
+                me._target =target;
+                break;
+            }
+        }
+    },
+
+    setTargetElementInstance: function(instance) {
+        var me = this;
+        me.targetElementInstance = instance;
+    },
+
     getTargetElementKey: function() {
         var me = this;
 
-        if (me._cloudElementsUtils.isEmpty(me._target) == false) {
+        if (!me._cloudElementsUtils.isEmpty(me._target)) {
             return me._target.elementKey;
         } else {
             return null;
@@ -229,18 +287,26 @@ var Picker = Class.extend({
 
     isTargetHidden: function() {
         var me = this;
-
-        if (me._cloudElementsUtils.isEmpty(me._target.hide) || me._target.hide == false) {
-            return false;
-        } else {
-            return true;
+        var show = me._elementsService.configuration.showTarget;
+        if (me._cloudElementsUtils.isEmpty(show)) {
+            show = false;
         }
+        return !show;
     },
 
     getTargetToken: function() {
         var me = this;
-
         return me._target.token;
+    },
+
+    getView: function() {
+        var me = this;
+
+        var view = me._elementsService.configuration.view;
+        if (me._cloudElementsUtils.isEmpty(view)) {
+            return 'datalist';
+        }
+        return view;
     }
 });
 

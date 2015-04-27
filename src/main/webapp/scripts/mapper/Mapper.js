@@ -299,11 +299,13 @@ var Mapper = Class.extend({
 
         if(path.indexOf('.') === -1) {
 
-            for(var i=0; i < findIn.fields.length; i++) {
-                var t = findIn.fields[i];
-                if(t.path == path) {
-                    t.vendorPath = vendorPath;
-                    break;
+            if(!me._cloudElementsUtils.isEmpty(findIn.fields)){
+                for(var i=0; i < findIn.fields.length; i++) {
+                    var t = findIn.fields[i];
+                    if(t.path == path) {
+                        t.vendorPath = vendorPath;
+                        break;
+                    }
                 }
             }
         }
@@ -311,11 +313,13 @@ var Mapper = Class.extend({
             var fieldParts = path.split('.').slice(1).join('.');
             var objField = path.split('.')[0];
 
-            for(var i=0; i < findIn.fields.length; i++) {
-                var t = findIn.fields[i];
-                if(t.path == objField) {
-                    me._setVendorPathInMapping(mapping, fieldParts, vendorPath, t);
-                    break;
+            if(!me._cloudElementsUtils.isEmpty(findIn.fields)){
+                for(var i=0; i < findIn.fields.length; i++) {
+                    var t = findIn.fields[i];
+                    if(t.path == objField) {
+                        me._setVendorPathInMapping(mapping, fieldParts, vendorPath, t);
+                        break;
+                    }
                 }
             }
         }

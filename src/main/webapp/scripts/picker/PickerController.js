@@ -28,7 +28,7 @@ var PickerController = BaseController.extend({
         me.$mdDialog = $mdDialog;
         me._super($scope);
 
-        me._maskLoader.show(me.$scope, 'Loading Instances...');
+        me._maskLoader.show(me.$scope, 'Loading...');
         me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
     },
 
@@ -45,6 +45,9 @@ var PickerController = BaseController.extend({
         me.$scope.withTarget = '';
         me.$scope.showTarget = false;
         me.$scope.showSelectTarget = false;
+
+        me.$scope.targets = [];
+        me.$scope.sources = [];
     },
 
     defineListeners:function() {
@@ -90,47 +93,17 @@ var PickerController = BaseController.extend({
 
     },
 
-    /*
-    _addSources: function() {
-        var me = this;
-
-        if (me._cloudElementsUtils.isEmpty(me._picker.sources)) {
-            return;
-        }
-
-        for (var i in me._picker.sources) {
-            var source = me._picker.sources[i];
-            var anchorElement = document.createElement('a');
-            var textElement = document.createElement('i');
-
-            angular.element(textElement)
-                .attr('class', 'icon wait')
-                .attr('ng-click', "onSelectSchedule('" + source.elementKey + "', $event)");
-
-            angular.element(anchorElement)
-                .attr('href', '')
-                .attr('ng-click', "onSelect('" + source.elementKey + "')")
-                .attr('id', source.elementKey)
-                .attr('class', source.elementKey)
-                .attr('alt', source.elementKey)
-                .attr('data-instance', "Connect to " + source.elementKey)
-                .text(textElement);
-        }
-    },
-    */
-
     _handleConfigurationLoad: function(instances) {
         var me = this;
-        me._maskLoader.hide();
-        me._instances = instances;
+        me.$scope.sources = me._picker._sources;
+        me.$scope.targets = me._picker._targets;
 
         if (me._picker.isTargetHidden() == false) {
-            me.showTarget = true;
+            me.$scope.showTarget = true;
+            me.$scope.withTarget = 'show-target';
         }
 
         if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
-            me.$scope.withTarget = 'show-target';
-
             if(!me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
                 me.$scope.showSelectTarget = false;
             }
@@ -138,6 +111,16 @@ var PickerController = BaseController.extend({
                 me.$scope.showSelectTarget = true;
             }
         }
+
+        me._maskLoader.hide();
+        me._maskLoader.show(me.$scope, 'Loading Instances...');
+        me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
+    },
+
+    _handleInstancesLoad: function(instances) {
+        var me = this;
+        me._maskLoader.hide();
+        me._instances = instances;
 
         if (!me._cloudElementsUtils.isEmpty(me._instances)) {
             var keys = Object.keys(me._instances);
@@ -148,35 +131,35 @@ var PickerController = BaseController.extend({
         }
     },
 
-    onSelect: function(elementKey) {
+    onSelect: function(elementKey, selection) {
         var me = this;
-
-        // Check if the target instance is created, if not inform user to create one
-        if (me._picker.getTargetElementKey() != elementKey
-            && me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
-
-            var confirm = me.$mdDialog.alert()
-                .title('Missing target')
-                .content('Provision your target to proceed forward."')
-                //.ariaLabel('Password notification')
-                .ok('OK');
-
-            me.$mdDialog.show(confirm);
-            return;
-        } else if (me._picker.getTargetElementKey() == elementKey &&
-                   !me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
-            return;
-        }
 
         //Check to see if the element instance is created, if so then move the view to dataselect
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
         if(me._cloudElementsUtils.isEmpty(me._instances) ||
             me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
             me._maskLoader.show(me.$scope, 'Creating Instance...');
-            me._picker.getOAuthUrl(elementKey)
+            me._picker.getOAuthUrl(elementKey, selection)
                 .then(me._handleOnOAuthUrl.bind(me));
-        } else {
+        } else if(selection == 'source') {
+
+            // Check if the target instance is created, if not inform user to create one
+            if(me._picker.isTargetHidden() == false
+                && me._cloudElementsUtils.isEmpty(me._picker._target)) {
+                var confirm = me.$mdDialog.alert()
+                    .title('Missing target')
+                    .content('Select or Provision your target to proceed forward."')
+                    .ok('OK');
+
+                me.$mdDialog.show(confirm);
+                return;
+            }
+
             me._onElementInstanceSelect(me._instances[elementKey]);
+        }
+        else if(selection == 'target') {
+            me._picker.setTargetElement(elementKey);
+            me._picker.setTargetElementInstance(me._instances[elementKey]);
         }
     },
 
@@ -193,10 +176,10 @@ var PickerController = BaseController.extend({
         // Set the instance details to factory class to be used in datalist
         me._picker.selectedElementInstance = instance;
 
-        //TODO Refer http://embed.plnkr.co/uW4v9T/preview for adding animation while switching the view
-        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) && !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+        if (me._picker.getView() == 'mapper') {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
             me.$location.path('/mapper');
+
         } else {
             me.$location.path('/datalist');
         }
