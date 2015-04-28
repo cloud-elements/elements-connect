@@ -888,6 +888,14 @@ var Mapper = Class.extend({
         var me = this;
 
         var keys = Object.keys(transformationArray);
+
+        //Setting the saved transformation
+        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
+            me.all[selectedInstance.element.key].transformations = new Object();
+        }
+        var savedkey = keys[transformationSaveCounter-1];
+        me.all[selectedInstance.element.key].transformations[savedkey] = transformationArray[savedkey];
+
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length)
         {

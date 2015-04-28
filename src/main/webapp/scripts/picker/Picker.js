@@ -297,6 +297,11 @@ var Picker = Class.extend({
         }
     },
 
+    getTarget: function() {
+        var me = this;
+        return me._target;
+    },
+
     setTargetElementInstance: function(instance) {
         var me = this;
         me.targetElementInstance = instance;

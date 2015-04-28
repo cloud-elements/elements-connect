@@ -108,13 +108,10 @@ var PickerController = BaseController.extend({
             me.$scope.withTarget = 'show-target';
         }
 
-        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
-            if(!me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
-                me.$scope.showSelectTarget = false;
-            }
-            else {
-                me.$scope.showSelectTarget = true;
-            }
+        if (me._picker.getView() == 'mapper') {
+            me.$scope.showSelectTarget = true;
+        } else {
+            me.$scope.showSelectTarget = false;
         }
 
         me._maskLoader.hide();

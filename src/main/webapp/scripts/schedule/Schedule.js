@@ -9,6 +9,7 @@ var Schedule = Class.extend({
     _elementsService:null,
     _notifications: null,
     _cloudElementsUtils: null,
+    _picker: null,
 
     _objectMetadata: null,
     _objectMetadataFlat: null,
@@ -56,41 +57,60 @@ var Schedule = Class.extend({
         me._openedModal = null;
     },
 
-    _buildFieldList: function(fields, fieldCheckType) {
+    _buildFieldList: function(fields, allObjects, targetInstance, objectName) {
         var me = this;
 
         var fieldList = '';
         var selectedFieldCount = 0;
 
-        for (var i = 0; i < fields.length; i++) {
-            if (fieldCheckType == 'vendorPath' && me._cloudElementsUtils.isEmpty(fields[i].vendorPath)) {
-                continue;
-            } else if (fieldCheckType == 'transform' &&
-                        (me._cloudElementsUtils.isEmpty(fields[i].transform) || fields[i].transform == false)) {
-                continue;
-            }
+        if(me._cloudElementsUtils.isEmpty(me._elementsService.configuration.view) ||
+            me._elementsService.configuration.view == 'datalist') {
+            for (var i = 0; i < fields.length; i++) {
+                if (me._cloudElementsUtils.isEmpty(fields[i].transform) || fields[i].transform == false) {
+                    continue;
+                }
 
-
-            if (selectedFieldCount > 0) {
-                fieldList = fieldList + ', '
-            }
-
-            if (fieldCheckType == 'vendorPath') {
-                fieldList = fieldList + fields[i].path;
-            } else if (fieldCheckType == 'transform') {
+                if (selectedFieldCount > 0) {
+                    fieldList = fieldList + ', '
+                }
                 fieldList = fieldList + fields[i].vendorPath;
+                selectedFieldCount++;
             }
+        } else {
 
-            selectedFieldCount++;
+            //Get transformation of the object and loop through to get the path value and construct fieldlist
+            var transformation = allObjects[targetInstance.element.key].transformations[objectName];
+            for (var i = 0; i < transformation.fields.length; i++) {
+                var f = transformation.fields[i];
+
+                if (me._cloudElementsUtils.isEmpty(f.path)) {
+                    continue;
+                }
+
+                if (selectedFieldCount > 0) {
+                    fieldList = fieldList + ', '
+                }
+
+                fieldList = fieldList + f.path;
+                selectedFieldCount++;
+            }
         }
-
         return fieldList;
     },
 
-    _scheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, fieldCheckType,
+    _scheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, allObjects,
                                  startDate, statusCheckInterval) {
         var me = this;
-        var query = "select " + me._buildFieldList(fields, fieldCheckType) + " from " + objectName;
+        var query = null;
+
+        if(me._cloudElementsUtils.isEmpty(me._elementsService.configuration.view) ||
+            me._elementsService.configuration.view == 'datalist') {
+            query = "select " + me._buildFieldList(fields, allObjects, targetInstance, objectName) + " from " + objectName;
+        } else {
+            var selectObjectName = objectName.split('_')[1]; // Second field in the objectname is source objectname
+            query = "select " + me._buildFieldList(fields, allObjects, targetInstance, objectName) + " from " + selectObjectName;
+        }
+
         var job = new Object();
 
         job.query = query;
@@ -98,29 +118,38 @@ var Schedule = Class.extend({
         job.objectName = objectName;
         job.statusCheckInterval = statusCheckInterval;
 
-        var targetConfiguration = new Object();
-
-        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.appendObjectName) ||
-                me._elementsService.configuration.target.appendObjectName == false) {
-            targetConfiguration.path = me._elementsService.configuration.target.path;
-        } else {
-            targetConfiguration.path = me._elementsService.configuration.target.path + '/' + objectName;
+        var source = me._picker.getSourceElement(selectedInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(source.path)) {
+            job.path=source.path;
+        }
+        if(!me._cloudElementsUtils.isEmpty(source.method)) {
+            job.method=source.method;
         }
 
-        targetConfiguration.method = me._elementsService.configuration.target.method;
+        var targetConfiguration = new Object();
 
-        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.elementToken) == false) {
-            targetConfiguration.token = me._elementsService.configuration.target.elementToken;
+        var target = me._picker.getTarget();
+        if (me._cloudElementsUtils.isEmpty(target.appendObjectName) ||
+                target.appendObjectName == false) {
+            targetConfiguration.path = target.path;
+        } else {
+            targetConfiguration.path = target.path + '/' + objectName;
+        }
+
+        targetConfiguration.method = target.method;
+
+        if (me._cloudElementsUtils.isEmpty(target.elementToken) == false) {
+            targetConfiguration.token = target.elementToken;
         } else {
             targetConfiguration.token = targetInstance.token;
         }
 
         var parameters = new Object();
 
-        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.other) == false) {
-            for (key in me._elementsService.configuration.target.other) {
-                if (me._elementsService.configuration.target.other.hasOwnProperty(key)) {
-                    parameters[key] = me._elementsService.configuration.target.other[key];
+        if (me._cloudElementsUtils.isEmpty(target.other) == false) {
+            for (key in target.other) {
+                if (target.other.hasOwnProperty(key)) {
+                    parameters[key] = target.other[key];
                 }
             }
         }
@@ -143,8 +172,13 @@ var Schedule = Class.extend({
 
     runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate) {
         var me = this;
-
-        var mappings = allObjects[selectedInstance.element.key].metamapping;
+        var mappings = null;
+        if(me._cloudElementsUtils.isEmpty(me._elementsService.configuration.view) ||
+            me._elementsService.configuration.view == 'datalist') {
+            mappings = allObjects[selectedInstance.element.key].metamapping;
+        } else {
+            mappings = allObjects[targetInstance.element.key].metamapping;
+        }
 
         if (me._cloudElementsUtils.isEmpty(mappings)) {
             // TODO: VSJ: Show an error message here.
@@ -165,7 +199,7 @@ var Schedule = Class.extend({
                 continue;
             }
 
-            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, 'vendorPath', startDate, 60000);
+            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, allObjects, startDate, 60000);
         }
 
         me._scheduledConfirmation();
@@ -206,7 +240,7 @@ var Schedule = Class.extend({
                 continue;
             }
 
-            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, 'transform', startDate, 60000);
+            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, allObjects, startDate, 60000);
         }
 
         me._scheduledConfirmation();
@@ -308,12 +342,13 @@ var Schedule = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, $modal, $mdDialog){
+        $get:['CloudElementsUtils', 'ElementsService','Notifications', 'Picker', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, Picker, $modal, $mdDialog){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
             this.instance.$modal = $modal;
             this.instance.$mdDialog = $mdDialog;
+            this.instance._picker= Picker;
 
             return this.instance;
         }]
