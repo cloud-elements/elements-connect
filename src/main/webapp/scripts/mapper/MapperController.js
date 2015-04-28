@@ -244,7 +244,7 @@ var MapperController = BaseController.extend({
             return;
         }
 
-        me.$scope.sourceElement = me._picker._getElementConfig(me._picker.selectedElementInstance.name, 'source');
+        me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.name, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
         me.$scope.targetLogo = me._picker._target.image;
 

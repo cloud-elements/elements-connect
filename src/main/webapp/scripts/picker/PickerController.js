@@ -61,6 +61,7 @@ var PickerController = BaseController.extend({
         me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
         me._notifications.addEventListener(bulkloader.events.APPKEY_ENTERED, me.checkKey.bind(me));
+        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me));
     },
 
     checkStatus: function() {
@@ -87,15 +88,18 @@ var PickerController = BaseController.extend({
         me.$mdDialog.show(confirm);
     },
 
+    showMask: function(event, msg) {
+        var me = this;
+        me._maskLoader.show(me.$scope, msg);
+    },
+
     _onInstancesRefresh: function() {
         var me = this;
-
+        me._maskLoader.hide();
         me._instances = me._picker._elementInstances;
 
-        if (bulkloader.Picker.oauthElementKey != me._picker.getTargetElementKey()) {
-            me.onSelect(bulkloader.Picker.oauthElementKey);
-        }
-
+        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).addClass('highlightingElement');
+        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).attr('data-instance', me._instances[bulkloader.Picker.oauthElementKey].name);
     },
 
     _handleConfigurationLoad: function(instances) {
@@ -140,37 +144,51 @@ var PickerController = BaseController.extend({
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
         if(me._cloudElementsUtils.isEmpty(me._instances) ||
             me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
-            me._maskLoader.show(me.$scope, 'Creating Instance...');
-            me._picker.getOAuthUrl(elementKey, selection)
-                .then(me._handleOnOAuthUrl.bind(me));
-            // TODO  Create Instance Window
-//            me.createInstance();
-        } else if(selection == 'source') {
 
-            // Check if the target instance is created, if not inform user to create one
-            if(me._picker.isTargetHidden() == false
-                && me._cloudElementsUtils.isEmpty(me._picker._target)) {
-                var confirm = me.$mdDialog.alert()
-                    .title('Missing target')
-                    .content('Select or Provision your target to proceed forward."')
-                    .ok('OK');
+            var element = me._picker.getElementConfig(elementKey, selection);
+            if(me._cloudElementsUtils.isEmpty(element.configs)) {
 
-                me.$mdDialog.show(confirm);
-                return;
+                me._maskLoader.show(me.$scope, 'Creating Instance...');
+
+                me._picker.getOAuthUrl(elementKey, selection)
+                    .then(me._handleOnOAuthUrl.bind(me));
+            } else {
+                me.createInstance(element);
             }
+        } else if(selection == 'source') {
 
             angular.element(document.querySelector('div.picker-source a.selectedTarget')).removeClass('selectedTarget');
             angular.element(document.querySelector('div.picker-source #' + elementKey)).addClass('selectedTarget');
 
-            me._onElementInstanceSelect(me._instances[elementKey]);
+            // Set the instance details to factory class to be used in datalist
+            me._picker.selectedElementInstance = me._instances[elementKey];
+
+            if (me._picker.getView() == 'datalist') {
+                me._onElementInstanceSelect();
+            }
+
         }
         else if(selection == 'target') {
             angular.element(document.querySelector('div.picker-target a.selectedTarget')).removeClass('selectedTarget');
             angular.element(document.querySelector('div.picker-target #' + elementKey)).addClass('selectedTarget');
-
             me._picker.setTargetElement(elementKey);
             me._picker.setTargetElementInstance(me._instances[elementKey]);
 
+            if (me._picker.getView() == 'mapper') {
+
+                // Check if the target instance is created, if not inform user to create one
+                if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+                    var confirm = me.$mdDialog.alert()
+                        .title('Missing Source')
+                        .content('Select or Provision your source to proceed forward."')
+                        .ok('OK');
+
+                    me.$mdDialog.show(confirm);
+                    return;
+                }
+            }
+
+            me._onElementInstanceSelect();
         }
     },
 
@@ -184,8 +202,7 @@ var PickerController = BaseController.extend({
         var me = this;
 
         me._maskLoader.show(me.$scope, 'Loading Instance Data...');
-        // Set the instance details to factory class to be used in datalist
-        me._picker.selectedElementInstance = instance;
+
 
         if (me._picker.getView() == 'mapper') {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
@@ -208,12 +225,12 @@ var PickerController = BaseController.extend({
         me._schedule.openSchedule();
     },
 
-    createInstance: function(instance, $event){
+    createInstance: function(element){
         var me = this;
 //        event.preventDefault();
 //        event.stopPropagation();
 //        me._maskLoader.show(me.$scope, 'Scheduling Job...');
-        me._createinstance.openCreateInstance();
+        me._createinstance.openCreateInstance(element);
     },
 
     checkKey: function(){

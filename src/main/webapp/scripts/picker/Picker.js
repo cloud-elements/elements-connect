@@ -9,6 +9,7 @@
 bulkloader.events.ELEMENT_INSTANCES_LOAD = 'ELEMENT_INSTANCES_LOAD';
 bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED = 'NEW_ELEMENT_INSTANCE_CREATED';
 bulkloader.events.SHOW_SCHEDULER = 'SHOW_SCHEDULER';
+bulkloader.events.SHOW_MASK = 'SHOW_MASK';
 bulkloader.events.ERROR = 'PICKER_ERROR';
 bulkloader.events.SHOW_CREATEINSTANCE = 'SHOW_CREATEINSTANCE';
 
@@ -182,7 +183,18 @@ var Picker = Class.extend({
                                  "Could not load the provisioned element instances. " + error.data.message);
     },
 
-    _getElementConfig: function(elementKey, selection) {
+    _findElementFrom: function(elements, elementKey) {
+        for (var i in elements) {
+            var src = elements[i];
+            if (src.elementKey == elementKey) {
+                return src;
+            }
+        }
+
+        return null;
+    },
+
+    getElementConfig: function(elementKey, selection) {
 
         var me = this;
 
@@ -191,22 +203,18 @@ var Picker = Class.extend({
             return me._target;
         }
 
-        if(selection == 'source') {
-            for (var i in me._sources) {
-                var source = me._sources[i];
-                if (source.elementKey == elementKey) {
-                    return source;
-                }
+        if(me._cloudElementsUtils.isEmpty(selection)) {
+            var element = me._findElementFrom(me._sources, elementKey);
+            if(element == null) {
+                element = me._findElementFrom(me._targets, elementKey);
             }
-        } else {
-            for (var i in me._targets) {
-                var target = me._targets[i];
-                if (target.elementKey == elementKey) {
-                    return target;
-                }
-            }
+            return element;
         }
-
+        else if(selection == 'source') {
+            return me._findElementFrom(me._sources, elementKey);
+        } else {
+            return me._findElementFrom(me._targets, elementKey);
+        }
         return null;
     },
 
@@ -215,7 +223,7 @@ var Picker = Class.extend({
 
         namespace('bulkloader.Picker').oauthElementKey = elementKey;
 
-        var elementConfig = me._getElementConfig(elementKey, selection);
+        var elementConfig = me.getElementConfig(elementKey, selection);
 
         if (me._cloudElementsUtils.isEmpty(elementConfig)) {
             // TODO: Throw an error
@@ -243,8 +251,9 @@ var Picker = Class.extend({
             return;
         }
 
+        me._notifications.notify(bulkloader.events.SHOW_MASK, 'Creating Instance');
         var elementKey  = bulkloader.Picker.oauthElementKey;
-        var elementConfig = me._getElementConfig(elementKey);
+        var elementConfig = me.getElementConfig(elementKey);
 
         if (me._cloudElementsUtils.isEmpty(elementConfig)) {
             // TODO: Throw an error
