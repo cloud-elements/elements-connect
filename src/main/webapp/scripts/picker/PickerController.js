@@ -14,7 +14,7 @@ var PickerController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, AppKey, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -23,6 +23,7 @@ var PickerController = BaseController.extend({
         me._picker = Picker;
         me._schedule = Schedule;
         me._createinstance = CreateInstance;
+        me._appkey = AppKey;
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
@@ -30,7 +31,7 @@ var PickerController = BaseController.extend({
         me._super($scope);
 
         me._maskLoader.show(me.$scope, 'Loading...');
-        me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
+        me.checkKey();
     },
 
     defineScope:function() {
@@ -41,6 +42,7 @@ var PickerController = BaseController.extend({
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
         me.$scope.createInstance = me.createInstance.bind(me);
+//        me.$scope.appkey = me.appKey.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
 
         // Add this class to show Target section
@@ -58,6 +60,7 @@ var PickerController = BaseController.extend({
 
         me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
+        me._notifications.addEventListener(bulkloader.events.APPKEY_ENTERED, me.checkKey.bind(me));
     },
 
     checkStatus: function() {
@@ -214,12 +217,22 @@ var PickerController = BaseController.extend({
 //        event.stopPropagation();
 //        me._maskLoader.show(me.$scope, 'Scheduling Job...');
         me._createinstance.openCreateInstance();
-    }
+    },
 
+    checkKey: function(){
+        var me = this;
+        var key = me._picker.isAppKeyPresent();
+        if (key == false){
+            me._maskLoader.hide();
+            me._appkey.openAppKey();
+            return
+        }
+        me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
+    }
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'AppKey', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

@@ -36,6 +36,20 @@ var Picker = Class.extend({
     // Load all the instances and from it get the defaultinstance and also set it to _selectedElementInstance
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
+
+    isAppKeyPresent: function() {
+        var me = this;
+        if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.apiKey)) {
+            return false;
+        }
+        return true;
+    },
+
+    setAppKey: function(key) {
+        var me = this;
+        me._elementsService._environment.apiKey = key;
+    },
+
     loadConfiguration: function() {
         var me = this;
 
