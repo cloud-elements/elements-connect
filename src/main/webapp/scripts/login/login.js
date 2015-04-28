@@ -28,8 +28,8 @@ var AppKey = Class.extend({
 
         if(me._cloudElementsUtils.isEmpty(me._openedModal)) {
             me._openedModal = me.$modal.open({
-                templateUrl: 'AppKey.html',
-                controller: 'AppKeyController',
+                templateUrl: 'login.html',
+                controller: 'loginController',
                 windowClass: 'bulkloaderModalWindow',
                 backdropClass: 'bulkloaderModalbackdrop',
                 backdrop: 'static',
