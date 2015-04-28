@@ -51,7 +51,7 @@
               class="glyphicon glyphicon-remove"
               ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
       <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
-      <label>{{metadata.vendorPath}}</label>
+      <label>{{metadata.path}}</label>
       <span class="type">{{metadata.type}}</span>
     </div>
 
@@ -98,9 +98,9 @@
                 ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
 
         <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
-        <span class="target">{{metadata.path}}</span>
+        <span class="target">{{metadata.vendorPath}}</span>
         <i class="angle right icon"></i>
-        <span class="source">{{metadata.vendorPath}}</span>
+        <span class="source">{{metadata.path}}</span>
 
         <span class="type">{{metadata.type}}</span>
 

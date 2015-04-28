@@ -259,6 +259,18 @@ var Picker = Class.extend({
         me._notifications.notify(bulkloader.events.ERROR, 'Provisioning failed. ' + error.data.message);
     },
 
+    getSourceElement: function(elementKey) {
+        var me = this;
+
+        for (var i in me._sources) {
+            var src = me._sources[i];
+            if (src.elementKey == elementKey) {
+                return src;
+                break;
+            }
+        }
+    },
+
     setTargetElement: function(elementKey) {
         var me = this;
 

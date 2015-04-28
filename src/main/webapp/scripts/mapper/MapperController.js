@@ -122,7 +122,7 @@ var MapperController = BaseController.extend({
             return false;
         }
         else {
-            parentModelVal.vendorPath = modelVal.actualVendorPath;
+            parentModelVal.path = modelVal.actualVendorPath;
             parentModelVal.targetVendorType= modelVal.type;
 
             if(me._mapper._isLiteral(parentModelVal.type)) {
@@ -200,8 +200,8 @@ var MapperController = BaseController.extend({
             || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
 
             //If the Objects are static and not needed to be loaded from API
-            if(!me._cloudElementsUtils.isEmpty(me._picker._target)
-                || !me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
+            if((!me._cloudElementsUtils.isEmpty(me._picker._target)
+                && !me._cloudElementsUtils.isEmpty(me._picker._target.objects))) {
 
                 var metaMapping = me._mapper._createEmptyMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
                         me._picker.targetElementInstance, me.$scope.selectedTargetObject,
@@ -273,7 +273,7 @@ var MapperController = BaseController.extend({
     save: function() {
         var me = this;
         me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
+        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me._picker.targetElementInstance, me.$scope.instanceObjects);
 
     },
 
