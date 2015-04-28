@@ -91,8 +91,13 @@ var Picker = Class.extend({
     _loadOrgConfigurationFailed: function(error) {
         var me = this;
 
-        me._notifications.notify(bulkloader.events.ERROR,
-                                 "Could not retrieve application configuration for organization. " + error.data.message);
+        if (me._cloudElementsUtils.isEmpty(error.data)) {
+            me._notifications.notify(bulkloader.events.ERROR,
+                    "Could not retrieve application configuration for organization.");
+        } else {
+            me._notifications.notify(bulkloader.events.ERROR,
+                    "Could not retrieve application configuration for organization. " + error.data.message);
+        }
     },
 
     _loadUserConfigurationSucceeded: function(result) {

@@ -218,12 +218,13 @@ var PickerController = BaseController.extend({
 
     checkKey: function(){
         var me = this;
+        me._maskLoader.hide();
         var key = me._picker.isAppKeyPresent();
         if (key == false){
-            me._maskLoader.hide();
             me._appkey.openAppKey();
             return
         }
+        me._maskLoader.show(me.$scope, 'Loading...');
         me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
     }
 
