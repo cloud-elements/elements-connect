@@ -39,6 +39,7 @@ var AppKeyController = BaseController.extend({
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
         me.$scope.apiKey;
+        me.$scope.userId;
 
     },
 
@@ -55,7 +56,7 @@ var AppKeyController = BaseController.extend({
 
     save: function() {
         var me = this;
-        me._picker.setAppKey(me.$scope.apiKey);
+        me._picker.setAppKey(me.$scope.apiKey, me.$scope.userId);
         me._notifications.notify(bulkloader.events.APPKEY_ENTERED, "Done");
         me._appKey.closeAppKey();
     }
