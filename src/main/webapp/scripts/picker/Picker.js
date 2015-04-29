@@ -46,7 +46,7 @@ var Picker = Class.extend({
         return true;
     },
 
-    setAppKey: function(key) {
+    setLogin: function(key) {
         var me = this;
         me._elementsService._environment.apiKey = key;
     },

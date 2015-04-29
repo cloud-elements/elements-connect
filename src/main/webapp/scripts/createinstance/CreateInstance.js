@@ -16,6 +16,7 @@ var CreateInstance = Class.extend({
     _openedModal: null,
     _mdDialog: null,
     _jobs: new Array(),
+    elementConfig: null,
 
     _handleLoadError:function(error){
         //Ignore as these can be ignored or 404's
@@ -23,17 +24,16 @@ var CreateInstance = Class.extend({
     },
 
 
-    openCreateInstance: function () {
+    openCreateInstance: function (element) {
         var me = this;
-
+        me.elementConfig = element;
         if(me._cloudElementsUtils.isEmpty(me._openedModal)) {
             me._openedModal = me.$modal.open({
                 templateUrl: 'createinstance.html',
                 controller: 'CreateInstanceController',
                 windowClass: 'bulkloaderModalWindow',
                 backdropClass: 'bulkloaderModalbackdrop',
-                backdrop: 'static',
-                size: 'lg'
+                backdrop: 'static'
             });
         }
     },

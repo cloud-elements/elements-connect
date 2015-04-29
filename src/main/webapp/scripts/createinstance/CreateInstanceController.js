@@ -38,6 +38,8 @@ var CreateInstanceController = BaseController.extend({
 
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
+        me.$scope.element = me._createinstance.elementConfig.configs;
+        me.$scope.elementName = me._createinstance.elementConfig.name;
 
     },
 
