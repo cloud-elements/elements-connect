@@ -108,6 +108,11 @@ var Schedule = Class.extend({
             query = "select " + me._buildFieldList(fields, allObjects, targetInstance, objectName) + " from " + objectName;
         } else {
             var selectObjectName = objectName.split('_')[1]; // Second field in the objectname is source objectname
+            var fieldsList = me._buildFieldList(fields, allObjects, targetInstance, objectName);
+            if (me._cloudElementsUtils.isEmpty(fieldsList) || fieldsList.length == 0) {
+                // No transformations setup, so ignore
+                return;
+            }
             query = "select " + me._buildFieldList(fields, allObjects, targetInstance, objectName) + " from " + selectObjectName;
         }
 

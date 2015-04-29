@@ -270,6 +270,9 @@ var Picker = Class.extend({
     _handleOnCreateInstance: function(response) {
         var me = this;
 
+        if (me._cloudElementsUtils.isEmpty(me._elementInstances)) {
+            me._elementInstances = new Object();
+        }
         //Adding the newly created instance to _elementInstances
         me._elementInstances[bulkloader.Picker.oauthElementKey] = response.data;
 
