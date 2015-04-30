@@ -57,6 +57,29 @@ var CreateInstanceController = BaseController.extend({
 
     save: function() {
         var me = this;
+
+        var eleConfig = me._createinstance.elementConfig;
+        var elementProvision = {};
+            elementProvision.configuration = {};
+            elementProvision.element = {};
+        for (var i = 0; i < eleConfig.configs.length; i++) {
+            var elemKey = eleConfig.configs[i].key;
+            elementProvision.configuration[elemKey] = i;
+        }
+        elementProvision.element.key = eleConfig.elementKey;
+        elementProvision.name = eleConfig.name;
+
+//        var elementProvision = {
+//            'configuration': {
+//                'oauth.api.key': me.$scope.element,
+//                'oauth.api.secret': me.$scope.element,s
+//                'oauth.callback.url': me.$scope.element
+//            }, 'element': {
+//                'key': ''
+//            }, 'name': me.$scope.elementName
+//        };
+
+//        me._createinstance.onSaveInstance(elementProvision);
     },
 
     clear: function () {

@@ -169,6 +169,22 @@ var ElementsService = Class.extend({
         return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
     },
 
+    createNonOathInstance: function (elementProvision) {
+        var me = this;
+
+//        var elementProvision = {
+//            'configuration': {
+//                'oauth.api.key': elementConfig.apiKey,
+//                'oauth.api.secret': elementConfig.apiSecret,
+//                'oauth.callback.url': elementConfig.callbackUrl
+//            }, 'element': {
+//                'key': elementConfig.elementKey
+//            }, 'name': elementConfig.elementKey
+//        };
+
+//        return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+    },
+
     loadElementDefaultTransformations: function (elementInstance) {
         var url = this._environment.elementsUrl + '/elements/' + elementInstance.element.key + '/transformations';
         return this._httpGet(url, this._getHeaders());

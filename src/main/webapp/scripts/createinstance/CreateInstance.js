@@ -42,6 +42,13 @@ var CreateInstance = Class.extend({
         var me = this;
         me._openedModal.close();
         me._openedModal = null;
+    },
+
+    onSaveInstance: function(){
+        return me._elementsService.createNonOathInstance(elementConfig).then(
+            me._handleOnCreateInstance.bind(me),
+            me._handleOnCreateInstanceFailed.bind(me) );
+
     }
 
 });
