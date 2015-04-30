@@ -9,6 +9,7 @@ var CreateInstance = Class.extend({
     _elementsService:null,
     _notifications: null,
     _cloudElementsUtils: null,
+    _picker: null,
 
     _objectMetadata: null,
     _objectMetadataFlat: null,
@@ -48,7 +49,9 @@ var CreateInstance = Class.extend({
         var me = this;
 
         me.closeCreateInstance();
-        return me._elementsService.createNonOathInstance(elementConfig);
+        return me._elementsService.createNonOathInstance(elementConfig).then(
+            me._picker._handleOnCreateInstance.bind(me),
+            me._picker._handleOnCreateInstanceFailed.bind(me));
     }
 
 });
@@ -67,10 +70,11 @@ var CreateInstance = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, $modal, $mdDialog){
+        $get:['CloudElementsUtils', 'ElementsService', 'Picker','Notifications', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Picker, Notifications, $modal, $mdDialog){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
+            this.instance._picker = Picker;
             this.instance.$modal = $modal;
             this.instance.$mdDialog = $mdDialog;
 

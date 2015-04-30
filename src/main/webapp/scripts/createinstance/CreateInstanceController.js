@@ -68,7 +68,7 @@ var CreateInstanceController = BaseController.extend({
             elementProvision.configuration[elemKey] = me.$scope.element.data[i];
         }
         elementProvision.element.key = eleConfig.elementKey;
-        elementProvision.name = eleConfig.name;
+        elementProvision.name = eleConfig.elementKey;
 
 //        var elementProvision = {
 //            'configuration': {
@@ -81,19 +81,6 @@ var CreateInstanceController = BaseController.extend({
 //        };
 
         me._createinstance.onSaveInstance(elementProvision);
-    },
-
-    clear: function () {
-        var me = this;
-        me.$scope.queryStartDate = null;
-    },
-
-    open: function($event) {
-        var me = this;
-        $event.preventDefault();
-        $event.stopPropagation();
-
-        me.$scope.opened = true;
     }
 
 });
