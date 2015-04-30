@@ -68,17 +68,7 @@ var CreateInstanceController = BaseController.extend({
             elementProvision.configuration[elemKey] = me.$scope.element.data[i];
         }
         elementProvision.element.key = eleConfig.elementKey;
-        elementProvision.name = eleConfig.elementKey;
-
-//        var elementProvision = {
-//            'configuration': {
-//                'oauth.api.key': me.$scope.element,
-//                'oauth.api.secret': me.$scope.element,s
-//                'oauth.callback.url': me.$scope.element
-//            }, 'element': {
-//                'key': ''
-//            }, 'name': me.$scope.elementName
-//        };
+        elementProvision.name = eleConfig.name;
 
         me._createinstance.onSaveInstance(elementProvision);
     }
