@@ -53,6 +53,7 @@ var CreateInstanceController = BaseController.extend({
         var me = this;
 
         me._createinstance.closeCreateInstance();
+        me.$scope.element.data = '';
     },
 
     save: function() {
@@ -64,7 +65,7 @@ var CreateInstanceController = BaseController.extend({
             elementProvision.element = {};
         for (var i = 0; i < eleConfig.configs.length; i++) {
             var elemKey = eleConfig.configs[i].key;
-            elementProvision.configuration[elemKey] = i;
+            elementProvision.configuration[elemKey] = me.$scope.element.data[i];
         }
         elementProvision.element.key = eleConfig.elementKey;
         elementProvision.name = eleConfig.name;
@@ -79,7 +80,7 @@ var CreateInstanceController = BaseController.extend({
 //            }, 'name': me.$scope.elementName
 //        };
 
-//        me._createinstance.onSaveInstance(elementProvision);
+        me._createinstance.onSaveInstance(elementProvision);
     },
 
     clear: function () {

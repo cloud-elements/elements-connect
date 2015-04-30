@@ -170,19 +170,8 @@ var ElementsService = Class.extend({
     },
 
     createNonOathInstance: function (elementProvision) {
-        var me = this;
 
-//        var elementProvision = {
-//            'configuration': {
-//                'oauth.api.key': elementConfig.apiKey,
-//                'oauth.api.secret': elementConfig.apiSecret,
-//                'oauth.callback.url': elementConfig.callbackUrl
-//            }, 'element': {
-//                'key': elementConfig.elementKey
-//            }, 'name': elementConfig.elementKey
-//        };
-
-//        return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+        return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
     },
 
     loadElementDefaultTransformations: function (elementInstance) {
