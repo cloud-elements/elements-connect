@@ -261,8 +261,31 @@ var Picker = Class.extend({
             console.log("Element config for elementKey: " + elementKey + " not found.");
             return;
         }
+//        var providerData = new Object();
+//        providerData['code'] = pageParameters.code;
+//        providerData['apikey'] = elementConfig.apiKey;
+//        if (me._cloudElementsUtils.isEmpty(elementConfig.other)) {
+//            elementConfig.other = new Object();
+//        }
+//
+//        if (!me._cloudElementsUtils.isEmpty(pageParameters.access_token)) {
+//            elementConfig.other['oauth.user.token'] = pageParameters.access_token;
+//            providerData.access_token = pageParameters.access_token;
+//        }
+//
+//        if (!me._cloudElementsUtils.isEmpty(pageParameters.expires_in)) {
+//            elementConfig.other['oauth.user.refresh_interval'] = pageParameters.expires_in;
+//            providerData.expires_in = pageParameters.expires_in;
+//        }
+//
+//        if (!me._cloudElementsUtils.isEmpty(pageParameters.refresh_token)) {
+//            elementConfig.other['oauth.user.refresh_token'] = pageParameters.refresh_token;
+//            providerData.refresh_token = pageParameters.refresh_token;
+//            var d = new Date();
+//            elementConfig.other['oauth.user.refresh_time'] = d.getTime();
+//        }
 
-        return me._elementsService.createInstance(elementConfig, pageParameters.code).then(
+        return me._elementsService.createInstance(elementConfig, pageParameters).then(
             me._handleOnCreateInstance.bind(me),
             me._handleOnCreateInstanceFailed.bind(me) );
     },

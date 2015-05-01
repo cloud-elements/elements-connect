@@ -143,7 +143,7 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
-    createInstance: function (elementConfig, code) {
+    createInstance: function (elementConfig, providerData) {
         var me = this;
 
         var elementProvision = {
@@ -151,9 +151,9 @@ var ElementsService = Class.extend({
                 'oauth.api.key': elementConfig.apiKey,
                 'oauth.api.secret': elementConfig.apiSecret,
                 'oauth.callback.url': elementConfig.callbackUrl
-            }, 'providerData': {
-                'code': code
-            }, 'element': {
+            },
+            'providerData': providerData,
+            'element': {
                 'key': elementConfig.elementKey
             }, 'name': elementConfig.elementKey
         };

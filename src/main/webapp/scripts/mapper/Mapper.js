@@ -587,6 +587,94 @@ var Mapper = Class.extend({
         me._constructAndSaveObjectDefinition(targetInstance, sourceInstance);
     },
 
+    _findDefinition: function(definitionArray, objectName, p, currentDefinition) {
+        var me = this;
+
+        var pArray = p.split('.');
+
+        var name = objectName;
+        var objectDefinition = null;
+        for(var i=0; i< pArray.length-1; i++) {
+            var pathStep = pArray[i];
+            name = name + '_' + pathStep;
+
+            if(me._cloudElementsUtils.isEmpty(definitionArray[name])) {
+                var objDef = {
+                    fields:[]
+                };
+                definitionArray[name]=objDef;
+                objectDefinition = objDef;
+
+                currentDefinition.fields.push({
+                    'path': pathStep,
+                    'type': name
+                });
+
+                currentDefinition = objectDefinition;
+
+            }   else {
+                objectDefinition = definitionArray[name];
+                currentDefinition = objectDefinition;
+            }
+        }
+
+        return objectDefinition;
+    },
+
+    _addToDefinition: function(definitionArray, objectName, mData, objDefinition) {
+        var me = this;
+
+        if(objDefinition == null) {
+            objDefinition = {
+                fields:[]
+            };
+
+            if(me._cloudElementsUtils.isEmpty(definitionArray[objectName])) {
+                definitionArray[objectName]=objDefinition;
+            } else {
+                objDefinition = definitionArray[objectName];
+            }
+
+        }
+
+        for(var i = 0; i < mData.fields.length; i++) {
+            var mapperData = mData.fields[i];
+
+            if(me._cloudElementsUtils.isEmpty(mapperData.type)) {
+                mapperData.type = 'string'; //this is dirty fix for setting a type value by default
+            }
+
+            if(this._isLiteral(mapperData.type.toLowerCase())
+                || this._isDateFormat(mapperData.type))
+            {
+                var t = mapperData.type;
+                var p = mapperData.path;
+
+                if(this._isDateFormat(t)) {
+                    t = 'date';
+                }
+
+                if(!this._cloudElementsUtils.isEmpty(p) && p.indexOf('.') > 0) {
+                    var objDef = me._findDefinition(definitionArray, objectName, p, objDefinition);
+                    var pArray = p.split('.');
+                    objDef.fields.push({
+                        'path': pArray[pArray.length-1],
+                        'type': t
+                    });
+                }
+                else if(!this._cloudElementsUtils.isEmpty(p)) {
+                    objDefinition.fields.push({
+                        'path': p,
+                        'type': t
+                    });
+                }
+            }
+            else {
+                me._addToDefinition(definitionArray, objectName, mapperData);
+            }
+        }
+    },
+
     //Definition that will be created is always in flat structure
     _constructDefinition: function(definitionArray, objectName, mData, objDefinition) {
         var me = this;
@@ -636,27 +724,27 @@ var Mapper = Class.extend({
                     name = name.replace('[*]', '');
                 }
 
-                me._constructDefinition(definitionArray, name, mapperData, objDefinition);
+                name = objectName+'_'+name;
+                me._constructDefinition(definitionArray, name, mapperData);
 
-//                var t = mapperData.vendorPath;
-//                var p = mapperData.path;
-//                if(this._cloudElementsUtils.isEmpty(p) || p.length == 0) {
-//                    p = mapperData.vendorPath
-//                }
-//                if(mapperData.type == 'array') {
-//                    t = 'array['+mapperData.vendorPath.replace('[*]', '')+']';
-//                    p = p+'[*]';
-//                }
-//
-//                if(this._cloudElementsUtils.isEmpty(t)) {
-//                    t = mapperData.actualVendorPath;
-//                }
-//
-//                t = objectnamePre + t;
-//                objDefinition.fields.push({
-//                    'path': p,
-//                    'type': t
-//                });
+                var t = mapperData.vendorPath;
+                var p = mapperData.path;
+                if(this._cloudElementsUtils.isEmpty(p) || p.length == 0) {
+                    p = mapperData.vendorPath
+                }
+                if(mapperData.type == 'array') {
+                    t = 'array['+mapperData.vendorPath.replace('[*]', '')+']';
+                    p = p+'[*]';
+                }
+
+                if(this._cloudElementsUtils.isEmpty(t)) {
+                    t = mapperData.actualVendorPath;
+                }
+
+                objDefinition.fields.push({
+                    'path': p,
+                    'type': t
+                });
             }
         }
     },
@@ -671,7 +759,7 @@ var Mapper = Class.extend({
 
         var definitionArray = new Object;
         for (var i = 0; i < mKeys.length; i++) {
-            me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
+            me._addToDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
         }
 
         var definitionSaveCounter = 0;

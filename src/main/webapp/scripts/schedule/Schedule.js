@@ -120,7 +120,7 @@ var Schedule = Class.extend({
 
         job.query = query;
         job.from = startDate;
-        job.objectName = objectName;
+        job.objectName = selectObjectName;
         job.statusCheckInterval = statusCheckInterval;
 
         var source = me._picker.getSourceElement(selectedInstance.element.key);
