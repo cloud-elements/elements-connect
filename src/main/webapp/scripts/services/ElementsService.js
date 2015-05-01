@@ -5,11 +5,8 @@
  */
 var ElementsService = Class.extend({
 
-    instanceId: null,
     _cloudElementsUtils: null,
     _environment: null,
-    selectedObjectName: null,
-    newobject: false,
     configuration: null,
 
     /**
@@ -19,52 +16,16 @@ var ElementsService = Class.extend({
     },
 
     populateServiceDetails: function () {
-
-
+        var me = this;
         //Read the URL arguments for Orgnaization and User secrets and selected element instanceId
         var pageParameters = this._cloudElementsUtils.pageParameters();
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.configuration)) {
-            this.configuration = angular.fromJson(pageParameters.configuration);
+
+        if (!this._cloudElementsUtils.isEmpty(pageParameters.email)) {
+            me._environment.userId = pageParameters.email;
         }
 
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.user)) {
-            this.configuration.user = pageParameters.user;
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.company)) {
-            this.configuration.company = pageParameters.company;
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.defaultAccount)) {
-            this.configuration.defaultAccount = pageParameters.defaultAccount;
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.accountName)) {
-            this.configuration.accountName = decodeURI(pageParameters.accountName);
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.accountId)) {
-            this.configuration.accountId = pageParameters.accountId;
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.instanceId)) {
-            this.instanceId = pageParameters.instanceId;
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.objectName)) {
-            this.selectedObjectName = pageParameters.objectName;
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.env)) {
-            this.ENV_URL = pageParameters.env;
-        }
-
-        if (this._cloudElementsUtils.isEmpty(this.ENV_URL)) {
-            this.ENV_URL = '/elements/api-v2/';
-        }
-
-        if (!this._cloudElementsUtils.isEmpty(pageParameters.newobject)) {
-            this.newobject = pageParameters.newobject;
+        if (!this._cloudElementsUtils.isEmpty(pageParameters.apiKey)) {
+            me._environment.apiKey = pageParameters.apiKey;
         }
     },
 
@@ -400,7 +361,7 @@ var ElementsService = Class.extend({
                 this.instance.$http = $http;
                 this.instance._cloudElementsUtils = CloudElementsUtils;
                 this.instance._environment = ENV;
-
+                this.instance.populateServiceDetails();
                 return this.instance;
             }
         ]

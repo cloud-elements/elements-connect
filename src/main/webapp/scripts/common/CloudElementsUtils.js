@@ -22,7 +22,20 @@ var CloudElementsUtils = Class.extend({
      * @returns {{}}
      */
     pageParameters: function () {
-        return this.getParamsFromURI(window.location.search.substring(1));
+        var me = this;
+        var locationString = window.location.search.substring(1);
+        if(!me.isEmpty(locationString) && locationString.length > 0) {
+            me.$cookies.cebulkparams = locationString;
+            window.location.href = window.location.origin + window.location.pathname;
+            return;
+        }
+
+        locationString = me.$cookies.cebulkparams;
+        me.$cookies.cebulkparams = null;
+        if(!me.isEmpty(locationString) && locationString.length > 0) {
+            return this.getParamsFromURI(locationString);
+        }
+        return {};
     },
 
     getParamsFromURI: function(query) {
@@ -92,9 +105,10 @@ var CloudElementsUtils = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['$http', '$filter', function($http, $filter){
+        $get:['$http', '$filter', '$cookies', function($http, $filter, $cookies){
             this.instance.$http = $http;
             this.instance.orderBy= $filter('orderBy');
+            this.instance.$cookies = $cookies
             return this.instance;
         }]
     })
