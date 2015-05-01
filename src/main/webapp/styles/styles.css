@@ -105,6 +105,44 @@ h1 {
 .horizontal-align {
     margin:0 auto;
 }
+/***********************/
+/* CREDENTIALS LOGIN/SIGNUP           */
+/***********************/
+#credentials {
+    color: #fff;
+    text-align: center;
+    padding: 0px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+.credentials-container{
+    width: 30%;
+    min-width: 250px;
+    left: 50%;
+    transform: translateX(-50%);
+    top:30%;
+}
+.credentials-container > .header {
+    display: block;
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    margin: 0em;
+    padding: 1.2rem 2rem;
+    font-size: 1.6em;
+    line-height: 1.3em;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 1);
+    border: none;
+    text-align: center;
+}
+.credentials-container p > a{
+    color: #58bde8;
+}
+
+/***********************/
+/* END CREDENTIALS LOGIN/SIGNUP           */
+/***********************/
 
 /*******************************/
 /* SERVICES LOGOS              */
