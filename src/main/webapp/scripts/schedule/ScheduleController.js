@@ -38,7 +38,7 @@ var ScheduleController = BaseController.extend({
     defineScope:function() {
         var me = this;
 
-        me.$scope.queryStartDate = null;
+        me.$scope.queryStartDate = "January 01, 2015";
 
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);

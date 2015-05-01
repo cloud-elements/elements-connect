@@ -1,6 +1,42 @@
 <!-- SERVICE PICKER -->
 <section id="picker" class="animated-card" ng-class="withTarget">
-  <div class="picker-source" ng-show="showTarget">
+
+  <div class="picker-source">
+    <div class="vertical-align" style="width: 100%;">
+      <h2 class="ui icon header">
+
+        <div class="content light">
+
+          <i class="settings icon light"></i> Select a Service
+          <div class="sub header light">That you would like to use with BulkLoader:</div>
+        </div>
+      </h2>
+
+      <div class="services-selections" ng-init="isDisabled = false">
+        <a href ng-repeat="source in sources"
+           ng-click='onSelect("{{source.elementKey}}", "source")'
+           id="{{source.elementKey}}"
+           data-instance="Connect to {{source.name}}"
+           style='background-image: url("{{source.image}}");'>
+          <i class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>
+        </a>
+      </div>
+
+      <!--<div class="services-selections" ng-init="isDisabled = false">-->
+        <!--<a href ng-repeat="source in sources"-->
+           <!--ng-click='onSelect("{{source.elementKey}}", "source")'-->
+           <!--id="{{source.elementKey}}"-->
+           <!--data-instance="Connect to {{source.name}}"-->
+           <!--style='background-image: url("{{source.image}}");'>-->
+          <!--<i class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>-->
+        <!--</a>-->
+      <!--</div>-->
+
+
+
+    </div>
+  </div>
+  <div class="picker-target" ng-show="showTarget">
     <div class="vertical-align" style="width: 100%;">
       <h2 class="ui icon header">
         <i class="bullseye icon light"></i>
@@ -15,54 +51,18 @@
       </h2>
 
       <div class="services-selections">
-        <a href ng-click="onSelect('zendesk')" id="zendesk" class="zendesk" data-instance="Connect to Zendesk">
-        </a>
+        <a href ng-repeat="target in targets"
+           ng-click='onSelect("{{target.elementKey}}", "target")'
+           id="{{target.elementKey}}"
+           data-instance="Connect to {{target.name}}"
+           style='background-image: url("{{target.image}}");'>
+          <i class="icon wait" ng-click='onSelectSchedule("{{target.elementKey}}", $event)'></i>
         </a>
       </div>
+
+
     </div>
   </div>
 
-  <div class="picker-target">
-    <div class="vertical-align" style="width: 100%;">
-      <h2 class="ui icon header">
-        <i class="settings icon light"></i>
-
-        <div class="content light">
-          Select a Service
-          <div class="sub header light">That you would like to use with BulkLoader:</div>
-        </div>
-      </h2>
-
-      <div class="services-selections" ng-init="isDisabled = false">
-        <a href ng-click="onSelect('sfdcmarketingcloud')" id="sfdcmarketingcloud" class="salesforce" alt="SalesForce"
-           data-instance="Connect to Salesforce.com">
-          <i class="icon wait" ng-click="onSelectSchedule('sfdcmarketingcloud', $event)"></i>
-        </a>
-        <a href ng-click="onSelect('hubspot')" id="hubspot" class="hubspot" alt="HubSpot"
-           data-instance="Connect to Hubspot">
-          <i class="icon wait" ng-click="onSelectSchedule('hubspot', $event)"></i>
-        </a>
-        <a href ng-click="onSelect('eloqua')" id="eloqua" class="eloqua" alt="Eloqua" data-instance="Connect to Eloqua">
-          <i class="icon wait" ng-click="onSelectSchedule('eloqua', $event)"></i>
-        </a>
-        <a href ng-click="onSelect('marketo')" id="marketo" class="marketo" alt="Marketo"
-           data-instance="Connect to Marketo">
-          <i class="icon wait" ng-click="onSelectSchedule('marketo', $event)"></i>
-        </a>
-
-        <!--
-        <a href ng-click="onSelect('jira')" id="jira" class="jira" alt="Jira"
-           data-instance="Connect to Jira">
-          <i class="icon wait" ng-click="onSelectSchedule('jira', $event)"></i>
-        </a>
-        <a href ng-click="onSelect('sfdcservicecloud')" id="sfdcservicecloud" class="sfdcservicecloud" alt="SalesForce"
-           data-instance="Connect to Salesforce.com">
-          <i class="icon wait" ng-click="onSelectSchedule('sfdcservicecloud', $event)"></i>
-        </a>
-        -->
-        <!--<a href="#" class="add-new" alt="Add New Service"><i class="icon circle add"></i></a>-->
-      </div>
-    </div>
-  </div>
 </section>
 

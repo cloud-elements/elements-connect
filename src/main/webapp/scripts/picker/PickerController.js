@@ -14,7 +14,7 @@ var PickerController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -22,14 +22,16 @@ var PickerController = BaseController.extend({
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
         me._schedule = Schedule;
+        me._createinstance = CreateInstance;
+        me._login = Login;
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
         me.$mdDialog = $mdDialog;
         me._super($scope);
 
-        me._maskLoader.show(me.$scope, 'Loading Instances...');
-        me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
+        me._maskLoader.show(me.$scope, 'Loading...');
+        me.checkKey();
     },
 
     defineScope:function() {
@@ -39,12 +41,16 @@ var PickerController = BaseController.extend({
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
+        me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
         me.$scope.showTarget = false;
         me.$scope.showSelectTarget = false;
+
+        me.$scope.targets = [];
+        me.$scope.sources = [];
     },
 
     defineListeners:function() {
@@ -53,6 +59,8 @@ var PickerController = BaseController.extend({
 
         me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
+        me._notifications.addEventListener(bulkloader.events.LOGIN_ENTERED, me.checkKey.bind(me));
+        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me));
     },
 
     checkStatus: function() {
@@ -79,65 +87,45 @@ var PickerController = BaseController.extend({
         me.$mdDialog.show(confirm);
     },
 
+    showMask: function(event, msg) {
+        var me = this;
+        me._maskLoader.show(me.$scope, msg);
+    },
+
     _onInstancesRefresh: function() {
         var me = this;
-
+        me._maskLoader.hide();
         me._instances = me._picker._elementInstances;
 
-        if (bulkloader.Picker.oauthElementKey != me._picker.getTargetElementKey()) {
-            me.onSelect(bulkloader.Picker.oauthElementKey);
-        }
-
+        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).addClass('highlightingElement');
+        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).attr('data-instance', me._instances[bulkloader.Picker.oauthElementKey].name);
     },
-
-    /*
-    _addSources: function() {
-        var me = this;
-
-        if (me._cloudElementsUtils.isEmpty(me._picker.sources)) {
-            return;
-        }
-
-        for (var i in me._picker.sources) {
-            var source = me._picker.sources[i];
-            var anchorElement = document.createElement('a');
-            var textElement = document.createElement('i');
-
-            angular.element(textElement)
-                .attr('class', 'icon wait')
-                .attr('ng-click', "onSelectSchedule('" + source.elementKey + "', $event)");
-
-            angular.element(anchorElement)
-                .attr('href', '')
-                .attr('ng-click', "onSelect('" + source.elementKey + "')")
-                .attr('id', source.elementKey)
-                .attr('class', source.elementKey)
-                .attr('alt', source.elementKey)
-                .attr('data-instance', "Connect to " + source.elementKey)
-                .text(textElement);
-        }
-    },
-    */
 
     _handleConfigurationLoad: function(instances) {
         var me = this;
-        me._maskLoader.hide();
-        me._instances = instances;
+        me.$scope.sources = me._picker._sources;
+        me.$scope.targets = me._picker._targets;
 
         if (me._picker.isTargetHidden() == false) {
-            me.showTarget = true;
-        }
-
-        if (!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+            me.$scope.showTarget = true;
             me.$scope.withTarget = 'show-target';
-
-            if(!me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
-                me.$scope.showSelectTarget = false;
-            }
-            else {
-                me.$scope.showSelectTarget = true;
-            }
         }
+
+        if (me._picker.getView() == 'mapper') {
+            me.$scope.showSelectTarget = true;
+        } else {
+            me.$scope.showSelectTarget = false;
+        }
+
+        me._maskLoader.hide();
+        me._maskLoader.show(me.$scope, 'Loading Instances...');
+        me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
+    },
+
+    _handleInstancesLoad: function(instances) {
+        var me = this;
+        me._maskLoader.hide();
+        me._instances = instances;
 
         if (!me._cloudElementsUtils.isEmpty(me._instances)) {
             var keys = Object.keys(me._instances);
@@ -148,35 +136,58 @@ var PickerController = BaseController.extend({
         }
     },
 
-    onSelect: function(elementKey) {
+    onSelect: function(elementKey, selection) {
         var me = this;
-
-        // Check if the target instance is created, if not inform user to create one
-        if (me._picker.getTargetElementKey() != elementKey
-            && me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
-
-            var confirm = me.$mdDialog.alert()
-                .title('Missing target')
-                .content('Provision your target to proceed forward."')
-                //.ariaLabel('Password notification')
-                .ok('OK');
-
-            me.$mdDialog.show(confirm);
-            return;
-        } else if (me._picker.getTargetElementKey() == elementKey &&
-                   !me._cloudElementsUtils.isEmpty(me._instances[me._picker.getTargetElementKey()])) {
-            return;
-        }
 
         //Check to see if the element instance is created, if so then move the view to dataselect
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
         if(me._cloudElementsUtils.isEmpty(me._instances) ||
             me._cloudElementsUtils.isEmpty(me._instances[elementKey])) {
-            me._maskLoader.show(me.$scope, 'Creating Instance...');
-            me._picker.getOAuthUrl(elementKey)
-                .then(me._handleOnOAuthUrl.bind(me));
-        } else {
-            me._onElementInstanceSelect(me._instances[elementKey]);
+
+            var element = me._picker.getElementConfig(elementKey, selection);
+            if(me._cloudElementsUtils.isEmpty(element.configs)) {
+
+                me._maskLoader.show(me.$scope, 'Creating Instance...');
+
+                me._picker.getOAuthUrl(elementKey, selection)
+                    .then(me._handleOnOAuthUrl.bind(me));
+            } else {
+                me.createInstance(element);
+            }
+        } else if(selection == 'source') {
+
+            angular.element(document.querySelector('div.picker-source a.selectedTarget')).removeClass('selectedTarget');
+            angular.element(document.querySelector('div.picker-source #' + elementKey)).addClass('selectedTarget');
+
+            // Set the instance details to factory class to be used in datalist
+            me._picker.selectedElementInstance = me._instances[elementKey];
+
+            if (me._picker.getView() == 'datalist') {
+                me._onElementInstanceSelect();
+            }
+
+        }
+        else if(selection == 'target') {
+            angular.element(document.querySelector('div.picker-target a.selectedTarget')).removeClass('selectedTarget');
+            angular.element(document.querySelector('div.picker-target #' + elementKey)).addClass('selectedTarget');
+            me._picker.setTargetElement(elementKey);
+            me._picker.setTargetElementInstance(me._instances[elementKey]);
+
+            if (me._picker.getView() == 'mapper') {
+
+                // Check if the target instance is created, if not inform user to create one
+                if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+                    var confirm = me.$mdDialog.alert()
+                        .title('Missing Source')
+                        .content('Select or Provision your source to proceed forward."')
+                        .ok('OK');
+
+                    me.$mdDialog.show(confirm);
+                    return;
+                }
+            }
+
+            me._onElementInstanceSelect();
         }
     },
 
@@ -190,13 +201,12 @@ var PickerController = BaseController.extend({
         var me = this;
 
         me._maskLoader.show(me.$scope, 'Loading Instance Data...');
-        // Set the instance details to factory class to be used in datalist
-        me._picker.selectedElementInstance = instance;
 
-        //TODO Refer http://embed.plnkr.co/uW4v9T/preview for adding animation while switching the view
-        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) && !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+
+        if (me._picker.getView() == 'mapper') {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
             me.$location.path('/mapper');
+
         } else {
             me.$location.path('/datalist');
         }
@@ -210,14 +220,29 @@ var PickerController = BaseController.extend({
         var me = this;
         event.preventDefault();
         event.stopPropagation();
-//        me._maskLoader.show(me.$scope, 'Scheduling Job...');
         me._schedule.openSchedule();
-    }
+    },
 
+    createInstance: function(element){
+        var me = this;
+        me._createinstance.openCreateInstance(element);
+    },
+
+    checkKey: function(){
+        var me = this;
+        me._maskLoader.hide();
+        var key = me._picker.isAppKeyPresent();
+        if (key == false){
+            me._login.openLogin();
+            return
+        }
+        me._maskLoader.show(me.$scope, 'Loading...');
+        me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
+    }
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

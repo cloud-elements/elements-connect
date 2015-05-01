@@ -122,7 +122,7 @@ var MapperController = BaseController.extend({
             return false;
         }
         else {
-            parentModelVal.vendorPath = modelVal.actualVendorPath;
+            parentModelVal.path = modelVal.actualVendorPath;
             parentModelVal.targetVendorType= modelVal.type;
 
             if(me._mapper._isLiteral(parentModelVal.type)) {
@@ -169,7 +169,7 @@ var MapperController = BaseController.extend({
 
     _handleOnMetadataLoad: function(obj,data) {
         var me = this;
-        me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'vendorPath');
+        me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'path');
         me.$scope.showTree = true;
 
         me.$scope.mapperdata = null;
@@ -178,7 +178,7 @@ var MapperController = BaseController.extend({
 
         //Now Check to see if there is a mapping already exists for the object
         //if so just set the target mapper
-        //Very dirty fix, not sure how the angular promise is handled is it returns null,
+        //Very dirty fix, not sure how the angular promise is handled as it returns null,
         // handling this in try catch until the angular promise for null is figured out
         try{
             me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
@@ -199,8 +199,20 @@ var MapperController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)
             || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
 
-            me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
-                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+            //If the Objects are static and not needed to be loaded from API
+            if((!me._cloudElementsUtils.isEmpty(me._picker._target)
+                && !me._cloudElementsUtils.isEmpty(me._picker._target.objects))) {
+
+                var metaMapping = me._mapper._createEmptyMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
+                        me._picker.targetElementInstance, me.$scope.selectedTargetObject,
+                        me._mapper.all[me._picker.targetElementInstance.element.key].metadata[me.$scope.selectedTargetObject]);
+
+                me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, metaMapping);
+            } else {
+                //Calling the API to load the target objectmetadata and mapping
+                me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
+                    .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+            }
         } else {
             me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping[me.$scope.selectedTargetObject]);
         }
@@ -211,7 +223,7 @@ var MapperController = BaseController.extend({
         var me = this;
 
         if(!me._cloudElementsUtils.isEmpty(data)) {
-            me.$scope.mapperdata =  me._cloudElementsUtils.orderObjects(data.fields, 'path');
+            me.$scope.mapperdata =  me._cloudElementsUtils.orderObjects(data.fields, 'vendorPath');
             me.$scope.showTargetTree = true;
 
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
@@ -232,8 +244,9 @@ var MapperController = BaseController.extend({
             return;
         }
 
-        me.$scope.sourceLogo = me._picker.selectedElementInstance.name;
-        me.$scope.targetLogo = me._picker.targetElementInstance.name;
+        me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
+        me.$scope.sourceLogo = me.$scope.sourceElement.image;
+        me.$scope.targetLogo = me._picker._target.image;
 
         me._maskLoader.show(me.$scope, 'Loading Objects...');
 
@@ -260,7 +273,7 @@ var MapperController = BaseController.extend({
     save: function() {
         var me = this;
         me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me.$scope.instanceObjects);
+        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me._picker.targetElementInstance, me.$scope.instanceObjects);
 
     },
 

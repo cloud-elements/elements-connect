@@ -25,7 +25,7 @@
         To let bower auto include 'bower:css' and 'endbower'-->
     <!-- build:css(.) styles/vendor.css -->
     <link rel="stylesheet" type="text/css" href="bower_components/semantic-ui/dist/semantic.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css">
+    <link rel="stylesheet" type="text/css" href="scripts/ux/angular-ui-tree/angular-ui-tree.min.css">
     <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
     <link rel="stylesheet" type="text/css" href="bower_components/angular-busy/angular-busy.css">
     <link rel="stylesheet" type="text/css" href="bower_components/angular-material/modules/js/switch/switch-default-theme.min.css">
@@ -64,8 +64,6 @@
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="bower_components/angular-touch/angular-touch.js"></script>
   <script src="bower_components/angular-busy/dist/angular-busy.js"></script>
-  <script src="scripts/ux/angular-ui-tree/angular-ui-tree.js"></script>
-  <script src="scripts/ux/select.js"></script>
   <script src="bower_components/angular-aria/angular-aria.js"></script>
   <script src="bower_components/angular-material/angular-material.js"></script>
   <!-- endbower -->
@@ -74,6 +72,8 @@
   <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 
   <!-- build:js({.tmp,webapp}) scripts/scripts.js -->
+  <script src="scripts/ux/angular-ui-tree/angular-ui-tree.js"></script>
+  <script src="scripts/ux/select.js"></script>
   <script src="scripts/config.js"></script>
   <script src="scripts/base/class.js"></script>
   <script src="scripts/base/namespace.js"></script>
@@ -101,6 +101,12 @@
 
   <script src="scripts/schedule/Schedule.js"></script>
   <script src="scripts/schedule/ScheduleController.js"></script>
+
+  <script src="scripts/createinstance/CreateInstance.js"></script>
+  <script src="scripts/createinstance/CreateInstanceController.js"></script>
+
+  <script src="scripts/login/Login.js"></script>
+  <script src="scripts/login/LoginController.js"></script>
   <!-- endbuild -->
 
 </head>
