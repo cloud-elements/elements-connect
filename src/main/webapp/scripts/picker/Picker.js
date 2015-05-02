@@ -106,8 +106,6 @@ var Picker = Class.extend({
         var me = this;
 
         me._elementsService.configuration.user = result.data.secret;
-        me._elementsService.populateServiceDetails();
-
         return true;
     },
 

@@ -352,6 +352,10 @@ h1 {
     position: relative;
 }
 
+#picker.show-target.dark-background .picker-source{
+    background-color: transparent !important;
+}
+
 #picker.show-target .picker-target {
     width: 100%;
     flex: 3;

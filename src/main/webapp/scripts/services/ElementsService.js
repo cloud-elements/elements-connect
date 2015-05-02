@@ -19,6 +19,9 @@ var ElementsService = Class.extend({
         var me = this;
         //Read the URL arguments for Orgnaization and User secrets and selected element instanceId
         var pageParameters = this._cloudElementsUtils.pageParameters();
+        if (this._cloudElementsUtils.isEmpty(pageParameters)) {
+            return;
+        }
 
         if (!this._cloudElementsUtils.isEmpty(pageParameters.email)) {
             me._environment.userId = pageParameters.email;

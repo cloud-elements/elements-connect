@@ -544,6 +544,10 @@ var Datalist = Class.extend({
 
         var keys = Object.keys(definitionArray);
 
+        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].definitions)) {
+            me.all[selectedInstance.element.key].definitions = new Object();
+        }
+
         //Setting the saved definition in case used for multiple save
         var savedkey = keys[definitionSaveCounter-1];
         me.all[selectedInstance.element.key].definitions[savedkey] = definitionArray[savedkey];

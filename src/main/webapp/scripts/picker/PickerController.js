@@ -109,6 +109,8 @@ var PickerController = BaseController.extend({
         if (me._picker.isTargetHidden() == false) {
             me.$scope.showTarget = true;
             me.$scope.withTarget = 'show-target';
+        } else {
+            me.$scope.withTarget = 'show-target dark-background';
         }
 
         if (me._picker.getView() == 'mapper') {
@@ -116,6 +118,7 @@ var PickerController = BaseController.extend({
         } else {
             me.$scope.showSelectTarget = false;
         }
+
 
         me._maskLoader.hide();
         me._maskLoader.show(me.$scope, 'Loading Instances...');

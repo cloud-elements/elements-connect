@@ -104,7 +104,7 @@ var DatalistController = BaseController.extend({
 
     _handleOnMetadataLoad: function(obj,data) {
         var me = this;
-        me.$scope.objectMetaData = data.fields;
+        me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'vendorPath');
 //        me.$scope.selectedObject.select = objectname;
         me.$scope.cbObject.checked = obj.select.transformed;
         me.$scope.showTree = true;
