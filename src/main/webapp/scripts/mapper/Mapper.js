@@ -245,44 +245,43 @@ var Mapper = Class.extend({
         var me = this;
 
         var trans = me.all[targetInstance.element.key].transformations;
-        if(me._cloudElementsUtils.isEmpty(trans)) {
-            me.all[selectedInstance.element.key].objectsAndTransformation = new Array();
-            return;
-        }
-
         var objectsAndTransformation = new Array();
-        var transformationKeys = Object.keys(trans);
-        var targetObject  = null;
         var tempObjectNames = new Object();
-        for(var i=0; i< transformationKeys.length; i++) {
-            targetObject = transformationKeys[i];
 
-            //Transformations are saved in the format <source_element>_<sourceobject>_<targetobject>
-            //selectedInstance.element.key+'_'+selectedInstanceObject+'_'+selectedObject;
-            var selectObjectName = null;
-            var srcElement = null;
-            var targetObjectName = null;
-            try {
-                var spl = targetObject.split('_');
-                selectObjectName = spl[1]; // Second field in the objectname is source objectname
-                targetObjectName = spl[2];
-                srcElement = spl[0];
+        if(!me._cloudElementsUtils.isEmpty(trans)) {
+            var transformationKeys = Object.keys(trans);
+            var targetObject  = null;
+
+            for(var i=0; i< transformationKeys.length; i++) {
+                targetObject = transformationKeys[i];
+
+                //Transformations are saved in the format <source_element>_<sourceobject>_<targetobject>
+                //selectedInstance.element.key+'_'+selectedInstanceObject+'_'+selectedObject;
+                var selectObjectName = null;
+                var srcElement = null;
+                var targetObjectName = null;
+                try {
+                    var spl = targetObject.split('_');
+                    selectObjectName = spl[1]; // Second field in the objectname is source objectname
+                    targetObjectName = spl[2];
+                    srcElement = spl[0];
+                }
+                    //Ignore the error
+                catch(err) {}
+
+                if(srcElement != selectedInstance.element.key
+                    || me._cloudElementsUtils.isEmpty(selectObjectName)) {
+                    continue;
+                }
+
+                var obj =  new Object();
+                obj.vendorName = targetObjectName;
+                obj.name = selectObjectName;
+                obj.transformed = true;
+                objectsAndTransformation.push(obj);
+
+                tempObjectNames[selectObjectName] = true;
             }
-            //Ignore the error
-            catch(err) {}
-
-            if(srcElement != selectedInstance.element.key
-                || me._cloudElementsUtils.isEmpty(selectObjectName)) {
-                continue;
-            }
-
-            var obj =  new Object();
-            obj.vendorName = targetObjectName;
-            obj.name = selectObjectName;
-            obj.transformed = true;
-            objectsAndTransformation.push(obj);
-
-            tempObjectNames[selectObjectName] = true;
         }
 
         //Now navigate through all the objects from source and push the pending objects to
