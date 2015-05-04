@@ -161,7 +161,7 @@ var MapperController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(instanceMeta)
             || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select.name])) {
 
-            me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name)
+            me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance)
                 .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
         } else {
             me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject.select.name]);
@@ -211,13 +211,14 @@ var MapperController = BaseController.extend({
                 me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, metaMapping);
             } else {
                 //Calling the API to load the target objectmetadata and mapping
-                me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, me.$scope.selectedTargetObject)
+                var trn = new Object();
+                trn.vendorName = me.$scope.selectedTargetObject;
+                me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, trn)
                     .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
             }
         } else {
             me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping[me.$scope.selectedTargetObject]);
         }
-
     },
 
     _handleOnTargetMetamappingLoad: function(obj, data) {
@@ -228,7 +229,7 @@ var MapperController = BaseController.extend({
             me.$scope.showTargetTree = true;
 
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
-                me.$scope.selectedTargetObject = data.name;
+                me.$scope.selectedTargetObject = data.vendorName;
             }
         }
 

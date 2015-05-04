@@ -82,22 +82,42 @@ var Mapper = Class.extend({
             me.all[targetInstance.element.key].instance = targetInstance;
         }
 
-        me.loadInstanceDefinitions(selectedInstance);
+        //Load target instance definitions
+        me.loadInstanceDefinitions(targetInstance);
 
-        //Check if the target instance objects needs to be loaded based on configuration
-        //If Objects are present in target config, just use that if not load it from server
-        if(me._cloudElementsUtils.isEmpty(me._picker._target)
-            || me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
-            //loading the target Instance Objects
-            me._elementsService.loadInstanceObjects(targetInstance)
-                .then(
-                me._handleLoadTargetInstanceObjects.bind(this, targetInstance),
-                me._handleLoadInstanceObjectError.bind(this));
-        } else {
-            me._loadTargetInstanceObjectsFromConfig(me._picker._target, targetInstance);
-        }
+        //Load source objects
+        me._loadObjects(selectedInstance);
 
-        return me.loadInstanceTransformations(selectedInstance);
+        return me.loadInstanceTransformations(targetInstance, selectedInstance);
+    },
+
+    //------------------------------------------------------------------
+    // Target Instance Definitions
+    //------------------------------------------------------------------
+    //Based on the selected instance get all the instance definitions
+    loadInstanceDefinitions: function(targetInstance) {
+        var me = this;
+
+        me._elementsService.loadInstanceObjectDefinitions(targetInstance)
+            .then(
+            this._handleLoadInstanceDefinitions.bind(this, targetInstance),
+            this._handleLoadError.bind(this) );
+
+    },
+
+    _handleLoadInstanceDefinitions:function(targetInstance, result){
+        var me = this;
+        me.all[targetInstance.element.key].definitions = result.data;
+    },
+
+    //------------------------------------------------------------------
+    // Source Instance Objects
+    //------------------------------------------------------------------
+    _loadObjects: function(selectedInstance) {
+        return this._elementsService.loadInstanceObjects(selectedInstance)
+            .then(
+            this._handleLoadInstanceObjects.bind(this, selectedInstance),
+            this._handleLoadInstanceObjectError.bind(this));
     },
 
     _handleLoadInstanceObjects:function(selectedInstance, result) {
@@ -135,24 +155,64 @@ var Mapper = Class.extend({
                 result.data = objects;
             }
         }
+    },
 
-        var objectsAndTransformation = new Array();
-        if(!me._cloudElementsUtils.isEmpty(result.data)) {
-            for(var i=0; i< result.data.length; i++) {
-                var objName = result.data[i];
-                var obj = {
-                    name: objName
-                };
-                obj = me._findAndUpdateTransformation(obj, objName, selectedInstance)
-                objectsAndTransformation.push(obj);
-            }
+    _handleLoadInstanceObjectError: function(result) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects");
+        return "Error getting the discovery object";
+    },
+
+    //------------------------------------------------------------------
+    // Target Instance Objects and transformations
+    //------------------------------------------------------------------
+
+    //Based on the selected instance get all the object transformation
+    loadInstanceTransformations: function(targetInstance, selectedInstance) {
+        return this._elementsService.loadInstanceTransformations(targetInstance, selectedInstance)
+            .then(
+            this._handleLoadInstanceTransformations.bind(this, targetInstance, selectedInstance),
+            this._handleLoadInstanceTransformationsError.bind(this, targetInstance, selectedInstance) );
+    },
+
+    _handleLoadInstanceTransformationsError:function(targetInstance, selectedInstance, result){
+        var me = this;
+        me.all[targetInstance.element.key].transformationsLoaded = true;
+        return me._loadTargetObjects(selectedInstance, targetInstance);
+    },
+
+    _handleLoadInstanceTransformations:function(targetInstance, selectedInstance, result){
+        var me = this;
+        me.all[targetInstance.element.key].transformationsLoaded = true;
+        me.all[targetInstance.element.key].transformations = result.data;
+        return me._loadTargetObjects(selectedInstance, targetInstance);
+    },
+
+    _loadTargetObjects: function(selectedInstance, targetInstance) {
+        var me = this;
+
+        //loading the target Instance Objects
+        return me._elementsService.loadInstanceObjects(targetInstance)
+            .then(
+            me._handleLoadTargetInstanceObjects.bind(this, selectedInstance, targetInstance),
+            me._handleLoadInstanceObjectError.bind(this));
+    },
+
+    _handleLoadTargetInstanceObjects:function(selectedInstance, targetInstance, result){
+        var me = this;
+
+        me.all[targetInstance.element.key].objects = result.data;
+
+        if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].objects)) {
+            me._loadTargetInstanceObjectsFromConfig(targetInstance);
         }
-        me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
+
+        me._findAndUpdateTransformation(targetInstance, selectedInstance);
 
         return me.all[selectedInstance.element.key].objectsAndTransformation;
     },
 
-    _loadTargetInstanceObjectsFromConfig: function(target, targetInstance) {
+    _loadTargetInstanceObjectsFromConfig: function(targetInstance) {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
             return;
@@ -160,7 +220,7 @@ var Mapper = Class.extend({
 
         var objects = new Array();
         for(var i in me._picker._target.objects) {
-            var obj = me._picker._target.objects[i]
+            var obj = me._picker._target.objects[i];
             objects.push(obj.vendorPath);
 
             if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
@@ -181,86 +241,64 @@ var Mapper = Class.extend({
         me.all[targetInstance.element.key].objects = objects;
     },
 
-    _handleLoadTargetInstanceObjects:function(targetInstance, result){
+    _findAndUpdateTransformation: function(targetInstance, selectedInstance) {
         var me = this;
 
-        me.all[targetInstance.element.key].objects = result.data;
-    },
-
-    _findAndUpdateTransformation: function(obj, objectName, selectedInstance) {
-        var me = this;
-
-        var trans = me.all[selectedInstance.element.key].transformations;
+        var trans = me.all[targetInstance.element.key].transformations;
         if(me._cloudElementsUtils.isEmpty(trans)) {
-            return obj;
+            me.all[selectedInstance.element.key].objectsAndTransformation = new Array();
+            return;
         }
 
+        var objectsAndTransformation = new Array();
         var transformationKeys = Object.keys(trans);
-        var transformedObject = null;
         var targetObject  = null;
-
+        var tempObjectNames = new Object();
         for(var i=0; i< transformationKeys.length; i++) {
             targetObject = transformationKeys[i];
-            transformedObject = trans[targetObject];
-            if(transformedObject.vendorName == objectName) {
-                obj.vendorName = targetObject;
-                obj.transformed = true;
-                break;
+
+            //Transformations are saved in the format <source_element>_<sourceobject>_<targetobject>
+            //selectedInstance.element.key+'_'+selectedInstanceObject+'_'+selectedObject;
+            var selectObjectName = null;
+            var srcElement = null;
+            var targetObjectName = null;
+            try {
+                var spl = targetObject.split('_');
+                selectObjectName = spl[1]; // Second field in the objectname is source objectname
+                targetObjectName = spl[2];
+                srcElement = spl[0];
             }
-            else {
-                transformedObject = null;
+            //Ignore the error
+            catch(err) {}
+
+            if(srcElement != selectedInstance.element.key
+                || me._cloudElementsUtils.isEmpty(selectObjectName)) {
+                continue;
+            }
+
+            var obj =  new Object();
+            obj.vendorName = targetObjectName;
+            obj.name = selectObjectName;
+            obj.transformed = true;
+            objectsAndTransformation.push(obj);
+
+            tempObjectNames[selectObjectName] = true;
+        }
+
+        //Now navigate through all the objects from source and push the pending objects to
+        var objs = me.all[selectedInstance.element.key].objects;
+        for(var i=0; i< objs.length; i++) {
+            var objName = objs[i];
+            if(me._cloudElementsUtils.isEmpty(tempObjectNames[objName])) {
+                var obj = {
+                    name: objName,
+                    transformed: false
+                };
+                objectsAndTransformation.push(obj);
             }
         }
 
-        return obj;
-    },
-
-    _handleLoadInstanceObjectError: function(result) {
-        var me = this;
-        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects");
-        return "Error getting the discovery object";
-    },
-
-    //Based on the selected instance get all the object transformation
-    loadInstanceTransformations: function(selectedInstance) {
-        return this._elementsService.loadInstanceTransformations(selectedInstance)
-            .then(
-            this._handleLoadInstanceTransformations.bind(this, selectedInstance),
-            this._handleLoadInstanceTransformationsError.bind(this, selectedInstance) );
-    },
-
-    _handleLoadInstanceTransformationsError:function(selectedInstance,result){
-        var me = this;
-        me.all[selectedInstance.element.key].transformationsLoaded = true;
-        return me._loadObjects(selectedInstance);
-    },
-
-    _handleLoadInstanceTransformations:function(selectedInstance, result){
-        var me = this;
-        me.all[selectedInstance.element.key].transformationsLoaded = true;
-        me.all[selectedInstance.element.key].transformations = result.data;
-        return me._loadObjects(selectedInstance);
-    },
-
-    _loadObjects: function(selectedInstance) {
-        return this._elementsService.loadInstanceObjects(selectedInstance)
-            .then(
-            this._handleLoadInstanceObjects.bind(this, selectedInstance),
-            this._handleLoadInstanceObjectError.bind(this));
-    },
-
-    //Based on the selected instance get all the instance definitions
-    loadInstanceDefinitions: function(selectedInstance) {
-        this._elementsService.loadInstanceObjectDefinitions(selectedInstance)
-            .then(
-            this._handleLoadInstanceDefinitions.bind(this, selectedInstance),
-            this._handleLoadError.bind(this) );
-
-    },
-
-    _handleLoadInstanceDefinitions:function(selectedInstance, result){
-        var me = this;
-        me.all[selectedInstance.element.key].definitions = result.data;
+        me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
     },
 
     //----------------------------------------------------------------------------------------------------------------
@@ -268,11 +306,11 @@ var Mapper = Class.extend({
     // Load selected Object metadata
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    loadObjectMetaData:function(selectedInstance, selectedObject){
+    loadObjectMetaData:function(selectedInstance, selectedObject, targetInstance){
 
         return this._elementsService.loadObjectMetaData(selectedInstance, selectedObject)
             .then(
-            this._handleLoadObjectMetadata.bind(this, selectedInstance, selectedObject),
+            this._handleLoadObjectMetadata.bind(this, selectedInstance, selectedObject, targetInstance),
             this._handleLoadErrorObjectMetadata.bind(this) );
     },
 
@@ -282,7 +320,7 @@ var Mapper = Class.extend({
         return "Error getting the discovery object";
     },
 
-    _handleLoadObjectMetadata:function(selectedInstance, selectedObject, result){
+    _handleLoadObjectMetadata:function(selectedInstance, selectedObject, targetInstance, result){
         var me = this;
 
         if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metadata)) {
@@ -296,16 +334,64 @@ var Mapper = Class.extend({
         angular.extend(objectMetadata, objectMetadataFlat);
         me.all[selectedInstance.element.key].metadataflat[selectedObject] = objectMetadataFlat;
 
+        //Check if there is a Transformation already applied for the Object, if so strip the rows which are already mapped
+        var trans = me.all[targetInstance.element.key].transformations;
+        if(!me._cloudElementsUtils.isEmpty(trans)) {
+            var transformationKeys = Object.keys(trans);
+            var transformation = null;
+            var targetObject  = null;
+
+            for(var i=0; i< transformationKeys.length; i++) {
+                targetObject = transformationKeys[i];
+                transformation = trans[targetObject];
+
+                var selectObjectName = null;
+                try {
+                    var spl = targetObject.split('_');
+                    selectObjectName = spl[1];
+                }
+                //Ignore the error
+                catch(err) {}
+
+                if(selectObjectName == selectedObject) {
+                    break;
+                }
+                else {
+                    transformation = null;
+                }
+            }
+
+            if(!me._cloudElementsUtils.isEmpty(transformation)
+                && !me._cloudElementsUtils.isEmpty(transformation.fields)) {
+
+                //Before restructuring, using trasformation find the fields that are transformed and remove from metadata
+                for(var i=0; i < transformation.fields.length; i++) {
+                    var t = transformation.fields[i];
+                    me._findAndRemoveInSourceMetadata(objectMetadata, t.path);
+                }
+            }
+        }
+
         me._restructureObjectMetadata(objectMetadata, 'path');
         me.all[selectedInstance.element.key].metadata[selectedObject] = objectMetadata;
 
         return objectMetadata;
     },
 
+    _findAndRemoveInSourceMetadata: function(sourceMetadata, path) {
+        for(var i=0; i < sourceMetadata.fields.length; i++) {
+            var field = sourceMetadata.fields[i];
+            if(field.vendorPath === path) {
+                sourceMetadata.fields.splice(i,1);
+                break;
+            }
+        }
+    },
+
     loadObjectMapping: function(selectedInstance, selectedObject, targetInstance, objectMetadata) {
         var me = this;
 
-        var trans = me.all[selectedInstance.element.key].transformations;
+        var trans = me.all[targetInstance.element.key].transformations;
         if(me._cloudElementsUtils.isEmpty(trans)) {
             return "";
         }
@@ -317,8 +403,17 @@ var Mapper = Class.extend({
         for(var i=0; i< transformationKeys.length; i++) {
             targetObject = transformationKeys[i];
             transformedObject = trans[targetObject];
-            if(transformedObject.vendorName == selectedObject) {
-                transformedObject.name = targetObject;
+
+            var selectObjectName = null;
+            try {
+                var spl = targetObject.split('_');
+                selectObjectName = spl[1];
+            }
+                //Ignore the error
+            catch(err) {}
+
+            if(selectObjectName == selectedObject) {
+                transformedObject.name = selectObjectName;
                 break;
             }
             else {
@@ -333,66 +428,7 @@ var Mapper = Class.extend({
 
         objectMetadata.objectTransformation = true;
 
-        return me.loadTargetObjectMetaMapping(selectedInstance, selectedObject, targetInstance, transformedObject.name)
-            .then(me._handleOnTargetEmptymappingLoad.bind(me, transformedObject));
-    },
-
-    _handleOnTargetEmptymappingLoad: function(transformedObject, emptyMapping) {
-
-        var me = this;
-
-        //Populate the mapping with the vendorPath from transformation
-        me._populateVendorPath(emptyMapping, transformedObject);
-
-        return emptyMapping;
-    },
-
-    _populateVendorPath: function(mapping, transformation) {
-        var me = this;
-
-        for(var i=0; i < transformation.fields.length; i++) {
-            var t = transformation.fields[i];
-
-            if(!me._cloudElementsUtils.isEmpty(t.vendorPath)){
-                me._setVendorPathInMapping(mapping, t.path, t.vendorPath);
-            }
-        }
-    },
-
-    _setVendorPathInMapping: function(mapping, path, vendorPath, parentMap) {
-        var me = this;
-
-        var findIn = parentMap;
-        if(findIn == null) {
-            findIn = mapping;
-        }
-
-        if(path.indexOf('.') === -1) {
-
-            if(!me._cloudElementsUtils.isEmpty(findIn.fields)){
-                for(var i=0; i < findIn.fields.length; i++) {
-                    var t = findIn.fields[i];
-                    if(t.path == path) {
-                        t.vendorPath = vendorPath;
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            var fieldParts = path.split('.').slice(1).join('.');
-            var objField = path.split('.')[0];
-
-            if(!me._cloudElementsUtils.isEmpty(findIn.fields)){
-                for(var i=0; i < findIn.fields.length; i++) {
-                    var t = findIn.fields[i];
-                    if(t.path == objField) {
-                        me._setVendorPathInMapping(mapping, fieldParts, vendorPath, t);
-                        break;
-                    }
-                }
-            }
-        }
+        return me.loadTargetObjectMetaMapping(selectedInstance, selectedObject, targetInstance, transformedObject);
     },
 
     _restructureObjectMetadata: function(objectMetadata, pathName) {
@@ -436,6 +472,11 @@ var Mapper = Class.extend({
                     newInnerField.actualVendorPath = field.vendorPath;
                     newInnerField.vendorPath = null;
                     newInnerField[pathName] = fieldParts;
+
+                    if(pathName != 'path' && this._cloudElementsUtils.isEmpty(field.path)) {
+                        newInnerField.path = field.path;
+                    }
+
                     if(this._cloudElementsUtils.isEmpty(newInnerField.fields)) {
                         newInnerField.fields = [];
                     }
@@ -502,6 +543,10 @@ var Mapper = Class.extend({
             newInnerField.actualVendorPath = field.vendorPath;
             newInnerField.vendorPath = null;
             newInnerField[pathName] = innerfieldParts;
+            if(pathName != 'path' && this._cloudElementsUtils.isEmpty(field.path)) {
+                newInnerField.path = field.path;
+            }
+
             if(this._cloudElementsUtils.isEmpty(field.fields)) {
                 newInnerField.fields = [];
             }
@@ -514,12 +559,12 @@ var Mapper = Class.extend({
     },
 
 
-    loadTargetObjectMetaMapping:function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject){
+    loadTargetObjectMetaMapping:function(selectedInstance, selectedInstanceObject, targetInstance, transformation){
         var me = this;
 
-        return me._elementsService.loadObjectMetaData(targetInstance, selectedObject)
+        return me._elementsService.loadObjectMetaData(targetInstance, transformation.vendorName)
             .then(
-            me._handleTargetLoadObjectMetadata.bind(me, selectedInstance, selectedInstanceObject, targetInstance, selectedObject),
+            me._handleTargetLoadObjectMetadata.bind(me, selectedInstance, selectedInstanceObject, targetInstance, transformation),
             me._handleTargetLoadErrorObjectMetadata.bind(me) );
     },
 
@@ -529,8 +574,10 @@ var Mapper = Class.extend({
         return "Error getting the discovery object";
     },
 
-    _handleTargetLoadObjectMetadata: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, result) {
+    _handleTargetLoadObjectMetadata: function(selectedInstance, selectedInstanceObject, targetInstance, transformation, result) {
         var me = this;
+
+        var targetObjectName = transformation.vendorName;
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
             me.all[targetInstance.element.key].metadata = new Object;
@@ -545,16 +592,26 @@ var Mapper = Class.extend({
         var objectMetadataFlat = new Object;
 
         angular.extend(objectMetadata, objectMetadataFlat);
-        me.all[targetInstance.element.key].metadataflat[selectedObject] = objectMetadataFlat;
+        me.all[targetInstance.element.key].metadataflat[targetObjectName] = objectMetadataFlat;
+
+        if(!me._cloudElementsUtils.isEmpty(transformation)
+            && !me._cloudElementsUtils.isEmpty(transformation.fields)) {
+            //Before restructuring, set the Path values from trasformation so that its easy in mapping
+            for(var i=0; i < transformation.fields.length; i++) {
+                var t = transformation.fields[i];
+                me._setPathInMetaData(objectMetadata, t.path, t.vendorPath);
+            }
+        }
 
         me._restructureObjectMetadata(objectMetadata);
-        me.all[targetInstance.element.key].metadata[selectedObject] = objectMetadata;
+
+        me.all[targetInstance.element.key].metadata[targetObjectName] = objectMetadata;
 
         //Create an empty mapping, basically the definition from metadata and return it
-        return me._createEmptyMapping(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata)
+        return me._createEmptyMapping(selectedInstance, selectedInstanceObject, targetInstance, targetObjectName, objectMetadata)
     },
 
-    _createEmptyMapping: function(selectedInstance, selectedInstanceObject, targetInstance, selectedObject, objectMetadata) {
+    _createEmptyMapping: function(selectedInstance, selectedInstanceObject, targetInstance, targetObjectName, objectMetadata) {
         var me = this;
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metamapping)) {
@@ -562,12 +619,22 @@ var Mapper = Class.extend({
         }
 
         var newMapping = new Object;
-        var name = selectedInstance.element.key+'_'+selectedInstanceObject+'_'+selectedObject;
+        var name = selectedInstance.element.key+'_'+selectedInstanceObject+'_'+targetObjectName;
         newMapping['name'] = name;
-        newMapping['vendorName'] = selectedObject;
+        newMapping['vendorName'] = targetObjectName;
         newMapping['fields'] = objectMetadata.fields;
         me.all[targetInstance.element.key].metamapping[name] = newMapping;
         return newMapping;
+    },
+
+    _setPathInMetaData: function(objectMetadata, path, vendorPath) {
+        for(var i=0; i < objectMetadata.fields.length; i++) {
+            var field = objectMetadata.fields[i];
+            if(field.vendorPath === vendorPath) {
+                field.path = path;
+                break;
+            }
+        }
     },
 
     //----------------------------------------------------------------------------------------------------------------
