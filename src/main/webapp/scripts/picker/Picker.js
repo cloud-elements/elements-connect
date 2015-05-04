@@ -74,14 +74,14 @@ var Picker = Class.extend({
         }
 
         if (me._cloudElementsUtils.isEmpty(me._sources)) {
-            // TODO: Throw an error here.
-            console.log("No source elements configured.");
+            // Throw an error here.
+            me._notifications.notify(bulkloader.events.ERROR, "No source elements configured.");
             return;
         }
 
         if (me._cloudElementsUtils.isEmpty(me._targets)) {
-            // TODO: Throw an error here.
-            console.log("No target elements configured.");
+            // Throw an error here.
+            me._notifications.notify(bulkloader.events.ERROR, "No target elements configured.");
             return;
         }
 
@@ -111,8 +111,6 @@ var Picker = Class.extend({
 
     _loadUserConfigurationFailed: function(error) {
         var me = this;
-
-        console.log(error);
         me._notifications.notify(bulkloader.events.ERROR, "Could not load user configuration. " + error.data.message);
     },
 
@@ -121,7 +119,7 @@ var Picker = Class.extend({
 
         return me._elementsService.loadElementInstances().then(
             me._handleLoadElementIntancesSuccess.bind(me),
-            me._handleLoadElementInstancesFailed.bind(me) );
+            me._handleLoadError.bind(me) );
     },
 
     _handleLoadElementIntancesSuccess:function(result){
@@ -175,13 +173,6 @@ var Picker = Class.extend({
         return this._elementInstances;
     },
 
-    _handleLoadElementInstancesFailed: function(error) {
-        var me = this;
-        console.log(error);
-        me._notifications.notify(bulkloader.events.ERROR,
-                                 "Could not load the provisioned element instances. " + error.data.message);
-    },
-
     _findElementFrom: function(elements, elementKey) {
         for (var i in elements) {
             var src = elements[i];
@@ -225,14 +216,19 @@ var Picker = Class.extend({
         var elementConfig = me.getElementConfig(elementKey, selection);
 
         if (me._cloudElementsUtils.isEmpty(elementConfig)) {
-            // TODO: Throw an error
-            console.log("Element config for elementKey: " + elementKey + " not found.");
+            // Throw an error
+            me._notifications.notify(bulkloader.events.ERROR, "Element config for elementKey: " + elementKey + " not found.");
             return;
         }
 
         return me._elementsService.getOAuthUrl(elementConfig).then(
             me._handleGetOauthUrl.bind(me),
-            me._handleLoadError.bind(me) );
+            me._handleGetOauthUrlError.bind(me) );
+    },
+
+    _handleGetOauthUrlError:function(err){
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting OAuth information");
     },
 
     _handleGetOauthUrl:function(result){
@@ -246,7 +242,8 @@ var Picker = Class.extend({
         var not_approved= pageParameters.not_approved;
 
         if(not_approved) {
-            // TODO Show that not approved
+            // Show that not approved
+            me._notifications.notify(bulkloader.events.ERROR, "Not Authoried to access the " + bulkloader.Picker.oauthElementKey + " information");
             return;
         }
 
@@ -255,33 +252,10 @@ var Picker = Class.extend({
         var elementConfig = me.getElementConfig(elementKey);
 
         if (me._cloudElementsUtils.isEmpty(elementConfig)) {
-            // TODO: Throw an error
-            console.log("Element config for elementKey: " + elementKey + " not found.");
+            //Throw an error
+            me._notifications.notify(bulkloader.events.ERROR, "Element config for elementKey: " + bulkloader.Picker.oauthElementKey + " not found.");
             return;
         }
-//        var providerData = new Object();
-//        providerData['code'] = pageParameters.code;
-//        providerData['apikey'] = elementConfig.apiKey;
-//        if (me._cloudElementsUtils.isEmpty(elementConfig.other)) {
-//            elementConfig.other = new Object();
-//        }
-//
-//        if (!me._cloudElementsUtils.isEmpty(pageParameters.access_token)) {
-//            elementConfig.other['oauth.user.token'] = pageParameters.access_token;
-//            providerData.access_token = pageParameters.access_token;
-//        }
-//
-//        if (!me._cloudElementsUtils.isEmpty(pageParameters.expires_in)) {
-//            elementConfig.other['oauth.user.refresh_interval'] = pageParameters.expires_in;
-//            providerData.expires_in = pageParameters.expires_in;
-//        }
-//
-//        if (!me._cloudElementsUtils.isEmpty(pageParameters.refresh_token)) {
-//            elementConfig.other['oauth.user.refresh_token'] = pageParameters.refresh_token;
-//            providerData.refresh_token = pageParameters.refresh_token;
-//            var d = new Date();
-//            elementConfig.other['oauth.user.refresh_time'] = d.getTime();
-//        }
 
         return me._elementsService.createInstance(elementConfig, pageParameters).then(
             me._handleOnCreateInstance.bind(me),

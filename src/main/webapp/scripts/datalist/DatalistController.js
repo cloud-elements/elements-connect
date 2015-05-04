@@ -15,7 +15,7 @@ var DatalistController = BaseController.extend({
     _schedule: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route){
+    init:function($scope, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -25,6 +25,7 @@ var DatalistController = BaseController.extend({
         me._schedule = Schedule;
         me.$window = $window;
         me.$location = $location;
+        me.$mdDialog = $mdDialog;
         me._maskLoader = MaskLoader;
         me._super($scope);
     },
@@ -68,7 +69,7 @@ var DatalistController = BaseController.extend({
         me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me));
 
         me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me));
-        me._notifications.addEventListener(bulkloader.events.DATALIST_ERROR, me._onDatalistError.bind(me));
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._onDatalistError.bind(me));
 
     },
 
@@ -160,6 +161,14 @@ var DatalistController = BaseController.extend({
 
     _onDatalistError: function() {
         var me = this;
+
+        me._maskLoader.hide();
+        var confirm = me.$mdDialog.alert()
+            .title('Error')
+            .content(error)
+            .ok('OK');
+
+        me.$mdDialog.show(confirm);
     },
 
     checkAllInstance: function(cbState, cbObject) {
@@ -213,7 +222,7 @@ var DatalistController = BaseController.extend({
     }
 });
 
-DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route'];
+DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

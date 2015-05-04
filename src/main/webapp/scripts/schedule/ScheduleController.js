@@ -60,7 +60,20 @@ var ScheduleController = BaseController.extend({
     defineListeners:function(){
         var me = this;
 
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
 //        me._notifications.addEventListener(bulkloader.events.SHOW_SCHEDULER, me._seedSchedule.bind(me));
+    },
+
+    _handleError: function(event, error) {
+        var me = this;
+
+        me._maskLoader.hide();
+        var confirm = me.$mdDialog.alert()
+            .title('Error')
+            .content(error)
+            .ok('OK');
+
+        me.$mdDialog.show(confirm);
     },
 
     _seedSchedule: function() {

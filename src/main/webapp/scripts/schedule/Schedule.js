@@ -187,14 +187,14 @@ var Schedule = Class.extend({
         }
 
         if (me._cloudElementsUtils.isEmpty(mappings)) {
-            // TODO: VSJ: Show an error message here.
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 
         var objects = Object.keys(mappings);
 
         if (me._cloudElementsUtils.isEmpty(objects)) {
-            // TODO: VSJ: Show an error message here.
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 
@@ -224,14 +224,14 @@ var Schedule = Class.extend({
         var objects = Object.keys(transformations);
 
         if (me._cloudElementsUtils.isEmpty(objects)) {
-            // TODO: VSJ: Show an error message here.
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 
         var objectsAndTrans = allObjects[selectedInstance.element.key].objectsAndTrans;
 
         if (me._cloudElementsUtils.isEmpty(objectsAndTrans)) {
-            // TODO: VSJ: Show an error message here.
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 

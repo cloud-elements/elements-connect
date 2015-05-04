@@ -6,7 +6,6 @@
  */
 
 bulkloader.events.TRANSFORMATION_SAVED = "Datalist.TRANSFORMATION_SAVED";
-bulkloader.events.DATALIST_ERROR = "Datalist.ERROR";
 
 var Datalist = Class.extend({
     _elementsService:null,
@@ -114,6 +113,8 @@ var Datalist = Class.extend({
     },
 
     _handleLoadInstanceObjectError: function(result) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects");
         return "Error getting the discovery object";
     },
 
@@ -174,6 +175,8 @@ var Datalist = Class.extend({
     },
 
     _handleLoadErrorObjectMetadata: function(result) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting object fields");
         return "Error getting the discovery object";
     },
 
@@ -472,14 +475,20 @@ var Datalist = Class.extend({
 
         var definitionArray = new Object;
 
+        var present = false;
         for (var i = 0; i < mKeys.length; i++) {
 
             if(objectsAndTrans[mKeys[i]] == false
                 || me._anyFieldSelected(mData[mKeys[i]]) == false) {
                 continue;
             }
-
+            present = true;
             me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
+        }
+
+        if(present == false) {
+            me._notifications.notify(bulkloader.events.ERROR, "No Object selected for schedule");
+            return;
         }
 
         var definitionSaveCounter = 0;
@@ -502,7 +511,7 @@ var Datalist = Class.extend({
 
         if (!me._cloudElementsUtils.isEmpty(defs)
             && !me._cloudElementsUtils.isEmpty(defs[key])
-            && defs[key].level == 'instance') //TODO Modify this to instance
+            && defs[key].level == 'instance')
         {
             methodType = 'PUT';
         }
@@ -533,7 +542,7 @@ var Datalist = Class.extend({
         }
         else
         {
-            this._notifications.notify(bulkloader.events.DATALIST_ERROR, error.data.message);
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
             return error;
         }
     },
@@ -701,7 +710,7 @@ var Datalist = Class.extend({
             return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'PUT');
         }
         else {
-            this._notifications.notify(bulkloader.events.DATALIST_ERROR, error.data.message);
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
             return false;
         }
     },

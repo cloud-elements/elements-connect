@@ -6,7 +6,6 @@
  */
 
 bulkloader.events.TRANSFORMATION_SAVED = "Datalist.TRANSFORMATION_SAVED";
-bulkloader.events.DATALIST_ERROR = "Datalist.ERROR";
 
 var Mapper = Class.extend({
     _elementsService:null,
@@ -217,6 +216,8 @@ var Mapper = Class.extend({
     },
 
     _handleLoadInstanceObjectError: function(result) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects");
         return "Error getting the discovery object";
     },
 
@@ -276,6 +277,8 @@ var Mapper = Class.extend({
     },
 
     _handleLoadErrorObjectMetadata: function(result) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the object fields");
         return "Error getting the discovery object";
     },
 
@@ -521,6 +524,8 @@ var Mapper = Class.extend({
     },
 
     _handleTargetLoadErrorObjectMetadata: function(result) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the target object metadata");
         return "Error getting the discovery object";
     },
 
@@ -813,7 +818,7 @@ var Mapper = Class.extend({
         }
         else
         {
-            this._notifications.notify(bulkloader.events.DATALIST_ERROR, error.data.message);
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
             return error;
         }
     },
@@ -967,7 +972,7 @@ var Mapper = Class.extend({
             return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'PUT');
         }
         else {
-            this._notifications.notify(bulkloader.events.DATALIST_ERROR, error.data.message);
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
             return false;
         }
     },
