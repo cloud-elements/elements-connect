@@ -155,7 +155,7 @@ var PickerController = BaseController.extend({
                 me._picker.getOAuthUrl(elementKey, selection)
                     .then(me._handleOnOAuthUrl.bind(me));
             } else {
-                me.createInstance(element);
+                me.createInstance(element, selection);
             }
         } else if(selection == 'source') {
 
@@ -226,9 +226,9 @@ var PickerController = BaseController.extend({
         me._schedule.openSchedule();
     },
 
-    createInstance: function(element){
+    createInstance: function(element, selection){
         var me = this;
-        me._createinstance.openCreateInstance(element);
+        me._createinstance.openCreateInstance(element, selection);
     },
 
     checkKey: function(){

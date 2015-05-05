@@ -38,8 +38,9 @@ var CreateInstanceController = BaseController.extend({
 
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
-        me.$scope.element = me._createinstance.elementConfig.configs;
-        me.$scope.elementName = me._createinstance.elementConfig.name;
+        me.$scope.elementConfigs = me._createinstance.element.configs;
+        me.$scope.elementData = new Object();
+        me.$scope.elementName = me._createinstance.element.name;
 
     },
 
@@ -53,24 +54,54 @@ var CreateInstanceController = BaseController.extend({
         var me = this;
 
         me._createinstance.closeCreateInstance();
-        me.$scope.element.data = '';
+        me.$scope.elementData = new Object();
+        me.$scope.elementConfigs = null;
     },
 
     save: function() {
         var me = this;
 
-        var eleConfig = me._createinstance.elementConfig;
-        var elementProvision = {};
-            elementProvision.configuration = {};
-            elementProvision.element = {};
-        for (var i = 0; i < eleConfig.configs.length; i++) {
-            var elemKey = eleConfig.configs[i].key;
-            elementProvision.configuration[elemKey] = me.$scope.element.data[i];
-        }
-        elementProvision.element.key = eleConfig.elementKey;
-        elementProvision.name = eleConfig.name;
+        var ele = me._createinstance.element;
 
-        me._createinstance.onSaveInstance(elementProvision);
+        if(me._cloudElementsUtils.isEmpty(ele.callbackUrl)) {
+            var elementProvision = new Object();
+            elementProvision.name = ele.name;
+            elementProvision.configuration = me.$scope.elementData;
+            elementProvision.element = {
+                "key"  : ele.elementKey
+            };
+
+            me._maskLoader.show(me.$scope, 'Creating Instance...');
+            me._createinstance.onSaveInstance(elementProvision);
+        } else {
+
+            me._maskLoader.show(me.$scope, 'Creating Instance...');
+            var elementConfig = me._picker.getElementConfig(ele.elementKey, me._createinstance.selection);
+            if(me._cloudElementsUtils.isEmpty(elementConfig.other)) {
+                elementConfig.other = new Object();
+            }
+            var keys = Object.keys(me.$scope.elementData);
+            for (key in keys) {
+                elementConfig.other[keys[key]] = me.$scope.elementData[keys[key]];
+
+                //This is the special case for Marketo where apikey/secret differs for every user
+                if('oauth.api.key' === keys[key]) {
+                    elementConfig.apiKey = me.$scope.elementData[keys[key]];
+                } else if('oauth.api.secret' === keys[key]) {
+                    elementConfig.apiSecret = me.$scope.elementData[keys[key]];
+                }
+            }
+
+            me._picker.getOAuthUrl(ele.elementKey, me._createinstance.selection)
+                .then(me._handleOnOAuthUrl.bind(me));
+        }
+    },
+
+    _handleOnOAuthUrl: function(oauthurl) {
+        var me = this;
+        me._maskLoader.hide();
+        me.$window.open(oauthurl, '_blank');
+        me._createinstance.closeCreateInstance();
     }
 
 });

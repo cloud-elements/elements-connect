@@ -5,11 +5,11 @@
     Create Instance for <span style="color: #58bde8">{{elementName}}</span>
   </div>
   <div class="content">
-    <div ng-repeat="configs in element track by $index" class="two ui icon input fluid"
+    <div ng-repeat="configs in elementConfigs track by $index" class="two ui icon input fluid"
          style="margin-bottom: 10px;">
       <p>{{configs.name}}</p>
       <!--<input type="text" name="{{configs.key}}" data-ng-model="user"/>-->
-      <input type='text' name="{{configs.key}}" ng-model='element.data[$index]' placeholder=" ">
+      <input type='text' name="{{configs.key}}" ng-model='elementData[configs.key]' placeholder=" ">
 
     </div>
   </div>

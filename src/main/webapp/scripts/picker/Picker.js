@@ -258,21 +258,23 @@ var Picker = Class.extend({
         }
 
         return me._elementsService.createInstance(elementConfig, pageParameters).then(
-            me._handleOnCreateInstance.bind(me),
+            me._handleOnCreateInstance.bind(me, bulkloader.Picker.oauthElementKey),
             me._handleOnCreateInstanceFailed.bind(me) );
     },
 
-    _handleOnCreateInstance: function(response) {
+    _handleOnCreateInstance: function(elementKey, response) {
         var me = this;
 
         if (me._cloudElementsUtils.isEmpty(me._elementInstances)) {
             me._elementInstances = new Object();
         }
         //Adding the newly created instance to _elementInstances
-        me._elementInstances[bulkloader.Picker.oauthElementKey] = response.data;
+        me._elementInstances[elementKey] = response.data;
+
+        bulkloader.Picker.oauthElementKey = elementKey;
 
         //Check to see if the instance is from target, if so set it to the target
-        me.setTargetElement(bulkloader.Picker.oauthElementKey);
+        me.setTargetElement(elementKey);
 
         //Notifying for new element instance creation
         me._notifications.notify(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED);

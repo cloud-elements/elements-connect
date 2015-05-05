@@ -17,7 +17,8 @@ var CreateInstance = Class.extend({
     _openedModal: null,
     _mdDialog: null,
     _jobs: new Array(),
-    elementConfig: null,
+    element: null,
+    selection: null,
 
     _handleLoadError:function(error){
         //Ignore as these can be ignored or 404's
@@ -25,9 +26,12 @@ var CreateInstance = Class.extend({
     },
 
 
-    openCreateInstance: function (element) {
+    openCreateInstance: function (element, selection) {
         var me = this;
-        me.elementConfig = element;
+
+        me.element = element;
+        me.selection = selection;
+
         if(me._cloudElementsUtils.isEmpty(me._openedModal)) {
             me._openedModal = me.$modal.open({
                 templateUrl: 'createinstance.html',
@@ -45,13 +49,12 @@ var CreateInstance = Class.extend({
         me._openedModal = null;
     },
 
-    onSaveInstance: function(elementConfig){
+    onSaveInstance: function(elementProvision){
         var me = this;
-
         me.closeCreateInstance();
-        return me._elementsService.createNonOathInstance(elementConfig).then(
-            me._picker._handleOnCreateInstance.bind(me),
-            me._picker._handleOnCreateInstanceFailed.bind(me));
+        return me._elementsService.createNonOathInstance(elementProvision).then(
+            me._picker._handleOnCreateInstance.bind(me._picker, elementProvision.element.key),
+            me._picker._handleOnCreateInstanceFailed.bind(me._picker));
     }
 
 });
