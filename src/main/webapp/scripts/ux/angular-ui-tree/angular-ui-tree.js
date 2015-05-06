@@ -1172,8 +1172,9 @@
 
                                         targetElm = targetNode.$element; // Get the element of ui-tree-node
                                         var targetOffset = $uiTreeHelper.offset(targetElm);
-                                        targetBefore = eventObj.pageY < (targetOffset.top + 6);
-
+                                        //Ramana commented this for Bulkloader, as its always a mapping here
+                                        //targetBefore = eventObj.pageY < (targetOffset.top + 6);
+                                        targetBefore = false;
                                         if (targetBefore && targetNode.accept(scope, targetNode.childNodesCount())) {
                                             tmpTargetNode = targetNode;
                                             placeElm.removeClass('angular-ui-tree-placeholder');

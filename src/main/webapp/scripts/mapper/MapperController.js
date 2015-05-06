@@ -96,6 +96,17 @@ var MapperController = BaseController.extend({
             return false;
         }
 
+        var targetModelValue = destNodesScope.$parent.$modelValue;
+        var srcModelValue = sourceNodeScope.$parent.$modelValue;
+        if(me._cloudElementsUtils.isEmpty(targetModelValue)
+            || targetModelValue == undefined
+            || targetModelValue.type == 'object'
+            || targetModelValue.type == 'array'
+            || srcModelValue.type == 'object'
+            || srcModelValue.type == 'array') {
+            return false;
+        }
+
         return true;
     },
 
@@ -119,7 +130,9 @@ var MapperController = BaseController.extend({
         var modelVal = event.source.nodeScope.$modelValue;
         var parentModelVal = event.dest.nodesScope.$parent.$modelValue;
 
-        if(me._cloudElementsUtils.isEmpty(parentModelVal)) {
+        if(me._cloudElementsUtils.isEmpty(parentModelVal)
+            || parentModelVal.type == 'object'
+            || parentModelVal.type == 'array') {
             return false;
         }
         else {
@@ -353,12 +366,12 @@ var MapperController = BaseController.extend({
 
         var obj = treenode.$nodeScope.$modelValue;
 
-        if(me._cloudElementsUtils.isEmpty(obj.vendorPath)) {
+        if(me._cloudElementsUtils.isEmpty(obj.path)) {
             return;
         }
 
-        this._populateBackToMetaData(obj.vendorPath, obj.targetVendorType, obj.vendorPath, me.$scope.objectMetaData);
-        obj.vendorPath = null;
+        this._populateBackToMetaData(obj.path, obj.targetVendorType, obj.path, me.$scope.objectMetaData);
+        obj.path = null;
         obj.targetVendorType = null;
     },
 
@@ -366,7 +379,7 @@ var MapperController = BaseController.extend({
         for(var i=0; i< metadatafields.length; i++) {
             var field = metadatafields[i];
 
-            if(field.vendorPath == objField) {
+            if(field.path == objField) {
                 return field;
             }
         }
@@ -398,7 +411,7 @@ var MapperController = BaseController.extend({
 
                 innerMetadata = {
                     fields : [],
-                    vendorPath: objField,
+                    path: objField,
                     actualVendorPath: objField,
                     type: t
                 };
@@ -411,7 +424,7 @@ var MapperController = BaseController.extend({
         else{
 
             var oldObj = {
-                vendorPath: targetVendorPath,
+                path: targetVendorPath,
                 type: targetVendorType,
                 actualVendorPath: actualTargetVendorPath
             };

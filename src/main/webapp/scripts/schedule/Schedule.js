@@ -57,6 +57,15 @@ var Schedule = Class.extend({
         me._openedModal = null;
     },
 
+    _wrapSelectField: function(field) {
+        var me = this;
+
+        if(field.split(" ").length > 1) {
+            field = "`"+field+"`";
+        }
+
+        return field;
+    },
     _buildFieldList: function(fields, allObjects, targetInstance, objectName) {
         var me = this;
 
@@ -73,7 +82,7 @@ var Schedule = Class.extend({
                 if (selectedFieldCount > 0) {
                     fieldList = fieldList + ', '
                 }
-                fieldList = fieldList + fields[i].vendorPath;
+                fieldList = fieldList + me._wrapSelectField(fields[i].vendorPath);
                 selectedFieldCount++;
             }
         } else {
@@ -91,7 +100,7 @@ var Schedule = Class.extend({
                     fieldList = fieldList + ', '
                 }
 
-                fieldList = fieldList + f.path;
+                fieldList = fieldList + me._wrapSelectField(f.path);
                 selectedFieldCount++;
             }
         }
@@ -114,7 +123,7 @@ var Schedule = Class.extend({
                 // No transformations setup, so ignore
                 return;
             }
-            query = "select " + me._buildFieldList(fields, allObjects, targetInstance, objectName) + " from " + selectObjectName;
+            query = "select " + fieldsList + " from " + selectObjectName;
         }
 
         var job = new Object();
@@ -183,7 +192,18 @@ var Schedule = Class.extend({
             me._elementsService.configuration.view == 'datalist') {
             mappings = allObjects[selectedInstance.element.key].metamapping;
         } else {
-            mappings = allObjects[targetInstance.element.key].metamapping;
+            var targetmappings = allObjects[targetInstance.element.key].metamapping;
+
+            //filter out mappings for only selected instance
+            var objects = Object.keys(targetmappings);
+            if (!me._cloudElementsUtils.isEmpty(objects)) {
+                mappings = new Object();
+                for (var i = 0; i < objects.length; i++) {
+                    if(objects[i].indexOf(selectedInstance.element.key) > -1) {
+                        mappings[objects[i]] = targetmappings[objects[i]];
+                    }
+                }
+            }
         }
 
         if (me._cloudElementsUtils.isEmpty(mappings)) {

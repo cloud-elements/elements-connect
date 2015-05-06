@@ -125,6 +125,8 @@ var Mapper = Class.extend({
 
         me.all[selectedInstance.element.key].objects = result.data;
 
+        me.all[selectedInstance.element.key].objects = me._cloudElementsUtils.orderBy(me.all[selectedInstance.element.key].objects, 'toString()');
+
         if(me.all[selectedInstance.element.key].objects ==  null ||
             me.all[selectedInstance.element.key].objects.length == 0) {
 
