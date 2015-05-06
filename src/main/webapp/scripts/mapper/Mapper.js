@@ -233,7 +233,7 @@ var Mapper = Class.extend({
             var objectMetadata = obj;
             var objectMetadataFlat = new Object;
 
-            angular.extend(objectMetadata, objectMetadataFlat);
+            angular.merge(objectMetadata, objectMetadataFlat);
             me.all[targetInstance.element.key].metadataflat[obj.vendorPath] = objectMetadataFlat;
 
             me._restructureObjectMetadata(objectMetadata);
@@ -433,7 +433,7 @@ var Mapper = Class.extend({
     },
 
     _restructureObjectMetadata: function(objectMetadata, pathName) {
-
+        var me = this;
         if(this._cloudElementsUtils.isEmpty(objectMetadata)
             || this._cloudElementsUtils.isEmpty(objectMetadata.fields)) {
             return;
@@ -446,6 +446,11 @@ var Mapper = Class.extend({
         for(var i=0; i < objectMetadata.fields.length; i++) {
             var field = objectMetadata.fields[i];
 
+            if(!this._cloudElementsUtils.isEmpty(field.vendorReadOnly)
+                && field.vendorReadOnly == true) {
+                continue;
+            }
+
             if(field.vendorPath.indexOf('.') !== -1) {
 
 
@@ -457,6 +462,9 @@ var Mapper = Class.extend({
                     newInnerMetaData = new Object;
                     newInnerMetaData[pathName] = objField;
                     newInnerMetaData.vendorPath = objField;
+                    if(!me._cloudElementsUtils.isEmpty(field.vendorDisplayName)) {
+                        newInnerMetaData.vendorDisplayName = objField;
+                    }
                     newInnerMetaData['fields'] = [];
                     var t = 'object';
                     if(objField.indexOf('[*]') !== -1) {
@@ -473,6 +481,10 @@ var Mapper = Class.extend({
                     newInnerField.actualVendorPath = field.vendorPath;
                     newInnerField.vendorPath = null;
                     newInnerField[pathName] = fieldParts;
+
+                    newInnerField.vendorDisplayName = field.vendorDisplayName;
+                    newInnerField.vendorRequired = field.vendorRequired;
+                    newInnerField.vendorReadOnly = field.vendorReadOnly;
 
                     if(pathName != 'path' && this._cloudElementsUtils.isEmpty(field.path)) {
                         newInnerField.path = field.path;
@@ -520,7 +532,7 @@ var Mapper = Class.extend({
     },
 
     _structureInnerObjectMetadata: function(metadata, fieldParts, field, pathName) {
-
+        var me = this;
         var innerfieldParts = fieldParts.split('.').slice(1).join('.');
         var objField = fieldParts.split('.')[0];
 
@@ -528,6 +540,10 @@ var Mapper = Class.extend({
         if(this._cloudElementsUtils.isEmpty(newInnerMetaData)) {
             newInnerMetaData = new Object;
             newInnerMetaData.vendorPath = objField;
+            newInnerMetaData[pathName] = objField;
+            if(!me._cloudElementsUtils.isEmpty(field.vendorDisplayName)) {
+                newInnerMetaData.vendorDisplayName = objField;
+            }
             newInnerMetaData[pathName] = objField;
             newInnerMetaData['fields'] = [];
             var t = 'object';
@@ -543,6 +559,11 @@ var Mapper = Class.extend({
             var newInnerField = angular.copy(field);
             newInnerField.actualVendorPath = field.vendorPath;
             newInnerField.vendorPath = null;
+
+            newInnerField.vendorDisplayName = field.vendorDisplayName;
+            newInnerField.vendorRequired = field.vendorRequired;
+            newInnerField.vendorReadOnly = field.vendorReadOnly;
+
             newInnerField[pathName] = innerfieldParts;
             if(pathName != 'path' && this._cloudElementsUtils.isEmpty(field.path)) {
                 newInnerField.path = field.path;
@@ -592,7 +613,7 @@ var Mapper = Class.extend({
         var objectMetadata = result.data;
         var objectMetadataFlat = new Object;
 
-        angular.extend(objectMetadata, objectMetadataFlat);
+        angular.copy(objectMetadata, objectMetadataFlat);
         me.all[targetInstance.element.key].metadataflat[targetObjectName] = objectMetadataFlat;
 
         if(!me._cloudElementsUtils.isEmpty(transformation)
@@ -610,6 +631,32 @@ var Mapper = Class.extend({
 
         //Create an empty mapping, basically the definition from metadata and return it
         return me._createEmptyMapping(selectedInstance, selectedInstanceObject, targetInstance, targetObjectName, objectMetadata)
+    },
+
+
+    hasDisplayName: function(instance, objectname) {
+        var me = this;
+
+        var metadataflat = me.all[instance.element.key].metadataflat[objectname];
+
+        var displayName = false;
+        var count = 0;
+        for(var i=0; i < metadataflat.fields.length; i++) {
+            var field = metadataflat.fields[i];
+
+            if(!this._cloudElementsUtils.isEmpty(field.vendorDisplayName)) {
+                displayName = true;
+                break;
+            }
+            //Just dont want to loop all the field to find out
+            //Should be a good number to decide what to sort on
+            if(count == 10) {
+                break;
+            }
+            count++;
+        }
+
+        return displayName;
     },
 
     _createEmptyMapping: function(selectedInstance, selectedInstanceObject, targetInstance, targetObjectName, objectMetadata) {

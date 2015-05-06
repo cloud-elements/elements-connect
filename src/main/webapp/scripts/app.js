@@ -40,12 +40,12 @@ var bulkloaderApp = angular
 bulkloaderApp.config(function($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'credentials.html',
-            controller: 'CredentialsController'
-        })
-        .when('/picker', {
             templateUrl: 'picker.html',
             controller: 'PickerController'
+        })
+        .when('/credentials', {
+            templateUrl: 'credentials.html',
+            controller: 'CredentialsController'
         })
         .when('/datalist', {
             templateUrl: 'datalist.html',

@@ -238,7 +238,11 @@ var MapperController = BaseController.extend({
         var me = this;
 
         if(!me._cloudElementsUtils.isEmpty(data)) {
-            me.$scope.mapperdata =  me._cloudElementsUtils.orderObjects(data.fields, 'vendorPath');
+            var sortby = 'vendorPath';
+            if(me._mapper.hasDisplayName(me._picker.targetElementInstance, data.vendorName) == true) {
+                sortby = 'vendorDisplayName';
+            }
+            me.$scope.mapperdata =  me._cloudElementsUtils.orderObjects(data.fields, sortby);
             me.$scope.showTargetTree = true;
 
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {

@@ -98,7 +98,7 @@
                 ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
 
         <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
-        <span class="target">{{metadata.vendorPath}}</span>
+        <span class="target">{{metadata.vendorDisplayName == null ? metadata.vendorPath: metadata.vendorDisplayName}}</span>
         <i class="angle right icon"></i>
         <span class="source">{{metadata.path}}</span>
 
