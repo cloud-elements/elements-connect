@@ -69,7 +69,7 @@
       <ul ui-tree-nodes="" ng-model="objectMetaData">
         <li ng-repeat="metadata in objectMetaData"
             ui-tree-node id="tree1-root-node" ng-include="'objectFields.html'"
-            collapsed="true">
+            collapsed="false">
         </li>
       </ul>
     </li>
@@ -124,7 +124,7 @@
         <ul ui-tree-nodes="" ng-model="mapperdata">
           <li ng-repeat="metadata in mapperdata"
               ui-tree-node id="tree2-root-node" ng-include="'mapperFields.html'"
-              collapsed="true">
+              collapsed="false">
           </li>
         </ul>
       </li>
