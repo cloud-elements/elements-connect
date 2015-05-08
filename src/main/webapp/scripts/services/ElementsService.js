@@ -30,6 +30,10 @@ var ElementsService = Class.extend({
         if (!this._cloudElementsUtils.isEmpty(pageParameters.apiKey)) {
             me._environment.apiKey = pageParameters.apiKey;
         }
+
+        if (!this._cloudElementsUtils.isEmpty(pageParameters.key)) {
+            me._environment.key = pageParameters.key;
+        }
     },
 
     loadOrgConfiguration: function () {
@@ -56,6 +60,32 @@ var ElementsService = Class.extend({
         var url = me._environment.elementsUrl + '/applications/users';
 
         return me._httpGet(url, headers);
+    },
+
+
+    loginAndloadConfiguration: function (email, password) {
+
+        var me = this;
+
+        var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Elements-User-Password ' + password
+        }
+
+        var url = me._environment.elementsUrl + '/applications/users/'+email;
+
+        return me._httpGet(url, headers);
+    },
+
+    signup: function (user) {
+        var me = this;
+        var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Elements-User-Password ' + user.password
+        }
+
+        var url = me._environment.elementsUrl + '/applications/users';
+        return this._httpPost(url, headers, user);
     },
 
     _getHeaders: function (token) {

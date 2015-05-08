@@ -61,6 +61,7 @@ var PickerController = BaseController.extend({
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
         me._notifications.addEventListener(bulkloader.events.LOGIN_ENTERED, me.checkKey.bind(me));
         me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me));
+        me._notifications.addEventListener(bulkloader.events.CONFIGURATION_LOAD, me._handleConfigurationLoad.bind(me));
     },
 
     checkStatus: function() {
@@ -234,13 +235,23 @@ var PickerController = BaseController.extend({
     checkKey: function(){
         var me = this;
         me._maskLoader.hide();
-        var key = me._picker.isAppKeyPresent();
-        if (key == false){
-            me._login.openLogin();
-            return
+
+        if(me._picker.isSecretsPresent() == false) {
+            if (me._picker.isAppKeyPresent() == false
+                && me._picker.isKeyPresent() == false){
+                me._login.openLogin();
+                return
+            } else if (me._picker.isAppKeyPresent() == false
+                && me._picker.isKeyPresent() == true){
+                me.$location.path('/credentials');
+                return;
+            }
+
+            me._maskLoader.show(me.$scope, 'Loading...');
+            me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
+        } else {
+            me._handleConfigurationLoad(true);
         }
-        me._maskLoader.show(me.$scope, 'Loading...');
-        me._picker.loadConfiguration().then(me._handleConfigurationLoad.bind(me));
     }
 
 });

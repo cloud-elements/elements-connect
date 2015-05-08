@@ -12,6 +12,7 @@ bulkloader.events.SHOW_SCHEDULER = 'SHOW_SCHEDULER';
 bulkloader.events.SHOW_MASK = 'SHOW_MASK';
 bulkloader.events.ERROR = 'PICKER_ERROR';
 bulkloader.events.SHOW_CREATEINSTANCE = 'SHOW_CREATEINSTANCE';
+bulkloader.events.CONFIGURATION_LOAD = 'CONFIGURATION_LOAD';
 
 namespace('bulkloader.Picker').oauthElementKey = null;
 
@@ -46,6 +47,24 @@ var Picker = Class.extend({
         return true;
     },
 
+    isKeyPresent: function() {
+        var me = this;
+        if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.key)) {
+            return false;
+        }
+        return true;
+    },
+
+    isSecretsPresent: function() {
+        var me = this;
+        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration)
+            || me._cloudElementsUtils.isEmpty(me._elementsService.configuration.user)
+            || me._cloudElementsUtils.isEmpty(me._elementsService.configuration.company)) {
+            return false;
+        }
+        return true;
+    },
+
     setLogin: function(key, userId) {
         var me = this;
         me._elementsService._environment.apiKey = key;
@@ -60,11 +79,13 @@ var Picker = Class.extend({
           me._loadOrgConfigurationFailed.bind(me));
     },
 
-    _loadOrgConfigurationSucceeded: function(result) {
+    handleConfigurationSetUp: function(result) {
         var me = this;
+
 
         me._elementsService.configuration = result.data.userData.configuration;
         me._elementsService.configuration.company = result.data.company.secret;
+        me._elementsService.configuration.user = result.data.userData.secret;
 
         me._sources = result.data.userData.configuration.sources;
         me._targets = result.data.userData.configuration.targets;
@@ -72,16 +93,32 @@ var Picker = Class.extend({
         if(me._targets.length == 1) {
             me._target = result.data.userData.configuration.targets[0];
         }
+    },
+
+    validateConfiguration: function() {
+        var me = this;
 
         if (me._cloudElementsUtils.isEmpty(me._sources)) {
             // Throw an error here.
             me._notifications.notify(bulkloader.events.ERROR, "No source elements configured.");
-            return;
+            return false;
         }
 
         if (me._cloudElementsUtils.isEmpty(me._targets)) {
             // Throw an error here.
             me._notifications.notify(bulkloader.events.ERROR, "No target elements configured.");
+            return false;
+        }
+
+        return true;
+    },
+
+    _loadOrgConfigurationSucceeded: function(result) {
+        var me = this;
+
+        me.handleConfigurationSetUp(result);
+
+        if(!me.validateConfiguration()) {
             return;
         }
 

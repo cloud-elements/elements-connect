@@ -24,7 +24,9 @@ var CloudElementsUtils = Class.extend({
     pageParameters: function () {
         var me = this;
         var locationString = window.location.search.substring(1);
-        if(!me.isEmpty(locationString) && locationString.length > 0) {
+        if(!me.isEmpty(locationString) && locationString.length > 0
+            && (locationString.indexOf('apiKey') > -1
+                || locationString.indexOf('email') > -1)) {
             me.$cookies.cebulkparams = locationString;
             window.location.href = window.location.origin + window.location.pathname;
             return;
@@ -32,6 +34,11 @@ var CloudElementsUtils = Class.extend({
 
         locationString = me.$cookies.cebulkparams;
         me.$cookies.cebulkparams = null;
+
+        if(me.isEmpty(locationString) || locationString == "null") {
+            locationString = window.location.search.substring(1);
+        }
+
         if(!me.isEmpty(locationString) && locationString.length > 0) {
             return this.getParamsFromURI(locationString);
         }

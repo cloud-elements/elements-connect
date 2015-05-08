@@ -51,6 +51,20 @@ var CredentialsController = BaseController.extend({
     },
 
 
+    changeCredentialView: function(view,$event){
+        var me = this;
+        event.preventDefault();
+        event.stopPropagation();
+
+        if(view == 'login'){
+            me.$scope.showLogin = false;
+            me.$scope.showSignup = true;
+        }else {
+            me.$scope.showLogin = true;
+            me.$scope.showSignup = false;
+        }
+    },
+
     _handleError: function(event, error) {
 
         var me = this;
@@ -72,30 +86,49 @@ var CredentialsController = BaseController.extend({
 
     onLogin: function(){
         var me = this;
-        me._credentials.login(me.$scope.login);
-        me.$location.path('/picker');
+
+        if(me._cloudElementsUtils.isEmpty(me.$scope.login.email)
+            || me._cloudElementsUtils.isEmpty(me.$scope.login.password)) {
+
+            var confirm = me.$mdDialog.alert()
+                .title('Missing values')
+                .content('Please enter email and password to login."')
+                .ok('OK');
+
+            me.$mdDialog.show(confirm);
+            return;
+        }
+        me._maskLoader.show(me.$scope, 'Authenticating...');
+        me._credentials.login(me.$scope.login).then(me._handleConfigurationLoad.bind(me));
     },
 
     onSignup: function(){
         var me = this;
-        me._credentials.signup(me.$scope.signup);
-        me.$location.path('/picker');
+        if(me._cloudElementsUtils.isEmpty(me.$scope.signup.email)
+            || me._cloudElementsUtils.isEmpty(me.$scope.signup.password)
+            || me._cloudElementsUtils.isEmpty(me.$scope.signup.firstName)
+            || me._cloudElementsUtils.isEmpty(me.$scope.signup.lastName)) {
+
+            var confirm = me.$mdDialog.alert()
+                .title('Missing values')
+                .content('Missing required values."')
+                .ok('OK');
+
+            me.$mdDialog.show(confirm);
+            return;
+        }
+
+        me._maskLoader.show(me.$scope, 'Creating account...');
+        me._credentials.signup(me.$scope.signup).then(me._handleConfigurationLoad.bind(me));
     },
 
-    changeCredentialView: function(view,$event){
+    _handleConfigurationLoad: function(result) {
         var me = this;
-        event.preventDefault();
-        event.stopPropagation();
-
-        if(view == 'login'){
-            me.$scope.showLogin = false;
-            me.$scope.showSignup = true;
-        }else {
-            me.$scope.showLogin = true;
-            me.$scope.showSignup = false;
+        me._maskLoader.hide();
+        if(result == true) {
+            me.$location.path('/');
         }
     }
-
 });
 
 CredentialsController.$inject = ['$scope','CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
