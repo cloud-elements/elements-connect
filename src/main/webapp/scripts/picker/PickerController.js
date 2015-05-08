@@ -13,6 +13,7 @@ var PickerController = BaseController.extend({
     _picker: null,
     _instances: null,
     _maskLoader: null,
+    _lastSelection: null,
 
     init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
@@ -57,11 +58,20 @@ var PickerController = BaseController.extend({
         var me = this;
         me._super();
 
-        me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me));
-        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
-        me._notifications.addEventListener(bulkloader.events.LOGIN_ENTERED, me.checkKey.bind(me));
-        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me));
-        me._notifications.addEventListener(bulkloader.events.CONFIGURATION_LOAD, me._handleConfigurationLoad.bind(me));
+        me._notifications.addEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.LOGIN_ENTERED, me.checkKey.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.CONFIGURATION_LOAD, me._handleConfigurationLoad.bind(me), me.$scope.$id);
+    },
+
+    destroy:function(){
+        var me = this;
+        me._notifications.removeEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.LOGIN_ENTERED, me.checkKey.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.CONFIGURATION_LOAD, me._handleConfigurationLoad.bind(me), me.$scope.$id);
     },
 
     checkStatus: function() {
@@ -77,7 +87,7 @@ var PickerController = BaseController.extend({
     _handleError: function(event, error) {
 
         var me = this;
-
+        console.log('In error ' + me.$scope.$id);
         me._maskLoader.hide();
 
         var confirm = me.$mdDialog.alert()
@@ -90,7 +100,7 @@ var PickerController = BaseController.extend({
 
     showMask: function(event, msg) {
         var me = this;
-        me._maskLoader.show(me.$scope, msg);
+        me._maskLoader.show(me.$scope, msg.toString());
     },
 
     _onInstancesRefresh: function() {
@@ -100,6 +110,10 @@ var PickerController = BaseController.extend({
 
         angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).addClass('highlightingElement');
         angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).attr('data-instance', me._instances[bulkloader.Picker.oauthElementKey].name);
+
+        if(!me._cloudElementsUtils.isEmpty(bulkloader.Picker.oauthElementKey)) {
+            me.onSelect(bulkloader.Picker.oauthElementKey, me._lastSelection);
+        }
     },
 
     _handleConfigurationLoad: function(instances) {
@@ -142,7 +156,7 @@ var PickerController = BaseController.extend({
 
     onSelect: function(elementKey, selection) {
         var me = this;
-
+        me._lastSelection = selection;
         //Check to see if the element instance is created, if so then move the view to dataselect
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
         if(me._cloudElementsUtils.isEmpty(me._instances) ||

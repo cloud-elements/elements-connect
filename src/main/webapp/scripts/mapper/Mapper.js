@@ -162,7 +162,7 @@ var Mapper = Class.extend({
     _handleLoadInstanceObjectError: function(result) {
         var me = this;
         me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects");
-        return "Error getting the discovery object";
+        //return "Error getting the discovery object";
     },
 
     //------------------------------------------------------------------
@@ -318,7 +318,7 @@ var Mapper = Class.extend({
     _handleLoadErrorObjectMetadata: function(result) {
         var me = this;
         me._notifications.notify(bulkloader.events.ERROR, "Error getting the object fields");
-        return "Error getting the discovery object";
+        //return "Error getting the discovery object";
     },
 
     _handleLoadObjectMetadata:function(selectedInstance, selectedObject, targetInstance, result){
@@ -593,7 +593,7 @@ var Mapper = Class.extend({
     _handleTargetLoadErrorObjectMetadata: function(result) {
         var me = this;
         me._notifications.notify(bulkloader.events.ERROR, "Error getting the target object metadata");
-        return "Error getting the discovery object";
+        //return "Error getting the discovery object";
     },
 
     _handleTargetLoadObjectMetadata: function(selectedInstance, selectedInstanceObject, targetInstance, transformation, result) {

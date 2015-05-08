@@ -60,8 +60,12 @@ var ScheduleController = BaseController.extend({
     defineListeners:function(){
         var me = this;
 
-        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
-//        me._notifications.addEventListener(bulkloader.events.SHOW_SCHEDULER, me._seedSchedule.bind(me));
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+    },
+
+    destroy:function(){
+        var me = this;
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
     },
 
     _handleError: function(event, error) {

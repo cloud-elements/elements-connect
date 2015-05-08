@@ -46,10 +46,15 @@ var CredentialsController = BaseController.extend({
         var me = this;
         me._super();
 
-        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me));
-        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me));
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
     },
 
+    destroy:function(){
+        var me = this;
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+    },
 
     changeCredentialView: function(view,$event){
         var me = this;

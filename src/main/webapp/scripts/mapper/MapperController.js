@@ -83,9 +83,15 @@ var MapperController = BaseController.extend({
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
         //me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedMapper.bind(me));
 
-        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me));
-        me._notifications.addEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me));
+        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
 
+    },
+
+    destroy:function(){
+        var me = this;
+        me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
     },
 
     onMetadataAccept: function(sourceNodeScope, destNodesScope, destIndex) {
@@ -277,6 +283,9 @@ var MapperController = BaseController.extend({
 
     _handleOnInstanceObjectsLoad: function(data) {
         var me = this;
+        if(me._cloudElementsUtils.isEmpty(data)) {
+            return;
+        }
 
         me.$scope.instanceObjects = data;
         me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objects;
@@ -304,7 +313,7 @@ var MapperController = BaseController.extend({
         me._schedule.openSchedule();
     },
 
-    _onMapperError: function() {
+    _onMapperError: function(event, error) {
         var me = this;
         me._maskLoader.hide();
         var confirm = me.$mdDialog.alert()
