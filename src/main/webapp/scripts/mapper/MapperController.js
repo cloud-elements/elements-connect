@@ -175,15 +175,18 @@ var MapperController = BaseController.extend({
     refreshObjectMetaData: function() {
         var me = this;
 
-        me._maskLoader.show(me.$scope, "Loading Object ...");
-        var instanceMeta = me._mapper.all[me._picker.selectedElementInstance.element.key].metadata;
-        if(me._cloudElementsUtils.isEmpty(instanceMeta)
-            || me._cloudElementsUtils.isEmpty(instanceMeta[me.$scope.selectedObject.select.name])) {
+        me._maskLoader.show(me.$scope, "Loading Object fields...");
+        var metadata = null;
+        if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat)) {
+            metadata = me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat[me.$scope.selectedObject.select.name];
+        }
 
+        if(me._cloudElementsUtils.isEmpty(metadata)) {
             me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance)
                 .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
         } else {
-            me._handleOnMetadataLoad(me.$scope.selectedObject, instanceMeta[me.$scope.selectedObject.select.name]);
+            var data = me._mapper.loadObjectMetaDataFromCache(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance);
+            me._handleOnMetadataLoad(me.$scope.selectedObject, data);
         }
     },
 
@@ -213,11 +216,26 @@ var MapperController = BaseController.extend({
     refreshTargetObject: function() {
         var me = this;
 
+        //First Check if there is me.$scope.mapperdata, if so reload the information from source
+        //TODO Think of the model of implementing this
+//        if(!me._cloudElementsUtils.isEmpty(me.$scope.mapperdata)) {
+//            var metadata = null;
+//            if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat)) {
+//                metadata = me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat[me.$scope.selectedObject.select.name];
+//            }
+//
+//            if(!me._cloudElementsUtils.isEmpty(metadata)) {
+//                var data = me._mapper.loadObjectMetaDataFromCache(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance);
+//                me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'path');
+//                me.$scope.showTree = true;
+//            }
+//        }
+
         me._maskLoader.show(me.$scope, "Loading mapping...");
 
-        var targetMetaMapping = me._mapper.all[me._picker.selectedElementInstance.element.key].metamapping;
-        if(me._cloudElementsUtils.isEmpty(targetMetaMapping)
-            || me._cloudElementsUtils.isEmpty(targetMetaMapping[me.$scope.selectedTargetObject])) {
+        //Get the targetmapping
+        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedObject.select.name, me.$scope.selectedTargetObject);
+        if(me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
 
             //If the Objects are static and not needed to be loaded from API
             if((!me._cloudElementsUtils.isEmpty(me._picker._target)
@@ -236,7 +254,7 @@ var MapperController = BaseController.extend({
                     .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
             }
         } else {
-            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping[me.$scope.selectedTargetObject]);
+            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping);
         }
     },
 
