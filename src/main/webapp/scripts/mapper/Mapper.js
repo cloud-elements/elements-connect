@@ -128,9 +128,12 @@ var Mapper = Class.extend({
             var sourceElement = me._picker.getSourceElement(selectedInstance.element.key);
 
             if(!me._cloudElementsUtils.isEmpty(sourceElement.objects)) {
+                var srcObjects = new Array();
+                angular.copy(sourceElement.objects, srcObjects);
+
                 var objects = new Array();
-                for(var i in sourceElement.objects) {
-                    var obj = sourceElement.objects[i];
+                for(var i in srcObjects) {
+                    var obj = srcObjects[i];
                     objects.push(obj.vendorPath);
 
                     if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metadata)) {
