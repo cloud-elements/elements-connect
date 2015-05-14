@@ -141,7 +141,7 @@ var Mapper = Class.extend({
                     var objectMetadata = obj;
                     var objectMetadataFlat = new Object;
 
-                    angular.extend(objectMetadata, objectMetadataFlat);
+                    angular.copy(objectMetadata, objectMetadataFlat);
                     me.all[selectedInstance.element.key].metadataflat[obj.vendorPath] = objectMetadataFlat;
 
                     me._restructureObjectMetadata(objectMetadata, 'path');
