@@ -29,6 +29,7 @@ var MapperController = BaseController.extend({
         me.$location = $location;
         me._maskLoader = MaskLoader;
         me.$mdDialog = $mdDialog;
+        me.$filter = $filter;
         me._super($scope);
     },
 
@@ -49,6 +50,7 @@ var MapperController = BaseController.extend({
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
+        me.$scope.searchObjectMetaData = me.searchObjectMetaData.bind(this);
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
         me.$scope.removeMapPath = me.removeMapPath.bind(this);
 
@@ -61,7 +63,7 @@ var MapperController = BaseController.extend({
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.showTreeToggle = me.showTreeToggle.bind(this);
         me.$scope.toggle = this.toggle.bind(this);
-
+        me.$scope.treeFilter = me.$filter('uiTreeFilter');
         me.$scope.checkAllInstance = me.checkAllInstance.bind(this);
         me.$scope.checkAllObjects = me.checkAllObjects.bind(this);
 
@@ -462,6 +464,10 @@ var MapperController = BaseController.extend({
 
             metadatafields.push(oldObj);
         }
+    },
+
+    searchObjectMetaData: function(){
+
     }
 });
 
@@ -469,4 +475,13 @@ MapperController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 
 
 
 angular.module('bulkloaderApp')
-    .controller('MapperController', MapperController);
+    .controller('MapperController', MapperController)
+    .filter('trust', function ($sce) {
+        return function (val) {
+            return $sce.trustAsHtml(val);
+        };
+    })
+    .config(function (uiTreeFilterSettingsProvider) {
+        uiTreeFilterSettingsProvider.addresses = ['path', 'vendorPath'];
+        uiTreeFilterSettingsProvider.descendantCollection = 'fields'
+    });

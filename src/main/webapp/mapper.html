@@ -23,27 +23,31 @@
   </div>
 
  <div id="mapping-data-list-body" class="mapping-data-list ui grid">
-
   <!-- mapper BODY -->
   <div id="mapper-data-list-source" class="column six wide ui grid">
 
     <div class="column sixteen wide" id="select-dropdown-container">
-        <ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"
-                   style="width: 100%;"
-                   ng-change="refreshObjectMetaData()">
-          <ui-select-match>{{$select.selected.name}}</ui-select-match>
-          <ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">
-            <md-switch class="md-primary-green" aria-label="Enable Object"
-                       ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">
-            </md-switch>
-            <div ng-bind-html="selectedObject.name | highlight: $select.search">
-            </div>
-          </ui-select-choices>
-        </ui-select>
-      </div>
+      <ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"
+                 style="width: 100%;"
+                 ng-change="refreshObjectMetaData()">
+        <ui-select-match>{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">
+          <md-switch class="md-primary-green" aria-label="Enable Object"
+                     ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">
+          </md-switch>
+          <div ng-bind-html="selectedObject.name | highlight: $select.search">
+          </div>
+        </ui-select-choices>
+      </ui-select>
+    </div>
 
-
-  <script type="text/ng-template" id="objectFields.html">
+    <div class="searchbarContainer">
+      <input type="text" placeholder="Search" class="ui searchbar" data-ng-model="searchtarget"
+             ng-focus="hasFocus = true" ng-blur="hasFocus = false"/>
+      <a class="btn btn-link" data-ng-click="searchtarget = '' " tabindex="0" ng-class="{'showBtn': hasFocus}">
+        clear</a>
+    </div>
+    <script type="text/ng-template" id="objectFields.html">
 
     <div ui-tree-handle class="tree-node ui toggle tree-root-li-li-container">
       <button type="submit" data-nodrag ng-show="showTreeToggle(metadata)"
@@ -57,19 +61,19 @@
 
     <ul ui-tree-nodes=""  ng-model="metadata.fields" ng-class="{hidden: collapsed}">
       <li ng-repeat="metadata in metadata.fields" ui-tree-node ng-include="'objectFields.html'"
-          collapsed="false">
+          collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
       </li>
     </ul>
 
   </script>
 
   <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
-       class="list">
+       class="list" style="top: 105px;">
     <li class="tree-root-li">
       <ul ui-tree-nodes="" ng-model="objectMetaData">
         <li ng-repeat="metadata in objectMetaData"
             ui-tree-node id="tree1-root-node" ng-include="'objectFields.html'"
-            collapsed="false">
+            collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
         </li>
       </ul>
     </li>
@@ -110,21 +114,29 @@
 
       <ul ui-tree-nodes="" ng-model="metadata.fields" ng-class="{hidden: collapsed}">
         <li ng-repeat="metadata in metadata.fields" ui-tree-node ng-include="'mapperFields.html'"
-            collapsed="false">
+            collapsed="false" ng-hide="!treeFilter(metadata, searchsource)">
         </li>
       </ul>
 
     </script>
 
     <div ui-tree="mapperTreeOptions" id="tree2-root"  ng-show="showTargetTree" class="list">
+      <div class="ui-tree-heading">
+        <h1 class="column eight">{{selectedTargetObject}}</h1>
+        <div class="searchbarContainer">
+          <input type="text" placeholder="Search" class="column eight ui searchbar" data-ng-model="searchsource"
+                 ng-focus="hasFocus = true" ng-blur="hasFocus = false"/>
+          <a class="btn btn-link" data-ng-click="searchsource = '' " tabindex="0" ng-class="{'showBtn': hasFocus}">
+            clear</a>
+        </div>
 
-      <h1>{{selectedTargetObject}}</h1>
-
+      </div>
       <li class="tree-root-li">
         <ul ui-tree-nodes="" ng-model="mapperdata">
           <li ng-repeat="metadata in mapperdata"
               ui-tree-node id="tree2-root-node" ng-include="'mapperFields.html'"
-              collapsed="false">
+              collapsed="false"
+              ng-hide="!treeFilter(metadata, searchsource)">
           </li>
         </ul>
       </li>

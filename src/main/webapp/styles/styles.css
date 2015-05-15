@@ -106,7 +106,7 @@ h1 {
     margin:0 auto;
 }
 /***********************/
-/* CREDENTIALS LOGIN/SIGNUP           */
+/* CREDENTIALS LOGIN/SIGNUP */
 /***********************/
 #credentials {
     color: #fff;
@@ -141,7 +141,7 @@ h1 {
 }
 
 /***********************/
-/* END CREDENTIALS LOGIN/SIGNUP           */
+/* END CREDENTIALS LOGIN/SIGNUP */
 /***********************/
 
 /*******************************/
@@ -913,18 +913,21 @@ div#data-list-body.disabled:after {
     position: absolute;
 }
 
-
-#mapping-data-list-body h1{
+#mapping-data-list-body .ui-tree-heading{
     text-align: left;
     margin-bottom: 0px;
     padding-bottom: 15px;
     box-shadow: 0 2px 3px #999;
     border-radius: 5px 5px 0 0;
-    padding: 15px 15px;
+    padding: 10px 15px;
     background-color: #ecf0f1;
     border-top: 1px solid #fff;
     border-bottom: 1px solid #ddd;
     float:none;
+    color: #95a5a6;
+    text-shadow:none;
+}
+#mapping-data-list-body .ui-tree-heading h1{
     color: #95a5a6;
     text-shadow:none;
 }
@@ -940,6 +943,43 @@ div#data-list-body.disabled:after {
     min-height: 400px;
     bottom: 35px;
     overflow: scroll;
+}
+#mapping-data-list-body .searchbarContainer{
+    border: 1px solid #95a5a6;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    background-color: #fff;
+    padding: 0;
+}
+#mapping-data-list-body .searchbarContainer .searchbar{
+    color: #222;
+    border: none;
+    flex:1;
+    padding-left: 10px;
+}
+#mapping-data-list-body .searchbarContainer .btn{
+    background-color: #f5f5f5;
+    color: #bbb;
+    opacity: 0;
+}#mapping-data-list-body .searchbarContainer .btn.showBtn{
+    opacity: 1;
+ }
+#mapping-data-list-body .searchbarContainer .btn:hover{
+    text-decoration: none;
+}
+#mapping-data-list-body #mapper-data-list-source .searchbarContainer{
+    position: absolute;
+    left: 16px;
+    top: 56px;
+    right: 0;
+    overflow: scroll;
+    margin: 10px;
+}
+#mapping-data-list-body .angular-ui-tree h1, #mapping-data-list-body .angular-ui-tree .searchbar{
+    width: 50%;
+    display: inline-block;
 }
 #mapping-data-list-body #mapper-data-list-source{
     background-color: #333;
