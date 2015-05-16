@@ -45,8 +45,8 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'local',
-            userId: 'system',
-            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            userId: null,
+            apiKey: null,
             elementsUrl: 'http://localhost:4040/elements/api-v2'
           }
         }
@@ -58,8 +58,8 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'snapshot',
-            userId: 'bulkloaderio@cloud-elements.com',
-            apiKey: 'qC5p0oLhoE6rmgpr/42LoZqmP/G8RIuLmm6C6vNYYhN0awR0jySAIyjLRXkKoAQI',
+            userId: null,
+            apiKey: null,
             elementsUrl: 'https://snapshot.cloud-elements.com/elements/api-v2'
           }
         }
@@ -71,8 +71,8 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'qa',
-            userId: 'bulkloaderio@cloud-elements.com',
-            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            userId: null,
+            apiKey: null,
             elementsUrl: 'https://qa.cloud-elements.com/elements/api-v2'
           }
         }
@@ -84,8 +84,8 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'staging',
-            userId: 'bulkloaderio@cloud-elements.com',
-            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            userId: null,
+            apiKey: null,
             elementsUrl: 'https://staging.cloud-elements.com/elements/api-v2'
           }
         }
@@ -97,8 +97,8 @@ module.exports = function (grunt) {
         constants: {
           ENV: {
             name: 'production',
-            userId: 'bulkloaderio@cloud-elements.com',
-            apiKey: 'RhYPhFm27WoBT+XnVrBgllg4V38+zvAy8j1L2w77WWR1ePaeG8lxFlvzHhaCoRfY',
+            userId: null,
+            apiKey: null,
             elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
           }
         }

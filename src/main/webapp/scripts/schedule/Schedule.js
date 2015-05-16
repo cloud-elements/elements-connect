@@ -131,6 +131,7 @@ var Schedule = Class.extend({
         job.query = query;
         job.from = startDate;
         job.objectName = selectObjectName;
+        job.elementKey = selectedInstance.element.key;
         job.statusCheckInterval = statusCheckInterval;
 
         var source = me._picker.getSourceElement(selectedInstance.element.key);
@@ -170,6 +171,8 @@ var Schedule = Class.extend({
         }
 
         targetConfiguration.parameters = parameters;
+        targetConfiguration.elementKey = targetInstance.element.key;
+        targetConfiguration.objectName = objectName;
 
         job.targetConfiguration = targetConfiguration;
 
