@@ -479,7 +479,7 @@ var Datalist = Class.extend({
         for (var i = 0; i < mKeys.length; i++) {
 
             if(objectsAndTrans[mKeys[i]] == false
-                || me._anyFieldSelected(mData[mKeys[i]]) == false) {
+                && me._anyFieldSelected(mData[mKeys[i]]) == false) {
                 continue;
             }
             present = true;

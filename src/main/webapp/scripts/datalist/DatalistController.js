@@ -159,7 +159,7 @@ var DatalistController = BaseController.extend({
         me._schedule.openSchedule();
     },
 
-    _onDatalistError: function() {
+    _onDatalistError: function(event, error) {
         var me = this;
 
         me._maskLoader.hide();
