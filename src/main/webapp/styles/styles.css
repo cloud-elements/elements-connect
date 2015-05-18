@@ -1338,8 +1338,11 @@ li li.angular-ui-tree-placeholder{
     margin: 0 0 5px 0;
     height: 46px;
 }
-
-#mapper-header .target-source-link-img {
+#mapper-header .target-source-link-img{
+    float: left;
+    display: inline-block;
+}
+#mapper-header .target-source-link-img span{
     background-size: 90%;
     background-position: center center;
     background-repeat: no-repeat;

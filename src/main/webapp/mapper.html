@@ -5,11 +5,21 @@
   <div id="mapper-header" class="sixteen">
     <div class="ui grid">
       <div class="column ten wide">
-        <div class="target-source-link-img" style="background-image: url({{sourceLogo}})"></div>
-        <div class="target-source-icon">
-          <i class="exchange icon"></i>
+        <div class="target-source-link-img">
+          <span style="background-image: url({{sourceLogo}})"></span>
+          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;">
+            <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
+            <br/>source</p>
         </div>
-        <div class="target-source-link-img" style="background-image: url({{targetLogo}})"></div>
+        <div class="target-source-icon">
+          <i class="long arrow right icon"></i>
+        </div>
+        <div class="target-source-link-img">
+          <span style="background-image: url({{targetLogo}})"></span>
+          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;font-weight: bold;">
+            <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>
+            <br/> target</p>
+        </div>
       </div>
       <div class="column six wide">
         <div class="button-container pull-right">
