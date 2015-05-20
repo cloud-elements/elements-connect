@@ -15,7 +15,7 @@ var PickerController = BaseController.extend({
     _maskLoader: null,
     _lastSelection: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, JobHistory, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -25,6 +25,7 @@ var PickerController = BaseController.extend({
         me._schedule = Schedule;
         me._createinstance = CreateInstance;
         me._login = Login;
+        me._jobhistory = JobHistory;
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
@@ -44,6 +45,7 @@ var PickerController = BaseController.extend({
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
+        me.$scope.onJobHistory = me.onJobHistory.bind(me);
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
@@ -266,11 +268,16 @@ var PickerController = BaseController.extend({
         } else {
             me._handleConfigurationLoad(true);
         }
+    },
+
+    onJobHistory: function(){
+        var me = this;
+        me.$location.path('/jobhistory');
     }
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', 'JobHistory', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')
