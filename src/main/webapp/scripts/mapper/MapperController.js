@@ -280,6 +280,8 @@ var MapperController = BaseController.extend({
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
         me.$scope.targetLogo = me._picker._target.image;
+        me.$scope.sourceName = me.$scope.sourceElement.name;
+        me.$scope.targetName = me._picker._target.name;
 
         me._maskLoader.show(me.$scope, 'Loading Objects...');
 
