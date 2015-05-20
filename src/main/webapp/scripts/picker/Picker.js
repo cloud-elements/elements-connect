@@ -337,6 +337,18 @@ var Picker = Class.extend({
         }
     },
 
+    getTargetElement: function(elementKey) {
+        var me = this;
+
+        for (var i in me._targets) {
+            var src = me._targets[i];
+            if (src.elementKey == elementKey) {
+                return src;
+                break;
+            }
+        }
+    },
+
     setTargetElement: function(elementKey) {
         var me = this;
 

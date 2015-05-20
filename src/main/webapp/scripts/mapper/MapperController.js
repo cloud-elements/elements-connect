@@ -238,23 +238,11 @@ var MapperController = BaseController.extend({
         //Get the targetmapping
         var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedObject.select.name, me.$scope.selectedTargetObject);
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
-
-            //If the Objects are static and not needed to be loaded from API
-            if((!me._cloudElementsUtils.isEmpty(me._picker._target)
-                && !me._cloudElementsUtils.isEmpty(me._picker._target.objects))) {
-
-                var metaMapping = me._mapper._createEmptyMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
-                        me._picker.targetElementInstance, me.$scope.selectedTargetObject,
-                        me._mapper.all[me._picker.targetElementInstance.element.key].metadata[me.$scope.selectedTargetObject]);
-
-                me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, metaMapping);
-            } else {
-                //Calling the API to load the target objectmetadata and mapping
-                var trn = new Object();
-                trn.vendorName = me.$scope.selectedTargetObject;
-                me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, trn)
-                    .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
-            }
+            //Calling the API to load the target objectmetadata and mapping
+            var trn = new Object();
+            trn.vendorName = me.$scope.selectedTargetObject;
+            me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, trn)
+                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
         } else {
             me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping);
         }

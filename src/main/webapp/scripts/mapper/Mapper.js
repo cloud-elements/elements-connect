@@ -109,10 +109,16 @@ var Mapper = Class.extend({
     // Source Instance Objects
     //------------------------------------------------------------------
     _loadObjects: function(selectedInstance, targetInstance) {
-        return this._elementsService.loadInstanceObjects(selectedInstance)
-            .then(
-            this._handleLoadInstanceObjects.bind(this, selectedInstance, targetInstance),
-            this._handleLoadInstanceObjectError.bind(this));
+        var me = this;
+        var sourceElement = me._picker.getSourceElement(selectedInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(sourceElement.objects)) {
+            return me._handleLoadInstanceObjects(selectedInstance, targetInstance, new Object());
+        } else {
+            return this._elementsService.loadInstanceObjects(selectedInstance)
+                .then(
+                this._handleLoadInstanceObjects.bind(this, selectedInstance, targetInstance),
+                this._handleLoadInstanceObjectError.bind(this));
+        }
     },
 
     _handleLoadInstanceObjects: function(selectedInstance, targetInstance, result) {
@@ -136,19 +142,21 @@ var Mapper = Class.extend({
                     var obj = srcObjects[i];
                     objects.push(obj.vendorPath);
 
-                    if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metadata)) {
-                        me.all[selectedInstance.element.key].metadata = new Object;
-                        me.all[selectedInstance.element.key].metadataflat = new Object;
+                    if(!me._cloudElementsUtils.isEmpty(obj.fields) && obj.fields.length > 0) {
+                        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metadata)) {
+                            me.all[selectedInstance.element.key].metadata = new Object;
+                            me.all[selectedInstance.element.key].metadataflat = new Object;
+                        }
+
+                        var objectMetadata = obj;
+                        var objectMetadataFlat = new Object;
+
+                        angular.copy(objectMetadata, objectMetadataFlat);
+                        me.all[selectedInstance.element.key].metadataflat[obj.vendorPath] = objectMetadataFlat;
+
+                        me._restructureObjectMetadata(objectMetadata, 'path');
+                        me.all[selectedInstance.element.key].metadata[obj.vendorPath] = objectMetadata;
                     }
-
-                    var objectMetadata = obj;
-                    var objectMetadataFlat = new Object;
-
-                    angular.copy(objectMetadata, objectMetadataFlat);
-                    me.all[selectedInstance.element.key].metadataflat[obj.vendorPath] = objectMetadataFlat;
-
-                    me._restructureObjectMetadata(objectMetadata, 'path');
-                    me.all[selectedInstance.element.key].metadata[obj.vendorPath] = objectMetadata;
                 }
 
                 me.all[selectedInstance.element.key].objects = objects;
@@ -193,11 +201,16 @@ var Mapper = Class.extend({
     _loadTargetObjects: function(selectedInstance, targetInstance) {
         var me = this;
 
-        //loading the target Instance Objects
-        return me._elementsService.loadInstanceObjects(targetInstance)
-            .then(
-            me._handleLoadTargetInstanceObjects.bind(this, selectedInstance, targetInstance),
-            me._handleLoadInstanceObjectError.bind(this));
+        var targetElement = me._picker.getTargetElement(targetInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(targetElement.objects)) {
+            return me._handleLoadTargetInstanceObjects(selectedInstance, targetInstance, new Object());
+        } else {
+            //loading the target Instance Objects
+            return me._elementsService.loadInstanceObjects(targetInstance)
+                .then(
+                me._handleLoadTargetInstanceObjects.bind(this, selectedInstance, targetInstance),
+                me._handleLoadInstanceObjectError.bind(this));
+        }
     },
 
     _handleLoadTargetInstanceObjects: function(selectedInstance, targetInstance, result) {
@@ -216,13 +229,14 @@ var Mapper = Class.extend({
 
     _loadTargetInstanceObjectsFromConfig: function(targetInstance) {
         var me = this;
-        if(me._cloudElementsUtils.isEmpty(me._picker._target.objects)) {
+        var targetElement = me._picker.getTargetElement(targetInstance.element.key);
+        if(me._cloudElementsUtils.isEmpty(targetElement.objects)) {
             return;
         }
 
         var objects = new Array();
-        for(var i in me._picker._target.objects) {
-            var obj = me._picker._target.objects[i];
+        for(var i in targetElement.objects) {
+            var obj = targetElement.objects[i];
             objects.push(obj.vendorPath);
 
             if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
@@ -233,7 +247,7 @@ var Mapper = Class.extend({
             var objectMetadata = obj;
             var objectMetadataFlat = new Object;
 
-            angular.merge(objectMetadata, objectMetadataFlat);
+            angular.copy(objectMetadata, objectMetadataFlat);
             me.all[targetInstance.element.key].metadataflat[obj.vendorPath] = objectMetadataFlat;
 
             me._restructureObjectMetadata(objectMetadata);
