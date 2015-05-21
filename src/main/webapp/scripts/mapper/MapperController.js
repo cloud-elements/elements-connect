@@ -392,6 +392,8 @@ var MapperController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(obj.path)) {
             return;
         }
+        treenode.$nodeScope.$element.removeClass('mapped');
+
 
         this._populateBackToMetaData(obj.path, obj.targetVendorType, obj.path, me.$scope.objectMetaData);
         obj.path = null;
@@ -453,6 +455,7 @@ var MapperController = BaseController.extend({
             };
 
             metadatafields.push(oldObj);
+            me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(metadatafields, 'path');
         }
     },
 
