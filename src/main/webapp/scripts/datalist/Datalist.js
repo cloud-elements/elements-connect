@@ -367,8 +367,9 @@ var Datalist = Class.extend({
         for(var i = 0; i < mData.fields.length; i++){
             var mapperData = mData.fields[i];
 
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
+            if((me._cloudElementsUtils.isEmpty(mapperData.transform)
+                || mapperData.transform == false)
+                && (me._cloudElementsUtils.isEmpty(mapperData.fields) || mapperData.fields.length == 0)) {
                 continue;
             }
 
@@ -582,8 +583,9 @@ var Datalist = Class.extend({
 
         for(var i = 0; i < objectMapperData.fields.length; i++){
             var mapperData = objectMapperData.fields[i];
-            if(me._cloudElementsUtils.isEmpty(mapperData.transform)
-                || mapperData.transform == false) {
+            if((me._cloudElementsUtils.isEmpty(mapperData.transform)
+                || mapperData.transform == false)
+                && (me._cloudElementsUtils.isEmpty(mapperData.fields) || mapperData.fields.length == 0)) {
                 continue;
             }
 
@@ -719,6 +721,15 @@ var Datalist = Class.extend({
         var me = this;
 
         var keys = Object.keys(transformationArray);
+
+        //Setting the saved transformation
+        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
+            me.all[selectedInstance.element.key].transformations = new Object();
+        }
+        var savedkey = keys[transformationSaveCounter - 1];
+        me.all[selectedInstance.element.key].transformations[savedkey] = transformationArray[savedkey];
+
+
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length)
         {

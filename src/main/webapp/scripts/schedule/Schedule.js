@@ -72,37 +72,21 @@ var Schedule = Class.extend({
         var fieldList = '';
         var selectedFieldCount = 0;
 
-        if(me._cloudElementsUtils.isEmpty(me._elementsService.configuration.view) ||
-            me._elementsService.configuration.view == 'datalist') {
-            for (var i = 0; i < fields.length; i++) {
-                if (me._cloudElementsUtils.isEmpty(fields[i].transform) || fields[i].transform == false) {
-                    continue;
-                }
+        //Get transformation of the object and loop through to get the path value and construct fieldlist
+        var transformation = allObjects[targetInstance.element.key].transformations[objectName];
+        for (var i = 0; i < transformation.fields.length; i++) {
+            var f = transformation.fields[i];
 
-                if (selectedFieldCount > 0) {
-                    fieldList = fieldList + ', '
-                }
-                fieldList = fieldList + me._wrapSelectField(fields[i].vendorPath);
-                selectedFieldCount++;
+            if (me._cloudElementsUtils.isEmpty(f.path)) {
+                continue;
             }
-        } else {
 
-            //Get transformation of the object and loop through to get the path value and construct fieldlist
-            var transformation = allObjects[targetInstance.element.key].transformations[objectName];
-            for (var i = 0; i < transformation.fields.length; i++) {
-                var f = transformation.fields[i];
-
-                if (me._cloudElementsUtils.isEmpty(f.path)) {
-                    continue;
-                }
-
-                if (selectedFieldCount > 0) {
-                    fieldList = fieldList + ', '
-                }
-
-                fieldList = fieldList + me._wrapSelectField(f.path);
-                selectedFieldCount++;
+            if (selectedFieldCount > 0) {
+                fieldList = fieldList + ', '
             }
+
+            fieldList = fieldList + me._wrapSelectField(f.path);
+            selectedFieldCount++;
         }
         return fieldList;
     },
@@ -114,7 +98,12 @@ var Schedule = Class.extend({
         var selectObjectName = null;
         if(me._cloudElementsUtils.isEmpty(me._elementsService.configuration.view) ||
             me._elementsService.configuration.view == 'datalist') {
-            query = "select " + me._buildFieldList(fields, allObjects, targetInstance, objectName) + " from " + objectName;
+            var fieldsList = me._buildFieldList(fields, allObjects, selectedInstance, objectName);
+            if (me._cloudElementsUtils.isEmpty(fieldsList) || fieldsList.length == 0) {
+                // No transformations setup, so ignore
+                return;
+            }
+            query = "select " + fieldsList + " from " + objectName;
             selectObjectName = objectName;
         } else {
             selectObjectName = objectName.split('_')[1]; // Second field in the objectname is source objectname
