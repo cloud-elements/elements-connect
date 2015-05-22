@@ -28,7 +28,7 @@ var Schedule = Class.extend({
 
         var confirm = me.$mdDialog.alert()
             .title('Your job has been scheduled')
-            .content('You will receive an email when the job is completed."')
+            .content('You will receive an email when the job is completed.')
             .ariaLabel('Password notification')
             .ok('OK')
             .targetEvent(ev);
