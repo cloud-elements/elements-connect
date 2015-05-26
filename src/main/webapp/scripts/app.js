@@ -21,6 +21,7 @@ var bulkloaderApp = angular
         'ui.tree-filter',
         'ui.select',
         'ui.grid',
+        'ui.grid.pagination',
         'ngMaterial',
         'ui.bootstrap',
         'notifications',

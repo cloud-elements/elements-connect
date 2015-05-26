@@ -32,8 +32,9 @@ var JobHistoryController = BaseController.extend({
     defineScope:function() {
         var me = this;
         me.$scope.selectedIndex = -1;
-        me.$scope.showLogGrid = false;
+        me.$scope.hideGrid = true;
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
+        me.$scope.close = me.close.bind(this);
 
 //      example store to work with UI
         me.$scope.jobhistorydata = [
@@ -187,11 +188,23 @@ var JobHistoryController = BaseController.extend({
             {id: "2", text: "T stuck in me throat, i've had a stiff neck for hours. it's not the size mate"},
             {id: "3", text: "Pull my finger! i took a viagra, got stuck in me throat, i've had a stiff neck for hours. when i get back"},
             {id: "4", text: "At this point, i'd set you up with a chimpanzee if it'd brought you back to the world! you wouldn't"},
-            {id: "5", text: "My lord! you're a tripod. i want to shoot the pigeons... off my roof. at this point, i'd set you up with"}
+            {id: "5", text: "My lord! you're a tripod. i want to shoot the pigeons... off my roof. at this point, i'd set you up with"},
+            {id: "6", text: "Uer wouldn't hit a man with no trousers on, would you? jasper: your baby is the miracle the whole world "},
+            {id: "7", text: "T stuck in me throat, i've had a stiff neck for hours. it's not the size mate"},
+            {id: "8", text: "Pull my finger! i took a viagra, got stuck in me throat, i've had a stiff neck for hours. when i get back"},
+            {id: "9", text: "At this point, i'd set you up with a chimpanzee if it'd brought you back to the world! you wouldn't"},
+            {id: "10", text: "My lord! you're a tripod. i want to shoot the pigeons... off my roof. at this point, i'd set you up with"},
+            {id: "11", text: "Uer wouldn't hit a man with no trousers on, would you? jasper: your baby is the miracle the whole world "},
+            {id: "12", text: "T stuck in me throat, i've had a stiff neck for hours. it's not the size mate"},
+            {id: "13", text: "Pull my finger! i took a viagra, got stuck in me throat, i've had a stiff neck for hours. when i get back"},
+            {id: "14", text: "At this point, i'd set you up with a chimpanzee if it'd brought you back to the world! you wouldn't"},
+            {id: "15", text: "My lord! you're a tripod. i want to shoot the pigeons... off my roof. at this point, i'd set you up with"}
         ];
         me.$scope.jobExecutionsOptions = {
             data: 'jobExecutions',
             enableRowHeaderSelection: false,
+            paginationPageSizes: [5, 10, 15],
+            paginationPageSize: 5,
             columnDefs: [
                 {field: 'id', width: 50},
                 {field: 'text'}
@@ -218,9 +231,15 @@ var JobHistoryController = BaseController.extend({
     onSelectJob:function($index){
         var me = this;
         me.$scope.selectedIndex = $index;
-        me.$scope.showLogGrid = true;
+        me.$scope.hideGrid = false;
 
+    },
+
+    close: function() {
+        var me = this;
+        me.$location.path('/');
     }
+
 });
 
 JobHistoryController.$inject = ['$scope','CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
