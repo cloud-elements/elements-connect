@@ -130,7 +130,7 @@
 
     </script>
 
-    <div ui-tree="mapperTreeOptions" id="tree2-root"  ng-show="showTargetTree" class="list">
+    <div ui-tree="mapperTreeOptions" id="tree2-root"  ng-show="showTargetTree" class="list" data-drag-enabled="true">
       <div class="ui-tree-heading">
         <h1 class="column eight">{{selectedTargetObject}}</h1>
         <div class="searchbarContainer">
@@ -146,7 +146,7 @@
           <li ng-repeat="metadata in mapperdata"
               ui-tree-node id="tree2-root-node" ng-include="'mapperFields.html'"
               collapsed="false"
-              ng-hide="!treeFilter(metadata, searchsource)">
+              ng-hide="!treeFilter(metadata, searchsource)" data-nodrag>
           </li>
         </ul>
       </li>

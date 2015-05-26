@@ -404,6 +404,122 @@ h1 {
 }
 #picker.show-target .picker-target h2{
 }
+
+/************************/
+/* JOB HISTORY          */
+/************************/
+#jobhistory{
+    color: #fff;
+    text-align:center;
+    padding:0px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+}
+#jobhistory > div{
+    display: block;
+    flex: 2;
+}
+
+#jobhistory .jobslist{
+    background-color: #f2f2f2;
+    flex: 1;
+    position: relative;
+    min-width: 400px;
+}
+#jobhistory .jobslist .job-tree{
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 40px;
+    overflow-y: scroll;
+}
+
+#jobhistory .jobslist .job-tree-node{
+    float: left;
+    display: initial;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-bottom-color: #999999;
+}
+#jobhistory .jobslist .job-tree-node:hover{
+    border: 1px solid #389dc8;
+}
+#jobhistory .jobslist .job-tree-node div{
+    display: block;
+    float: left;
+    width: 100%;
+    color: #555555;
+    padding: 10px 10px 5px;
+}
+
+#jobhistory .jobslist .job-tree-node div.job-header{
+    font-size: 11px;
+    color: #aaaaaa;
+    text-align: left;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer{
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #cccccc;
+    text-align: left;
+    padding: 0;
+    margin-top: 10px;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer span{
+    width: 50%;
+    display: inline-block;
+    float: left;
+    padding: 7px 10px;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer span b{
+    color: #389dc8;
+}
+
+#jobhistory .jobslist .job-tree-node div.job-body{
+    position: relative;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p{
+    display: inline-block;
+    float: left;
+    width: 50%;
+    color: #555;
+    text-align: left;
+    line-height: .8em;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p span{
+    display: block;
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+}
+#jobhistory .jobslist .job-tree-node div.job-body i{
+    position: absolute;
+    right: 50%;
+    top: 30px;
+}
+
+#jobhistory .jobslist .job-tree-node.selectJob{
+    background-color: #389dc8;
+    border-color: #389dc8;
+}
+#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p{
+    color: #fff;
+}
+
+/************************/
+/* END JOB HISTORY      */
+/************************/
+
+
 /************************/
 /* ANIMATION STYLES     */
 /************************/

@@ -20,13 +20,13 @@ var bulkloaderApp = angular
         'ui.tree',
         'ui.tree-filter',
         'ui.select',
+        'ui.grid',
         'ngMaterial',
         'ui.bootstrap',
         'notifications',
         'config',
         'CloudElementsUtils'
     ]);
-
 bulkloaderApp.config(function($routeProvider) {
     $routeProvider
         .when('/', {
