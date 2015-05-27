@@ -53,6 +53,7 @@ var ScheduleController = BaseController.extend({
         };
         me.$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate', 'MMMM dd, yyyy'];
         me.$scope.format = me.$scope.formats[4];
+        me.$scope.maxDate = me.$scope.maxDate ? null : new Date();
 
 
     },
