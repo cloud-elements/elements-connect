@@ -202,6 +202,7 @@ var JobHistoryController = BaseController.extend({
         ];
         me.$scope.jobExecutionsOptions = {
             data: 'jobExecutions',
+            enableColumnMenus: false,
             enableRowHeaderSelection: false,
             paginationPageSizes: [5, 10, 15],
             paginationPageSize: 5,

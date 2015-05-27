@@ -536,12 +536,29 @@ h1 {
     padding:20px;
     position: relative;
 }
+#jobhistory div.executionslist h2{
+    font-size: 20px;
+    font-weight: bold;
+}
+#jobhistory div.executionslist h2 span{
+    color: #389dc8;
+}
 #jobhistory div.executionslist .ui-grid{
     position: absolute;
     bottom: 20px;
-    top: 20px;
+    top: 65px;
     left: 20px;
     right: 20px;
+    background-color: transparent;
+    border: none;
+}
+#jobhistory div.executionslist .ui-grid .ui-grid-pager-panel{
+    background-color: transparent;
+    padding: 7px;
+    color: #fff;
+}
+#jobhistory div.executionslist .ui-grid .ui-grid-pager-panel input{
+    color: #000;
 }
 /************************/
 /* END JOB HISTORY      */
