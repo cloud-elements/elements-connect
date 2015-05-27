@@ -404,6 +404,27 @@ h1 {
 }
 #picker.show-target .picker-target h2{
 }
+#picker .picker-history{
+    background-color: rgba(0,0,0,.2);
+}
+#picker .picker-history a{
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: right;
+    display: block;
+    float: right;
+    padding: 15px;
+}
+#picker .picker-history a i{
+    font-size: 20px;
+}
+#picker .picker-history a:hover{
+    text-decoration: none;
+}
+#picker.show-target .picker-history{
+    background-color: #389dc8;
+}
 
 /************************/
 /* JOB HISTORY          */
