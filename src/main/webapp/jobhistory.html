@@ -20,21 +20,24 @@
     <!-- mapper BODY -->
     <div class="jobslist">
       <script type="text/ng-template" id="jobHistory.html">
-        <div class="job-header"><i class="wait icon"></i> {{metadata.date}} // {{metadata.time}}</div>
+        <div class="job-header"><i class="wait icon"></i> {{metadata.date}}</div>
         <div class="job-body">
           <p>
-            <span><img src="{{metadata.sourceLogo}}" width="30px" height="30px"> {{metadata.source}}</span><br/>
-            {{metadata.sourceObject}}
+            {{metadata.sourceStatus}}<br/>
+            <span><img src="{{metadata.sourceLogo}}" width="30px" height="30px">
+              {{metadata.source}}</span><br/>
+            {{metadata.sourceObjectName}}
           </p>
           <i class="chevron right icon"></i>
           <p>
+            {{metadata.targetStatus}}<br/>
             <span><img src="{{metadata.targetLogo}}" width="30px" height="30px"> {{metadata.target}}</span><br/>
-            {{metadata.targetObject}}
+            {{metadata.targetObjectName}}
           </p>
         </div>
         <div class="job-footer">
-          <span><b>downloaded:</b> {{metadata.downloadCount}}</span>
-          <span><b>failed:</b> {{metadata.failCount}}</span>
+          <span><b>downloaded:</b> {{metadata.sourceRecordCount}}</span>
+          <!--<span><b>failed:</b> {{metadata.failCount}}</span>-->
         </div>
 
       </script>
@@ -46,12 +49,22 @@
       </ul>
     </div>
 
-    <div class="executionslist">
+    <div class="executionslist" ng-show="showNoErrors" >
       <div>
-        <h2>Log history for <span>Box (contact) > Marketo (leads)</span></h2>
+        <h2>{{errorMessage}}</h2>
+        <br>
       </div>
-      <div ui-grid="jobExecutionsOptions" ui-grid-pagination ui-grid-selection></div>
     </div>
+
+    <div class="executionslist" ng-show="showErrors" >
+      <div>
+        <h2>Errors</h2>
+      </div>
+      <div ui-grid="jobExecutionsOptions" ui-grid-selection></div>
+    </div>
+
   </div>
+
+
 
 </section>

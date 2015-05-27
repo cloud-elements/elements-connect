@@ -62,7 +62,6 @@ var ElementsService = Class.extend({
         return me._httpGet(url, headers);
     },
 
-
     loginAndloadConfiguration: function (email, password) {
 
         var me = this;
@@ -332,6 +331,24 @@ var ElementsService = Class.extend({
         }
 
         return this._httpDelete(url, this._getHeaders());
+    },
+
+    getHistory: function() {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        var url = this._environment.elementsUrl + '/bulkloader';
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    getJobErrors: function(elementInstance, jobId) {
+
+        var url = this._environment.elementsUrl + '/hubs/'+ elementInstance.element.hub + '/bulk/' + jobId +'/errors';
+
+        return this._httpGet(url, this._getHeaders(elementInstance.token));
     },
 
     /**
