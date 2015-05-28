@@ -50,6 +50,7 @@ var PickerController = BaseController.extend({
         // Add this class to show Target section
         me.$scope.withTarget = '';
         me.$scope.showTarget = false;
+        me.$scope.showWait = false;
         me.$scope.showSelectTarget = false;
 
         me.$scope.targets = [];
@@ -132,8 +133,10 @@ var PickerController = BaseController.extend({
 
         if (me._picker.getView() == 'mapper') {
             me.$scope.showSelectTarget = true;
+            me.$scope.showWait = false;
         } else {
             me.$scope.showSelectTarget = false;
+            me.$scope.showWait = true;
         }
 
 
