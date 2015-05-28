@@ -517,12 +517,16 @@ h1 {
     color: #fff;
     float: right;
 }
-#jobhistory .jobslist .job-tree-node div.job-header span.status.COMPLETE{
+#jobhistory .jobslist .job-tree-node div.job-header span.status.COMPLETED{
     background-color: #8dc63f;
 }
 #jobhistory .jobslist .job-tree-node div.job-header span.status.RUNNING{
     background-color: #f7941e;
 }
+#jobhistory .jobslist .job-tree-node div.job-header span.status.ERROR{
+    background-color: #c92026;
+}
+
 #jobhistory .jobslist .job-tree-node div.job-footer{
     font-size: 13px;
     font-weight: bold;
@@ -563,6 +567,7 @@ h1 {
 #jobhistory .jobslist .job-tree-node div.job-body p span.elementStatus{
     font-size: 11px;
     color: #aaa;
+    padding-bottom: 5px;
 }
 #jobhistory .jobslist .job-tree-node div.job-body p span.elementObject{
     font-size: 15px;

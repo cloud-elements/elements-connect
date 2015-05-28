@@ -19,6 +19,7 @@
   <div id="jobhistory-body">
     <!-- mapper BODY -->
     <div class="jobslist">
+      <h2 ng-hide="noJobsMessage" style="width: 100%;text-align: center;padding: 50px 0;color: #666;">No Jobs found</h2>
       <script type="text/ng-template" id="jobHistory.html">
         <div class="job-header">
           <span><i class="wait icon"></i> {{metadata.createdDate}}</span>
@@ -51,12 +52,13 @@
       </ul>
     </div>
 
-    <div class="executionslist"  >
+    <div class="executionslist">
       <div>
+        <h2 ng-hide="showNoErrors == true || noJobsMessage == false || showErrors == true">Select a job</h2>
         <h2 ng-show="showNoErrors">{{errorMessage}}</h2>
         <h2 ng-show="showErrors">Errors</h2>
       </div>
-      <div ui-grid="jobExecutionsOptions" ui-grid-selection ng-show="showErrors"></div>
+      <div ui-grid="jobExecutionsOptions" ui-grid-selection ui-grid-auto-resize ng-show="showErrors"></div>
     </div>
 
   </div>
