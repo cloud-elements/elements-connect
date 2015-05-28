@@ -1077,8 +1077,35 @@ var Mapper = Class.extend({
             me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]].vendorName, mData[mKeys[i]]);
         }
 
+        //Filter transformations for empty fields
+        var fileteredArray = me._filterTransformationsForEmpty(transformationArray);
+
         var transformationSaveCounter = 0;
-        return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter);
+        return me._saveTransformationFromArray(selectedInstance, fileteredArray, transformationSaveCounter);
+    },
+
+    _filterTransformationsForEmpty: function(transformationArray) {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(transformationArray)) {
+            return transformationArray;
+        }
+
+        var tKeys = Object.keys(transformationArray);
+
+        var fileteredArray = new Object;
+        for(var i=0; i < tKeys.length; i++) {
+            var tkey = tKeys[i];
+            var tObj = transformationArray[tkey];
+            if(me._cloudElementsUtils.isEmpty(tObj.fields)
+                || tObj.fields.length) {
+                continue;
+            }
+
+            fileteredArray[tkey] = tObj;
+        }
+
+        return fileteredArray;
     },
 
     _saveTransformationFromArray: function(selectedInstance, transformationArray, transformationSaveCounter, useMethodType) {
