@@ -503,6 +503,25 @@ h1 {
     font-size: 11px;
     color: #aaaaaa;
     text-align: left;
+    padding: 0;
+}
+
+#jobhistory .jobslist .job-tree-node div.job-header span{
+    display: inline-block;
+    padding: 10px;
+    float: left;
+}
+#jobhistory .jobslist .job-tree-node div.job-header span.status{
+    text-align: right;
+    background-color: #389dc8;
+    color: #fff;
+    float: right;
+}
+#jobhistory .jobslist .job-tree-node div.job-header span.status.COMPLETE{
+    background-color: #8dc63f;
+}
+#jobhistory .jobslist .job-tree-node div.job-header span.status.RUNNING{
+    background-color: #f7941e;
 }
 #jobhistory .jobslist .job-tree-node div.job-footer{
     font-size: 13px;
@@ -536,8 +555,18 @@ h1 {
 #jobhistory .jobslist .job-tree-node div.job-body p span{
     display: block;
     width: 100%;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p span.element{
     font-size: 20px;
     font-weight: bold;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p span.elementStatus{
+    font-size: 11px;
+    color: #aaa;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p span.elementObject{
+    font-size: 15px;
+    padding-left: 35px;
 }
 #jobhistory .jobslist .job-tree-node div.job-body i{
     position: absolute;
@@ -549,10 +578,13 @@ h1 {
     background-color: #389dc8;
     border-color: #389dc8;
 }
-#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p{
+#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p span{
     color: #fff;
 }
-
+#jobhistory .jobslist .job-tree-node.selectJob div.job-header span.status{
+    background-color: #fff;
+    color: #389dc8;
+}
 #jobhistory div.executionslist{
     padding:20px;
     position: relative;
@@ -580,6 +612,9 @@ h1 {
 }
 #jobhistory div.executionslist .ui-grid .ui-grid-pager-panel input{
     color: #000;
+}
+#jobhistory div.executionslist .ui-grid .ui-grid-header{
+    border-bottom: none;
 }
 /************************/
 /* END JOB HISTORY      */

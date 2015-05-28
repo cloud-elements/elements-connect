@@ -20,19 +20,21 @@
     <!-- mapper BODY -->
     <div class="jobslist">
       <script type="text/ng-template" id="jobHistory.html">
-        <div class="job-header"><i class="wait icon"></i> {{metadata.createdDate}}</div>
+        <div class="job-header">
+          <span><i class="wait icon"></i> {{metadata.createdDate}}</span>
+          <span class="status {{metadata.status}}">{{metadata.status}}</span>
+        </div>
         <div class="job-body">
           <p>
-            {{metadata.sourceStatus}}<br/>
-            <span><img src="{{metadata.sourceLogo}}" width="30px" height="30px">
-              {{metadata.source}}</span><br/>
-            {{metadata.sourceObjectName}}
+            <span class="elementStatus">{{metadata.sourceStatus}}</span>
+            <span class="element"><img src="{{metadata.sourceLogo}}" width="30px" height="30px"> {{metadata.source}}</span><br />
+            <span class="elementObject">{{metadata.sourceObjectName}}</span>
           </p>
           <i class="chevron right icon"></i>
           <p>
-            {{metadata.targetStatus}}<br/>
-            <span><img src="{{metadata.targetLogo}}" width="30px" height="30px"> {{metadata.target}}</span><br/>
-            {{metadata.targetObjectName}}
+            <span class="elementStatus">{{metadata.targetStatus}}</span>
+            <span class="element"><img src="{{metadata.targetLogo}}" width="30px" height="30px"> {{metadata.target}}</span><br />
+            <span class="elementObject">{{metadata.targetObjectName}}</span>
           </p>
         </div>
         <div class="job-footer">
@@ -49,18 +51,12 @@
       </ul>
     </div>
 
-    <div class="executionslist" ng-show="showNoErrors" >
+    <div class="executionslist"  >
       <div>
-        <h2>{{errorMessage}}</h2>
-        <br>
+        <h2 ng-show="showNoErrors">{{errorMessage}}</h2>
+        <h2 ng-show="showErrors">Errors</h2>
       </div>
-    </div>
-
-    <div class="executionslist" ng-show="showErrors" >
-      <div>
-        <h2>Errors</h2>
-      </div>
-      <div ui-grid="jobExecutionsOptions" ui-grid-selection></div>
+      <div ui-grid="jobExecutionsOptions" ui-grid-selection ng-show="showErrors"></div>
     </div>
 
   </div>

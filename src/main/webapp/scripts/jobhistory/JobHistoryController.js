@@ -47,7 +47,7 @@ var JobHistoryController = BaseController.extend({
             paginationPageSizes: [50],
             paginationPageSize: 50,
             columnDefs: [
-                {field: 'status'},
+                {field: 'status', width: 250},
                 {field: 'response'}
             ]
         };
@@ -99,6 +99,7 @@ var JobHistoryController = BaseController.extend({
 
         me.$scope.selectedJob = me.$scope.jobhistorydata[$index];
 
+        me.$scope.selectedIndex = $index;
         if(me.$scope.selectedJob.sourceStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetErrorCount == 0) {
