@@ -146,12 +146,15 @@ var JobHistoryController = BaseController.extend({
             err = me.$scope.selectedJob.targetStatusMessage
         }
 
-        if(err == null) {
+        if(err == null && results.length == 0) {
             err = 'No errors, data transfer completed successfully';
         }
 
-        me.$scope.errorMessage = err;
-        me.$scope.showNoErrors = true;
+        if(err != null ) {
+            me.$scope.showNoErrors = true;
+            me.$scope.errorMessage = err;
+        }
+
         if(results.length > 0) {
             me.$scope.showErrors = true;
         }
