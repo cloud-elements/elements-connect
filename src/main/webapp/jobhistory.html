@@ -22,7 +22,7 @@
       <h2 ng-hide="noJobsMessage" style="width: 100%;text-align: center;padding: 50px 0;color: #666;">No Jobs found</h2>
       <script type="text/ng-template" id="jobHistory.html">
         <div class="job-header">
-          <span><i class="wait icon"></i> {{metadata.createdDate}}</span>
+          <span><i class="wait icon"></i> {{metadata.createdDate | date:'medium'}}</span>
           <span class="status {{metadata.status}}">{{metadata.status}}</span>
         </div>
         <div class="job-body">
@@ -54,7 +54,8 @@
 
     <div class="executionslist">
       <div>
-        <h2 ng-hide="showNoErrors == true || noJobsMessage == false || showErrors == true">Select a job</h2>
+        <h2 ng-show="noJobsMessage">Select a job to see more
+          details</h2>
         <h2 ng-show="showNoErrors">{{errorMessage}}</h2>
         <h2 ng-show="showErrors">Errors</h2>
       </div>

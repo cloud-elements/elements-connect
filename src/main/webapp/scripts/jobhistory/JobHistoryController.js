@@ -37,7 +37,7 @@ var JobHistoryController = BaseController.extend({
         me.$scope.selectedIndex = -1;
         me.$scope.hideGrid = true;
         me.$scope.selectJobs = false;
-        me.$scope.noJobsMessage = false;
+        me.$scope.noJobsMessage = true;
 
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.close = me.close.bind(this);
@@ -90,9 +90,6 @@ var JobHistoryController = BaseController.extend({
 
     _handleGetHistory: function(results) {
         var me = this;
-        if (results != null){
-            me.$scope.noJobsMessage = true;
-        }
         me.$scope.jobhistorydata = results;
     },
 
@@ -101,6 +98,7 @@ var JobHistoryController = BaseController.extend({
 
         me.$scope.showErrors = false;
         me.$scope.showNoErrors = false;
+        me.$scope.noJobsMessage = false;
 
         me.$scope.selectedJob = me.$scope.jobhistorydata[$index];
 
@@ -109,6 +107,7 @@ var JobHistoryController = BaseController.extend({
             && me.$scope.selectedJob.targetStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetErrorCount == 0) {
             me.$scope.showNoErrors = true;
+            me.$scope.errorMessage = 'No errors, data transfer completed successfully';
             return;
         }
 
