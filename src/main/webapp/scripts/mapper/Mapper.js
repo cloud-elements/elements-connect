@@ -1098,7 +1098,7 @@ var Mapper = Class.extend({
             var tkey = tKeys[i];
             var tObj = transformationArray[tkey];
             if(me._cloudElementsUtils.isEmpty(tObj.fields)
-                || tObj.fields.length) {
+                || tObj.fields.length == 0) {
                 continue;
             }
 
