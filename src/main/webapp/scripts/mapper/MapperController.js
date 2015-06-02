@@ -50,7 +50,6 @@ var MapperController = BaseController.extend({
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
-        me.$scope.searchObjectMetaData = me.searchObjectMetaData.bind(this);
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
         me.$scope.removeMapPath = me.removeMapPath.bind(this);
 
@@ -143,6 +142,9 @@ var MapperController = BaseController.extend({
             return false;
         }
         else {
+            if (parentModelVal.path != null){
+                this._populateBackToMetaData(parentModelVal.path, parentModelVal.targetVendorType, parentModelVal.path, me.$scope.objectMetaData);
+            }
             parentModelVal.path = modelVal.actualVendorPath;
             parentModelVal.targetVendorType= modelVal.type;
 
@@ -456,10 +458,6 @@ var MapperController = BaseController.extend({
             metadatafields.push(oldObj);
             me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(metadatafields, 'path');
         }
-    },
-
-    searchObjectMetaData: function(){
-
     }
 });
 

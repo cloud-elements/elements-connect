@@ -60,7 +60,7 @@
     <script type="text/ng-template" id="objectFields.html">
 
     <div ui-tree-handle class="tree-node ui toggle tree-root-li-li-container">
-      <button type="submit" data-nodrag ng-show="showTreeToggle(metadata)"
+      <button type="submit" ng-show="showTreeToggle(metadata)"
               class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)"><span
               class="glyphicon glyphicon-remove"
               ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
@@ -69,7 +69,7 @@
       <span class="type">{{metadata.type}}</span>
     </div>
 
-    <ul ui-tree-nodes=""  ng-model="metadata.fields" ng-class="{hidden: collapsed}">
+    <ul ui-tree-nodes ng-model="metadata.fields" ng-class="{hidden: collapsed}" data-nodrop-enabled="true">
       <li ng-repeat="metadata in metadata.fields" ui-tree-node ng-include="'objectFields.html'"
           collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
       </li>
@@ -80,7 +80,7 @@
   <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
        class="list" style="top: 105px;">
     <li class="tree-root-li">
-      <ul ui-tree-nodes="" ng-model="objectMetaData">
+      <ul ui-tree-nodes="" ng-model="objectMetaData" data-nodrop-enabled="true">
         <li ng-repeat="metadata in objectMetaData"
             ui-tree-node id="tree1-root-node" ng-include="'objectFields.html'"
             collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">

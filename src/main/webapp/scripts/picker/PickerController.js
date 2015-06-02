@@ -202,7 +202,7 @@ var PickerController = BaseController.extend({
                 if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
                     var confirm = me.$mdDialog.alert()
                         .title('Missing Source')
-                        .content('Select or Provision your source to proceed forward."')
+                        .content('Select or Provision your source to proceed forward.')
                         .ok('OK');
 
                     me.$mdDialog.show(confirm);

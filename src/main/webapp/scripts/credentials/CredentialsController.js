@@ -97,7 +97,7 @@ var CredentialsController = BaseController.extend({
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Please enter email and password to login."')
+                .content('Please enter email and password to login.')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
@@ -116,7 +116,7 @@ var CredentialsController = BaseController.extend({
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Missing required values."')
+                .content('Missing required values.')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
