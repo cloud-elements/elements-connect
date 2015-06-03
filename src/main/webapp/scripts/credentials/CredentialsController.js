@@ -56,7 +56,7 @@ var CredentialsController = BaseController.extend({
         me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
     },
 
-    changeCredentialView: function(view,$event){
+    changeCredentialView: function(view,event){
         var me = this;
         event.preventDefault();
         event.stopPropagation();
@@ -116,7 +116,7 @@ var CredentialsController = BaseController.extend({
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Missing required values.')
+                .content('Missing required values."')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
