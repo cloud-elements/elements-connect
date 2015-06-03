@@ -169,7 +169,7 @@ var Mapper = Class.extend({
 
     _handleLoadInstanceObjectError: function(result) {
         var me = this;
-        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects");
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects or Instance is bad");
         //return "Error getting the discovery object";
     },
 
