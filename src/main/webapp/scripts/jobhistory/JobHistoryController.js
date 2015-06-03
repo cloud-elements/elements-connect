@@ -103,6 +103,12 @@ var JobHistoryController = BaseController.extend({
         me.$scope.selectedJob = me.$scope.jobhistorydata[$index];
 
         me.$scope.selectedIndex = $index;
+
+        if(me.$scope.selectedJob.status == 'ERROR') {
+            me.$scope.errorMessage = me.$scope.selectedJob.statusMessage;
+            return;
+        }
+
         if(me.$scope.selectedJob.sourceStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetErrorCount == 0) {
@@ -151,6 +157,16 @@ var JobHistoryController = BaseController.extend({
                 err += '<BR>'
             }
             err = me.$scope.selectedJob.targetStatusMessage
+        }
+
+        if(err == null
+            && me.$scope.selectedJob.status == 'RUNNING') {
+            err = 'Data transfer in progress';
+        }
+
+        if(err == null
+            && me.$scope.selectedJob.status == 'RUNNING') {
+            err = 'Data transfer in progress';
         }
 
         if(err == null && results.length == 0) {
