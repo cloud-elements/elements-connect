@@ -456,7 +456,7 @@ var MapperController = BaseController.extend({
             };
 
             metadatafields.push(oldObj);
-            me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(metadatafields, 'path');
+            me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(me.$scope.objectMetaData, 'path');
         }
     }
 });
