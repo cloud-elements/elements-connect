@@ -1276,7 +1276,7 @@ div#data-list-body.disabled:after {
 
 #mapping-data-list-body li.tree-root-li{
     list-style: none;
-    overflow-x: hidden;
+    overflow: hidden;
     position: absolute;
     top: 72px;
     left: 10px;
@@ -1379,9 +1379,14 @@ div#data-list-body.disabled:after {
     margin-top: -2px;
 }
 
-#mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes{
+#mapping-data-list-body #mapper-data-list-target .tree-root-li > ul.angular-ui-tree-nodes,
+#mapping-data-list-body #mapper-data-list-source .tree-root-li > ul.angular-ui-tree-nodes{
     position: absolute;
-    width: 100%;}
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: scroll;}
 #mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes ul{
     position: relative;}
 #mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes .btn.pull-right{
