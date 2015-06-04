@@ -450,6 +450,7 @@ h1 {
     display: block;
     float: right;
     padding: 15px;
+    margin: 0;
 }
 #picker .picker-history a i{
     font-size: 20px;
@@ -1425,13 +1426,16 @@ div#data-list-body.disabled:after {
     background-color: #555;
 }
 
-#mapping-data-list-body li li div.tree-root-li-li-container:before{
+#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container:before{
     content: '';
     position: absolute;
     left: -10px;
     border-left: 10px solid #444;
     top: 0;
     bottom: 0;
+}
+#mapping-data-list-body #mapper-data-list-source li li div.tree-root-li-li-container:before{
+
 }
 #mapping-data-list-body li li div.tree-root-li-li-container .toogle-tree-btn.pull-left{
     margin-right: 15px;

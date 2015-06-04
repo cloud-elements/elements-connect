@@ -15,7 +15,7 @@ var PickerController = BaseController.extend({
     _maskLoader: null,
     _lastSelection: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, JobHistory, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
@@ -25,6 +25,7 @@ var PickerController = BaseController.extend({
         me._schedule = Schedule;
         me._createinstance = CreateInstance;
         me._login = Login;
+        me._help = Help;
         me._jobhistory = JobHistory;
         me.$window = $window;
         me.$location = $location;
@@ -46,6 +47,7 @@ var PickerController = BaseController.extend({
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
+        me.$scope.onHelp = me.onHelp.bind(me);
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
@@ -249,6 +251,13 @@ var PickerController = BaseController.extend({
         me._schedule.openSchedule();
     },
 
+    onHelp: function($event){
+        var me = this;
+        event.preventDefault();
+        event.stopPropagation();
+        me._help.openHelp();
+    },
+
     createInstance: function(element, selection){
         var me = this;
         me._createinstance.openCreateInstance(element, selection);
@@ -283,7 +292,7 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', 'JobHistory', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', 'JobHistory', 'Help', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

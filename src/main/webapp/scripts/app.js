@@ -23,6 +23,7 @@ var bulkloaderApp = angular
         'ui.grid',
         'ui.grid.pagination',
         'ui.grid.autoResize',
+        'slick',
         'ngMaterial',
         'ui.bootstrap',
         'notifications',

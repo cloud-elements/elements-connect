@@ -1,0 +1,17 @@
+<div class="ui basic modal" style="display: block; width: 836px; position: static; margin: 0; min-height: 500px;">
+  <i class="close icon" ng-click="cancel()"></i>
+  <div class="header">
+    Help
+  </div>
+
+  <div class="content">
+    <script type="text/ng-template" id="helpimages.html">
+      <img src="images/help-images/{{items.imageURL}}" width="100%"/>
+    </script>
+
+    <slick infinite="false" slides-to-show="1" slides-to-scroll="1" arrows="true" ng-modal="helpList">
+      <div ng-repeat="items in helpList" ng-include="'helpimages.html'">
+      </div>
+    </slick>
+  </div>
+</div>
