@@ -1386,7 +1386,8 @@ div#data-list-body.disabled:after {
     bottom: 0;
     left: 0;
     right: 0;
-    overflow: scroll;}
+    overflow-x: hidden;
+    overflow-y: scroll;}
 #mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes ul{
     position: relative;}
 #mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes .btn.pull-right{
