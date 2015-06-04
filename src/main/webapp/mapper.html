@@ -64,33 +64,50 @@
       <a class="btn btn-link" data-ng-click="searchtarget = '' " tabindex="0" ng-class="{'showBtn': hasFocus}">
         clear</a>
     </div>
-    <script type="text/ng-template" id="objectFields.html">
+  <script type="text/ng-template" id="objectFields.html" data-nodrop>
 
-    <div ui-tree-handle class="tree-node ui toggle tree-root-li-li-container">
-      <button type="submit" ng-show="showTreeToggle(metadata)"
-              class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)"><span
-              class="glyphicon glyphicon-remove"
-              ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
-      <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
-      <label>{{metadata.path}}</label>
-      <span class="type">{{metadata.type}}</span>
+    <!--Show tree node for object undraggable-->
+    <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container"
+         data-nodrag ng-if="showTreeToggle(metadata)">
+      <button type="submit" ng-show=true data-nodrop
+              class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)">
+        <span data-nodrop class="glyphicon glyphicon-remove"
+              ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+      </button>
+      <div data-nodrop ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
+      <label data-nodrop>{{metadata.path}}</label>
+      <span class="type" data-nodrop>{{metadata.type}}</span>
     </div>
 
-    <ul ui-tree-nodes ng-model="metadata.fields" ng-class="{hidden: collapsed}" data-nodrop-enabled="true">
-      <li ng-repeat="metadata in metadata.fields" ui-tree-node ng-include="'objectFields.html'"
-          collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
+    <!--Show tree node for object draggable-->
+    <div ui-tree-handle data-nodrop
+         class="tree-node ui toggle tree-root-li-li-container" ng-if="!showTreeToggle(metadata)">
+      <button type="submit" ng-show=false data-nodrop
+              class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)">
+        <span data-nodrop class="glyphicon glyphicon-remove"
+              ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+      </button>
+      <div data-nodrop ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
+      <label data-nodrop>{{metadata.path}}</label>
+      <span class="type" data-nodrop>{{metadata.type}}</span>
+    </div>
+
+    <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}" >
+      <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop
+          id="tree1-root-node" ng-include="'objectFields.html'"
+          collapsed="true" ng-hide="!treeFilter(metadata, searchtarget)">
       </li>
     </ul>
 
   </script>
 
   <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
-       class="list" style="top: 105px;">
-    <li class="tree-root-li">
-      <ul ui-tree-nodes="" ng-model="objectMetaData" data-nodrop-enabled="true">
+       class="list" style="top: 105px;" data-nodrop>
+    <li class="tree-root-li" data-nodrop>
+      <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
         <li ng-repeat="metadata in objectMetaData"
-            ui-tree-node id="tree1-root-node" ng-include="'objectFields.html'"
-            collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
+            ui-tree-node data-nodrop id="tree1-root-node" ng-include="'objectFields.html'"
+            collapsed="true" ng-hide="!treeFilter(metadata, searchtarget)" >
         </li>
       </ul>
     </li>
