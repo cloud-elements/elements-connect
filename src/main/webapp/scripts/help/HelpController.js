@@ -34,23 +34,42 @@ var HelpController = BaseController.extend({
         var me = this;
         me.$scope.cancel = me.cancel.bind(me);
 
+        if (me._picker.getView() == 'mapper') {
+            me.$scope.helpList = [
+                {imageURL: 'BulkloaderClickThrough-1.png'},
+                {imageURL: 'BulkloaderClickThrough-2.png'},
+                {imageURL: 'BulkloaderClickThrough-3.png'},
+                {imageURL: 'BulkloaderClickThrough-4.png'},
+                {imageURL: 'BulkloaderClickThrough-5.png'},
+                {imageURL: 'BulkloaderClickThrough-6.png'},
+                {imageURL: 'BulkloaderClickThrough-7.png'},
+                {imageURL: 'BulkloaderClickThrough-8.png'},
+                {imageURL: 'BulkloaderClickThrough-9.png'},
+                {imageURL: 'BulkloaderClickThrough-10.png'},
+                {imageURL: 'BulkloaderClickThrough-11.png'},
+                {imageURL: 'BulkloaderClickThrough-12.png'},
+                {imageURL: 'BulkloaderClickThrough-13.png'},
+                {imageURL: 'BulkloaderClickThrough-14.png'}
+            ]
+        } else {
+            me.$scope.helpList = [
+                {imageURL: 'BulkloaderClickThrough-1.png'},
+                {imageURL: 'BulkloaderClickThrough-2.png'},
+                {imageURL: 'BulkloaderClickThrough-3.png'},
+                {imageURL: 'BulkloaderClickThrough-4.png'},
+                {imageURL: 'BulkloaderClickThrough-5.png'},
+                {imageURL: 'BulkloaderClickThrough-6.png'},
+                {imageURL: 'BulkloaderClickThrough-7.png'},
+                {imageURL: 'BulkloaderClickThrough-8.png'},
+                {imageURL: 'BulkloaderClickThrough-9.png'},
+                {imageURL: 'BulkloaderClickThrough-10.png'},
+                {imageURL: 'BulkloaderClickThrough-11.png'},
+                {imageURL: 'BulkloaderClickThrough-12.png'},
+                {imageURL: 'BulkloaderClickThrough-13.png'},
+                {imageURL: 'BulkloaderClickThrough-14.png'}
+            ]
+        }
 
-        me.$scope.helpList = [
-            {imageURL: 'BulkloaderClickThrough-1.png'},
-            {imageURL: 'BulkloaderClickThrough-2.png'},
-            {imageURL: 'BulkloaderClickThrough-3.png'},
-            {imageURL: 'BulkloaderClickThrough-4.png'},
-            {imageURL: 'BulkloaderClickThrough-5.png'},
-            {imageURL: 'BulkloaderClickThrough-6.png'},
-            {imageURL: 'BulkloaderClickThrough-7.png'},
-            {imageURL: 'BulkloaderClickThrough-8.png'},
-            {imageURL: 'BulkloaderClickThrough-9.png'},
-            {imageURL: 'BulkloaderClickThrough-10.png'},
-            {imageURL: 'BulkloaderClickThrough-11.png'},
-            {imageURL: 'BulkloaderClickThrough-12.png'},
-            {imageURL: 'BulkloaderClickThrough-13.png'},
-            {imageURL: 'BulkloaderClickThrough-14.png'}
-        ]
     },
 
     cancel: function() {
