@@ -171,9 +171,10 @@ var PickerController = BaseController.extend({
             if(me._cloudElementsUtils.isEmpty(element.configs)) {
 
                 me._maskLoader.show(me.$scope, 'Creating Instance...');
-
+                me.openedWindow = me.$window.open('', '_blank');
                 me._picker.getOAuthUrl(elementKey, selection)
                     .then(me._handleOnOAuthUrl.bind(me));
+
             } else {
                 me.createInstance(element, selection);
             }
@@ -217,7 +218,9 @@ var PickerController = BaseController.extend({
     _handleOnOAuthUrl: function(oauthurl) {
         var me = this;
         me._maskLoader.hide();
-        me.$window.open(oauthurl, '_blank');
+//        me.$window.open(oauthurl, '_blank');
+
+        me.openedWindow.location.href = oauthurl;
     },
 
     _onElementInstanceSelect: function(instance) {
