@@ -91,7 +91,7 @@ var CreateInstanceController = BaseController.extend({
                     elementConfig.apiSecret = me.$scope.elementData[keys[key]];
                 }
             }
-
+            me.openedWindow = me.$window.open('', '_blank');
             me._picker.getOAuthUrl(ele.elementKey, me._createinstance.selection)
                 .then(me._handleOnOAuthUrl.bind(me));
         }
@@ -100,7 +100,8 @@ var CreateInstanceController = BaseController.extend({
     _handleOnOAuthUrl: function(oauthurl) {
         var me = this;
         me._maskLoader.hide();
-        me.$window.open(oauthurl, '_blank');
+        //me.$window.open(oauthurl, '_blank');
+        me.openedWindow.location.href = oauthurl;
         me._createinstance.closeCreateInstance();
     }
 
