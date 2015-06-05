@@ -1891,20 +1891,25 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     border: none;
 }
 
-.bulkloaderModalWindow .dropdown-menu{
+.bulkloaderModalWindow .dropdown-menu, .dropdown-menu{
     width: 100%;
-    padding: 15px;}
+    padding: 15px;
+    z-index: 2500;}
 
-.bulkloaderModalWindow .dropdown-menu table{
+.bulkloaderModalWindow .dropdown-menu table, .dropdown-menu table{
     width: 100%;
 }
 
-.bulkloaderModalWindow .dropdown-menu thead tr th{
+.bulkloaderModalWindow .dropdown-menu thead tr th, .dropdown-menu thead tr th{
     vertical-align:middle;
 }
 
-.bulkloaderModalWindow .dropdown-menu thead tr th .pull-right{
+.bulkloaderModalWindow .dropdown-menu thead tr th .pull-right, .dropdown-menu thead tr th .pull-right{
     margin: 0;
+}
+
+.bulkloaderModalWindow .ui.basic.modal{
+    overflow: hidden;
 }
 
 .md-dialog-container .md-default-theme h2{

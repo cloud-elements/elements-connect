@@ -55,7 +55,27 @@ var ScheduleController = BaseController.extend({
         me.$scope.format = me.$scope.formats[4];
         me.$scope.maxDate = me.$scope.maxDate ? null : new Date();
 
+        me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
+        me.$scope.sourceLogo = me.$scope.sourceElement.image;
+        me.$scope.targetLogo = me._picker._target.image;
+        me.$scope.sourceName = me.$scope.sourceElement.name;
+        me.$scope.targetName = me._picker._target.name;
 
+        // temp store to display current transformation
+        me.$scope.currentTransfomations = [
+            {
+                'sourceObj' : 'contacts',
+                'targetObj' : 'contacts'
+            },
+            {
+                'sourceObj' : 'Accounts',
+                'targetObj' : 'deals'
+            },
+            {
+                'sourceObj' : 'users',
+                'targetObj' : 'leads'
+            }
+        ]
     },
 
     defineListeners:function(){
