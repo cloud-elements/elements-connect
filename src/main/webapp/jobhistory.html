@@ -38,7 +38,12 @@
             <span class="elementObject">{{metadata.targetObjectName}}</span>
           </p>
         </div>
-        <div class="job-footer">
+
+        <div class="job-footer running bar" ng-if="metadata.status == 'RUNNING'">
+          <div></div>
+          <!--<span><b>failed:</b> {{metadata.failCount}}</span>-->
+        </div>
+        <div class="job-footer" ng-if="metadata.status != 'RUNNING'">
           <span><b>downloaded:</b> {{metadata.sourceRecordCount}}</span>
           <!--<span><b>failed:</b> {{metadata.failCount}}</span>-->
         </div>

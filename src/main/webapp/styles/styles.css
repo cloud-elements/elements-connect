@@ -575,6 +575,9 @@ h1 {
     padding: 0;
     margin-top: 10px;
 }
+#jobhistory .jobslist .job-tree-node div.job-footer.running{
+    background-color: #f7941e;
+}
 #jobhistory .jobslist .job-tree-node div.job-footer span{
     width: 50%;
     display: inline-block;
@@ -1998,6 +2001,7 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     -webkit-animation-delay: -0.32s;
     animation-delay: -0.32s;
 }
+
 @-webkit-keyframes loadStripes {
     0%,
     80%,
@@ -2020,5 +2024,116 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     40% {
         box-shadow: 0 -2em #ffffff;
         height: 5em;
+    }
+}
+
+/*
+This is the actual bar with stripes
+*/
+
+.bar {
+    height:20px;
+    width:200px;
+    padding:10px;
+    margin:200px auto 0;
+}
+
+.bar div {
+    display:inline-block;
+    height:100%;
+    width:100%;
+    border:none;
+    background-color:transparent;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    box-sizing:border-box;
+    background-image:
+    -webkit-linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .4) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .4) 50%,
+            rgba(255, 255, 255, .4) 75%,
+            transparent 75%,
+            transparent
+    );
+    background-image:
+    -moz-linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .4) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .4) 50%,
+            rgba(255, 255, 255, .4) 75%,
+            transparent 75%,
+            transparent
+    );
+    background-image:
+    -ms-linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .4) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .4) 50%,
+            rgba(255, 255, 255, .4) 75%,
+            transparent 75%,
+            transparent
+    );
+    background-image:
+    linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, .4) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .4) 50%,
+            rgba(255, 255, 255, .4) 75%,
+            transparent 75%,
+            transparent
+    );
+    -webkit-background-size:50px 50px;
+    -moz-background-size:50px 50px;
+    -ms-background-size:50px 50px;
+    background-size:50px 50px;
+    -webkit-animation:move 2s linear infinite;
+    -moz-animation:move 2s linear infinite;
+    -ms-animation:move 2s linear infinite;
+    animation:move 2s linear infinite;
+    overflow: hidden;
+}
+/*
+Animate the stripes
+*/
+@-webkit-keyframes move{
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+@-moz-keyframes move{
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+@-ms-keyframes move{
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+@keyframes move{
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
     }
 }
