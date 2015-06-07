@@ -176,47 +176,71 @@ var Schedule = Class.extend({
                   me._handleJobSchedulingError.bind(me, selectedInstance));
     },
 
-    runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate) {
+    getMappingTransformations: function(selectedInstance, targetInstance, allObjects) {
         var me = this;
-        var mappings = null;
-        if(me._cloudElementsUtils.isEmpty(me._elementsService.configuration.view) ||
-            me._elementsService.configuration.view == 'datalist') {
-            mappings = allObjects[selectedInstance.element.key].metamapping;
-        } else {
-            var targetmappings = allObjects[targetInstance.element.key].metamapping;
 
-            //filter out mappings for only selected instance
-            var objects = Object.keys(targetmappings);
-            if (!me._cloudElementsUtils.isEmpty(objects)) {
-                mappings = new Object();
-                for (var i = 0; i < objects.length; i++) {
-                    if(objects[i].indexOf(selectedInstance.element.key) > -1) {
-                        mappings[objects[i]] = targetmappings[objects[i]];
-                    }
+        var targetmappings = allObjects[targetInstance.element.key].metamapping;
+
+        //filter out mappings for targetInstance
+        var objects = Object.keys(targetmappings);
+        if (!me._cloudElementsUtils.isEmpty(objects)) {
+            mappings = new Object();
+            for (var i = 0; i < objects.length; i++) {
+                if(objects[i].indexOf(selectedInstance.element.key) > -1) {
+                    mappings[objects[i]] = targetmappings[objects[i]];
                 }
             }
         }
 
-        if (me._cloudElementsUtils.isEmpty(mappings)) {
+        var objects = Object.keys(mappings);
+        var schedulemappings = new Array();
+        if (!me._cloudElementsUtils.isEmpty(objects)) {
+            for (var i = 0; i < objects.length; i++) {
+                var fields = mappings[objects[i]].fields;
+                if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+                    continue;
+                }
+
+                var o = objects[i].split('_');
+                var mapping = new Object();
+                mapping.transformed = true;
+                mapping.sourceObject = o[1];
+                mapping.targetObject= o[2];
+                mapping.name=objects[i];
+                schedulemappings.push(mapping);
+
+            }
+        }
+        return schedulemappings;
+    },
+
+    runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings) {
+        var me = this;
+        if (me._cloudElementsUtils.isEmpty(schedulemappings)) {
             me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 
-        var objects = Object.keys(mappings);
+        var objects = Object.keys(schedulemappings);
 
         if (me._cloudElementsUtils.isEmpty(objects)) {
             me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 
-        for (var i = 0; i < objects.length; i++) {
-            var fields = mappings[objects[i]].fields;
+        var targetmappings = allObjects[targetInstance.element.key].metamapping;
 
-            if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+        for (var i = 0; i < objects.length; i++) {
+            var m = schedulemappings[objects[i]];
+            if (m.transformed == false) {
                 continue;
             }
 
-            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, allObjects, startDate, 60000);
+            var fields = targetmappings[m.name].fields;
+            if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+                continue;
+            }
+            me._scheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000);
         }
 
         me._scheduledConfirmation();

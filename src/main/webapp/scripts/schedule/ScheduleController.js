@@ -33,6 +33,8 @@ var ScheduleController = BaseController.extend({
         me._maskLoader = MaskLoader;
         me.$location = $location;
         me._super($scope);
+
+        me._getMappingTransformations();
     },
 
     defineScope:function() {
@@ -62,26 +64,23 @@ var ScheduleController = BaseController.extend({
         me.$scope.targetName = me._picker._target.name;
 
         // temp store to display current transformation
-        me.$scope.currentTransfomations = [
-            {
-                'sourceObj' : 'contacts',
-                'targetObj' : 'contacts'
-            },
-            {
-                'sourceObj' : 'Accounts',
-                'targetObj' : 'deals'
-            },
-            {
-                'sourceObj' : 'users',
-                'targetObj' : 'leads'
-            }
-        ]
+        me.$scope.currentTransfomations = null;
     },
 
     defineListeners:function(){
         var me = this;
 
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+    },
+
+    _getMappingTransformations: function() {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) &&
+            !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+            me.$scope.currentTransfomations = me._schedule.getMappingTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+                me._mapper.all);
+        }
     },
 
     destroy:function(){
@@ -126,7 +125,7 @@ var ScheduleController = BaseController.extend({
         if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) &&
                 !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
-                                               me._mapper.all, startdt);
+                                               me._mapper.all, startdt, me.$scope.currentTransfomations);
         } else {
             me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                                                  me._datalist.all, startdt);
