@@ -25,10 +25,18 @@ var CloudElementsUtils = Class.extend({
         var me = this;
         var locationString = window.location.search.substring(1);
         if(!me.isEmpty(locationString) && locationString.length > 0
+            && me.$cookies.cebulkparams == null
             && (locationString.indexOf('apiKey') > -1
                 || locationString.indexOf('email') > -1)) {
             me.$cookies.cebulkparams = locationString;
             window.location.href = window.location.origin + window.location.pathname;
+            return;
+        } else if (!me.isEmpty(locationString) && locationString.length > 0
+            && locationString.indexOf('token') > -1) {
+            //In this scenario just extract the token and refresh the window with out token
+            me.$cookies.cebulkparams = locationString;
+            var params = this.getParamsFromURI(locationString);
+            window.location.href = window.location.origin + window.location.pathname+'?key='+params.key;
             return;
         }
 

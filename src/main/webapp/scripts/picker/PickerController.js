@@ -11,17 +11,19 @@ var PickerController = BaseController.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _credentials: null,
     _instances: null,
     _maskLoader: null,
     _lastSelection: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
         me._maskLoader = MaskLoader;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
+        me._credentials = Credentials;
         me._schedule = Schedule;
         me._createinstance = CreateInstance;
         me._login = Login;
@@ -268,7 +270,16 @@ var PickerController = BaseController.extend({
         me._maskLoader.hide();
 
         if(me._picker.isSecretsPresent() == false) {
-            if (me._picker.isAppKeyPresent() == false
+            if (me._picker.isTokenPresent() == true){
+                var login = new Object();
+                login.email = me._picker.getToken();
+                me._maskLoader.show(me.$scope, 'Loading...');
+                if(me._credentials.login(login) == true) {
+                    me._handleConfigurationLoad(true);
+                }
+                return;
+            }
+            else if (me._picker.isAppKeyPresent() == false
                 && me._picker.isKeyPresent() == false){
                 me._login.openLogin();
                 return
@@ -292,7 +303,7 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', 'JobHistory', 'Help', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Credentials', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', 'JobHistory', 'Help', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

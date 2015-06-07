@@ -47,6 +47,19 @@ var Picker = Class.extend({
         return true;
     },
 
+    isTokenPresent: function() {
+        var me = this;
+        if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.token)) {
+            return false;
+        }
+        return true;
+    },
+
+    getToken: function() {
+        var me = this;
+        return me._elementsService._environment.token;
+    },
+
     isKeyPresent: function() {
         var me = this;
         if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.key)) {

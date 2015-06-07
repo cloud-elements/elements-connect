@@ -34,6 +34,10 @@ var ElementsService = Class.extend({
         if (!this._cloudElementsUtils.isEmpty(pageParameters.key)) {
             me._environment.key = pageParameters.key;
         }
+
+        if (!this._cloudElementsUtils.isEmpty(pageParameters.token)) {
+            me._environment.token = pageParameters.token;
+        }
     },
 
     loadOrgConfiguration: function () {
