@@ -37,13 +37,15 @@
 <!--</div>-->
 
 
-<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
-  <i class="close icon" ng-click="cancel()"></i>
+<!--<div class="ui basic" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">-->
 
-  <div class="header">
-    Schedule
+<div class="ui grid basic">
+  <i class="close icon closebutton" ng-click="cancel()"></i>
+
+  <div class="header wide row">
+    <h2 class="wide column">Schedule</h2>
   </div>
-  <div class="content">
+  <div class="content wide row">
     <div class="ui grid">
       <div class="six wide column">
         <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 75px;
@@ -52,7 +54,7 @@
           <br/>source</p>
       </div>
       <div class="two wide column">
-        <i class="long arrow right icon"></i>
+        <i class="long arrow right icon" style="font-size: 2rem;"></i>
       </div>
       <div class="six wide column">
         <p style="float: left;padding: 0;line-height: 1.3em;font-weight: bold; padding-left:75px;
@@ -62,22 +64,19 @@
       </div>
 
       <script type="text/ng-template" id="currentTransfomations.html">
-          <p class="six wide column">{{metadata.sourceObject}}</p>
-          <p class="two wide column"><i class="angle right icon"></i></p>
-          <p class="six wide column">{{metadata.targetObject}}</p>
+          <p class="fourteen wide column">{{metadata.sourceObject}} <i class="angle right icon"></i> {{metadata
+            .targetObject}}</p>
           <md-switch class="two wide column md-primary-green"
                      ng-model="metadata.transformed" aria-label></md-switch>
       </script>
 
-      <div class="ui internally celled grid transformations"
-           style="height:150px; overflow: scroll; display: block; padding: 0;margin: 1rem;width: auto;"
-           data-ng-model="currentTransfomations">
+      <div class="ui internally grid transformations" data-ng-model="currentTransfomations">
           <div ng-repeat="metadata in currentTransfomations"
-               ng-include="'currentTransfomations.html'" class="row" style=""></div>
+               ng-include="'currentTransfomations.html'" class="row"></div>
       </div>
 
       <div class="sixteen wide column">
-        <h2>How far back would you like to pull data from? </h2>
+        <h3>How far back would you like to pull data from? </h3>
         <div class="ui icon input fluid">
           <input type="text" class="datepicker" datepicker-popup="{{format}}" ng-model="queryStartDate"
                  placeholder="January 01, 2015" is-open="opened" min-date="minDate"
@@ -92,7 +91,7 @@
       </div>
     </div>
   </div>
-  <div class="actions">
+  <div class="actions wide row">
     <div class="two fluid ui inverted buttons">
       <button type="submit" class="ui red basic inverted button tiny" ng-click="cancel()">
         <i class="remove icon"></i> Back

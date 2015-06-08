@@ -561,7 +561,7 @@ h1 {
     background-color: #8dc63f;
 }
 #jobhistory .jobslist .job-tree-node div.job-header span.status.RUNNING{
-    background-color: #389dc8;
+    background-color: #58bde8;
 }
 #jobhistory .jobslist .job-tree-node div.job-header span.status.ERROR{
     background-color: #c92026;
@@ -576,7 +576,7 @@ h1 {
     margin-top: 10px;
 }
 #jobhistory .jobslist .job-tree-node div.job-footer.running{
-    background-color: #389dc8;
+    background-color: #58bde8;
 }
 #jobhistory .jobslist .job-tree-node div.job-footer span{
     width: 50%;
@@ -1664,9 +1664,40 @@ li li.angular-ui-tree-placeholder{
     box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
 }
 /***********************/
-/* END MAPPER           */
+/* END MAPPER          */
 /***********************/
 
+.bulkloaderModalWindow .header{}
+
+.bulkloaderModalWindow .content .h3{
+    font-size: 1.5rem;
+    padding: 0 1rem;
+}
+.bulkloaderModalWindow .content .transformations{
+    height: 150px;
+    overflow: scroll;
+    display: block;
+    margin: 1rem;
+    width: auto;
+    background-color: #fff;}
+.bulkloaderModalWindow .content .transformations .row{
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
+}
+.bulkloaderModalWindow .content .transformations .row p{
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/***********************/
+/*  Scheduler          */
+/***********************/
+
+
+/***********************/
+/*  END Scheduler          */
+/***********************/
 .ui.modal h2 {
     margin-bottom: 15px;
     font-size: 105%;
@@ -1875,6 +1906,10 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     text-shadow: none;
 }
 
+/* Boostrap button */
+.btn-xs, .btn-group-xs>.btn{
+    padding: 5px;
+}
 
 /* ------- Modal Window --------*/
 
@@ -1882,7 +1917,10 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     opacity: .9;
     filter: alpha(opacity=90);
 }
-
+.bulkloaderModalbackdropOpac.in{
+    opacity: 1;
+    filter: alpha(opacity=1);
+}
 .bulkloaderModalWindow.in{
     top: 50%;
     margin-top: -300px;
@@ -1913,6 +1951,21 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
 
 .bulkloaderModalWindow .ui.basic.modal{
     overflow: hidden;
+}
+
+.bulkloaderModalWindow .ui.basic .header h2{
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 0;
+}
+.bulkloaderModalWindow .ui.basic .closebutton{
+    font-size: 1.5rem;
+    color: #fff;
+    padding: 0;
+    display: block;
+    position: absolute;
+    right: -2rem;
+    z-index: 1010;
 }
 
 .md-dialog-container .md-default-theme h2{
