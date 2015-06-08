@@ -674,6 +674,9 @@ h1 {
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid{
 }
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-canvas{
+    background-color: #efe4e5;
+}
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .errorCell{
     line-height: 2rem;
     padding: 0 1rem;
@@ -690,7 +693,9 @@ h1 {
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell{
     background-color: transparent;
-    color: #c92026;
+    color: #222;
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected .errorCell{
     line-height: 2rem;
@@ -698,7 +703,12 @@ h1 {
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected .errorCell code{
     white-space: normal;
-    color: #c92026;
+    color: #222;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 /************************/
 /* END JOB HISTORY      */
