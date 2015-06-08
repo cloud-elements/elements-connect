@@ -274,9 +274,7 @@ var PickerController = BaseController.extend({
                 var login = new Object();
                 login.email = me._picker.getToken();
                 me._maskLoader.show(me.$scope, 'Loading...');
-                if(me._credentials.login(login) == true) {
-                    me._handleConfigurationLoad(true);
-                }
+                me._credentials.login(login).then(me._handleConfigurationLoad.bind(me));
                 return;
             }
             else if (me._picker.isAppKeyPresent() == false
