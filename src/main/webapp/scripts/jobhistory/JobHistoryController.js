@@ -46,11 +46,14 @@ var JobHistoryController = BaseController.extend({
             data: 'jobExecutions',
             enableColumnMenus: false,
             enableRowHeaderSelection: false,
+            enableRowSelection: true,
+            multiSelect: false,
             paginationPageSizes: [50],
             paginationPageSize: 50,
             columnDefs: [
-                {field: 'status', width: 250},
-                {field: 'response'}
+                {field: 'rowNum', width: 120, name: 'Row number'},
+                {field: 'status', width: 450,cellTooltip: function(row, col) {return 'Click to read more';}},
+                {field: 'response',cellTooltip: function(row, col) {return 'Click to read more';}, cellTemplate:'<code class="error">{{row.entity.response}}</code>', cellClass:'errorCell'}
             ]
         };
         me.$scope.jobhistorydata = null;
@@ -104,11 +107,6 @@ var JobHistoryController = BaseController.extend({
 
         me.$scope.selectedIndex = $index;
 
-        if(me.$scope.selectedJob.status == 'ERROR') {
-            me.$scope.errorMessage = me.$scope.selectedJob.statusMessage;
-            return;
-        }
-
         if(me.$scope.selectedJob.sourceStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetErrorCount == 0) {
@@ -157,6 +155,10 @@ var JobHistoryController = BaseController.extend({
                 err += '<BR>'
             }
             err = me.$scope.selectedJob.targetStatusMessage
+        }
+
+        if(me.$scope.selectedJob.status == 'ERROR') {
+            err = me.$scope.selectedJob.statusMessage;
         }
 
         if(err == null
