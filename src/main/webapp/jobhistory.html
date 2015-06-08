@@ -41,7 +41,6 @@
 
         <div class="job-footer running bar" ng-if="metadata.status == 'RUNNING'">
           <div></div>
-          <!--<span><b>failed:</b> {{metadata.failCount}}</span>-->
         </div>
         <div class="job-footer" ng-if="metadata.status != 'RUNNING'">
           <span><b>downloaded:</b> {{metadata.sourceRecordCount}}</span>
@@ -61,14 +60,13 @@
       <div>
         <h2 ng-show="noJobsMessage">Select a job to see more
           details</h2>
-        <h2 ng-show="showNoErrors">{{errorMessage}}</h2>
+        <h2 ng-show="showNoErrors" class="errorTitle">{{errorMessage}}</h2>
         <h2 ng-show="showErrors">Errors</h2>
       </div>
-      <div ui-grid="jobExecutionsOptions" ui-grid-selection ui-grid-auto-resize ng-show="showErrors"></div>
+      <div ui-grid="jobExecutionsOptions" ui-grid-selection ui-grid-auto-resize
+           ng-if="showErrors" class="errorJobHistoryGrid"></div>
     </div>
 
   </div>
-
-
 
 </section>

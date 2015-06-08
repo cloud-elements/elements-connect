@@ -637,9 +637,16 @@ h1 {
     padding:20px;
     position: relative;
 }
+
 #jobhistory div.executionslist h2{
     font-size: 20px;
     font-weight: bold;
+}
+#jobhistory div.executionslist h2.errorTitle{
+    background-color: #c92026;
+    padding: 10px;
+    color: #fff;
+    margin-bottom: 15px;
 }
 #jobhistory div.executionslist h2 span{
     color: #389dc8;
@@ -647,11 +654,12 @@ h1 {
 #jobhistory div.executionslist .ui-grid{
     position: absolute;
     bottom: 20px;
-    top: 65px;
+    top: 105px;
     left: 20px;
     right: 20px;
-    background-color: transparent;
+    background-color: #fff;
     border: none;
+    height: auto;
 }
 #jobhistory div.executionslist .ui-grid .ui-grid-pager-panel{
     background-color: transparent;
@@ -663,6 +671,44 @@ h1 {
 }
 #jobhistory div.executionslist .ui-grid .ui-grid-header{
     border-bottom: none;
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid{
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-canvas{
+    background-color: #efe4e5;
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .errorCell{
+    line-height: 2rem;
+    padding: 0 1rem;
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .errorCell code{
+    font-size: 90%;
+    color: #333;
+    background-color: transparent;
+    white-space: nowrap;
+    border-radius: 0;
+    display: block;
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected{
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell{
+    background-color: transparent;
+    color: #222;
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected .errorCell{
+    line-height: 2rem;
+    height: auto;
+}
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected .errorCell code{
+    white-space: normal;
+    color: #222;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 /************************/
 /* END JOB HISTORY      */
