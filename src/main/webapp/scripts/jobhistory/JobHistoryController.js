@@ -119,27 +119,12 @@ var JobHistoryController = BaseController.extend({
             return;
         }
 
-//        document.getElementsByClassName('grid')[0]).css('width', '100%');
-
-        //Check for any errors, Check if source has errors, if not then check for Target
-//        if(me.$scope.selectedJob.sourceStatus != 'COMPLETED'
-//            && me.$scope.selectedJob.sourceErrorCount > 0) {
-//            //call the API for source error records
-//            return me._history.getJobErrors(me.$scope.selectedJob.sourceElementKey, me.$scope.selectedJob.sourceJobId).then(me._handleGetJobErrors.bind(me));
-//        } else if(me.$scope.selectedJob.sourceStatus != 'COMPLETED'){
-//            me.$scope.errorMessage = me.$scope.selectedJob.sourceStatusMessage;
-//            return;
-//        }
-
-        //Check if target has errors
-//        if(me.$scope.selectedJob.targetStatus != 'COMPLETED'
-//            && me.$scope.selectedJob.targetErrorCount > 0) {
-            //call the API for target error records
+        //call the API for target error records
+        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetElementKey)) {
             return me._history.getJobErrors(me.$scope.selectedJob.targetElementKey, me.$scope.selectedJob.targetJobId).then(me._handleGetJobErrors.bind(me));
-//        } else if(me.$scope.selectedJob.targetStatus != 'COMPLETED'){
-//            me.$scope.errorMessage = me.$scope.selectedJob.targetStatusMessage;
-//            return;
-//        }
+        } else {
+            return me._history.getJobErrors(me.$scope.selectedJob.sourceElementKey, me.$scope.selectedJob.sourceJobId).then(me._handleGetJobErrors.bind(me));
+        }
     },
 
     _handleGetJobErrors: function(results) {
