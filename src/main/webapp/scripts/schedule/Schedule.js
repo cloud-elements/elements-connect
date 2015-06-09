@@ -215,6 +215,50 @@ var Schedule = Class.extend({
         return schedulemappings;
     },
 
+    getDatalistTransformations: function (selectedInstance, targetInstance, allObjects, startDate) {
+        var me = this;
+
+        var transformations = allObjects[selectedInstance.element.key].metadata;
+        var schedulemappings = new Array();
+
+        if(me._cloudElementsUtils.isEmpty(transformations)) {
+            return schedulemappings;
+        }
+
+        var objects = Object.keys(transformations);
+
+        if(me._cloudElementsUtils.isEmpty(objects)) {
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
+            return;
+        }
+
+        var objectsAndTrans = allObjects[selectedInstance.element.key].objectsAndTrans;
+
+        if(me._cloudElementsUtils.isEmpty(objectsAndTrans)) {
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
+            return;
+        }
+
+        for(var i = 0; i < objects.length; i++) {
+            if(me._cloudElementsUtils.isEmpty(objectsAndTrans[objects[i]]) || objectsAndTrans[objects[i]] == false) {
+                continue;
+            }
+
+            var fields = transformations[objects[i]].fields;
+
+            if(me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+                continue;
+            }
+
+            var mapping = new Object();
+            mapping.transformed = true;
+            mapping.sourceObject = objects[i];
+            schedulemappings.push(mapping);
+        }
+
+        return schedulemappings;
+    },
+
     runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings) {
         var me = this;
         if (me._cloudElementsUtils.isEmpty(schedulemappings)) {
@@ -247,17 +291,15 @@ var Schedule = Class.extend({
         me._scheduledConfirmation();
     },
 
-    runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate) {
+    runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings) {
         var me = this;
 
-        // VSJ console.log("Campaigns field count: " + me._datalist.all[me._picker.selectedElementInstance.element.key].transformations.campaigns.fields.length);
-        var transformations = allObjects[selectedInstance.element.key].metadata;
-
-        if (me._cloudElementsUtils.isEmpty(transformations)) {
+        if (me._cloudElementsUtils.isEmpty(schedulemappings)) {
+            me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
 
-        var objects = Object.keys(transformations);
+        var objects = Object.keys(schedulemappings);
 
         if (me._cloudElementsUtils.isEmpty(objects)) {
             me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
@@ -270,19 +312,24 @@ var Schedule = Class.extend({
             me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
             return;
         }
+        var transformations = allObjects[selectedInstance.element.key].metadata;
+        if (me._cloudElementsUtils.isEmpty(transformations)) {
+            return;
+        }
 
         for (var i = 0; i < objects.length; i++) {
-            if (me._cloudElementsUtils.isEmpty(objectsAndTrans[objects[i]]) || objectsAndTrans[objects[i]] == false) {
+            var m = schedulemappings[objects[i]];
+            if (m.transformed == false) {
                 continue;
             }
 
-            var fields = transformations[objects[i]].fields;
+            var fields = transformations[m.sourceObject].fields;
 
             if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
                 continue;
             }
 
-            me._scheduleObjectJob(selectedInstance, targetInstance, objects[i], fields, allObjects, startDate, 60000);
+            me._scheduleObjectJob(selectedInstance, targetInstance, m.sourceObject, fields, allObjects, startDate, 60000);
         }
 
         me._scheduledConfirmation();
