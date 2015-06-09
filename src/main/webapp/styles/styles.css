@@ -643,8 +643,7 @@ h1 {
     font-weight: bold;
 }
 #jobhistory div.executionslist h2.errorTitle{
-    background-color: #c92026;
-    padding: 10px;
+    padding: 10px 0;
     color: #fff;
     margin-bottom: 15px;
 }
