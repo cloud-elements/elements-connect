@@ -460,6 +460,11 @@ h1 {
 }
 #picker.show-target .picker-history{
     background-color: #389dc8;
+    position: absolute;
+    z-index: 500;
+    right: 0;
+    left: 0;
+    top: 0;
 }
 
 /************************/
