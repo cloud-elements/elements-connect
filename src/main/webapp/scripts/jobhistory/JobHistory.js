@@ -56,8 +56,10 @@ var JobHistory = Class.extend({
                 res['sourceLogo'] = src.image;
                 res['source'] = src.name;
                 var tar = me._allElements[res.targetElementKey];
-                res['targetLogo'] = tar.image;
-                res['target'] = tar.name;
+                if (!me._cloudElementsUtils.isEmpty(tar)) {
+                    res['targetLogo'] = tar.image;
+                    res['target'] = tar.name;
+                }
             }
 
             return result.data;

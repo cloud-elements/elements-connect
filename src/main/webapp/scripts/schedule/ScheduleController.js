@@ -65,6 +65,13 @@ var ScheduleController = BaseController.extend({
 
         // temp store to display current transformation
         me.$scope.currentTransfomations = null;
+
+        if(me._picker.getView() == 'datalist') {
+            me.$scope.showTarget = false;
+        } else {
+            me.$scope.showTarget = true;
+        }
+
     },
 
     defineListeners:function(){
@@ -76,8 +83,10 @@ var ScheduleController = BaseController.extend({
     _getMappingTransformations: function() {
         var me = this;
 
-        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) &&
-            !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+        if (me._picker.getView() == 'datalist') {
+            me.$scope.currentTransfomations = me._schedule.getDatalistTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+                me._datalist.all);
+        } else {
             me.$scope.currentTransfomations = me._schedule.getMappingTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._mapper.all);
         }
@@ -122,13 +131,12 @@ var ScheduleController = BaseController.extend({
         }
         startdt = startdt.toISOString();
 
-        if (me._cloudElementsUtils.isEmpty(me._picker.getTargetToken()) &&
-                !me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
-            me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
-                                               me._mapper.all, startdt, me.$scope.currentTransfomations);
-        } else {
+        if (me._picker.getView() == 'datalist') {
             me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
-                                                 me._datalist.all, startdt);
+                me._datalist.all, startdt, me.$scope.currentTransfomations);
+        } else {
+            me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+                me._mapper.all, startdt, me.$scope.currentTransfomations);
         }
 
         me._maskLoader.hide();

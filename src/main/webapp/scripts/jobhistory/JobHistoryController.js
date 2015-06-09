@@ -38,7 +38,7 @@ var JobHistoryController = BaseController.extend({
         me.$scope.hideGrid = true;
         me.$scope.selectJobs = false;
         me.$scope.noJobsMessage = true;
-
+        me.$scope.showTarget = true;
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.close = me.close.bind(this);
 
@@ -86,6 +86,10 @@ var JobHistoryController = BaseController.extend({
         if(me._picker.isSecretsPresent() == false) {
             me.$location.path('/');
             return;
+        }
+
+        if(me._picker.getView() == 'datalist') {
+            me.$scope.showTarget = false;
         }
 
         me._history.getHistory().then(me._handleGetHistory.bind(me));

@@ -53,10 +53,10 @@
           <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
           <br/>source</p>
       </div>
-      <div class="two wide column">
+      <div ng-show="showTarget" class="two wide column">
         <i class="long arrow right icon" style="font-size: 2rem;"></i>
       </div>
-      <div class="six wide column">
+      <div ng-show="showTarget" class="six wide column">
         <p style="float: left;padding: 0;line-height: 1.3em;font-weight: bold; padding-left:75px;
          background-image: url({{targetLogo}});background-size: contain;background-repeat: no-repeat;">
           <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>

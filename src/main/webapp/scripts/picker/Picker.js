@@ -211,12 +211,14 @@ var Picker = Class.extend({
             }
         }
 
-//        if (!me._cloudElementsUtils.isEmpty(me._target)
-//              &&  me._target.hide == true
-//              && me._cloudElementsUtils.isEmpty(me.targetElementInstance)) {
-//            me._notifications.notify(bulkloader.events.ERROR, "Configuration Error. A target element instance has not been configured.");
-//            return null;
-//        }
+        if (!me._cloudElementsUtils.isEmpty(me._target)
+              &&  me.getView() == 'datalist'
+              && me._cloudElementsUtils.isEmpty(me.targetElementInstance)) {
+            //Create a dummy targetElementInstance to be used all the places
+            me.targetElementInstance = new Object();
+            me.targetElementInstance.token = me._target.token;
+            me.targetElementInstance.element = me._target;
+        }
 
         this._notifications.notify(bulkloader.events.ELEMENT_INSTANCES_LOAD);
 
