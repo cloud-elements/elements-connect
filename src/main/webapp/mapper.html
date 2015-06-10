@@ -148,7 +148,7 @@
 
       <ul ui-tree-nodes="" ng-model="metadata.fields" ng-class="{hidden: collapsed}">
         <li ng-repeat="metadata in metadata.fields" ui-tree-node ng-include="'mapperFields.html'"
-            collapsed="false" ng-hide="!treeFilter(metadata, searchsource)">
+            collapsed="false" ng-hide="!treeFilter(metadata, searchsource)" ng-class="{'mapped': metadata.path}">
         </li>
       </ul>
 
@@ -170,7 +170,7 @@
           <li ng-repeat="metadata in mapperdata"
               ui-tree-node id="tree2-root-node" ng-include="'mapperFields.html'"
               collapsed="false"
-              ng-hide="!treeFilter(metadata, searchsource)" data-nodrag>
+              ng-hide="!treeFilter(metadata, searchsource)" data-nodrag ng-class="{'mapped': metadata.path}">
           </li>
         </ul>
       </li>
