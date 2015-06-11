@@ -418,6 +418,18 @@ var Picker = Class.extend({
         return me._target.token;
     },
 
+    getTargetElementBulkSequence: function(elementKey) {
+        var me = this;
+        var target = null;
+        for (var i in me._targets) {
+            target = me._targets[i];
+            if (target.elementKey == elementKey) {
+                break;
+            }
+        }
+        return target.bulkSequence;
+    },
+
     getView: function() {
         var me = this;
 

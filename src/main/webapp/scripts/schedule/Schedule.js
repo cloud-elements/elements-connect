@@ -91,7 +91,7 @@ var Schedule = Class.extend({
         return fieldList;
     },
 
-    _scheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, allObjects,
+    _getScheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, allObjects,
                                  startDate, statusCheckInterval) {
         var me = this;
         var query = null;
@@ -174,9 +174,7 @@ var Schedule = Class.extend({
 
         job.notificationConfiguration = notificationConfiguration;
 
-        me._elementsService.scheduleJob(selectedInstance, job)
-            .then(me._handleJobScheduled.bind(me, selectedInstance),
-                  me._handleJobSchedulingError.bind(me, selectedInstance));
+        return job;
     },
 
     getMappingTransformations: function(selectedInstance, targetInstance, allObjects) {
@@ -277,6 +275,7 @@ var Schedule = Class.extend({
 
         var targetmappings = allObjects[targetInstance.element.key].metamapping;
 
+        var jobs = new Array();
         for (var i = 0; i < objects.length; i++) {
             var m = schedulemappings[objects[i]];
             if (m.transformed == false) {
@@ -287,10 +286,10 @@ var Schedule = Class.extend({
             if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
                 continue;
             }
-            me._scheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000);
+            jobs.push(me._getScheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000));
         }
 
-        me._scheduledConfirmation();
+        me.scheduleJobs(selectedInstance, targetInstance, jobs);
     },
 
     runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings) {
@@ -319,6 +318,7 @@ var Schedule = Class.extend({
             return;
         }
 
+        var jobs = new Array();
         for (var i = 0; i < objects.length; i++) {
             var m = schedulemappings[objects[i]];
             if (m.transformed == false) {
@@ -331,80 +331,10 @@ var Schedule = Class.extend({
                 continue;
             }
 
-            me._scheduleObjectJob(selectedInstance, targetInstance, m.sourceObject, fields, allObjects, startDate, 60000);
+            jobs.push(me._getScheduleObjectJob(selectedInstance, targetInstance, m.sourceObject, fields, allObjects, startDate, 60000));
         }
 
-        me._scheduledConfirmation();
-
-
-
-        /* VSJ
-        if (me._cloudElementsUtils.isEmpty(objects)) {
-            return;
-        }
-
-        var fieldList = '';
-
-        for (var i = 0; i < objects.length; i++) {
-            var fields = transformations[objects[i]].fields;
-
-            if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
-                continue;
-            }
-
-            for (var j = 0; j < fields.length; j++) {
-                fieldList = fieldList + fields[j].path;
-
-                if (j < fields.length - 1) {
-                    fieldList = fieldList + ', '
-                }
-            }
-
-            // var query = "select " + fieldList + " from " + objects[i] + " where lastRunDate = '" + startDate + "'";
-            var query = "select " + fieldList + " from " + objects[i];
-
-            var job = new Object();
-
-            job.query = query;
-            job.from = startDate;
-            job.objectName = objects[i];
-            job.statusCheckInterval = 1000;
-
-            var targetConfiguration = new Object();
-
-            targetConfiguration.path = me._elementsService.configuration.target.path;
-            targetConfiguration.method = me._elementsService.configuration.target.method;
-            targetConfiguration.token = me._elementsService.configuration.target.elementToken;
-
-            var parameters = new Object();
-
-            if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration.target.other) == false) {
-                for (key in me._elementsService.configuration.target.other) {
-                    if (me._elementsService.configuration.target.other.hasOwnProperty(key)) {
-                        parameters[key] = me._elementsService.configuration.target.other[key];
-                    }
-                }
-            }
-
-            targetConfiguration.parameters = parameters;
-
-            job.targetConfiguration = targetConfiguration;
-
-            var notificationConfiguration = new Object();
-
-            notificationConfiguration.token = me._elementsService.configuration.notificationToken;
-            notificationConfiguration.to = me._elementsService.configuration.notificationEmail;
-            // notificationConfiguration.to = "vineet@cloud-elements.com";
-
-            job.notificationConfiguration = notificationConfiguration;
-
-            me._elementsService.scheduleJob(selectedInstance, job)
-              .then(me._handleJobScheduled.bind(me, selectedInstance),
-                    me._handleJobSchedulingError.bind(me, selectedInstance));
-        }
-
-        me._scheduledConfirmation();
-        */
+        me.scheduleJobs(selectedInstance, targetInstance, jobs);
     },
 
     _handleJobScheduled: function(selectedInstance, job) {
@@ -415,8 +345,48 @@ var Schedule = Class.extend({
 
     _handleJobSchedulingError: function(selectedInstance, error) {
         var me = this;
-    }
+    },
 
+    scheduleJobs: function(selectedInstance, targetInstance, jobs) {
+        var me = this;
+
+        var sequence = me._picker.getTargetElementBulkSequence(targetInstance.element.key);
+
+        if(me._cloudElementsUtils.isEmpty(sequence)) {
+            for (key in jobs) {
+                var js = new Array();
+                js.push(jobs[key]);
+
+                me._elementsService.scheduleJob(selectedInstance, js)
+                    .then(me._handleJobScheduled.bind(me, selectedInstance),
+                    me._handleJobSchedulingError.bind(me, selectedInstance));
+            }
+
+        } else {
+
+            //Create a sequence for the Jobs in the JS array
+            var js = new Array();
+
+            //Loop through the sequence and also loop through the jobs to create the sequence of jobs to be sent
+            for (field in sequence) {
+                for (key in jobs) {
+                    var j = jobs[key];
+                    var targetObj = j.targetConfiguration.objectName;
+                    var targetObjectName = targetObj.split('_')[2];
+
+                    if(targetObjectName === sequence[field]) {
+                        js.push(j);
+                    }
+                }
+            }
+
+            me._elementsService.scheduleJob(selectedInstance, js)
+                .then(me._handleJobScheduled.bind(me, selectedInstance),
+                me._handleJobSchedulingError.bind(me, selectedInstance));
+        }
+
+        me._scheduledConfirmation();
+    }
 });
 
 
