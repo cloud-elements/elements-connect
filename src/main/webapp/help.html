@@ -6,7 +6,8 @@
 
   <div class="content">
     <script type="text/ng-template" id="helpimages.html">
-      <img src="images/help-images/{{items.imageURL}}" width="100%"/>
+      <img src="images/{{items.imageURL}}" width="100%"/>
+      <p style="width:100%; margin-top: 20px; color: #fff;">{{items.text}}</p>
     </script>
 
     <slick infinite="false" slides-to-show="1" slides-to-scroll="1" arrows="true" ng-modal="helpList">

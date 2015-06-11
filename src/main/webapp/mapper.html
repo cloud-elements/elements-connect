@@ -95,7 +95,7 @@
     <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}" >
       <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop
           id="tree1-root-node" ng-include="'objectFields.html'"
-          collapsed="true" ng-hide="!treeFilter(metadata, searchtarget)">
+          collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
       </li>
     </ul>
 
@@ -107,7 +107,7 @@
       <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
         <li ng-repeat="metadata in objectMetaData"
             ui-tree-node data-nodrop id="tree1-root-node" ng-include="'objectFields.html'"
-            collapsed="true" ng-hide="!treeFilter(metadata, searchtarget)" >
+            collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)" >
         </li>
       </ul>
     </li>
@@ -148,7 +148,7 @@
 
       <ul ui-tree-nodes="" ng-model="metadata.fields" ng-class="{hidden: collapsed}">
         <li ng-repeat="metadata in metadata.fields" ui-tree-node ng-include="'mapperFields.html'"
-            collapsed="false" ng-hide="!treeFilter(metadata, searchsource)">
+            collapsed="false" ng-hide="!treeFilter(metadata, searchsource)" ng-class="{'mapped': metadata.path}">
         </li>
       </ul>
 
@@ -170,7 +170,7 @@
           <li ng-repeat="metadata in mapperdata"
               ui-tree-node id="tree2-root-node" ng-include="'mapperFields.html'"
               collapsed="false"
-              ng-hide="!treeFilter(metadata, searchsource)" data-nodrag>
+              ng-hide="!treeFilter(metadata, searchsource)" data-nodrag ng-class="{'mapped': metadata.path}">
           </li>
         </ul>
       </li>
