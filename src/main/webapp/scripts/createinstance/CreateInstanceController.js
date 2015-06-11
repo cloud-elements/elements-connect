@@ -41,7 +41,10 @@ var CreateInstanceController = BaseController.extend({
         me.$scope.elementConfigs = me._createinstance.element.configs;
         me.$scope.elementData = new Object();
         me.$scope.elementName = me._createinstance.element.name;
-
+        me.$scope.createOrEdit = 'Create';
+        if(me._createinstance.instance != null) {
+            me.$scope.createOrEdit = 'Edit';
+        }
     },
 
     defineListeners:function(){
@@ -92,7 +95,7 @@ var CreateInstanceController = BaseController.extend({
                 }
             }
             me.openedWindow = me.$window.open('', '_blank');
-            me._picker.getOAuthUrl(ele.elementKey, me._createinstance.selection)
+            me._picker.getOAuthUrl(ele.elementKey, me._createinstance.selection, me._createinstance.instance)
                 .then(me._handleOnOAuthUrl.bind(me));
         }
     },

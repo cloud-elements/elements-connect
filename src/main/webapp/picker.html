@@ -27,6 +27,7 @@
            data-instance="Connect to {{source.name}}"
            style='background-image: url("{{source.image}}");'>
           <i ng-show="showWait" class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>
+          <i class="icon wait" ng-click='onEditInstance("{{source.elementKey}}", "source", $event)'></i>
         </a>
       </div>
 
@@ -66,6 +67,7 @@
            style='background-image: url("{{target.image}}");'>
           <i ng-show="showWait" class="icon wait"
              ng-click='onSelectSchedule("{{target.elementKey}}", $event)'></i>
+          <i class="icon wait" ng-click='onEditInstance("{{target.elementKey}}", "target", $event)'></i>
         </a>
       </div>
 

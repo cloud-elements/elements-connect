@@ -25,12 +25,12 @@ var CreateInstance = Class.extend({
         console.log('Loading error' + error);
     },
 
-
-    openCreateInstance: function (element, selection) {
+    openCreateInstance: function (element, selection, instance) {
         var me = this;
 
         me.element = element;
         me.selection = selection;
+        me.instance = instance;
 
         if(me._cloudElementsUtils.isEmpty(me._openedModal)) {
             me._openedModal = me.$modal.open({
@@ -52,7 +52,13 @@ var CreateInstance = Class.extend({
     onSaveInstance: function(elementProvision){
         var me = this;
         me.closeCreateInstance();
-        return me._elementsService.createNonOathInstance(elementProvision).then(
+        var methodType = 'POST';
+        var insId = null;
+        if(!me._cloudElementsUtils.isEmpty(me.instance)) {
+            var methodType = 'PUT';
+            var insId = me.instance.id;
+        }
+        return me._elementsService.createNonOathInstance(elementProvision, insId, methodType).then(
             me._picker._handleOnCreateInstance.bind(me._picker, elementProvision.element.key),
             me._picker._handleOnCreateInstanceFailed.bind(me._picker));
     }

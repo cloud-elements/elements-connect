@@ -260,10 +260,11 @@ var Picker = Class.extend({
         return null;
     },
 
-    getOAuthUrl: function(elementKey, selection) {
+    getOAuthUrl: function(elementKey, selection, instance) {
         var me = this;
 
         namespace('bulkloader.Picker').oauthElementKey = elementKey;
+        namespace('bulkloader.Picker').oauthElementInstance = instance;
 
         var elementConfig = me.getElementConfig(elementKey, selection);
 
@@ -309,7 +310,14 @@ var Picker = Class.extend({
             return;
         }
 
-        return me._elementsService.createInstance(elementConfig, pageParameters).then(
+        var methodType = 'POST';
+        var insId = null;
+        if(!me._cloudElementsUtils.isEmpty(bulkloader.Picker.oauthElementInstance)) {
+            var methodType = 'PUT';
+            var insId = bulkloader.Picker.oauthElementInstance.id;
+        }
+
+        return me._elementsService.createInstance(elementConfig, pageParameters, insId, methodType).then(
             me._handleOnCreateInstance.bind(me, bulkloader.Picker.oauthElementKey),
             me._handleOnCreateInstanceFailed.bind(me) );
     },

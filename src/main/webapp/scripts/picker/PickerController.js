@@ -50,6 +50,7 @@ var PickerController = BaseController.extend({
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
         me.$scope.onHelp = me.onHelp.bind(me);
+        me.$scope.onEditInstance = me.onEditInstance.bind(me);
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
@@ -297,6 +298,38 @@ var PickerController = BaseController.extend({
     onJobHistory: function(){
         var me = this;
         me.$location.path('/jobhistory');
+    },
+
+    onEditInstance: function(elementKey, selection, $event) {
+        var me = this;
+
+        //Get Instance for ElementKey
+        var element = null;
+        var instance = null;
+        if(selection == 'source') {
+            element = me._picker.getSourceElement(elementKey);
+        } else {
+            element = me._picker.getTargetElement(elementKey);
+        }
+
+        var keys = Object.keys(me._picker._elementInstances);
+        for(var i = 0; i< keys.length; i++) {
+            var ins = me._instances[keys[i]];
+            if(ins.element.key = elementKey) {
+                instance = ins;
+                break;
+            }
+        }
+
+        if(me._cloudElementsUtils.isEmpty(element.configs)) {
+
+            me._maskLoader.show(me.$scope, 'Editing Instance...');
+            me.openedWindow = me.$window.open('', '_blank');
+            me._picker.getOAuthUrl(elementKey, selection, instance)
+                .then(me._handleOnOAuthUrl.bind(me));
+        } else {
+            me._createinstance.openCreateInstance(element, selection, instance);
+        }
     }
 
 });

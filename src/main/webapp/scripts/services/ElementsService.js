@@ -140,7 +140,7 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
-    createInstance: function (elementConfig, providerData) {
+    createInstance: function (elementConfig, providerData, instanceId, methodType) {
         var me = this;
 
         var elementProvision = {
@@ -162,13 +162,21 @@ var ElementsService = Class.extend({
                 }
             }
         }
-
-        return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+        if(me._cloudElementsUtils.isEmpty(methodType) || methodType == 'POST') {
+            return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+        } else {
+            return this._httpPut(this._environment.elementsUrl + '/instances/'+ instanceId, this._getHeaders(), elementProvision);
+        }
     },
 
-    createNonOathInstance: function (elementProvision) {
+    createNonOathInstance: function (elementProvision, instanceId, methodType) {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(methodType) || methodType == 'POST') {
+            return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+        } else {
+            return this._httpPut(this._environment.elementsUrl + '/instances/'+ instanceId, this._getHeaders(), elementProvision);
+        }
 
-        return this._httpPost(this._environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
     },
 
     loadElementDefaultTransformations: function (elementInstance) {

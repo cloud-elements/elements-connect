@@ -145,7 +145,9 @@ var Schedule = Class.extend({
 
         if (me._cloudElementsUtils.isEmpty(target.elementToken) == false) {
             targetConfiguration.token = target.elementToken;
-        } else {
+        } else if (me._cloudElementsUtils.isEmpty(target.token) == false) {
+            targetConfiguration.token = target.token;
+        } else if (!me._cloudElementsUtils.isEmpty(targetInstance)) {
             targetConfiguration.token = targetInstance.token;
         }
 
