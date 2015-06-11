@@ -231,6 +231,7 @@ h1 {
     -webkit-transform: scale(1.1);
         -ms-transform: scale(1.1);
             transform: scale(1.1);
+    text-decoration: none;
 }
 #picker .services-selections > a:focus {
     outline: none;
@@ -331,6 +332,23 @@ h1 {
     text-shadow: 0 -1px 0 rgba(255,255,255,.5);
     z-index:100;
 }
+#picker .services-selections > a i.write {
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    background: rgba(0,0,0,0);
+    height: 30px;
+    width: 100%;
+    line-height: 32px;
+    color: rgba(255,255,255,1);
+    border-radius: 0 0 6px 6px;
+    font-size: 80%;
+    z-index:100;
+}
+#picker .services-selections > a i.write:hover{
+    background: rgba(0,0,0,.05);
+    font-size: 85%;
+}
 #picker .picker-target{
     width: 100%;
 }
@@ -383,7 +401,7 @@ h1 {
     border: 3px solid #999;
 }
 
-#picker a i.wait {
+#picker a i.wait, #picker a i.write {
     opacity: 0;
     visibility: hidden;
     -webkit-transform: scale(.8);
@@ -393,11 +411,11 @@ h1 {
             transition: all 350ms ease-in;
 }
 
-#picker a.highlightingElement:hover i.wait{
+#picker a.highlightingElement:hover i.wait, #picker a.highlightingElement:hover i.write{
     visibility: visible;
 }
 
-#picker a:hover i.wait {
+#picker a:hover i.wait, #picker a:hover i.write {
     opacity: 1;
     -webkit-transform: scale(1);
         -ms-transform: scale(1);
