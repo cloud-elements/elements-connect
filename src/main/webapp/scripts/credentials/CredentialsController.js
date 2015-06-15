@@ -33,8 +33,11 @@ var CredentialsController = BaseController.extend({
         var me = this;
         me.$scope.showLogin = true;
         me.$scope.showSignup = false;
+        me.$scope.showForgotPassword = false;
+        me.$scope.showNewPassword = false;
         me.$scope.login = {};
         me.$scope.signup = {};
+        me.$scope.forgotpassword = {};
 
         me.$scope.onLogin = me.onLogin.bind(me);
         me.$scope.onSignup = me.onSignup.bind(me);
@@ -62,10 +65,16 @@ var CredentialsController = BaseController.extend({
         event.stopPropagation();
 
         if(view == 'login'){
-            me.$scope.showLogin = false;
-            me.$scope.showSignup = true;
-        }else {
             me.$scope.showLogin = true;
+            me.$scope.showForgotPassword = false;
+            me.$scope.showSignup = false;
+        }else if(view == 'signup'){
+            me.$scope.showLogin = false;
+            me.$scope.showForgotPassword = false;
+            me.$scope.showSignup = true;
+        }else if(view == 'forgotpassword'){
+            me.$scope.showLogin = false;
+            me.$scope.showForgotPassword = true;
             me.$scope.showSignup = false;
         }
     },
