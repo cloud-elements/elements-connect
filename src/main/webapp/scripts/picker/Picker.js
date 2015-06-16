@@ -13,6 +13,7 @@ bulkloader.events.SHOW_MASK = 'SHOW_MASK';
 bulkloader.events.ERROR = 'PICKER_ERROR';
 bulkloader.events.SHOW_CREATEINSTANCE = 'SHOW_CREATEINSTANCE';
 bulkloader.events.CONFIGURATION_LOAD = 'CONFIGURATION_LOAD';
+bulkloader.events.CREDENTIALS_EXPIRED = 'CREDENTIALS_EXPIRED';
 
 namespace('bulkloader.Picker').oauthElementKey = null;
 

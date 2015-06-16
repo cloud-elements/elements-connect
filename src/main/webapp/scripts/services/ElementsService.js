@@ -80,6 +80,32 @@ var ElementsService = Class.extend({
         return me._httpGet(url, headers);
     },
 
+    updatePassword: function (email, password, newpassword) {
+
+        var me = this;
+
+        var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Elements-User-Password ' + password +' Elements-User-NewPassword '+newpassword
+        }
+
+        var url = me._environment.elementsUrl + '/applications/users/'+email+'/updatepassword';
+
+        return me._httpPut(url, headers);
+    },
+
+    resetPassword: function (user) {
+        var me = this;
+        var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Elements-User-Password ' + user.email
+        }
+
+        var url = me._environment.elementsUrl + '/applications/users/reset?email='+user.email;
+
+        return me._httpPut(url, headers);
+    },
+
     signup: function (user) {
         var me = this;
         var headers = {
