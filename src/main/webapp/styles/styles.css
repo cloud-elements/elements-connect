@@ -1751,14 +1751,14 @@ li li.angular-ui-tree-placeholder{
     padding: 0 1rem;
 }
 .bulkloaderModalWindow .content .transformations{
-    height: 150px;
+    height: 312px;
     overflow: scroll;
     display: block;
     margin: 1rem;
     width: auto;
     background-color: #fff;}
 .bulkloaderModalWindow .content .transformations .row{
-    padding: 1rem;
+    padding: 5px;
     border-bottom: 1px solid #ccc;
 }
 .bulkloaderModalWindow .content .transformations .row p{
@@ -1766,7 +1766,12 @@ li li.angular-ui-tree-placeholder{
     font-size: 1rem;
     font-weight: bold;
 }
-
+.bulkloaderModalWindow .content .transformations .row md-switch{
+    margin-top: 5px;
+}
+.bulkloaderModalWindow .content .transformations .row md-switch .md-container{
+    cursor: pointer;
+}
 /***********************/
 /*  Scheduler          */
 /***********************/
@@ -1987,6 +1992,36 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
 .btn-xs, .btn-group-xs>.btn{
     padding: 5px;
 }
+
+/* -------- DatePicker Inline --------*/
+.datepicker-inline {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    margin-top: 10px;
+}
+.datepicker-inline table{
+    width: 100%;
+    background-color: transparent;
+}
+.datepicker-inline table thead tr th{
+    vertical-align: top;
+}
+.datepicker-inline table thead tr th button{
+    margin: 0;
+}
+.datepicker-inline table thead tr th button.pull-right,
+.datepicker-inline table thead tr th button.pull-left{
+    padding-top: 7px;
+    padding-bottom: 9px;
+}
+
+/* -------- END DatePicker Inline --------*/
 
 /* ------- Modal Window --------*/
 

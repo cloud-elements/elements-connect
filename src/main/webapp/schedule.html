@@ -47,46 +47,53 @@
   </div>
   <div class="content wide row">
     <div class="ui grid">
+      <div class="ten wide column ui grid" style="border-right: 1px solid #aaa;margin-right: 1rem;">
+        <div class="seven wide column">
+          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 75px;
+          background-image: url({{sourceLogo}});background-size: contain;background-repeat: no-repeat;">
+            <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
+            <br/>source</p>
+        </div>
+        <div ng-show="showTarget" class="one wide column">
+          <i class="long arrow right icon" style="font-size: 1.5rem;"></i>
+        </div>
+        <div ng-show="showTarget" class="seven wide column">
+          <p style="float: left;padding: 0;line-height: 1.3em;font-weight: bold; padding-left:75px;
+           background-image: url({{targetLogo}});background-size: contain;background-repeat: no-repeat;">
+            <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>
+            <br/> target</p>
+        </div>
+
+        <script type="text/ng-template" id="currentTransfomations.html">
+            <p class="fourteen wide column">{{metadata.sourceObject}} <i class="angle right icon"></i> {{metadata
+              .targetObject}}</p>
+            <md-switch class="two wide column md-primary-green"
+                       ng-model="metadata.transformed" aria-label></md-switch>
+        </script>
+
+        <div class="ui internally grid transformations" data-ng-model="currentTransfomations">
+            <div ng-repeat="metadata in currentTransfomations"
+                 ng-include="'currentTransfomations.html'" class="row"></div>
+        </div>
+      </div>
+
       <div class="six wide column">
-        <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 75px;
-        background-image: url({{sourceLogo}});background-size: contain;background-repeat: no-repeat;">
-          <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
-          <br/>source</p>
-      </div>
-      <div ng-show="showTarget" class="two wide column">
-        <i class="long arrow right icon" style="font-size: 2rem;"></i>
-      </div>
-      <div ng-show="showTarget" class="six wide column">
-        <p style="float: left;padding: 0;line-height: 1.3em;font-weight: bold; padding-left:75px;
-         background-image: url({{targetLogo}});background-size: contain;background-repeat: no-repeat;">
-          <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>
-          <br/> target</p>
-      </div>
-
-      <script type="text/ng-template" id="currentTransfomations.html">
-          <p class="fourteen wide column">{{metadata.sourceObject}} <i class="angle right icon"></i> {{metadata
-            .targetObject}}</p>
-          <md-switch class="two wide column md-primary-green"
-                     ng-model="metadata.transformed" aria-label></md-switch>
-      </script>
-
-      <div class="ui internally grid transformations" data-ng-model="currentTransfomations">
-          <div ng-repeat="metadata in currentTransfomations"
-               ng-include="'currentTransfomations.html'" class="row"></div>
-      </div>
-
-      <div class="sixteen wide column">
-        <h3>How far back would you like to pull data from? </h3>
+        <h3 style="margin:1rem 0 2rem;">How far back would you like to pull data from? </h3>
         <div class="ui icon input fluid">
-          <input type="text" class="datepicker" datepicker-popup="{{format}}" ng-model="queryStartDate"
-                 placeholder="January 01, 2015" is-open="opened" min-date="minDate"
-                 datepicker-options="dateOptions"
-                 show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true" max-date="maxDate"
-                 close-text="Close" datepicker-append-to-body="false"/>
-            <span class="input-group-btn" style="position: absolute;top: 0;right: 39px;">
-              <button type="button" class="btn btn-default" ng-click="open($event)"
-                      style="padding: 14px 11px 15px 13px;"><i class="calendar icon"></i></button>
-            </span>
+          <!--<input type="text" class="datepicker" datepicker-popup="{{format}}" ng-model="queryStartDate"-->
+                 <!--placeholder="January 01, 2015" is-open="opened" min-date="minDate"-->
+                 <!--datepicker-options="dateOptions" close-on-date-selection="false"-->
+                 <!--show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true" max-date="maxDate"-->
+                 <!--close-text="Close" datepicker-append-to-body="false"/>-->
+            <!--<span class="input-group-btn" style="position: absolute;top: 0;right: 39px;">-->
+              <!--<button type="button" class="btn btn-default" ng-click="open($event)"-->
+                      <!--style="padding: 14px 11px 15px 13px;"><i class="calendar icon"></i></button>-->
+            <!--</span>-->
+          <input type="text" class="datepicker" value="{{queryStartDate | date:'fullDate' }}"
+                 placeholder="January 01, 2015" ng-readonly="true"/>
+          <datepicker ng-model="queryStartDate" min-date="minDate" show-weeks="false"
+                      datepicker-options="dateOptions" ng-required="true" max-date="maxDate"
+                      class="well well-sm datepicker-inline" custom-class="getDayClass(date, mode)"></datepicker>
         </div>
       </div>
     </div>
