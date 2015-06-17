@@ -45,7 +45,8 @@ var Schedule = Class.extend({
                 controller: 'ScheduleController',
                 windowClass: 'bulkloaderModalWindow',
                 backdropClass: 'bulkloaderModalbackdropOpac',
-                backdrop: 'static'
+                backdrop: 'static',
+                size: 'lg'
 //                windowTemplateUrl: 'schedule.html'
             });
         }

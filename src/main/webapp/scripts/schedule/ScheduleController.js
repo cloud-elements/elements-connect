@@ -48,6 +48,7 @@ var ScheduleController = BaseController.extend({
         // Datepicker Actions
         me.$scope.open = me.open.bind(this);
         me.$scope.clear = me.clear.bind(this);
+        me.$scope.getDayClass = me.getDayClass.bind(this);
         me.$scope.dateOptions = {
             formatYear: 'yy',
             startingDay: 1,
@@ -56,6 +57,7 @@ var ScheduleController = BaseController.extend({
         me.$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate', 'MMMM dd, yyyy'];
         me.$scope.format = me.$scope.formats[4];
         me.$scope.maxDate = me.$scope.maxDate ? null : new Date();
+        me.$scope.opened = true;
 
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
@@ -154,6 +156,21 @@ var ScheduleController = BaseController.extend({
         $event.stopPropagation();
 
         me.$scope.opened = true;
+    },
+
+    getDayClass: function(date, mode) {
+        var me = this;
+        if (mode === 'day') {
+            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+            for (var i = 0; i < me.$scope.events.length; i++) {
+                var currentDay = new Date(me.$scope.events[i].date).setHours(0, 0, 0, 0);
+
+                if (dayToCheck === currentDay) {
+                    return me.$scope.events[i].status;
+                }
+            }
+        }
     }
 
 });
