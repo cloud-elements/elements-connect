@@ -306,6 +306,7 @@ var PickerController = BaseController.extend({
         //Get Instance for ElementKey
         var element = null;
         var instance = null;
+
         if(selection == 'source') {
             element = me._picker.getSourceElement(elementKey);
         } else {
@@ -330,6 +331,10 @@ var PickerController = BaseController.extend({
         } else {
             me._createinstance.openCreateInstance(element, selection, instance);
         }
+
+        $event.preventDefault();
+        $event.stopPropagation();
+
     }
 
 });
