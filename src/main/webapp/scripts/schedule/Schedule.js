@@ -215,6 +215,48 @@ var Schedule = Class.extend({
         return schedulemappings;
     },
 
+
+    _anyFieldSelected: function(object) {
+
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(object)) {
+            return false;
+        }
+
+        if (me._cloudElementsUtils.isEmpty(object.fields)) {
+            return false;
+        }
+
+        if (object.fields.length <= 0) {
+            return false;
+        }
+
+        for (var i = 0; i < object.fields.length; i++) {
+            var field = object.fields[i];
+
+            if ((field instanceof Object) == false) {
+                continue;
+            }
+
+            if ('fields' in field) {
+                if (me._anyFieldSelected(field) == false) {
+                    continue;
+                } else {
+                    return true;
+                }
+            } else {
+                if ('transform' in field) {
+                    if (field.transform == true) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    },
+
     getDatalistTransformations: function (selectedInstance, targetInstance, allObjects, startDate) {
         var me = this;
 
@@ -244,9 +286,7 @@ var Schedule = Class.extend({
                 continue;
             }
 
-            var fields = transformations[objects[i]].fields;
-
-            if(me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
+            if(!me._anyFieldSelected(transformations[objects[i]])) {
                 continue;
             }
 
@@ -279,6 +319,10 @@ var Schedule = Class.extend({
         for (var i = 0; i < objects.length; i++) {
             var m = schedulemappings[objects[i]];
             if (m.transformed == false) {
+                continue;
+            }
+
+            if(me._cloudElementsUtils.isEmpty(targetmappings[m.name])) {
                 continue;
             }
 

@@ -92,7 +92,9 @@ var Datalist = Class.extend({
                 var objName = result.data[i];
                 objectsAndTransformation.push({
                     name: objName,
-                    transformed: me._isObjectTransformed(objName, selectedInstance)
+                    //For now setting everything to transformed and the saving definitions and transformations will decide
+//                    transformed: me._isObjectTransformed(objName, selectedInstance)
+                    transformed: true
                 });
             }
         }

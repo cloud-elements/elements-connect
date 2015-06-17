@@ -5,18 +5,25 @@
   <div id="data-list-header">
     <div class="ui grid">
       <div class="column eight wide" id="select-dropdown-container">
-        <ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"
-                   style="width: 100%;"
-                   ng-change="refreshObjectMetaData()">
-          <ui-select-match>{{$select.selected.name}}</ui-select-match>
-          <ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">
-            <md-switch class="md-primary-green" aria-label="Enable Object"
-                       ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">
-            </md-switch>
-            <div ng-bind-html="selectedObject.name | highlight: $select.search">
-            </div>
-          </ui-select-choices>
-        </ui-select>
+        <!--<ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"-->
+                   <!--style="width: 100%;"-->
+                   <!--ng-change="refreshObjectMetaData()">-->
+          <!--<ui-select-match>{{$select.selected.name}}</ui-select-match>-->
+          <!--<ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">-->
+            <!--<md-switch class="md-primary-green" aria-label="Enable Object"-->
+                       <!--ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">-->
+            <!--</md-switch>-->
+            <!--<div ng-bind-html="selectedObject.name | highlight: $select.search">-->
+            <!--</div>-->
+          <!--</ui-select-choices>-->
+        <!--</ui-select>-->
+
+        <select
+            data-ng-model="selectedObject.select"
+            ng-options="o as o.name for o in instanceObjects"
+            ng-change="refreshObjectMetaData()" class="ui-select-datalist" style="width: 100%;">
+        </select>
+
       </div>
       <div class="column eight wide">
         <div class="button-container pull-right">
