@@ -70,9 +70,13 @@ var ElementsService = Class.extend({
 
         var me = this;
 
+        if (me._cloudElementsUtils.isEmpty(password)) {
+            password = email;
+        }
+
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + password
+            'Elements-User-Password': password
         }
 
         var url = me._environment.elementsUrl + '/applications/users/'+email;
@@ -86,7 +90,7 @@ var ElementsService = Class.extend({
 
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + password,
+            'Elements-User-Password': password,
             'Elements-User-NewPassword': newpassword
         }
 
@@ -97,8 +101,7 @@ var ElementsService = Class.extend({
     resetPassword: function (user) {
         var me = this;
         var headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + user.email
+            'Content-Type': 'application/json'
         }
 
         var url = me._environment.elementsUrl + '/applications/users/'+user.email+'/reset';
@@ -110,7 +113,7 @@ var ElementsService = Class.extend({
         var me = this;
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + user.password
+            'Elements-User-Password': user.password
         }
 
         var url = me._environment.elementsUrl + '/applications/users';
