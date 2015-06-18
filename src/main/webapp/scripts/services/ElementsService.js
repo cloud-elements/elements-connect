@@ -91,7 +91,7 @@ var ElementsService = Class.extend({
 
         var url = me._environment.elementsUrl + '/applications/users/'+email+'/updatepassword';
 
-        return me._httpPut(url, headers);
+        return me._httpPatch(url, headers);
     },
 
     resetPassword: function (user) {
@@ -101,9 +101,9 @@ var ElementsService = Class.extend({
             'Authorization': 'Elements-User-Password ' + user.email
         }
 
-        var url = me._environment.elementsUrl + '/applications/users/reset?email='+user.email;
+        var url = me._environment.elementsUrl + '/applications/users/'+user.email+'/reset';
 
-        return me._httpPut(url, headers);
+        return me._httpPost(url, headers, user);
     },
 
     signup: function (user) {
@@ -420,6 +420,13 @@ var ElementsService = Class.extend({
 
         return this.$http({
             url: url, method: 'PUT', headers: headers, data: data
+        });
+    },
+
+    _httpPatch: function (url, headers, data) {
+
+        return this.$http({
+            url: url, method: 'PATCH', headers: headers, data: data
         });
     },
 
