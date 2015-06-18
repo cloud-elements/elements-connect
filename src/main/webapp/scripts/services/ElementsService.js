@@ -86,11 +86,11 @@ var ElementsService = Class.extend({
 
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + password +' Elements-User-NewPassword '+newpassword
+            'Authorization': 'Elements-User-Password ' + password,
+            'Elements-User-NewPassword': newpassword
         }
 
         var url = me._environment.elementsUrl + '/applications/users/'+email+'/updatepassword';
-
         return me._httpPatch(url, headers);
     },
 
