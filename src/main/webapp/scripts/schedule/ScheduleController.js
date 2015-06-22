@@ -57,7 +57,14 @@ var ScheduleController = BaseController.extend({
         me.$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate', 'MMMM dd, yyyy'];
         me.$scope.format = me.$scope.formats[4];
         me.$scope.maxDate = me.$scope.maxDate ? null : new Date();
-        me.$scope.opened = true;
+
+        /* to show Calendar UI dropdown */
+        me.$scope.opened = {
+            transfernow: false,
+            schedule: false,
+            schedulemonth: false
+        };
+
 
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
@@ -74,6 +81,10 @@ var ScheduleController = BaseController.extend({
             me.$scope.showTarget = true;
         }
 
+        me.$scope.scheduleType = [ {value: 'hourly', name: 'Hourly'}, {value: 'daily', name: 'Daily'},{value: 'weekly', name: 'Weekly'}, {value: 'monthly', name: 'Monthly'}, {value: 'yearly', name: 'Yearly'}];
+        me.$scope.datatransfer = 'transfernow';
+        me.$scope.showschedulecalendar = false;
+        me.$scope.onSelectSchedule = me.onSelectSchedule.bind();
     },
 
     defineListeners:function(){
@@ -150,12 +161,22 @@ var ScheduleController = BaseController.extend({
         me.$scope.queryStartDate = null;
     },
 
-    open: function($event) {
+    open: function($event, calendar) {
         var me = this;
         $event.preventDefault();
         $event.stopPropagation();
 
-        me.$scope.opened = true;
+        if(calendar == 'transfernow'){
+            me.$scope.opened.transfernow = true;
+        }
+        else if(calendar == 'schedule'){
+            me.$scope.opened.schedule = true;
+        }
+        else if(calendar == 'schedulemonth'){
+            me.$scope.opened.schedulemonth = true;
+        }
+
+
     },
 
     getDayClass: function(date, mode) {
@@ -171,6 +192,10 @@ var ScheduleController = BaseController.extend({
                 }
             }
         }
+    },
+
+    onSelectSchedule: function(){
+        var me = this;
     }
 
 });
