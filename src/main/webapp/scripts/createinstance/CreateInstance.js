@@ -58,6 +58,15 @@ var CreateInstance = Class.extend({
             var methodType = 'PUT';
             var insId = me.instance.id;
         }
+
+        if (me._cloudElementsUtils.isEmpty(me.element.other) == false) {
+            for (key in me.element.other) {
+                if (me.element.other.hasOwnProperty(key)) {
+                    elementProvision.configuration[key] = me.element.other[key];
+                }
+            }
+        }
+
         return me._elementsService.createNonOathInstance(elementProvision, insId, methodType).then(
             me._picker._handleOnCreateInstance.bind(me._picker, elementProvision.element.key),
             me._picker._handleOnCreateInstanceFailed.bind(me._picker));
