@@ -85,6 +85,7 @@ var ScheduleController = BaseController.extend({
         me.$scope.datatransfer = 'transfernow';
         me.$scope.showschedulecalendar = false;
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind();
+        me.$scope.columnWidth = 'sixteen';
     },
 
     defineListeners:function(){

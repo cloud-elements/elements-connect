@@ -67,13 +67,16 @@
         <md-radio-button aria-label="" value="schedule" class="md-large md-light md-checked-green">
           <h3>Schedule Data Transfer</h3>
         </md-radio-button>
-        <div ng-show="datatransfer=='schedule'" class="ui icon input fluid">
-          <p>How often?</p>
-          <select class="bl-select" style="width: 100%;"
-                  ng-change="onSelectSchedule()" ng-options="type as type.name for type in scheduleType " ng-model="item">
-          </select>
+        <div ng-show="datatransfer=='schedule'" class="ui grid icon input fluid">
 
-          <div ng-show="item.value == 'weekly'" style="margin-top: 10px;">
+          <div class="sixteen wide column">
+            <p>How often?</p>
+            <select class="bl-select" style="width: 100%;"
+                    ng-change="onSelectSchedule()" ng-options="type as type.name for type in scheduleType " ng-model="item">
+            </select>
+          </div>
+
+          <div ng-show="item.value == 'weekly'" class="sixteen wide column"  style="padding-top: 0px;">
             <p>Select day of the week</p>
             <select class="bl-select" style="width: 100%;">
               <option value="Monday">Monday</option>
@@ -86,26 +89,44 @@
             </select>
           </div>
 
-          <div ng-show="item.value == 'yearly'" style="margin-top: 10px;">
-            <p>Select month</p>
+          <div ng-show="item.value == 'monthly'" class="sixteen wide column"  style="padding-top: 0px;">
+            <p>Select day of the month</p>
             <select class="bl-select" style="width: 100%;">
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+              <option value="13">January</option>
+              <option value="14">February</option>
+              <option value="15">March</option>
+              <option value="16">April</option>
+              <option value="17">May</option>
+              <option value="18">June</option>
+              <option value="19">July</option>
+              <option value="20">August</option>
+              <option value="21">September</option>
+              <option value="22">October</option>
+              <option value="23">November</option>
+              <option value="24">December</option>
+              <option value="25">June</option>
+              <option value="26">July</option>
+              <option value="27">August</option>
+              <option value="28">September</option>
+              <option value="29">October</option>
+              <option value="30">November</option>
             </select>
           </div>
 
-          <div style="margin-top: 20px;">
-            <p>How far?</p>
+          <div style="margin-top: 10px;" class="sixteen wide column">
+            <p>How far for the first transfer?</p>
             <div class="ui icon input fluid">
               <input type="text" class="datepicker ui" datepicker-popup="{{format}}" ng-model="queryStartDate"
                      placeholder="January 01, 2015" is-open="opened.schedule" min-date="minDate"
