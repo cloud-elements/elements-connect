@@ -53,6 +53,10 @@ var CreateInstanceController = BaseController.extend({
 //        me._notifications.addEventListener(bulkloader.events.SHOW_SCHEDULER, me._seedSchedule.bind(me));
     },
 
+    destroy:function(){
+        var me = this;
+    },
+
     cancel: function() {
         var me = this;
 
