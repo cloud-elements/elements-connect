@@ -67,6 +67,7 @@ var MapperController = BaseController.extend({
         me.$scope.checkAllObjects = me.checkAllObjects.bind(this);
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
+        me.$scope.showTargetObjectSelection = false;
 
         this.$scope.mapperTreeOptions = {
             dropped: this.onMetadataTreeDropped.bind(this),
@@ -179,6 +180,7 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me._maskLoader.show(me.$scope, "Loading Object fields...");
+        me.$scope.showTargetObjectSelection = false;
         var metadata = null;
         if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat)) {
             metadata = me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat[me.$scope.selectedObject.select.name];
@@ -211,6 +213,7 @@ var MapperController = BaseController.extend({
                 me._picker.targetElementInstance, me.$scope.objectMetaData)
                 .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedObject));
         } catch (e) {
+            me.$scope.showTargetObjectSelection = true;
             me._maskLoader.hide();
         }
     },
@@ -263,6 +266,9 @@ var MapperController = BaseController.extend({
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
                 me.$scope.selectedTargetObject = data.vendorName;
             }
+            me.$scope.showTargetObjectSelection = false;
+        } else {
+            me.$scope.showTargetObjectSelection = true;
         }
 
         me._maskLoader.hide();
