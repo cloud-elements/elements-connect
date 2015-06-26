@@ -498,6 +498,11 @@ md-radio-button.md-checked.md-checked-green .md-on{
 }
 #picker .picker-history a i{
     font-size: 20px;
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
 }
 #picker .picker-history a:hover{
     text-decoration: none;
@@ -595,6 +600,14 @@ md-radio-button.md-checked.md-checked-green .md-on{
     padding: 0;
 }
 
+#jobhistory .jobslist .job-tree-node div.job-header-schedule{
+    font-size: 13px;
+    color: #888;
+}
+#jobhistory .jobslist .job-tree-node div.job-header-schedule b{
+    font-weight: bold;
+    color: #666;
+}
 #jobhistory .jobslist .job-tree-node div.job-header span{
     display: inline-block;
     padding: 10px;
@@ -648,6 +661,12 @@ md-radio-button.md-checked.md-checked-green .md-on{
     text-align: left;
     line-height: .8em;
 }
+
+#jobhistory .jobslist .job-tree-node div.job-body p.elementObjectContainer{
+    width: 100%;
+    position: relative;
+    line-height: 1.5em;
+}
 #jobhistory .jobslist .job-tree-node div.job-body p span{
     display: block;
     width: 100%;
@@ -665,17 +684,30 @@ md-radio-button.md-checked.md-checked-green .md-on{
     font-size: 15px;
     padding-left: 35px;
 }
+#jobhistory .jobslist .job-tree-node div.job-body p.elementObjectContainer span.elementObject{
+    font-size: 17px;
+    padding-left: 35px;
+    width: 50%;
+    float: left;
+    position: relative;
+}
 #jobhistory .jobslist .job-tree-node div.job-body i{
     position: absolute;
     right: 50%;
     top: 30px;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p.elementObjectContainer span.elementObject i{
+    position: absolute;
+    font-size: .6em;
+    top: 10px;
+    right: 10px;
 }
 
 #jobhistory .jobslist .job-tree-node.selectJob{
     background-color: #389dc8;
     border-color: #389dc8;
 }
-#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p span{
+#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-header b, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p span{
     color: #fff;
 }
 #jobhistory .jobslist .job-tree-node.selectJob div.job-header span.status{
@@ -757,6 +789,76 @@ md-radio-button.md-checked.md-checked-green .md-on{
     -webkit-user-select: text;
     -ms-user-select: text;
     user-select: text;
+}
+#jobhistory div.executionslist{
+
+}
+#jobhistory div.executionslist li{
+    background-color: #444444;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+    float: left;
+    width: 100%;
+}
+#jobhistory div.executionslist li .header{
+    display: block;
+    width: 100%;
+    float: left;
+}
+#jobhistory div.executionslist li .header span{
+    padding: 10px;
+    display: inline-block;
+    color: #fff;
+    font-size: .8em;
+}
+
+#jobhistory div.executionslist li .header span.status{
+    float: right;
+    min-width: 120px;
+    font-size: .7em;
+    text-align: center;
+    background-color: #999;
+}
+#jobhistory div.executionslist li .objectsnames{
+    float: left;
+    padding: 15px 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #389dc8;
+}
+#jobhistory div.executionslist li .objectsnames b{
+    color: #bbbbbb;
+}
+#jobhistory div.executionslist li .objectsnames i{
+    font-size: .8em;
+    color: #bbbbbb;
+}
+
+#jobhistory div.executionslist li .header span.status.COMPLETED{
+    background-color: #8dc63f;
+}
+#jobhistory div.executionslist li .header span.status.RUNNING{
+    background-color: #58bde8;
+}
+#jobhistory div.executionslist li .header span.status.ERROR{
+    background-color: #c92026;
+}
+#jobhistory div.executionslist li .footer{
+    width: 100%;
+    float: left;
+    display: block;
+    background-color: #888888;
+    padding: 10px;
+    font-size: .8em;
+    margin-top: 10px;
+}
+#jobhistory div.executionslist li .footer span{
+    margin-right: 50px;
+}
+#jobhistory div.executionslist li .footer.running{
+    background-color: #58bde8;
+    padding: 0;
 }
 /************************/
 /* END JOB HISTORY      */

@@ -56,5 +56,9 @@ bulkloaderApp.config(function($routeProvider) {
         .when('/jobhistory', {
             templateUrl: 'jobhistory.html',
             controller: 'JobHistoryController'
+        })
+        .when('/jobs', {
+            templateUrl: 'jobs.html',
+            controller: 'JobsController'
         });
 });

@@ -49,6 +49,7 @@ var PickerController = BaseController.extend({
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
+        me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
         me.$scope.onHelp = me.onHelp.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
 
@@ -298,6 +299,11 @@ var PickerController = BaseController.extend({
     onJobHistory: function(){
         var me = this;
         me.$location.path('/jobhistory');
+    },
+
+    onScheduledJobs: function(){
+        var me = this;
+        me.$location.path('/jobs');
     },
 
     onEditInstance: function(elementKey, selection, $event) {
