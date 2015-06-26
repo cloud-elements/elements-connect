@@ -70,9 +70,13 @@ var ElementsService = Class.extend({
 
         var me = this;
 
+        if (me._cloudElementsUtils.isEmpty(password)) {
+            password = email;
+        }
+
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + password
+            'Elements-User-Password': password
         }
 
         var url = me._environment.elementsUrl + '/applications/users/'+email;
@@ -80,11 +84,36 @@ var ElementsService = Class.extend({
         return me._httpGet(url, headers);
     },
 
+    updatePassword: function (email, password, newpassword) {
+
+        var me = this;
+
+        var headers = {
+            'Content-Type': 'application/json',
+            'Elements-User-Password': password,
+            'Elements-User-NewPassword': newpassword
+        }
+
+        var url = me._environment.elementsUrl + '/applications/users/'+email+'/updatepassword';
+        return me._httpPatch(url, headers);
+    },
+
+    resetPassword: function (user) {
+        var me = this;
+        var headers = {
+            'Content-Type': 'application/json'
+        }
+
+        var url = me._environment.elementsUrl + '/applications/users/'+user.email+'/reset';
+
+        return me._httpPost(url, headers, user);
+    },
+
     signup: function (user) {
         var me = this;
         var headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Elements-User-Password ' + user.password
+            'Elements-User-Password': user.password
         }
 
         var url = me._environment.elementsUrl + '/applications/users';
@@ -394,6 +423,13 @@ var ElementsService = Class.extend({
 
         return this.$http({
             url: url, method: 'PUT', headers: headers, data: data
+        });
+    },
+
+    _httpPatch: function (url, headers, data) {
+
+        return this.$http({
+            url: url, method: 'PATCH', headers: headers, data: data
         });
     },
 

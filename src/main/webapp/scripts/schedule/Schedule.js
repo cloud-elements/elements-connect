@@ -67,6 +67,7 @@ var Schedule = Class.extend({
 
         return field;
     },
+
     _buildFieldList: function(fields, allObjects, targetInstance, objectName) {
         var me = this;
 
@@ -92,6 +93,29 @@ var Schedule = Class.extend({
         return fieldList;
     },
 
+    _buildWhereClause: function(selectedInstance, allObjects, objectName) {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(allObjects[selectedInstance.element.key].objectsWhere)) {
+            return null;
+        }
+
+        var mapperwhere = allObjects[selectedInstance.element.key].objectsWhere[objectName];
+        if (me._cloudElementsUtils.isEmpty(mapperwhere)) {
+            return null;
+        }
+
+        var where = ' where '
+        for (var i = 0; i < mapperwhere.length; i++) {
+            var mw = mapperwhere[i];
+
+            if (!me._cloudElementsUtils.isEmpty(mw.value)) {
+                where += mw.key + ' = ' + mw.value;
+            }
+        }
+        return where;
+    },
+
     _getScheduleObjectJob: function(selectedInstance, targetInstance, objectName, fields, allObjects,
                                  startDate, statusCheckInterval) {
         var me = this;
@@ -114,6 +138,12 @@ var Schedule = Class.extend({
                 return;
             }
             query = "select " + fieldsList + " from " + selectObjectName;
+
+            //Construct the where clause if has and append it to the query
+            var where = me._buildWhereClause(selectedInstance, allObjects, selectObjectName);
+            if (!me._cloudElementsUtils.isEmpty(where)) {
+                query += where;
+            }
         }
 
         var job = new Object();

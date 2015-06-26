@@ -138,9 +138,14 @@ var Mapper = Class.extend({
                 angular.copy(sourceElement.objects, srcObjects);
 
                 var objects = new Array();
+                var objectsWhere = new Object();
                 for(var i in srcObjects) {
                     var obj = srcObjects[i];
                     objects.push(obj.vendorPath);
+
+                    if(!me._cloudElementsUtils.isEmpty(obj.where) && obj.where.length > 0) {
+                        objectsWhere[obj.vendorPath] = obj.where;
+                    }
 
                     if(!me._cloudElementsUtils.isEmpty(obj.fields) && obj.fields.length > 0) {
                         if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].metadata)) {
@@ -160,6 +165,7 @@ var Mapper = Class.extend({
                 }
 
                 me.all[selectedInstance.element.key].objects = objects;
+                me.all[selectedInstance.element.key].objectsWhere = objectsWhere;
                 result.data = objects;
             }
         }
@@ -437,15 +443,18 @@ var Mapper = Class.extend({
             transformedObject = trans[targetObject];
 
             var selectObjectName = null;
+            var srcElement = null;
             try {
                 var spl = targetObject.split('_');
                 selectObjectName = spl[1];
+                srcElement = spl[0];
             }
                 //Ignore the error
             catch(err) {
             }
 
-            if(selectObjectName == selectedObject) {
+            if(srcElement === selectedInstance.element.key &&
+                selectObjectName === selectedObject) {
                 transformedObject.name = selectObjectName;
                 break;
             }

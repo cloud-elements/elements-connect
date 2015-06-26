@@ -16,6 +16,67 @@ var Credentials = Class.extend({
         console.log('Loading error' + error);
     },
 
+    forgot: function(email) {
+        var me = this;
+
+        var user = new Object();
+        user.username = email;
+        user.email = email;
+
+        return me._elementsService.resetPassword(user).then(
+            me._resetPasswordSucceeded.bind(me),
+            me._resetPasswordFailed.bind(me));
+    },
+
+    _resetPasswordSucceeded: function(result) {
+        var me = this;
+        return true;
+    },
+
+    _resetPasswordFailed: function(error) {
+        var me = this;
+
+
+        if(error.code == 206) {
+            //Credentials expired, force user to change Password
+            me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, error.data);
+            return;
+        }
+
+        if (me._cloudElementsUtils.isEmpty(error.data)) {
+            me._notifications.notify(bulkloader.events.ERROR,
+                "Error while resetting the password.");
+        } else {
+            me._notifications.notify(bulkloader.events.ERROR,
+                    "Error while resetting the password. " + error.data.message);
+        }
+    },
+
+    updatePassword: function(login) {
+        var me = this;
+
+        return me._elementsService.updatePassword(login.email, login.password, login.newpassword).then(
+            me._updatePasswordSucceeded.bind(me),
+            me._updatePasswordFailed.bind(me));
+    },
+
+    _updatePasswordSucceeded: function(result) {
+        var me = this;
+        return true;
+    },
+
+    _updatePasswordFailed: function(error) {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(error.data)) {
+            me._notifications.notify(bulkloader.events.ERROR,
+                "Could not update password.");
+        } else {
+            me._notifications.notify(bulkloader.events.ERROR,
+                    "Could not update password. " + error.data.message);
+        }
+    },
+
     login: function(login) {
         var me = this;
 
@@ -26,6 +87,11 @@ var Credentials = Class.extend({
 
     _loadConfigurationSucceeded: function(result) {
         var me = this;
+        if(result.status == 205) {
+            //Credentials expired, force user to change Password
+            me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, status.data);
+            return;
+        }
 
         me._picker.handleConfigurationSetUp(result);
 
@@ -38,7 +104,11 @@ var Credentials = Class.extend({
 
     _loadConfigurationFailed: function(error) {
         var me = this;
-
+        if(error.status == 205) {
+            //Credentials expired, force user to change Password
+            me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, error.data);
+            return;
+        }
         if (me._cloudElementsUtils.isEmpty(error.data)) {
             me._notifications.notify(bulkloader.events.ERROR,
                 "Could not retrieve application configuration for organization.");

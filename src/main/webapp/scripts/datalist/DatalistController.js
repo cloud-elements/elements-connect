@@ -64,13 +64,19 @@ var DatalistController = BaseController.extend({
     defineListeners:function(){
         var me = this;
         me._super();
-
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
-        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me));
+        me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._onDatalistError.bind(me), me.$scope.$id);
 
-        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me));
-        me._notifications.addEventListener(bulkloader.events.ERROR, me._onDatalistError.bind(me));
+    },
 
+    destroy:function(){
+        var me = this;
+
+        me._notifications.removeEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._onDatalistError.bind(me), me.$scope.$id);
     },
 
     refreshObjectMetaData: function() {
