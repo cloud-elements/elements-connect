@@ -64,7 +64,17 @@
       <a class="btn btn-link" data-ng-click="searchtarget = '' " tabindex="0" ng-class="{'showBtn': hasFocus}">
         clear</a>
     </div>
-  <script type="text/ng-template" id="objectFields.html" data-nodrop>
+
+
+    <div class="searchbarContainer">
+      <div ng-repeat="configs in mapperwhere track by $index" class="two ui icon input fluid"
+           style="margin-bottom: 10px;">
+        {{configs.name}}
+        <input type="{{configs.type}}"  name="{{configs.key}}" ng-model='configs.value' placeholder=" ">
+      </div>
+    </div>
+
+    <script type="text/ng-template" id="objectFields.html" data-nodrop>
 
     <!--Show tree node for object undraggable-->
     <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container"

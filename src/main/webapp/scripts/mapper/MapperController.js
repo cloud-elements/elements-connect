@@ -47,6 +47,7 @@ var MapperController = BaseController.extend({
         me.$scope.mapperdata = [];
         me.$scope.cbObject = {};
         me.$scope.cbInstance = {};
+        me.$scope.mapperwhere = [];
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
@@ -181,6 +182,15 @@ var MapperController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, "Loading Object fields...");
         me.$scope.showTargetObjectSelection = false;
+
+        //Get the Where condition objects for the source element
+        if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key])
+            && !me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].objectsWhere)) {
+            me.$scope.mapperwhere = me._mapper.all[me._picker.selectedElementInstance.element.key].objectsWhere[me.$scope.selectedObject.select.name];
+        } else {
+            me.$scope.mapperwhere = null;
+        }
+
         var metadata = null;
         if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat)) {
             metadata = me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat[me.$scope.selectedObject.select.name];
