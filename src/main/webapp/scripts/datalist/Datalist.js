@@ -359,7 +359,7 @@ var Datalist = Class.extend({
         me._constructAndSaveObjectDefinition(selectedInstance);
     },
 
-    _constructDefinition: function(definitionArray, objectName, mData) {
+    _constructDefinition: function(definitionArray, objectName, mData, parentObjectName) {
         var me = this;
 
         var objDefinition = {
@@ -409,9 +409,9 @@ var Datalist = Class.extend({
                     name = name.replace('[*]', '');
                 }
 
-                this._constructDefinition(definitionArray, name, mapperData);
+                this._constructDefinition(definitionArray, name, mapperData, parentObjectName);
 
-                var t = mapperData.vendorPath;
+                var t = parentObjectName+'_'+mapperData.vendorPath;
                 var p = mapperData.vendorPath;
                 if(mapperData.type == 'array') {
                     t = 'array['+mapperData.vendorPath.replace('[*]', '')+']';
@@ -425,7 +425,11 @@ var Datalist = Class.extend({
             }
         }
 
-        definitionArray[objectName]=objDefinition;
+        if(parentObjectName === objectName ) {
+            definitionArray[objectName]=objDefinition;
+        } else {
+            definitionArray[parentObjectName+'_'+objectName]=objDefinition;
+        }
     },
 
     _anyFieldSelected: function(object) {
@@ -486,7 +490,7 @@ var Datalist = Class.extend({
                 continue;
             }
             present = true;
-            me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
+            me._constructDefinition(definitionArray, mKeys[i], mData[mKeys[i]], mKeys[i]);
         }
 
         if(present == false) {
@@ -643,7 +647,7 @@ var Datalist = Class.extend({
             ],
             fields:[]
         };
-        me._constructDeeperTransformation(objectTransformation, metaData)
+        me._constructDeeperTransformation(objectTransformation, metaData, null, vendorName);
         transformationArray[vendorName]=objectTransformation;
     },
 
