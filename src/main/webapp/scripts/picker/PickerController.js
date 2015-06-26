@@ -316,7 +316,7 @@ var PickerController = BaseController.extend({
         var keys = Object.keys(me._picker._elementInstances);
         for(var i = 0; i< keys.length; i++) {
             var ins = me._instances[keys[i]];
-            if(ins.element.key = elementKey) {
+            if(ins.element.key === elementKey) {
                 instance = ins;
                 break;
             }
