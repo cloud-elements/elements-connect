@@ -65,11 +65,9 @@
         clear</a>
     </div>
 
-
-    <div class="searchbarContainer">
-      <div ng-repeat="configs in mapperwhere track by $index" class="two ui icon input fluid"
-           style="margin-bottom: 10px;">
-        {{configs.name}}
+    <div class="ui grid fields configContainer" style="padding: 0;" ng-if="mapperwhere">
+      <div ng-repeat="configs in mapperwhere track by $index" class="eight wide column ui input field">
+        <label>{{configs.name}}</label>
         <input type="{{configs.type}}"  name="{{configs.key}}" ng-model='configs.value' placeholder=" ">
       </div>
     </div>
@@ -112,7 +110,7 @@
   </script>
 
   <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
-       class="list" style="top: 105px;" data-nodrop>
+       class="list source-list" data-nodrop>
     <li class="tree-root-li" data-nodrop>
       <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
         <li ng-repeat="metadata in objectMetaData"
@@ -126,18 +124,16 @@
 
   </div>
 
-
   <!-- LIST BODY -->
   <div id="mapper-data-list-target" class="column ten wide ui grid">
-    <label ng-show="showTargetObjectSelection" style="margin: 28px
+    <label ng-if="showTargetObjectSelection" style="margin: 28px
      0 0;color: #444;font-size: 120%;padding-left: 20px;font-weight: bold;">Select target object:</label>
     <select
-            ng-show="showTargetObjectSelection" data-ng-model="selectedTargetObject"
+            ng-if="showTargetObjectSelection" data-ng-model="selectedTargetObject"
             ng-options="o as o for o in targetObjects"
             ng-change="refreshTargetObject()" class="column eight wide target-select" style="padding: 5px 1rem;
             margin-left: 0;">
     </select>
-
 
     <script type="text/ng-template" id="mapperFields.html">
 
@@ -167,7 +163,8 @@
 
     </script>
 
-    <div ui-tree="mapperTreeOptions" id="tree2-root"  ng-show="showTargetTree" class="list" data-drag-enabled="true">
+    <div ui-tree="mapperTreeOptions" id="tree2-root"  ng-show="showTargetTree" class="list" data-drag-enabled="true"
+            ng-style="!showTargetObjectSelection && {'top': '20px'}">
       <div class="ui-tree-heading">
         <h1 class="column eight">{{selectedTargetObject}}</h1>
         <div class="searchbarContainer">
