@@ -420,6 +420,24 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders());
     },
 
+    deleteJob: function(jobId) {
+        var me = this;
+        var url = me._environment.elementsUrl + '/jobs/'+jobId;
+        return this._httpDelete(url, this._getHeaders());
+    },
+
+    disableJob: function(jobId) {
+        var me = this;
+        var url = me._environment.elementsUrl + '/jobs/'+jobId + '/disable';
+        return this._httpPut(url, this._getHeaders());
+    },
+
+    enableJob: function(jobId) {
+        var me = this;
+        var url = me._environment.elementsUrl + '/jobs/'+jobId + '/enable';
+        return this._httpPut(url, this._getHeaders());
+    },
+
     _httpGet: function (url, headers, data) {
 
         return this.$http({

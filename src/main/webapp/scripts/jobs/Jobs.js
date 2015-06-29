@@ -55,6 +55,7 @@ var Jobs = Class.extend({
                         transformations: [],
                         jobId: res.id,
                         scheduleType: res.description,
+                        scheduleState: res.trigger.state,
                         scheduleTypeDetail: '1'
                     };
                 }
@@ -89,19 +90,6 @@ var Jobs = Class.extend({
         //Modify the result to add the Element Name and Logo using Picker
         if (!me._cloudElementsUtils.isEmpty(result.data)
             && result.data.length > 0) {
-
-//            for (var i in result.data) {
-//                var res = result.data[i];
-//                var src = me._allElements[res.sourceElementKey];
-//                res['sourceLogo'] = src.image;
-//                res['source'] = src.name;
-//                var tar = me._allElements[res.targetElementKey];
-//                if (!me._cloudElementsUtils.isEmpty(tar)) {
-//                    res['targetLogo'] = tar.image;
-//                    res['target'] = tar.name;
-//                }
-//            }
-
             return result.data;
         }
 
@@ -128,6 +116,57 @@ var Jobs = Class.extend({
 
     _handleGetJobErrorsFailed: function(results) {
         var me = this;
+    },
+
+    deleteJob: function(jobId) {
+        var me = this;
+        return me._elementsService.deleteJob(jobId).then(
+            me._handleDeleteJob.bind(me),
+            me._handleDeleteJobFailed.bind(me));
+    },
+
+    _handleDeleteJob: function(results) {
+        var me = this;
+        return true;
+    },
+
+    _handleDeleteJobFailed: function(error) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, 'Deleted failed. ' + error.data.message);
+    },
+
+    enableJob: function(jobId) {
+        var me = this;
+        return me._elementsService.enableJob(jobId).then(
+            me._handleEnableJob.bind(me),
+            me._handleEnableJobFailed.bind(me));
+    },
+
+    _handleEnableJob: function(results) {
+        var me = this;
+        return true;
+    },
+
+    _handleEnableJobFailed: function(error) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, 'Enabling the job failed. ' + error.data.message);
+    },
+
+    disableJob: function(jobId) {
+        var me = this;
+        return me._elementsService.disableJob(jobId).then(
+            me._handleDisableJob.bind(me),
+            me._handleDisableJobFailed.bind(me));
+    },
+
+    _handleDisableJob: function(results) {
+        var me = this;
+        return true;
+    },
+
+    _handleDisableJobFailed: function(error) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, 'Disabling the job failed. ' + error.data.message);
     }
 
 

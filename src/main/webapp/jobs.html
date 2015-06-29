@@ -48,7 +48,17 @@
         </div>
 
         <div class="job-footer">
-          <button type="submit" class="pull-right btn btn-danger btn-xs" style="margin:5px;">
+          <button type="submit" ng-show="showEnable(metadata)" ng-click="onEnable(metadata)"
+                  class="pull-right btn btn-danger btn-xs"
+                  style="margin:5px;">
+            <i class="glyphicon glyphicon-remove"></i> Enable
+          </button>
+          <button type="submit" ng-show="showDisable(metadata)" ng-click="onDisable(metadata)"
+                  class="pull-right btn btn-danger btn-xs"
+                  style="margin:5px;">
+            <i class="glyphicon glyphicon-remove"></i> Disable
+          </button>
+          <button type="submit" ng-click="onDelete(metadata)" class="pull-right btn btn-danger btn-xs" style="margin:5px;">
             <i class="glyphicon glyphicon-remove"></i> Delete
           </button>
         </div>

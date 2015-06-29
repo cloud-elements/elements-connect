@@ -42,37 +42,17 @@ var JobsController = BaseController.extend({
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.onSelectScheduledJob = me.onSelectScheduledJob.bind(this);
         me.$scope.close = me.close.bind(this);
+        me.$scope.showEnable = me.showEnable.bind(this);
+        me.$scope.onEnable = me.onEnable.bind(this);
+        me.$scope.showDisable = me.showDisable.bind(this);
+        me.$scope.onDisable = me.onDisable.bind(this);
+        me.$scope.onDelete = me.onDelete.bind(this);
 
         // Store for schedule job data
-        me.$scope.jobscheduledata = [],
+        me.$scope.jobscheduledata = [];
 
         // Store for Scheduled jobs Details
-        me.$scope.jobscheduledetails = [
-            {
-                sourceObject: 'users',
-                targetObject: 'details',
-                status: 'RUNNING',
-                downloadCount: '30',
-                errorCount: '12',
-                createdDate: '1433547078167'
-            },
-            {
-                sourceObject: 'contacts',
-                targetObject: 'contacts',
-                status: 'COMPLETED',
-                downloadCount: '3',
-                errorCount: '0',
-                createdDate: '1433546675983'
-            },
-            {
-                sourceObject: 'account',
-                targetObject: 'leads',
-                status: 'ERROR',
-                downloadCount: '5',
-                errorCount: '2304',
-                createdDate: '1433546675983'
-            }
-        ]
+        me.$scope.jobscheduledetails = [];
 
         me._seedJobs();
     },
@@ -80,16 +60,26 @@ var JobsController = BaseController.extend({
     defineListeners: function() {
         var me = this;
         me._super();
-//        TODO Add handleError and showMask
-//        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
-//        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
     },
 
     destroy: function() {
         var me = this;
-//        TODO Add handleError and showMask
-//        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
-//        me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+    },
+
+    _handleError: function(event, error) {
+
+        var me = this;
+        console.log('In error ' + me.$scope.$id);
+        me._maskLoader.hide();
+
+        var confirm = me.$mdDialog.alert()
+            .title('Error')
+            .content(error)
+            .ok('OK');
+
+        me.$mdDialog.show(confirm);
     },
 
     _seedJobs: function() {
@@ -202,7 +192,61 @@ var JobsController = BaseController.extend({
     close: function() {
         var me = this;
         me.$location.path('/');
+    },
+
+    showEnable: function(job) {
+        var me = this;
+        if(job.scheduleState == 'PAUSED') {
+            return true;
+        }
+        return false;
+    },
+
+    showDisable: function(job) {
+        var me = this;
+        if(!(job.scheduleState == 'PAUSED')) {
+            return true;
+        }
+        return false;
+    },
+
+    onEnable: function(job) {
+        var me = this;
+        me._maskLoader.show(me.$scope, 'Enabling...');
+        me._jobs.enableJob(job.jobId).then(me._handleOnEnable.bind(me, job));
+    },
+
+    _handleOnEnable: function(job, results) {
+        var me = this;
+        job.scheduleState = 'BLOCKED';
+        me._maskLoader.hide();
+    },
+
+    onDisable: function(job) {
+        var me = this;
+        me._maskLoader.show(me.$scope, 'Disabling...');
+        me._jobs.disableJob(job.jobId).then(me._handleOnDisable.bind(me, job));
+    },
+
+    _handleOnDisable: function(job, results) {
+        var me = this;
+        job.scheduleState = 'PAUSED';
+        me._maskLoader.hide();
+    },
+
+    onDelete: function(job) {
+        var me = this;
+        me._maskLoader.show(me.$scope, 'Deleting...');
+        me._jobs.deleteJob(job.jobId).then(me._handleOnDelete.bind(me));
+    },
+
+    _handleOnDelete: function(results) {
+        var me = this;
+        me._maskLoader.hide();
+
+        me._seedJobs();
     }
+
 
 });
 

@@ -467,8 +467,7 @@ var Schedule = Class.extend({
         var me  = this;
         var cronStr = null;
         if(selectedScheduleType.value === 'hourly') {
-            //cronStr = '0 0 0/1 1/1 * ? *';
-            cronStr = '0 0/1 * 1/1 * ? *'; //TODO Just for testing in minutes
+            cronStr = '0 0 0/1 1/1 * ? *';
         } else if(selectedScheduleType.value === 'daily') {
             cronStr = '0 0 12 1/1 * ? *';
         } else if(selectedScheduleType.value === 'weekly') {
