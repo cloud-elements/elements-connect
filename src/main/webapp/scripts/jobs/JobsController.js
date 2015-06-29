@@ -41,44 +41,7 @@ var JobsController = BaseController.extend({
         me.$scope.close = me.close.bind(this);
 
         // Temp Store for schedule job data
-        me.$scope.jobscheduledata = [
-            {
-                source: 'Pipedrive',
-                sourceLogo: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRHf3AxNjqGdISH5H9_vtTfFsMCA_D28QGk9eiK899BlteXOuCi',
-                target: 'Hubspot',
-                targetLogo: 'https://qa.cloud-elements.com/elements/images/elements/provider_hubspot.png',
-                transformations:[
-                    {
-                        sourceObject: 'users',
-                        targetObject: 'details'
-                    },
-                    {
-                        sourceObject: 'contacts',
-                        targetObject: 'contacts'
-                    },
-                    {
-                        sourceObject: 'account',
-                        targetObject: 'leads'
-                    }
-                ],
-                scheduleType: 'monthly',
-                scheduleTypeDetail: '1'
-            },
-            {
-                source: 'Zoho CRM',
-                sourceLogo: 'https://qa.cloud-elements.com/elements/images/elements/provider_zohocrm.png',
-                target: 'Hubspot',
-                targetLogo: 'https://qa.cloud-elements.com/elements/images/elements/provider_hubspot.png',
-                transformations:[
-                    {
-                        sourceObject: 'users',
-                        targetObject: 'details'
-                    }
-                ],
-                scheduleType: 'hourly',
-                scheduleTypeDetail: null
-            }
-        ],
+        me.$scope.jobscheduledata = [],
 
         // Temp Store for Scheduled jobs Details
         me.$scope.jobscheduledetails = [
@@ -107,6 +70,8 @@ var JobsController = BaseController.extend({
                 createdDate: '1433546675983'
             }
         ]
+
+        me._seedJobs();
     },
 
     defineListeners: function() {
@@ -122,6 +87,23 @@ var JobsController = BaseController.extend({
 //        TODO Add handleError and showMask
 //        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
 //        me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+    },
+
+    _seedJobs: function() {
+        var me = this;
+
+        if(me._picker.isSecretsPresent() == false) {
+            me.$location.path('/');
+            return;
+        }
+        me._maskLoader.show(me.$scope, 'Loading...');
+        me._jobs.getJobs().then(me._handleGetJobs.bind(me));
+    },
+
+    _handleGetJobs: function(results) {
+        var me = this;
+        me.$scope.jobscheduledata = results;
+        me._maskLoader.hide();
     },
 
     onSelectJob: function($index) {

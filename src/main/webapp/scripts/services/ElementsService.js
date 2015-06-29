@@ -396,13 +396,24 @@ var ElementsService = Class.extend({
      * Query server and returns Object metadata
      * @return Service handler
      */
-    scheduleJob: function (elementInstance, job) {
+    scheduleJob: function (elementInstance, job, cronVal) {
 
         var url = this._environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
         console.log(JSON.stringify(job));
+        var headers = this._getHeaders(elementInstance.token);
+        if (!this._cloudElementsUtils.isEmpty(cronVal)) {
+            headers['Elements-Schedule-Request'] = cronVal;
+        }
 
-        return this._httpPost(url, this._getHeaders(elementInstance.token), job);
+        return this._httpPost(url, headers, job);
+    },
+
+    getJobs: function() {
+        var me = this;
+
+        var url = me._environment.elementsUrl + '/jobs';
+        return this._httpGet(url, this._getHeaders());
     },
 
     _httpGet: function (url, headers, data) {

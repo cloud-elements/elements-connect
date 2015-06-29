@@ -18,7 +18,7 @@ var ScheduleController = BaseController.extend({
     $mdDialog: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog){
+    init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -37,7 +37,7 @@ var ScheduleController = BaseController.extend({
         me._getMappingTransformations();
     },
 
-    defineScope:function() {
+    defineScope: function() {
         var me = this;
 
         me.$scope.queryStartDate = "January 01, 2015";
@@ -65,7 +65,6 @@ var ScheduleController = BaseController.extend({
             schedulemonth: false
         };
 
-
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
         me.$scope.targetLogo = me._picker._target.image;
@@ -81,14 +80,19 @@ var ScheduleController = BaseController.extend({
             me.$scope.showTarget = true;
         }
 
-        me.$scope.scheduleType = [ {value: 'hourly', name: 'Hourly'}, {value: 'daily', name: 'Daily'},{value: 'weekly', name: 'Weekly'}, {value: 'monthly', name: 'Monthly'}, {value: 'yearly', name: 'Yearly'}];
+        me.$scope.scheduleTypes = [
+            {value: 'hourly', name: 'Hourly'},
+            {value: 'daily', name: 'Daily'},
+            {value: 'weekly', name: 'Weekly'},
+            {value: 'monthly', name: 'Monthly'}
+        ];
         me.$scope.datatransfer = 'transfernow';
         me.$scope.showschedulecalendar = false;
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind();
         me.$scope.columnWidth = 'sixteen';
     },
 
-    defineListeners:function(){
+    defineListeners: function() {
         var me = this;
 
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
@@ -97,7 +101,7 @@ var ScheduleController = BaseController.extend({
     _getMappingTransformations: function() {
         var me = this;
 
-        if (me._picker.getView() == 'datalist') {
+        if(me._picker.getView() == 'datalist') {
             me.$scope.currentTransfomations = me._schedule.getDatalistTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._datalist.all);
         } else {
@@ -106,7 +110,7 @@ var ScheduleController = BaseController.extend({
         }
     },
 
-    destroy:function(){
+    destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
     },
@@ -124,7 +128,7 @@ var ScheduleController = BaseController.extend({
     },
 
     _seedSchedule: function() {
-      var me = this;
+        var me = this;
 
     },
 
@@ -140,24 +144,30 @@ var ScheduleController = BaseController.extend({
         me._maskLoader.show(me.$scope, 'Scheduling...');
 
         var startdt = me.$scope.queryStartDate;
-        if (me._cloudElementsUtils.isEmpty(startdt) || startdt == "January 01, 2015") {
+        if(me._cloudElementsUtils.isEmpty(startdt) || startdt == "January 01, 2015") {
             startdt = new Date('01 January 2015 00:00 UTC');
         }
         startdt = startdt.toISOString();
 
-        if (me._picker.getView() == 'datalist') {
+        //Construct CRON string if there is a selection
+        var cronVal = null;
+        if(me.$scope.datatransfer === 'schedule') {
+            cronVal = me._schedule.constructCronExpression(me.$scope.selectedScheduleType);
+        }
+
+        if(me._picker.getView() == 'datalist') {
             me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
-                me._datalist.all, startdt, me.$scope.currentTransfomations);
+                me._datalist.all, startdt, me.$scope.currentTransfomations, cronVal);
         } else {
             me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
-                me._mapper.all, startdt, me.$scope.currentTransfomations);
+                me._mapper.all, startdt, me.$scope.currentTransfomations, cronVal);
         }
 
         me._maskLoader.hide();
         me.$location.path('/');
     },
 
-    clear: function () {
+    clear: function() {
         var me = this;
         me.$scope.queryStartDate = null;
     },
@@ -167,42 +177,41 @@ var ScheduleController = BaseController.extend({
         $event.preventDefault();
         $event.stopPropagation();
 
-        if(calendar == 'transfernow'){
+        if(calendar == 'transfernow') {
             me.$scope.opened.transfernow = true;
         }
-        else if(calendar == 'schedule'){
+        else if(calendar == 'schedule') {
             me.$scope.opened.schedule = true;
         }
-        else if(calendar == 'schedulemonth'){
+        else if(calendar == 'schedulemonth') {
             me.$scope.opened.schedulemonth = true;
         }
-
 
     },
 
     getDayClass: function(date, mode) {
         var me = this;
-        if (mode === 'day') {
+        if(mode === 'day') {
             var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
 
-            for (var i = 0; i < me.$scope.events.length; i++) {
+            for(var i = 0; i < me.$scope.events.length; i++) {
                 var currentDay = new Date(me.$scope.events[i].date).setHours(0, 0, 0, 0);
 
-                if (dayToCheck === currentDay) {
+                if(dayToCheck === currentDay) {
                     return me.$scope.events[i].status;
                 }
             }
         }
     },
 
-    onSelectSchedule: function(){
+    onSelectSchedule: function() {
         var me = this;
+
     }
 
 });
 
-ScheduleController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
-
+ScheduleController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('ScheduleController', ScheduleController);

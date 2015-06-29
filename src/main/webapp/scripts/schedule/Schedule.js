@@ -330,7 +330,7 @@ var Schedule = Class.extend({
         return schedulemappings;
     },
 
-    runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings) {
+    runMapperScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings, cronVal) {
         var me = this;
         if (me._cloudElementsUtils.isEmpty(schedulemappings)) {
             me._notifications.notify(bulkloader.events.ERROR, "There are no Object mappings defined to schedule");
@@ -364,10 +364,10 @@ var Schedule = Class.extend({
             jobs.push(me._getScheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000));
         }
 
-        me.scheduleJobs(selectedInstance, targetInstance, jobs);
+        me.scheduleJobs(selectedInstance, targetInstance, jobs, cronVal);
     },
 
-    runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings) {
+    runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings, cronVal) {
         var me = this;
 
         if (me._cloudElementsUtils.isEmpty(schedulemappings)) {
@@ -409,7 +409,7 @@ var Schedule = Class.extend({
             jobs.push(me._getScheduleObjectJob(selectedInstance, targetInstance, m.sourceObject, fields, allObjects, startDate, 60000));
         }
 
-        me.scheduleJobs(selectedInstance, targetInstance, jobs);
+        me.scheduleJobs(selectedInstance, targetInstance, jobs, cronVal);
     },
 
     _handleJobScheduled: function(selectedInstance, job) {
@@ -422,7 +422,7 @@ var Schedule = Class.extend({
         var me = this;
     },
 
-    scheduleJobs: function(selectedInstance, targetInstance, jobs) {
+    scheduleJobs: function(selectedInstance, targetInstance, jobs, cronVal) {
         var me = this;
 
         var sequence = me._picker.getTargetElementBulkSequence(targetInstance.element.key);
@@ -432,7 +432,7 @@ var Schedule = Class.extend({
                 var js = new Array();
                 js.push(jobs[key]);
 
-                me._elementsService.scheduleJob(selectedInstance, js)
+                me._elementsService.scheduleJob(selectedInstance, js, cronVal)
                     .then(me._handleJobScheduled.bind(me, selectedInstance),
                     me._handleJobSchedulingError.bind(me, selectedInstance));
             }
@@ -455,17 +455,37 @@ var Schedule = Class.extend({
                 }
             }
 
-            me._elementsService.scheduleJob(selectedInstance, js)
+            me._elementsService.scheduleJob(selectedInstance, js, cronVal)
                 .then(me._handleJobScheduled.bind(me, selectedInstance),
                 me._handleJobSchedulingError.bind(me, selectedInstance));
         }
 
         me._scheduledConfirmation();
+    },
+
+    constructCronExpression: function(selectedScheduleType) {
+        var me  = this;
+        var cronStr = null;
+        if(selectedScheduleType.value === 'hourly') {
+            cronStr = '0 0 0/1 1/1 * ? *';
+        } else if(selectedScheduleType.value === 'daily') {
+            cronStr = '0 0 12 1/1 * ? *';
+        } else if(selectedScheduleType.value === 'weekly') {
+            cronStr = '0 0 12 ? * ';
+            cronStr +=selectedScheduleType.typeValue;
+            cronStr +=' *';
+        } else if(selectedScheduleType.value === 'monthly') {
+            cronStr = '0 0 12 ';
+            cronStr +=selectedScheduleType.typeValue;
+            cronStr +=' 1/1 ? *';
+        }
+
+        return cronStr;
     }
 });
 
 
-/**
+/**runMapperScheduledJob
  * Schedule Factory object creation
  *
  */
