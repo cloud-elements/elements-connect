@@ -57,7 +57,7 @@
 
       <ul class="job-tree" ng-model="jobscheduledata">
         <li class="job-tree-node" ng-repeat="metadata in jobscheduledata" ng-include="'jobscheduled.html'"
-            ng-click="onSelectJob($index);" ng-class="{'selectJob': $index == selectedIndex}">
+            ng-click="onSelectScheduledJob($index);" ng-class="{'selectJob': $index == selectedIndex}">
         </li>
       </ul>
     </div>
@@ -66,8 +66,6 @@
       <div>
         <h2 ng-show="noJobsMessage">Select a scheduled job to see more details</h2>
       </div>
-
-
       <script type="text/ng-template" id="jobscheduledetails.html">
         <div class="header">
           <span><i class="wait icon"></i> {{metadata.createdDate | date:'medium'}}</span>
@@ -75,9 +73,9 @@
         </div>
 
         <div class="objectsnames">
-          <b>Source:</b> {{metadata.sourceObject}}
+          <b></b> {{metadata.sourceObjectName}}
           <i class="chevron right icon"></i>
-          <b>Target:</b> {{metadata.targetObject}}
+          <b></b> {{metadata.targetObjectName}}
         </div>
 
         <div class="footer running bar" ng-if="metadata.status == 'RUNNING'">
@@ -86,20 +84,31 @@
 
         <div class="footer" ng-if="metadata.status != 'RUNNING'">
           <span>
-            downloaded: {{metadata.downloadCount}}
+            downloaded: {{metadata.sourceRecordCount}}
           </span>
           <span>
-            errors: {{metadata.errorCount}}
+            errors: {{metadata.targetErrorCount}}
           </span>
         </div>
       </script>
 
       <ul ng-show="!noJobsMessage" class="scheduledjobs-list">
         <li class="job-tree-node" ng-repeat="metadata in jobscheduledetails" ng-include="'jobscheduledetails.html'"
-            ng-click="" ng-class="">
+            ng-click="onSelectJob($index);" ng-class="">
         </li>
       </ul>
+    </div>
 
+
+    <div class="executionslist">
+      <div>
+        <h2 ng-show="noJobsMessage">Select a job to see more
+          details</h2>
+        <h2 ng-show="showNoErrors" class="errorTitle">{{errorMessage}}</h2>
+        <h2 ng-show="showErrors">Errors</h2>
+      </div>
+      <div ui-grid="jobExecutionsOptions" ui-grid-selection ui-grid-auto-resize
+           ng-if="showErrors" class="errorJobHistoryGrid"></div>
     </div>
 
   </div>

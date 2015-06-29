@@ -374,12 +374,16 @@ var ElementsService = Class.extend({
         return this._httpDelete(url, this._getHeaders());
     },
 
-    getHistory: function() {
+    getHistory: function(jobId) {
 
         var parameters = {
             'page': 1,
             'pageSize': 50
         };
+
+        if (!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
 
         var url = this._environment.elementsUrl + '/bulkloader';
         return this._httpGet(url, this._getHeaders(), parameters);

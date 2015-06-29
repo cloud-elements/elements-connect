@@ -53,7 +53,8 @@ var Jobs = Class.extend({
                         targetKey: targetElement.elementKey,
                         targetLogo: targetElement.image,
                         transformations: [],
-                        scheduleType: res.data.name,
+                        jobId: res.id,
+                        scheduleType: res.description,
                         scheduleTypeDetail: '1'
                     };
                 }
@@ -73,7 +74,62 @@ var Jobs = Class.extend({
     _handleGetJobFailed: function(result) {
         var me = this;
 
+    },
+
+    getHistory: function(jobId) {
+        var me = this;
+        return me._elementsService.getHistory(jobId).then(
+            me._handleGetHistorySucceeded.bind(me),
+            me._handleGetHistoryFailed.bind(me));
+    },
+
+    _handleGetHistorySucceeded: function(result) {
+        var me = this;
+
+        //Modify the result to add the Element Name and Logo using Picker
+        if (!me._cloudElementsUtils.isEmpty(result.data)
+            && result.data.length > 0) {
+
+//            for (var i in result.data) {
+//                var res = result.data[i];
+//                var src = me._allElements[res.sourceElementKey];
+//                res['sourceLogo'] = src.image;
+//                res['source'] = src.name;
+//                var tar = me._allElements[res.targetElementKey];
+//                if (!me._cloudElementsUtils.isEmpty(tar)) {
+//                    res['targetLogo'] = tar.image;
+//                    res['target'] = tar.name;
+//                }
+//            }
+
+            return result.data;
+        }
+
+        return null;
+    },
+
+    _handleGetHistoryFailed: function(result) {
+        var me = this;
+
+    },
+
+    getJobErrors: function(elementKey, jobId) {
+        var me = this;
+        var instance = me._picker._elementInstances[elementKey];
+        return me._elementsService.getJobErrors(instance, jobId).then(
+            me._handleGetJobErrors.bind(me),
+            me._handleGetJobErrorsFailed.bind(me));
+    },
+
+    _handleGetJobErrors: function(results) {
+        var me = this;
+        return results.data;
+    },
+
+    _handleGetJobErrorsFailed: function(results) {
+        var me = this;
     }
+
 
 });
 
