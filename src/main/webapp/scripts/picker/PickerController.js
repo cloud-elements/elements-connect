@@ -58,6 +58,7 @@ var PickerController = BaseController.extend({
         me.$scope.showTarget = false;
         me.$scope.showWait = false;
         me.$scope.showSelectTarget = false;
+        me.$scope.showScheduling = false;
 
         me.$scope.targets = [];
         me.$scope.sources = [];
@@ -143,6 +144,14 @@ var PickerController = BaseController.extend({
         } else {
             me.$scope.showSelectTarget = false;
             me.$scope.showWait = true;
+        }
+
+
+        if (!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
+            && me._picker.getDisplay().scheduling == true) {
+            me.$scope.showScheduling = true;
+        } else {
+            me.$scope.showScheduling = false;
         }
 
 

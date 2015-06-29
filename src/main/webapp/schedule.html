@@ -64,10 +64,10 @@
         </div>
 
         <!-- Schedule -->
-        <md-radio-button aria-label="" value="schedule" class="md-large md-light md-checked-green">
+        <md-radio-button ng-show="showScheduling" aria-label="" value="schedule" class="md-large md-light md-checked-green">
           <h3>Schedule Data Transfer</h3>
         </md-radio-button>
-        <div ng-show="datatransfer=='schedule'" class="ui grid icon input fluid">
+        <div ng-show="datatransfer=='schedule' && showScheduling" class="ui grid icon input fluid">
 
           <div class="sixteen wide column">
             <p>How often?</p>

@@ -58,6 +58,9 @@ var ScheduleController = BaseController.extend({
         me.$scope.format = me.$scope.formats[4];
         me.$scope.maxDate = me.$scope.maxDate ? null : new Date();
 
+        me.$scope.showScheduling = false;
+        me.$scope.datatransfer='transfernow';
+
         /* to show Calendar UI dropdown */
         me.$scope.opened = {
             transfernow: false,
@@ -98,6 +101,11 @@ var ScheduleController = BaseController.extend({
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
     },
 
+    destroy: function() {
+        var me = this;
+        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+    },
+
     _getMappingTransformations: function() {
         var me = this;
 
@@ -108,11 +116,8 @@ var ScheduleController = BaseController.extend({
             me.$scope.currentTransfomations = me._schedule.getMappingTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._mapper.all);
         }
-    },
 
-    destroy: function() {
-        var me = this;
-        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._seedSchedule();
     },
 
     _handleError: function(event, error) {
@@ -130,6 +135,12 @@ var ScheduleController = BaseController.extend({
     _seedSchedule: function() {
         var me = this;
 
+        if (!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
+            && me._picker.getDisplay().scheduling == true) {
+            me.$scope.showScheduling = true;
+        } else {
+            me.$scope.showScheduling = false;
+        }
     },
 
     cancel: function() {

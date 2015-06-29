@@ -439,7 +439,13 @@ var Picker = Class.extend({
             return 'datalist';
         }
         return view;
+    },
+
+    getDisplay: function() {
+        var me = this;
+        return me._elementsService.configuration.display;
     }
+
 });
 
 
