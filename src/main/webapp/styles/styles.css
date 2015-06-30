@@ -860,6 +860,10 @@ md-radio-button.md-checked.md-checked-green .md-on{
     background-color: #58bde8;
     padding: 0;
 }
+
+#jobhistory .executionslist .job-tree-node.selectJobDetails{
+    border-left: 5px solid #389dc8;
+}
 /************************/
 /* END JOB HISTORY      */
 /************************/

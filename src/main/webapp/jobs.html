@@ -54,7 +54,7 @@
             <i class="glyphicon glyphicon-remove"></i> Enable
           </button>
           <button type="submit" ng-show="showDisable(metadata)" ng-click="onDisable(metadata)"
-                  class="pull-right btn btn-danger btn-xs"
+                  class="pull-left btn btn-warning btn-xs"
                   style="margin:5px;">
             <i class="glyphicon glyphicon-remove"></i> Disable
           </button>
@@ -72,7 +72,7 @@
       </ul>
     </div>
 
-    <div class="executionslist">
+    <div class="executionslist" style="overflow: scroll;">
       <div>
         <h2 ng-show="noJobsMessage">Select a scheduled job to see more details</h2>
       </div>
@@ -104,13 +104,13 @@
 
       <ul ng-show="!noJobsMessage" class="scheduledjobs-list">
         <li class="job-tree-node" ng-repeat="metadata in jobscheduledetails" ng-include="'jobscheduledetails.html'"
-            ng-click="onSelectJob($index);" ng-class="">
+            ng-click="onSelectJob($index);" ng-class="{'selectJobDetails': $index == selectedIndexJobDetails}">
         </li>
       </ul>
     </div>
 
 
-    <div class="executionslist">
+    <div class="executionslist" style="padding: 20px 20px 20px 0;" ng-show="!noJobsMessage">
       <div>
         <h2 ng-show="noJobsMessage">Select a job to see more
           details</h2>
@@ -118,7 +118,7 @@
         <h2 ng-show="showErrors">Errors</h2>
       </div>
       <div ui-grid="jobExecutionsOptions" ui-grid-selection ui-grid-auto-resize
-           ng-if="showErrors" class="errorJobHistoryGrid"></div>
+           ng-if="showErrors" class="errorJobHistoryGrid" style="left: 0; top: 60px;"></div>
     </div>
 
   </div>

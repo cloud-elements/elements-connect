@@ -38,6 +38,7 @@ var JobsController = BaseController.extend({
         var me = this;
 
         me.$scope.selectedIndex = -1;
+        me.$scope.selectedIndexJobDetails = -1;
         me.$scope.noJobsMessage = true;
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.onSelectScheduledJob = me.onSelectScheduledJob.bind(this);
@@ -124,7 +125,7 @@ var JobsController = BaseController.extend({
 
         me.$scope.selectedJob = me.$scope.jobscheduledetails[$index];
 
-        me.$scope.selectedIndex = $index;
+        me.$scope.selectedIndexJobDetails = $index;
 
         if(me.$scope.selectedJob.sourceStatus == 'COMPLETED'
             && me.$scope.selectedJob.targetStatus == 'COMPLETED'
