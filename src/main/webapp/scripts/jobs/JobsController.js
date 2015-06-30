@@ -40,6 +40,7 @@ var JobsController = BaseController.extend({
         me.$scope.selectedIndex = -1;
         me.$scope.selectedIndexJobDetails = -1;
         me.$scope.noJobsMessage = true;
+        me.$scope.noJobsMessageDetailsErrors = false;
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.onSelectScheduledJob = me.onSelectScheduledJob.bind(this);
         me.$scope.close = me.close.bind(this);
@@ -107,6 +108,8 @@ var JobsController = BaseController.extend({
         me.$scope.noJobsMessage = false;
         me.$scope.selectedIndex = $index;
 
+        me.$scope.noJobsMessageDetailsErrors = true;
+
         me.$scope.selectedJob = me.$scope.jobscheduledata[$index];
         me._jobs.getHistory(me.$scope.selectedJob.jobId).then(me._handleGetHistory.bind(me));
     },
@@ -121,7 +124,6 @@ var JobsController = BaseController.extend({
 
         me.$scope.showErrors = false;
         me.$scope.showNoErrors = false;
-        me.$scope.noJobsMessage = false;
 
         me.$scope.selectedJob = me.$scope.jobscheduledetails[$index];
 
@@ -211,10 +213,13 @@ var JobsController = BaseController.extend({
         return false;
     },
 
-    onEnable: function(job) {
+    onEnable: function(job, $event) {
         var me = this;
         me._maskLoader.show(me.$scope, 'Enabling...');
         me._jobs.enableJob(job.jobId).then(me._handleOnEnable.bind(me, job));
+        $event.preventDefault();
+        $event.stopPropagation();
+
     },
 
     _handleOnEnable: function(job, results) {
@@ -223,10 +228,13 @@ var JobsController = BaseController.extend({
         me._maskLoader.hide();
     },
 
-    onDisable: function(job) {
+    onDisable: function(job, $event) {
         var me = this;
         me._maskLoader.show(me.$scope, 'Disabling...');
         me._jobs.disableJob(job.jobId).then(me._handleOnDisable.bind(me, job));
+        $event.preventDefault();
+        $event.stopPropagation();
+
     },
 
     _handleOnDisable: function(job, results) {
@@ -235,10 +243,13 @@ var JobsController = BaseController.extend({
         me._maskLoader.hide();
     },
 
-    onDelete: function(job) {
+    onDelete: function(job, $event) {
         var me = this;
         me._maskLoader.show(me.$scope, 'Deleting...');
         me._jobs.deleteJob(job.jobId).then(me._handleOnDelete.bind(me));
+
+        $event.preventDefault();
+        $event.stopPropagation();
     },
 
     _handleOnDelete: function(results) {

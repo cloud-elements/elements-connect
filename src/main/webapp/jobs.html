@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div id="jobhistory-body">
+  <div id="jobhistory-body" style="background-color: #444">
     <!-- mapper BODY -->
     <div class="jobslist">
       <h2 ng-hide="noJobsMessage" style="width: 100%;text-align: center;padding: 50px 0;color: #666;">No Jobs found</h2>
@@ -48,17 +48,21 @@
         </div>
 
         <div class="job-footer">
-          <button type="submit" ng-show="showEnable(metadata)" ng-click="onEnable(metadata)"
-                  class="pull-left btn btn-primary btn-xs"
-                  style="margin:5px;">
-            <i class="glyphicon glyphicon-remove"></i> Enable
+          <button type="submit" ng-show="showEnable(metadata)" ng-click="onEnable(metadata, $event)"
+                  class="pull-left btn btn-link scheduledJobsEnabled">
+            <i></i> <span>Enabled</span>
+            <md-tooltip>
+              Click to Disable
+            </md-tooltip>
           </button>
-          <button type="submit" ng-show="showDisable(metadata)" ng-click="onDisable(metadata)"
-                  class="pull-left btn btn-warning btn-xs"
-                  style="margin:5px;">
-            <i class="glyphicon glyphicon-remove"></i> Disable
+          <button type="submit" ng-show="showDisable(metadata)" ng-click="onDisable(metadata, $event)"
+                  class="pull-left btn btn-link scheduledJobsDisabled">
+            <i></i>  <span>Disabled</span>
+            <md-tooltip>
+              Click to Enable
+            </md-tooltip>
           </button>
-          <button type="submit" ng-click="onDelete(metadata)" class="pull-right btn btn-danger btn-xs" style="margin:5px;">
+          <button type="submit" ng-click="onDelete(metadata, $event)" class="pull-right btn btn-danger btn-xs" style="margin:5px;">
             <i class="glyphicon glyphicon-remove"></i> Delete
           </button>
         </div>
@@ -72,7 +76,7 @@
       </ul>
     </div>
 
-    <div class="executionslist" style="overflow: scroll;">
+    <div class="executionslist executionslisterrors" style="overflow: scroll;background: linear-gradient(#333, #222)">
       <div>
         <h2 ng-show="noJobsMessage">Select a scheduled job to see more details</h2>
       </div>
@@ -110,15 +114,14 @@
     </div>
 
 
-    <div class="executionslist" style="padding: 20px 20px 20px 0;" ng-show="!noJobsMessage">
+    <div class="executionslist" ng-show="noJobsMessageDetailsErrors">
       <div>
-        <h2 ng-show="noJobsMessage">Select a job to see more
-          details</h2>
+        <h2 ng-show="!showErrors">Select a job detail to see more details</h2>
         <h2 ng-show="showNoErrors" class="errorTitle">{{errorMessage}}</h2>
         <h2 ng-show="showErrors">Errors</h2>
       </div>
       <div ui-grid="jobExecutionsOptions" ui-grid-selection ui-grid-auto-resize
-           ng-if="showErrors" class="errorJobHistoryGrid" style="left: 0; top: 60px;"></div>
+           ng-if="showErrors" class="errorJobHistoryGrid" style="left: 20px; top: 60px;"></div>
     </div>
 
   </div>

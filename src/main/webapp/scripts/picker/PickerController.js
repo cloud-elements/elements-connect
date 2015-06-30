@@ -46,6 +46,7 @@ var PickerController = BaseController.extend({
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
+        me.$scope.onSignout = me.onSignout.bind(me);
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
@@ -350,6 +351,11 @@ var PickerController = BaseController.extend({
         $event.preventDefault();
         $event.stopPropagation();
 
+    },
+
+    onSignout: function(){
+        var me = this;
+        me.$location.path('/credentials');
     }
 
 });

@@ -637,6 +637,44 @@ md-radio-button.md-checked.md-checked-green .md-on{
     padding: 0;
     margin-top: 10px;
 }
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled,
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsDisabled{
+    color: #666;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 0;
+    background-color: #eeeeee;
+    border: none;
+    -moz-box-shadow:    1px 1px 1px 0px #aaaaaa;
+    -webkit-box-shadow: 1px 1px 1px 0px #aaaaaa;
+    box-shadow:         1px 1px 1px 0px #aaaaaa;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled i,
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsDisabled i{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #dddddd;
+    border: 1px solid #777777;
+    border-width: 2px;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled span,
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsDisabled span{
+    width: inherit;
+    float: right;
+    padding: 0 0 0 5px;
+    margin-top: 3px;
+    font-size: 12px;}
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled i{
+    background-color: #5cb85c;
+    background-image: -webkit-linear-gradient(top ,#8bd18b, #5cb85c);
+    background-image:         linear-gradient(to bottom ,#8bd18b, #5cb85c);
+    border: 1px solid #5cb85c;
+    -moz-box-shadow:    0px 0px 2px 1px #9ae59a;
+    -webkit-box-shadow: 0px 0px 2px 1px #9ae59a;
+    box-shadow:         0px 0px 2px 1px #9ae59a;
+}
 #jobhistory .jobslist .job-tree-node div.job-footer.running{
     background-color: #58bde8;
 }
@@ -717,6 +755,11 @@ md-radio-button.md-checked.md-checked-green .md-on{
 #jobhistory div.executionslist{
     padding:20px;
     position: relative;
+}
+
+#jobhistory div.executionslisterrors{
+    -webkit-box-shadow: 4px 0px 8px 0px #000000;
+    box-shadow: 4px 0px 8px 0px #000000;
 }
 
 #jobhistory div.executionslist h2{
