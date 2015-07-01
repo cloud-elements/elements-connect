@@ -107,6 +107,32 @@ h1 {
 .horizontal-align {
     margin:0 auto;
 }
+
+md-radio-button.md-large .md-container{
+    top: 10px;
+    width: 30px;
+    height: 30px;
+}
+md-radio-button.md-large .md-off{
+    border: 5px solid;
+    width: 30px;
+    height: 30px;
+}
+md-radio-button.md-large .md-on{
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+}
+md-radio-button.md-light .md-off{
+    border-color: #fff;
+    border-color: rgba(255,255,255,1);
+}
+md-radio-button.md-checked.md-checked-green .md-off{
+    border-color: #47a447;
+}
+md-radio-button.md-checked.md-checked-green .md-on{
+    background-color: #47a447;
+}
 /***********************/
 /* CREDENTIALS LOGIN/SIGNUP */
 /***********************/
@@ -472,6 +498,11 @@ h1 {
 }
 #picker .picker-history a i{
     font-size: 20px;
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
 }
 #picker .picker-history a:hover{
     text-decoration: none;
@@ -569,6 +600,14 @@ h1 {
     padding: 0;
 }
 
+#jobhistory .jobslist .job-tree-node div.job-header-schedule{
+    font-size: 13px;
+    color: #888;
+}
+#jobhistory .jobslist .job-tree-node div.job-header-schedule b{
+    font-weight: bold;
+    color: #666;
+}
 #jobhistory .jobslist .job-tree-node div.job-header span{
     display: inline-block;
     padding: 10px;
@@ -598,6 +637,44 @@ h1 {
     padding: 0;
     margin-top: 10px;
 }
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled,
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsDisabled{
+    color: #666;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 0;
+    background-color: #eeeeee;
+    border: none;
+    -moz-box-shadow:    1px 1px 1px 0px #aaaaaa;
+    -webkit-box-shadow: 1px 1px 1px 0px #aaaaaa;
+    box-shadow:         1px 1px 1px 0px #aaaaaa;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled i,
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsDisabled i{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #dddddd;
+    border: 1px solid #777777;
+    border-width: 2px;
+}
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled span,
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsDisabled span{
+    width: inherit;
+    float: right;
+    padding: 0 0 0 5px;
+    margin-top: 3px;
+    font-size: 12px;}
+#jobhistory .jobslist .job-tree-node div.job-footer .scheduledJobsEnabled i{
+    background-color: #5cb85c;
+    background-image: -webkit-linear-gradient(top ,#8bd18b, #5cb85c);
+    background-image:         linear-gradient(to bottom ,#8bd18b, #5cb85c);
+    border: 1px solid #5cb85c;
+    -moz-box-shadow:    0px 0px 2px 1px #9ae59a;
+    -webkit-box-shadow: 0px 0px 2px 1px #9ae59a;
+    box-shadow:         0px 0px 2px 1px #9ae59a;
+}
 #jobhistory .jobslist .job-tree-node div.job-footer.running{
     background-color: #58bde8;
 }
@@ -622,6 +699,12 @@ h1 {
     text-align: left;
     line-height: .8em;
 }
+
+#jobhistory .jobslist .job-tree-node div.job-body p.elementObjectContainer{
+    width: 100%;
+    position: relative;
+    line-height: 1.5em;
+}
 #jobhistory .jobslist .job-tree-node div.job-body p span{
     display: block;
     width: 100%;
@@ -639,17 +722,30 @@ h1 {
     font-size: 15px;
     padding-left: 35px;
 }
+#jobhistory .jobslist .job-tree-node div.job-body p.elementObjectContainer span.elementObject{
+    font-size: 17px;
+    padding-left: 35px;
+    width: 50%;
+    float: left;
+    position: relative;
+}
 #jobhistory .jobslist .job-tree-node div.job-body i{
     position: absolute;
     right: 50%;
     top: 30px;
+}
+#jobhistory .jobslist .job-tree-node div.job-body p.elementObjectContainer span.elementObject i{
+    position: absolute;
+    font-size: .6em;
+    top: 10px;
+    right: 10px;
 }
 
 #jobhistory .jobslist .job-tree-node.selectJob{
     background-color: #389dc8;
     border-color: #389dc8;
 }
-#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p span{
+#jobhistory .jobslist .job-tree-node.selectJob div, #jobhistory .jobslist .job-tree-node.selectJob div.job-header, #jobhistory .jobslist .job-tree-node.selectJob div.job-header b, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p, #jobhistory .jobslist .job-tree-node.selectJob div.job-body p span{
     color: #fff;
 }
 #jobhistory .jobslist .job-tree-node.selectJob div.job-header span.status{
@@ -659,6 +755,11 @@ h1 {
 #jobhistory div.executionslist{
     padding:20px;
     position: relative;
+}
+
+#jobhistory div.executionslisterrors{
+    -webkit-box-shadow: 4px 0px 8px 0px #000000;
+    box-shadow: 4px 0px 8px 0px #000000;
 }
 
 #jobhistory div.executionslist h2{
@@ -731,6 +832,80 @@ h1 {
     -webkit-user-select: text;
     -ms-user-select: text;
     user-select: text;
+}
+#jobhistory div.executionslist{
+
+}
+#jobhistory div.executionslist li{
+    background-color: #444444;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+    float: left;
+    width: 100%;
+}
+#jobhistory div.executionslist li .header{
+    display: block;
+    width: 100%;
+    float: left;
+}
+#jobhistory div.executionslist li .header span{
+    padding: 10px;
+    display: inline-block;
+    color: #fff;
+    font-size: .8em;
+}
+
+#jobhistory div.executionslist li .header span.status{
+    float: right;
+    min-width: 120px;
+    font-size: .7em;
+    text-align: center;
+    background-color: #999;
+}
+#jobhistory div.executionslist li .objectsnames{
+    float: left;
+    padding: 15px 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #389dc8;
+}
+#jobhistory div.executionslist li .objectsnames b{
+    color: #bbbbbb;
+}
+#jobhistory div.executionslist li .objectsnames i{
+    font-size: .8em;
+    color: #bbbbbb;
+}
+
+#jobhistory div.executionslist li .header span.status.COMPLETED{
+    background-color: #8dc63f;
+}
+#jobhistory div.executionslist li .header span.status.RUNNING{
+    background-color: #58bde8;
+}
+#jobhistory div.executionslist li .header span.status.ERROR{
+    background-color: #c92026;
+}
+#jobhistory div.executionslist li .footer{
+    width: 100%;
+    float: left;
+    display: block;
+    background-color: #888888;
+    padding: 10px;
+    font-size: .8em;
+    margin-top: 10px;
+}
+#jobhistory div.executionslist li .footer span{
+    margin-right: 50px;
+}
+#jobhistory div.executionslist li .footer.running{
+    background-color: #58bde8;
+    padding: 0;
+}
+
+#jobhistory .executionslist .job-tree-node.selectJobDetails{
+    border-left: 5px solid #389dc8;
 }
 /************************/
 /* END JOB HISTORY      */
@@ -1780,7 +1955,14 @@ li li.angular-ui-tree-placeholder{
 /***********************/
 /*  Scheduler          */
 /***********************/
-
+.column.transfer-container{
+    padding: 10px !important;
+    margin: 0 !important;
+}
+.column.transfer-container md-radio-button{
+    padding: 0 !important;
+    margin: 0;
+}
 
 /***********************/
 /*  END Scheduler          */
@@ -1930,6 +2112,19 @@ dropdown > div.show > div.dropdown-list {
     -o-transform: scale(1, 1);
     -moz-transform: scale(1, 1);
 }
+.bl-select{
+    background: #fff;
+    padding: 7px 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.5);
+    color: #555;
+    text-shadow: 0 1px #fff;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    -webkit-transition: all 250ms ease-in;
+    transition: all 250ms ease-in;
+    height: 42px;
+    border: none;}
 
 .target-select{
     background: #fff;

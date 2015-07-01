@@ -374,12 +374,16 @@ var ElementsService = Class.extend({
         return this._httpDelete(url, this._getHeaders());
     },
 
-    getHistory: function() {
+    getHistory: function(jobId) {
 
         var parameters = {
             'page': 1,
             'pageSize': 50
         };
+
+        if (!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
 
         var url = this._environment.elementsUrl + '/bulkloader';
         return this._httpGet(url, this._getHeaders(), parameters);
@@ -396,13 +400,42 @@ var ElementsService = Class.extend({
      * Query server and returns Object metadata
      * @return Service handler
      */
-    scheduleJob: function (elementInstance, job) {
+    scheduleJob: function (elementInstance, job, cronVal) {
 
         var url = this._environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
         console.log(JSON.stringify(job));
+        var headers = this._getHeaders(elementInstance.token);
+        if (!this._cloudElementsUtils.isEmpty(cronVal)) {
+            headers['Elements-Schedule-Request'] = cronVal;
+        }
 
-        return this._httpPost(url, this._getHeaders(elementInstance.token), job);
+        return this._httpPost(url, headers, job);
+    },
+
+    getJobs: function() {
+        var me = this;
+
+        var url = me._environment.elementsUrl + '/jobs';
+        return this._httpGet(url, this._getHeaders());
+    },
+
+    deleteJob: function(jobId) {
+        var me = this;
+        var url = me._environment.elementsUrl + '/jobs/'+jobId;
+        return this._httpDelete(url, this._getHeaders());
+    },
+
+    disableJob: function(jobId) {
+        var me = this;
+        var url = me._environment.elementsUrl + '/jobs/'+jobId + '/disable';
+        return this._httpPut(url, this._getHeaders());
+    },
+
+    enableJob: function(jobId) {
+        var me = this;
+        var url = me._environment.elementsUrl + '/jobs/'+jobId + '/enable';
+        return this._httpPut(url, this._getHeaders());
     },
 
     _httpGet: function (url, headers, data) {

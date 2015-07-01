@@ -46,9 +46,11 @@ var PickerController = BaseController.extend({
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
+        me.$scope.onSignout = me.onSignout.bind(me);
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
+        me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
         me.$scope.onHelp = me.onHelp.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
 
@@ -57,6 +59,7 @@ var PickerController = BaseController.extend({
         me.$scope.showTarget = false;
         me.$scope.showWait = false;
         me.$scope.showSelectTarget = false;
+        me.$scope.showScheduling = false;
 
         me.$scope.targets = [];
         me.$scope.sources = [];
@@ -142,6 +145,14 @@ var PickerController = BaseController.extend({
         } else {
             me.$scope.showSelectTarget = false;
             me.$scope.showWait = true;
+        }
+
+
+        if (!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
+            && me._picker.getDisplay().scheduling == true) {
+            me.$scope.showScheduling = true;
+        } else {
+            me.$scope.showScheduling = false;
         }
 
 
@@ -300,6 +311,11 @@ var PickerController = BaseController.extend({
         me.$location.path('/jobhistory');
     },
 
+    onScheduledJobs: function(){
+        var me = this;
+        me.$location.path('/jobs');
+    },
+
     onEditInstance: function(elementKey, selection, $event) {
         var me = this;
 
@@ -335,6 +351,11 @@ var PickerController = BaseController.extend({
         $event.preventDefault();
         $event.stopPropagation();
 
+    },
+
+    onSignout: function(){
+        var me = this;
+        me.$location.path('/credentials');
     }
 
 });
