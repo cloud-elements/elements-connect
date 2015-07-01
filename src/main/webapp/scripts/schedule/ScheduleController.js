@@ -98,12 +98,12 @@ var ScheduleController = BaseController.extend({
     defineListeners: function() {
         var me = this;
 
-        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.SCHEDULE_ERROR, me._handleError.bind(me), me.$scope.$id);
     },
 
     destroy: function() {
         var me = this;
-        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.SCHEDULE_ERROR, me._handleError.bind(me), me.$scope.$id);
     },
 
     _getMappingTransformations: function() {
@@ -166,16 +166,20 @@ var ScheduleController = BaseController.extend({
             cronVal = me._schedule.constructCronExpression(me.$scope.selectedScheduleType);
         }
 
+        var jobs = null;
         if(me._picker.getView() == 'datalist') {
-            me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+            jobs = me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._datalist.all, startdt, me.$scope.currentTransfomations, cronVal);
         } else {
-            me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+            jobs = me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._mapper.all, startdt, me.$scope.currentTransfomations, cronVal);
         }
 
+        if(jobs != false) {
+            me._schedule.scheduleJobs(me._picker.selectedElementInstance, me._picker.targetElementInstance, jobs, cronVal);
+            me.$location.path('/');
+        }
         me._maskLoader.hide();
-        me.$location.path('/');
     },
 
     clear: function() {

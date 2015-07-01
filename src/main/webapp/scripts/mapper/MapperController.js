@@ -177,12 +177,37 @@ var MapperController = BaseController.extend({
         uitree.toggle();
     },
 
-    refreshObjectMetaData: function() {
+    refreshObjectMetaData: function(checkWhereFields) {
         var me = this;
+
+        //First check if existing Where condition mandatory ones are filled, if not warn user
+        if((me._cloudElementsUtils.isEmpty(checkWhereFields) || checkWhereFields == true)
+            && !me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere)) {
+            for (var i = 0; i < me.$scope.mapperwhere.length; i++) {
+                var mw = me.$scope.mapperwhere[i];
+                if (me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
+
+                    var confirm = me.$mdDialog.confirm()
+                        .title('Missing required fields')
+                        .content("Missing required value " + mw.name + " for object " + me.$scope.selectedSourceObject.name + ". Do you still want to continue ?")
+                        .ok('Yes')
+                        .cancel('No');
+
+                    me.$mdDialog.show(confirm).then(function() {
+                        //continue
+                        me.refreshObjectMetaData(false);
+                    }, function() {
+                        //Don't do anything
+                        me.$scope.selectedObject.select=me.$scope.selectedSourceObject;
+                    });
+                    return false;
+                }
+            }
+        }
 
         me._maskLoader.show(me.$scope, "Loading Object fields...");
         me.$scope.showTargetObjectSelection = false;
-
+        me.$scope.selectedSourceObject = me.$scope.selectedObject.select;
 //        Get the Where condition objects for the source element
         if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key])
             && !me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].objectsWhere)) {
@@ -331,8 +356,33 @@ var MapperController = BaseController.extend({
         me.$location.path('/');
     },
 
-    save: function() {
+    save: function(checkWhereFields) {
         var me = this;
+
+        //First check if existing Where condition mandatory ones are filled, if not warn user
+        if((me._cloudElementsUtils.isEmpty(checkWhereFields) || checkWhereFields == true)
+            && !me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere)) {
+            for (var i = 0; i < me.$scope.mapperwhere.length; i++) {
+                var mw = me.$scope.mapperwhere[i];
+                if (me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
+
+                    var confirm = me.$mdDialog.confirm()
+                        .title('Missing required fields')
+                        .content("Missing required value " + mw.name + " for object " + me.$scope.selectedSourceObject.name + ". Do you still want to continue ?")
+                        .ok('Yes')
+                        .cancel('No');
+
+                    me.$mdDialog.show(confirm).then(function() {
+                        //continue
+                        me.save(false);
+                    }, function() {
+                        //Don't do anything
+                    });
+                    return false;
+                }
+            }
+        }
+
         me._maskLoader.show(me.$scope, 'Saving...');
         var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me._picker.targetElementInstance, me.$scope.instanceObjects);
 

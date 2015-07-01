@@ -105,12 +105,18 @@ var Schedule = Class.extend({
             return null;
         }
 
-        var where = ' where '
+        var where = '';
         for (var i = 0; i < mapperwhere.length; i++) {
             var mw = mapperwhere[i];
 
             if (!me._cloudElementsUtils.isEmpty(mw.value)) {
+                if(where == '') {
+                    where = ' where ';
+                }
                 where += mw.key + ' = ' + mw.value;
+            } else if (me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
+                me._notifications.notify(bulkloader.events.SCHEDULE_ERROR, "The value for " + mw.name + " for object " + objectName + " is empty which is required. Please close the window and provide the value.");
+                return false;
             }
         }
         return where;
@@ -141,6 +147,11 @@ var Schedule = Class.extend({
 
             //Construct the where clause if has and append it to the query
             var where = me._buildWhereClause(selectedInstance, allObjects, selectObjectName);
+            if(!me._cloudElementsUtils.isEmpty(where) && where == false) {
+                // If where is returned false, then its missing required value to be sent for the Object
+                return false;
+            }
+
             if (!me._cloudElementsUtils.isEmpty(where)) {
                 query += where;
             }
@@ -346,6 +357,7 @@ var Schedule = Class.extend({
 
         var targetmappings = allObjects[targetInstance.element.key].metamapping;
 
+        var allGoodForSave = true;
         var jobs = new Array();
         for (var i = 0; i < objects.length; i++) {
             var m = schedulemappings[objects[i]];
@@ -361,10 +373,21 @@ var Schedule = Class.extend({
             if (me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
                 continue;
             }
-            jobs.push(me._getScheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000));
+            var jo = me._getScheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000);
+            if(jo == false) {
+                //Something broke, stopping doing other stuff
+                allGoodForSave = false;
+                break;
+            }
+            jobs.push(jo);
         }
 
-        me.scheduleJobs(selectedInstance, targetInstance, jobs, cronVal);
+        if(allGoodForSave == true) {
+            return jobs;
+        } else {
+            return false;
+        }
+
     },
 
     runDatalistScheduledJob: function (selectedInstance, targetInstance, allObjects, startDate, schedulemappings, cronVal) {
@@ -393,6 +416,7 @@ var Schedule = Class.extend({
             return;
         }
 
+        var allGoodForSave = true;
         var jobs = new Array();
         for (var i = 0; i < objects.length; i++) {
             var m = schedulemappings[objects[i]];
@@ -406,10 +430,20 @@ var Schedule = Class.extend({
                 continue;
             }
 
-            jobs.push(me._getScheduleObjectJob(selectedInstance, targetInstance, m.sourceObject, fields, allObjects, startDate, 60000));
+            var jo = me._getScheduleObjectJob(selectedInstance, targetInstance, m.sourceObject, fields, allObjects, startDate, 60000);
+            if(jo == false) {
+                allGoodForSave = false;
+                //Something broke, stopping doing other stuff
+                break;
+            }
+            jobs.push(jo);
         }
 
-        me.scheduleJobs(selectedInstance, targetInstance, jobs, cronVal);
+        if(allGoodForSave == true) {
+            return jobs;
+        } else {
+            return false;
+        }
     },
 
     _handleJobScheduled: function(selectedInstance, job) {
