@@ -216,12 +216,6 @@ var MapperController = BaseController.extend({
             me.$scope.mapperwhere = null;
         }
 
-//        me.$scope.mapperwhere = [{
-//            "key"  : "channelId",
-//            "name" : "Channel Id",
-//            "type" : "text"
-//        }];
-
         var metadata = null;
         if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat)) {
             metadata = me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat[me.$scope.selectedObject.select.name];

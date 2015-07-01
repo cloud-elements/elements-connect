@@ -11,7 +11,7 @@ var Datalist = Class.extend({
     _elementsService:null,
     _notifications: null,
     _cloudElementsUtils: null,
-
+    _picker: null,
     _objectMetadata: null,
     _objectMetadataFlat: null,
 
@@ -83,19 +83,34 @@ var Datalist = Class.extend({
 
     _handleLoadInstanceObjects:function(selectedInstance, result){
         var me = this;
-
-        me.all[selectedInstance.element.key].objects = result.data;
-
         var objectsAndTransformation = new Array();
-        if(!me._cloudElementsUtils.isEmpty(result.data)) {
-            for(var i=0; i< result.data.length; i++) {
-                var objName = result.data[i];
+        var sourceElement = me._picker.getSourceElement(selectedInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(sourceElement.objects)) {
+            var objs = new Array();
+            for(var i in sourceElement.objects) {
+                var obj = sourceElement.objects[i];
+                objs.push(obj.vendorPath);
                 objectsAndTransformation.push({
-                    name: objName,
+                    name: obj.vendorPath,
                     //For now setting everything to transformed and the saving definitions and transformations will decide
 //                    transformed: me._isObjectTransformed(objName, selectedInstance)
                     transformed: true
                 });
+            }
+            me.all[selectedInstance.element.key].objects = objs;
+
+        } else {
+            me.all[selectedInstance.element.key].objects = result.data;
+            if(!me._cloudElementsUtils.isEmpty(result.data)) {
+                for(var i=0; i< result.data.length; i++) {
+                    var objName = result.data[i];
+                    objectsAndTransformation.push({
+                        name: objName,
+                        //For now setting everything to transformed and the saving definitions and transformations will decide
+//                    transformed: me._isObjectTransformed(objName, selectedInstance)
+                        transformed: true
+                    });
+                }
             }
         }
 
@@ -133,20 +148,32 @@ var Datalist = Class.extend({
         me.all[selectedInstance.element.key].transformationsLoaded = true;
         me.all[selectedInstance.element.key].transformations = result.data;
 
-        return this._elementsService.loadInstanceObjects(selectedInstance)
-            .then(
-            this._handleLoadInstanceObjects.bind(this, selectedInstance),
-            this._handleLoadInstanceObjectError.bind(this));
+        var sourceElement = me._picker.getSourceElement(selectedInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(sourceElement.objects)) {
+            return me._handleLoadInstanceObjects(selectedInstance, new Object());
+        } else {
+            //loading the Instance Objects
+            return this._elementsService.loadInstanceObjects(selectedInstance)
+                .then(
+                this._handleLoadInstanceObjects.bind(this, selectedInstance),
+                this._handleLoadInstanceObjectError.bind(this));
+        }
     },
 
     _handleLoadInstanceTransformationsError:function(selectedInstance,result){
         var me = this;
         me.all[selectedInstance.element.key].transformationsLoaded = true;
 
-        return this._elementsService.loadInstanceObjects(selectedInstance)
-            .then(
-            this._handleLoadInstanceObjects.bind(this, selectedInstance),
-            this._handleLoadInstanceObjectError.bind(this));
+        var sourceElement = me._picker.getSourceElement(selectedInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(sourceElement.objects)) {
+            return me._handleLoadInstanceObjects(selectedInstance, new Object());
+        } else {
+            //loading the Instance Objects
+            return this._elementsService.loadInstanceObjects(selectedInstance)
+                .then(
+                this._handleLoadInstanceObjects.bind(this, selectedInstance),
+                this._handleLoadInstanceObjectError.bind(this));
+        }
     },
 
     //Based on the selected instance get all the instance definitions
@@ -765,10 +792,11 @@ var Datalist = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications',function(CloudElementsUtils, ElementsService, Notifications){
+        $get:['CloudElementsUtils', 'ElementsService','Notifications','Picker', function(CloudElementsUtils, ElementsService, Notifications, Picker){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
+            this.instance._picker = Picker;
             return this.instance;
         }]
     });
