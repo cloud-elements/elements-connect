@@ -289,12 +289,7 @@ var PickerController = BaseController.extend({
                 me._credentials.login(login).then(me._handleConfigurationLoad.bind(me));
                 return;
             }
-            else if (me._picker.isAppKeyPresent() == false
-                && me._picker.isKeyPresent() == false){
-                me._login.openLogin();
-                return
-            } else if (me._picker.isAppKeyPresent() == false
-                && me._picker.isKeyPresent() == true){
+            else {
                 me.$location.path('/credentials');
                 return;
             }
