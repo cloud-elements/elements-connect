@@ -47,7 +47,7 @@ module.exports = function (grunt) {
             name: 'local',
             userId: null,
             apiKey: null,
-            elementsUrl: 'http://localhost:4040/elements/api-v2'
+            elementsUrl: 'http://localhost:8080/elements/api-v2'
           }
         }
       },
