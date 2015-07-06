@@ -57,6 +57,7 @@ Bulk loader application
 * setup `config.js` file: 
  * `cp [PROJECT_HOME]/target-grunt/webapp/scripts/config.js [PROJECT_HOME]/src/main/webapp/scripts/config.js`
  *  make sure the `elementsUrl` is set to point to the proper URL
+ *  Don't checkin this file, this is only for project to get running on intelli-j
 * In a browser, go to `http://localhost:63342/bulkloader.io/src/main/webapp/index.html` (Note: `63342` is the default Intelli-J port and requires no run/debug configuration setup) 
 
 ## app setup
