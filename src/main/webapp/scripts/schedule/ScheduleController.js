@@ -40,6 +40,10 @@ var ScheduleController = BaseController.extend({
     defineScope: function() {
         var me = this;
 
+        // This is for transitions
+        me.$scope.pageClass = 'page-scheduler';
+
+
         me.$scope.queryStartDate = "January 01, 2015";
 
         me.$scope.cancel = me.cancel.bind(this);
@@ -93,6 +97,7 @@ var ScheduleController = BaseController.extend({
         me.$scope.showschedulecalendar = false;
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind();
         me.$scope.columnWidth = 'sixteen';
+        me.$scope.processtep = 'schedule';
     },
 
     defineListeners: function() {
@@ -146,7 +151,7 @@ var ScheduleController = BaseController.extend({
     cancel: function() {
         var me = this;
 
-        me._schedule.closeSchedule();
+        me.$location.path('/mapper');
     },
 
     save: function() {
@@ -174,7 +179,6 @@ var ScheduleController = BaseController.extend({
             jobs = me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._mapper.all, startdt, me.$scope.currentTransfomations, cronVal);
         }
-
         if(jobs != false) {
             me._schedule.scheduleJobs(me._picker.selectedElementInstance, me._picker.targetElementInstance, jobs, cronVal);
             me.$location.path('/');

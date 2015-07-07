@@ -31,10 +31,10 @@ module.exports = function(config) {
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/angular-busy/dist/angular-busy.js',
-      'bower_components/angular-ui-tree/dist/angular-ui-tree.js',
       'bower_components/angular-ui-select/dist/select.js',
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-material/angular-material.js',
+      'bower_components/angular-ui-tree-filter/dist/angular-ui-tree-filter.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'webapp/scripts/**/*.js',

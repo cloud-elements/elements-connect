@@ -10,6 +10,7 @@ var Schedule = Class.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _navigation: null,
 
     _objectMetadata: null,
     _objectMetadataFlat: null,
@@ -33,7 +34,7 @@ var Schedule = Class.extend({
             .ok('OK')
             .targetEvent(ev);
 
-        me.$mdDialog.show(confirm).then(me.closeSchedule.bind(me));
+        me.$mdDialog.show(confirm);
     },
 
     openSchedule: function () {
@@ -532,13 +533,14 @@ var Schedule = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications', 'Picker', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, Picker, $modal, $mdDialog){
+        $get:['CloudElementsUtils', 'ElementsService','Notifications', 'Picker', 'Navigation', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, Picker, Navigation, $modal, $mdDialog){
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
             this.instance.$modal = $modal;
             this.instance.$mdDialog = $mdDialog;
             this.instance._picker= Picker;
+            this.instance._navigation= Navigation;
 
             return this.instance;
         }]

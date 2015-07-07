@@ -142,6 +142,10 @@ var Credentials = Class.extend({
             me._notifications.notify(bulkloader.events.ERROR,
                     "Could not Signup for the application. " + error.data.message);
         }
+    },
+    fromLanding: function (){
+        var me = this;
+        me._notifications.notify(bulkloader.events.CREDENTIALS_LANDINGSIGNUP);
     }
 
 });

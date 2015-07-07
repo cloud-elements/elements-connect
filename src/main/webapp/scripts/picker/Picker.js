@@ -15,6 +15,7 @@ bulkloader.events.SCHEDULE_ERROR = 'SCHEDULE_ERROR';
 bulkloader.events.SHOW_CREATEINSTANCE = 'SHOW_CREATEINSTANCE';
 bulkloader.events.CONFIGURATION_LOAD = 'CONFIGURATION_LOAD';
 bulkloader.events.CREDENTIALS_EXPIRED = 'CREDENTIALS_EXPIRED';
+bulkloader.events.CREDENTIALS_LANDINGSIGNUP = 'CREDENTIALS_LANDINGSIGNUP';
 
 namespace('bulkloader.Picker').oauthElementKey = null;
 

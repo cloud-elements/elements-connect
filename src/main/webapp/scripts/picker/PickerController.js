@@ -43,15 +43,15 @@ var PickerController = BaseController.extend({
         var me = this;
         // This is for transitions
         me.$scope.pageClass = 'page-picker';
+        me.$scope.processtep = 'picker';
+        me.$scope.shownext = false;
 
         me.$scope.onSelect = me.onSelect.bind(me);
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
-        me.$scope.onSignout = me.onSignout.bind(me);
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
         me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
-        me.$scope.onHelp = me.onHelp.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
 
         // Add this class to show Target section
@@ -265,13 +265,6 @@ var PickerController = BaseController.extend({
         me._schedule.openSchedule();
     },
 
-    onHelp: function($event){
-        var me = this;
-        event.preventDefault();
-        event.stopPropagation();
-        me._help.openHelp();
-    },
-
     createInstance: function(element, selection){
         var me = this;
         me._createinstance.openCreateInstance(element, selection);
@@ -346,12 +339,8 @@ var PickerController = BaseController.extend({
         $event.preventDefault();
         $event.stopPropagation();
 
-    },
-
-    onSignout: function(){
-        var me = this;
-        me.$location.path('/credentials');
     }
+
 
 });
 

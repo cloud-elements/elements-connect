@@ -69,6 +69,7 @@ var MapperController = BaseController.extend({
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
         me.$scope.showTargetObjectSelection = false;
+        me.$scope.processtep = 'mapper';
 
         this.$scope.mapperTreeOptions = {
             dropped: this.onMetadataTreeDropped.bind(this),
@@ -382,13 +383,21 @@ var MapperController = BaseController.extend({
 
     },
 
+//    _onTransformationSave: function() {
+//        //Show the scheduler
+//        var me = this;
+//        me._maskLoader.hide();
+//        //me._notifications.notify(bulkloader.events.SHOW_SCHEDULER);
+//        me._schedule.openSchedule();
+//    },
+
     _onTransformationSave: function() {
-        //Show the scheduler
         var me = this;
+
         me._maskLoader.hide();
-        //me._notifications.notify(bulkloader.events.SHOW_SCHEDULER);
-        me._schedule.openSchedule();
+        me.$location.path('/schedule');
     },
+
 
     _onMapperError: function(event, error) {
         var me = this;
