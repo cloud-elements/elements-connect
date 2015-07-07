@@ -15,8 +15,9 @@ var PickerController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
     _lastSelection: null,
+    _application: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, $window, $location, $interval, $filter, $route, $mdDialog){
+    init: function($scope, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -28,6 +29,7 @@ var PickerController = BaseController.extend({
         me._createinstance = CreateInstance;
         me._login = Login;
         me._help = Help;
+        me._application = Application;
         me._jobhistory = JobHistory;
         me.$window = $window;
         me.$location = $location;
@@ -39,7 +41,7 @@ var PickerController = BaseController.extend({
         me.checkKey();
     },
 
-    defineScope:function() {
+    defineScope: function() {
         var me = this;
         // This is for transitions
         me.$scope.pageClass = 'page-picker';
@@ -65,7 +67,7 @@ var PickerController = BaseController.extend({
         me.$scope.sources = [];
     },
 
-    defineListeners:function() {
+    defineListeners: function() {
         var me = this;
         me._super();
 
@@ -76,7 +78,7 @@ var PickerController = BaseController.extend({
         me._notifications.addEventListener(bulkloader.events.CONFIGURATION_LOAD, me._handleConfigurationLoad.bind(me), me.$scope.$id);
     },
 
-    destroy:function(){
+    destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.NEW_ELEMENT_INSTANCES_CREATED, me._onInstancesRefresh.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
@@ -132,14 +134,14 @@ var PickerController = BaseController.extend({
         me.$scope.sources = me._picker._sources;
         me.$scope.targets = me._picker._targets;
 
-        if (me._picker.isTargetHidden() == false) {
+        if(me._picker.isTargetHidden() == false) {
             me.$scope.showTarget = true;
             me.$scope.withTarget = 'show-target';
         } else {
             me.$scope.withTarget = 'show-target dark-background';
         }
 
-        if (me._picker.getView() == 'mapper') {
+        if(me._picker.getView() == 'mapper') {
             me.$scope.showSelectTarget = true;
             me.$scope.showWait = false;
         } else {
@@ -147,14 +149,12 @@ var PickerController = BaseController.extend({
             me.$scope.showWait = true;
         }
 
-
-        if (!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
+        if(!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
             && me._picker.getDisplay().scheduling == true) {
             me.$scope.showScheduling = true;
         } else {
             me.$scope.showScheduling = false;
         }
-
 
         me._maskLoader.hide();
         me._maskLoader.show(me.$scope, 'Loading Instances...');
@@ -166,9 +166,9 @@ var PickerController = BaseController.extend({
         me._maskLoader.hide();
         me._instances = instances;
 
-        if (!me._cloudElementsUtils.isEmpty(me._instances)) {
+        if(!me._cloudElementsUtils.isEmpty(me._instances)) {
             var keys = Object.keys(me._instances);
-            for(var i = 0; i< keys.length; i++) {
+            for(var i = 0; i < keys.length; i++) {
                 angular.element(document.querySelector('#' + keys[i])).addClass('highlightingElement');
                 angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].name);
             }
@@ -202,7 +202,7 @@ var PickerController = BaseController.extend({
             // Set the instance details to factory class to be used in datalist
             me._picker.selectedElementInstance = me._instances[elementKey];
 
-            if (me._picker.getView() == 'datalist') {
+            if(me._picker.getView() == 'datalist') {
                 me._onElementInstanceSelect();
             }
 
@@ -213,7 +213,7 @@ var PickerController = BaseController.extend({
             me._picker.setTargetElement(elementKey);
             me._picker.setTargetElementInstance(me._instances[elementKey]);
 
-            if (me._picker.getView() == 'mapper') {
+            if(me._picker.getView() == 'mapper') {
 
                 // Check if the target instance is created, if not inform user to create one
                 if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
@@ -244,8 +244,7 @@ var PickerController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Loading Instance Data...');
 
-
-        if (me._picker.getView() == 'mapper') {
+        if(me._picker.getView() == 'mapper') {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
             me.$location.path('/mapper');
 
@@ -258,26 +257,26 @@ var PickerController = BaseController.extend({
         me._maskLoader.hide();
     },
 
-    onSelectSchedule: function(instance, $event){
+    onSelectSchedule: function(instance, $event) {
         var me = this;
         event.preventDefault();
         event.stopPropagation();
         me._schedule.openSchedule();
     },
 
-    createInstance: function(element, selection){
+    createInstance: function(element, selection) {
         var me = this;
         me._createinstance.openCreateInstance(element, selection);
     },
 
-    checkKey: function(){
+    checkKey: function() {
         var me = this;
         me._maskLoader.hide();
 
-        if(me._picker.isSecretsPresent() == false) {
-            if (me._picker.isTokenPresent() == true){
+        if(me._application.isSecretsPresent() == false) {
+            if(me._application.isTokenPresent() == true) {
                 var login = new Object();
-                login.email = me._picker.getToken();
+                login.email = me._application.getToken();
                 me._maskLoader.show(me.$scope, 'Loading...');
                 me._credentials.login(login).then(me._handleConfigurationLoad.bind(me));
                 return;
@@ -294,12 +293,12 @@ var PickerController = BaseController.extend({
         }
     },
 
-    onJobHistory: function(){
+    onJobHistory: function() {
         var me = this;
         me.$location.path('/jobhistory');
     },
 
-    onScheduledJobs: function(){
+    onScheduledJobs: function() {
         var me = this;
         me.$location.path('/jobs');
     },
@@ -318,7 +317,7 @@ var PickerController = BaseController.extend({
         }
 
         var keys = Object.keys(me._picker._elementInstances);
-        for(var i = 0; i< keys.length; i++) {
+        for(var i = 0; i < keys.length; i++) {
             var ins = me._instances[keys[i]];
             if(ins.element.key === elementKey) {
                 instance = ins;
@@ -344,8 +343,11 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope','CloudElementsUtils','Picker', 'Schedule', 'Credentials', 'Notifications', 'MaskLoader', 'CreateInstance', 'Login', 'JobHistory', 'Help', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
-
+PickerController.$inject = ['$scope', 'CloudElementsUtils', 'Picker',
+    'Schedule', 'Credentials', 'Notifications',
+    'MaskLoader', 'CreateInstance', 'Login',
+    'JobHistory', 'Help', 'Application',
+    '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('PickerController', PickerController);

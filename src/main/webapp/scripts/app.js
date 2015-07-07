@@ -29,7 +29,8 @@ var bulkloaderApp = angular
         'ui.bootstrap',
         'notifications',
         'config',
-        'CloudElementsUtils'
+        'CloudElementsUtils',
+        'Application'
     ]);
 bulkloaderApp.config(function($routeProvider) {
     $routeProvider

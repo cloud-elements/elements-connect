@@ -21,6 +21,7 @@ namespace('bulkloader.Picker').oauthElementKey = null;
 
 var Picker = Class.extend({
     _elementsService: null,
+    _application: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _elementInstances: null,
@@ -35,61 +36,13 @@ var Picker = Class.extend({
         console.log('Loading error' + error);
     },
 
-
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
     // Load all the instances and from it get the defaultinstance and also set it to _selectedElementInstance
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-
-    isAppKeyPresent: function () {
-        var me = this;
-        if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.apiKey)) {
-            return false;
-        }
-        return true;
-    },
-
-    isTokenPresent: function () {
-        var me = this;
-        if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.token)) {
-            return false;
-        }
-        return true;
-    },
-
-    getToken: function () {
-        var me = this;
-        return me._elementsService._environment.token;
-    },
-
-    isKeyPresent: function () {
-        var me = this;
-        if (me._cloudElementsUtils.isEmpty(me._elementsService._environment.key)) {
-            return false;
-        }
-        return true;
-    },
-
-    isSecretsPresent: function () {
-        var me = this;
-        if (me._cloudElementsUtils.isEmpty(me._elementsService.configuration)
-            || me._cloudElementsUtils.isEmpty(me._elementsService.configuration.user)
-            || me._cloudElementsUtils.isEmpty(me._elementsService.configuration.company)) {
-            return false;
-        }
-        return true;
-    },
-
-    setLogin: function (key, userId) {
-        var me = this;
-        me._elementsService._environment.apiKey = key;
-        me._elementsService._environment.userId = userId;
-    },
-
     loadConfiguration: function () {
         var me = this;
-
         return me._elementsService.loadOrgConfiguration().then(
             me._loadOrgConfigurationSucceeded.bind(me),
             me._loadOrgConfigurationFailed.bind(me));
@@ -97,16 +50,12 @@ var Picker = Class.extend({
 
     handleConfigurationSetUp: function (result) {
         var me = this;
-
-
-        me._elementsService.configuration = result.data.userData.configuration;
-        me._elementsService.configuration.company = result.data.company.secret;
-        me._elementsService.configuration.user = result.data.userData.secret;
+        me._application.loadConfiguration(result.data);
 
         me._sources = result.data.userData.configuration.sources;
         me._targets = result.data.userData.configuration.targets;
 
-        if (me._targets && me._targets.length == 1) {
+        if (me._targets.length == 1) {
             me._target = result.data.userData.configuration.targets[0];
         }
     },
@@ -114,7 +63,7 @@ var Picker = Class.extend({
     validateConfiguration: function () {
         var me = this;
 
-        // allowing for empty triggers, since the CAaaS just has a list of sources to choose from, but you must have sources
+        // allow no targets because the CAaaS will not have any
         if (me._cloudElementsUtils.isEmpty(me._sources)) {
             // Throw an error here.
             me._notifications.notify(bulkloader.events.ERROR, "No source elements configured.");
@@ -153,7 +102,7 @@ var Picker = Class.extend({
     _loadUserConfigurationSucceeded: function (result) {
         var me = this;
 
-        me._elementsService.configuration.user = result.data.secret;
+        me._application.configuration.user = result.data.secret;
         return true;
     },
 
@@ -404,7 +353,7 @@ var Picker = Class.extend({
 
     isTargetHidden: function () {
         var me = this;
-        var show = me._elementsService.configuration.showTarget;
+        var show = me._application.configuration.showTarget;
         if (me._cloudElementsUtils.isEmpty(show)) {
             show = false;
         }
@@ -430,21 +379,15 @@ var Picker = Class.extend({
 
     getView: function () {
         var me = this;
-
-        var view = me._elementsService.configuration.view;
-        if (me._cloudElementsUtils.isEmpty(view)) {
-            return 'datalist';
-        }
-        return view;
+        return me._application.getView();
     },
 
     getDisplay: function () {
         var me = this;
-        return me._elementsService.configuration.display;
+        return me._application.getDisplay();
     }
 
 });
-
 
 /**
  * Picker Factory object creation
@@ -459,9 +402,10 @@ var Picker = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', function (CloudElementsUtils, ElementsService, Notifications) {
+        $get: ['CloudElementsUtils', 'ElementsService', 'Application', 'Notifications', function (CloudElementsUtils, ElementsService, Application, Notifications) {
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
+            this.instance._application = Application;
             this.instance._notifications = Notifications;
             return this.instance;
         }]
