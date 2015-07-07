@@ -92,17 +92,17 @@ var NavigationController = BaseController.extend({
     stepClass: function(step, stepname){
         var me = this;
 
-        if ((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '3' && stepname == 'schedule')){
+        if ((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '2' && stepname == 'datalist') || (step == '3' && stepname == 'schedule')){
             return 'active'
         }
-        else if ((step == '1' && stepname == 'mapper') || (step == '1' && stepname == 'schedule') || (step == '2' && stepname == 'schedule')){
+        else if ((step == '1' && stepname == 'mapper') || (step == '1' && stepname == 'schedule') || (step == '2' && stepname == 'schedule') || (step == '2' && stepname == 'datalist')){
             return 'completed'
         }
 
     },
 
     showStepTitle: function(step, stepname){
-        if ((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '3' && stepname == 'schedule')){
+        if ((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '2' && stepname == 'datalist') || (step == '3' && stepname == 'schedule')){
             return true
         }
     }
