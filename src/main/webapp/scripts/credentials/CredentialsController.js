@@ -13,14 +13,16 @@ var CredentialsController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
     _credentials: null,
+    _application: null,
 
-    init:function($scope, CloudElementsUtils, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog){
+    init:function($scope, CloudElementsUtils, Notifications, Credentials, MaskLoader, Application, $window, $location, $interval, $filter, $route, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
         me._maskLoader = MaskLoader;
         me._cloudElementsUtils = CloudElementsUtils;
         me._credentials = Credentials;
+        me._application = Application;
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
@@ -42,6 +44,8 @@ var CredentialsController = BaseController.extend({
         me.$scope.newpasswordagain = null;
 
         me.$scope.shownav = false;
+
+        me.$scope.appName = me._application.getApplicationName();
 
         me.$scope.onLogin = me.onLogin.bind(me);
         me.$scope.onSignup = me.onSignup.bind(me);
@@ -253,7 +257,7 @@ var CredentialsController = BaseController.extend({
 
 });
 
-CredentialsController.$inject = ['$scope','CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+CredentialsController.$inject = ['$scope','CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', 'Application', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

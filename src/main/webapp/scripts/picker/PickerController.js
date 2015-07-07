@@ -55,6 +55,7 @@ var PickerController = BaseController.extend({
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
         me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
+        me.$scope.appName = me._application.getApplicationName()
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
