@@ -10,17 +10,19 @@ var HelpController = BaseController.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _application: null,
     _instances: null,
     $modal: null,
     $mdDialog: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Notifications, MaskLoader, Help, $window, $location, $filter, $route, $modal, $mdDialog){
+    init:function($scope, CloudElementsUtils, Picker, Application, Notifications, MaskLoader, Help, $window, $location, $filter, $route, $modal, $mdDialog){
         var me = this;
 
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
+        me._application = Application;
         me._help = Help;
         me.$modal = $modal;
         me.$mdDialog = $mdDialog;
@@ -34,7 +36,7 @@ var HelpController = BaseController.extend({
         var me = this;
         me.$scope.cancel = me.cancel.bind(me);
 
-        if (me._picker.getView() == 'mapper') {
+        if (me._application.getView() == 'mapper') {
             me.$scope.helpList = [
                 {imageURL: 'help-images/BulkloaderClickThrough-1.png', text:'Select a service, the source of your data..'},
                 {imageURL: 'help-images/BulkloaderClickThrough-2.png', text:'Enter your credentials for that service.'},
@@ -75,7 +77,7 @@ var HelpController = BaseController.extend({
 
 });
 
-HelpController.$inject = ['$scope','CloudElementsUtils','Picker', 'Notifications', 'MaskLoader', 'Help', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
+HelpController.$inject = ['$scope','CloudElementsUtils','Picker', 'Application', 'Notifications', 'MaskLoader', 'Help', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

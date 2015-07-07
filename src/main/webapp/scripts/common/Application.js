@@ -84,6 +84,15 @@ var Application = Class.extend({
         return me.configuration.display;
     },
 
+    isTargetHidden: function() {
+        var me = this;
+        var show = me.configuration.showTarget;
+        if(me._cloudElementsUtils.isEmpty(show)) {
+            show = false;
+        }
+        return !show;
+    },
+
     setLogin: function(key, userId) {
         var me = this;
         me.environment.apiKey = key;
