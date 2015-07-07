@@ -1,19 +1,7 @@
+<div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
+     ng-include="'navigation.html'"></div>
 <!-- SERVICE PICKER -->
-<section id="picker" class="animated-card" ng-class="withTarget">
-  <div class="picker-history">
-    <a href class="history pull-left" ng-click='onSignout()'>
-      Sign out
-    </a>
-    <a href class="history pull-right" ng-click='onJobHistory()'>
-      History <i class="icon history"></i>
-    </a>
-    <a ng-show="showScheduling" href class="scheduled pull-right" ng-click='onScheduledJobs()'>
-      Scheduled Jobs <i class="wait icon"></i>
-    </a>
-    <a href class="help pull-right" ng-click='onHelp($event)'>
-      <i class="icon help circle"></i> Help
-    </a>
-  </div>
+<section id="picker" class="" ng-class="withTarget">
 
   <div class="picker-source">
     <div class="vertical-align" style="width: 100%;">
@@ -83,3 +71,5 @@
 
 </section>
 
+<md-sidenav class="md-sidenav-left" md-component-id="left" ng-include="'sidenav.html'"
+            ng-controller="NavigationController"></md-sidenav>

@@ -60,5 +60,9 @@ bulkloaderApp.config(function($routeProvider) {
         .when('/jobs', {
             templateUrl: 'jobs.html',
             controller: 'JobsController'
+        })
+        .when('/elementloader', {
+            templateUrl: 'elementloader.html',
+            controller: 'LandingController'
         });
 });

@@ -41,6 +41,8 @@ var CredentialsController = BaseController.extend({
         me.$scope.newpassword = null;
         me.$scope.newpasswordagain = null;
 
+        me.$scope.shownav = false;
+
         me.$scope.onLogin = me.onLogin.bind(me);
         me.$scope.onSignup = me.onSignup.bind(me);
         me.$scope.changeCredentialView = me.changeCredentialView.bind(me);
@@ -57,6 +59,7 @@ var CredentialsController = BaseController.extend({
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
         me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
         me._notifications.addEventListener(bulkloader.events.CREDENTIALS_EXPIRED, me._onCredentialsExpired.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.CREDENTIALS_LANDINGSIGNUP, me._onSignupLanding.bind(me), me.$scope.$id);
     },
 
     destroy:function(){
@@ -64,6 +67,7 @@ var CredentialsController = BaseController.extend({
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.CREDENTIALS_EXPIRED, me._onCredentialsExpired.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.CREDENTIALS_LANDINGSIGNUP, me._onSignupLanding.bind(me), me.$scope.$id);
     },
 
     changeCredentialView: function(view,event){
@@ -240,6 +244,11 @@ var CredentialsController = BaseController.extend({
     _onCredentialsExpired: function(event, error) {
         var me = this;
         me.changeCredentialView('newpassword');
+    },
+
+    _onSignupLanding: function(event, error) {
+        var me = this;
+        me.changeCredentialView('signup');
     }
 
 });
