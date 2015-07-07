@@ -116,7 +116,7 @@ var CredentialsController = BaseController.extend({
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Please enter email and password to login.')
+                .content('Please enter Email and Password to login.')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
@@ -132,7 +132,7 @@ var CredentialsController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(me.$scope.forgotpasswordEmail)) {
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Missing Email."')
+                .content('Email is required.')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
@@ -165,7 +165,7 @@ var CredentialsController = BaseController.extend({
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Please enter new password and Confirm new password.')
+                .content('Please enter new password and confirm new password.')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
@@ -218,7 +218,7 @@ var CredentialsController = BaseController.extend({
 
             var confirm = me.$mdDialog.alert()
                 .title('Missing values')
-                .content('Missing required values."')
+                .content('First Name, Last Name, Email, and Password are required.')
                 .ok('OK');
 
             me.$mdDialog.show(confirm);
