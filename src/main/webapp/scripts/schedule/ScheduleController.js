@@ -10,6 +10,7 @@ var ScheduleController = BaseController.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _application: null,
     _datalist: null,
     _mapper: null,
     _schedule: null,
@@ -18,12 +19,13 @@ var ScheduleController = BaseController.extend({
     $mdDialog: null,
     _maskLoader: null,
 
-    init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Picker, Application, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
+        me._application = Application;
         me._datalist = Datalist;
         me._mapper = Mapper;
         me._schedule = Schedule;
@@ -42,7 +44,6 @@ var ScheduleController = BaseController.extend({
 
         // This is for transitions
         me.$scope.pageClass = 'page-scheduler';
-
 
         me.$scope.queryStartDate = "January 01, 2015";
 
@@ -63,7 +64,7 @@ var ScheduleController = BaseController.extend({
         me.$scope.maxDate = me.$scope.maxDate ? null : new Date();
 
         me.$scope.showScheduling = false;
-        me.$scope.datatransfer='transfernow';
+        me.$scope.datatransfer = 'transfernow';
 
         /* to show Calendar UI dropdown */
         me.$scope.opened = {
@@ -81,7 +82,7 @@ var ScheduleController = BaseController.extend({
         // temp store to display current transformation
         me.$scope.currentTransfomations = null;
 
-        if(me._picker.getView() == 'datalist') {
+        if(me._application.getView() == 'datalist') {
             me.$scope.showTarget = false;
         } else {
             me.$scope.showTarget = true;
@@ -98,6 +99,8 @@ var ScheduleController = BaseController.extend({
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind();
         me.$scope.columnWidth = 'sixteen';
         me.$scope.processtep = 'schedule';
+
+        me._seedSchedule();
     },
 
     defineListeners: function() {
@@ -114,15 +117,13 @@ var ScheduleController = BaseController.extend({
     _getMappingTransformations: function() {
         var me = this;
 
-        if(me._picker.getView() == 'datalist') {
+        if(me._application.getView() == 'datalist') {
             me.$scope.currentTransfomations = me._schedule.getDatalistTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._datalist.all);
         } else {
             me.$scope.currentTransfomations = me._schedule.getMappingTransformations(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._mapper.all);
         }
-
-        me._seedSchedule();
     },
 
     _handleError: function(event, error) {
@@ -140,8 +141,8 @@ var ScheduleController = BaseController.extend({
     _seedSchedule: function() {
         var me = this;
 
-        if (!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
-            && me._picker.getDisplay().scheduling == true) {
+        if(!me._cloudElementsUtils.isEmpty(me._application.getDisplay())
+            && me._application.getDisplay().scheduling == true) {
             me.$scope.showScheduling = true;
         } else {
             me.$scope.showScheduling = false;
@@ -172,7 +173,7 @@ var ScheduleController = BaseController.extend({
         }
 
         var jobs = null;
-        if(me._picker.getView() == 'datalist') {
+        if(me._application.getView() == 'datalist') {
             jobs = me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._datalist.all, startdt, me.$scope.currentTransfomations, cronVal);
         } else {
@@ -230,7 +231,7 @@ var ScheduleController = BaseController.extend({
 
 });
 
-ScheduleController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
+ScheduleController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Application', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('ScheduleController', ScheduleController);

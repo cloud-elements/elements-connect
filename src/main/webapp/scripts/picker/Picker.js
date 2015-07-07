@@ -164,7 +164,7 @@ var Picker = Class.extend({
         }
 
         if(!me._cloudElementsUtils.isEmpty(me._target)
-            && me.getView() == 'datalist'
+            && me._application.getView() == 'datalist'
             && me._cloudElementsUtils.isEmpty(me.targetElementInstance)) {
             //Create a dummy targetElementInstance to be used all the places
             me.targetElementInstance = new Object();
@@ -356,15 +356,6 @@ var Picker = Class.extend({
         }
     },
 
-    isTargetHidden: function() {
-        var me = this;
-        var show = me._application.configuration.showTarget;
-        if(me._cloudElementsUtils.isEmpty(show)) {
-            show = false;
-        }
-        return !show;
-    },
-
     getTargetToken: function() {
         var me = this;
         return me._target.token;
@@ -380,18 +371,7 @@ var Picker = Class.extend({
             }
         }
         return target.bulkSequence;
-    },
-
-    getView: function() {
-        var me = this;
-        return me._application.getView();
-    },
-
-    getDisplay: function() {
-        var me = this;
-        return me._application.getDisplay();
     }
-
 });
 
 /**

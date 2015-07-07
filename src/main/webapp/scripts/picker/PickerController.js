@@ -134,14 +134,14 @@ var PickerController = BaseController.extend({
         me.$scope.sources = me._picker._sources;
         me.$scope.targets = me._picker._targets;
 
-        if(me._picker.isTargetHidden() == false) {
+        if(me._application.isTargetHidden() == false) {
             me.$scope.showTarget = true;
             me.$scope.withTarget = 'show-target';
         } else {
             me.$scope.withTarget = 'show-target dark-background';
         }
 
-        if(me._picker.getView() == 'mapper') {
+        if(me._application.getView() == 'mapper') {
             me.$scope.showSelectTarget = true;
             me.$scope.showWait = false;
         } else {
@@ -149,8 +149,8 @@ var PickerController = BaseController.extend({
             me.$scope.showWait = true;
         }
 
-        if(!me._cloudElementsUtils.isEmpty(me._picker.getDisplay())
-            && me._picker.getDisplay().scheduling == true) {
+        if(!me._cloudElementsUtils.isEmpty(me._application.getDisplay())
+            && me._application.getDisplay().scheduling == true) {
             me.$scope.showScheduling = true;
         } else {
             me.$scope.showScheduling = false;
@@ -202,7 +202,7 @@ var PickerController = BaseController.extend({
             // Set the instance details to factory class to be used in datalist
             me._picker.selectedElementInstance = me._instances[elementKey];
 
-            if(me._picker.getView() == 'datalist') {
+            if(me._application.getView() == 'datalist') {
                 me._onElementInstanceSelect();
             }
 
@@ -213,7 +213,7 @@ var PickerController = BaseController.extend({
             me._picker.setTargetElement(elementKey);
             me._picker.setTargetElementInstance(me._instances[elementKey]);
 
-            if(me._picker.getView() == 'mapper') {
+            if(me._application.getView() == 'mapper') {
 
                 // Check if the target instance is created, if not inform user to create one
                 if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
@@ -244,7 +244,7 @@ var PickerController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Loading Instance Data...');
 
-        if(me._picker.getView() == 'mapper') {
+        if(me._application.getView() == 'mapper') {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
             me.$location.path('/mapper');
 
