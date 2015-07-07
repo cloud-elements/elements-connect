@@ -55,7 +55,7 @@ var Picker = Class.extend({
         me._sources = result.data.userData.configuration.sources;
         me._targets = result.data.userData.configuration.targets;
 
-        if (me._targets.length == 1) {
+        if (me._targets && me._targets.length == 1) {
             me._target = result.data.userData.configuration.targets[0];
         }
     },
