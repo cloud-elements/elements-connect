@@ -14,7 +14,7 @@ var CredentialsController = BaseController.extend({
     _maskLoader: null,
     _credentials: null,
 
-    init:function($scope, CloudElementsUtils, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog){
+    init: function($scope, CloudElementsUtils, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -29,7 +29,7 @@ var CredentialsController = BaseController.extend({
 
     },
 
-    defineScope:function() {
+    defineScope: function() {
         var me = this;
         me.$scope.showLogin = true;
         me.$scope.showSignup = false;
@@ -49,28 +49,26 @@ var CredentialsController = BaseController.extend({
         me.$scope.onForgot = me.onForgot.bind(me);
         me.$scope.onSetNewPassword = me.onSetNewPassword.bind(me);
 
-
+        me.changeCredentialView(me._credentials.credentialsView);
     },
 
-    defineListeners:function() {
+    defineListeners: function() {
         var me = this;
         me._super();
 
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
         me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
         me._notifications.addEventListener(bulkloader.events.CREDENTIALS_EXPIRED, me._onCredentialsExpired.bind(me), me.$scope.$id);
-        me._notifications.addEventListener(bulkloader.events.CREDENTIALS_LANDINGSIGNUP, me._onSignupLanding.bind(me), me.$scope.$id);
     },
 
-    destroy:function(){
+    destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.CREDENTIALS_EXPIRED, me._onCredentialsExpired.bind(me), me.$scope.$id);
-        me._notifications.removeEventListener(bulkloader.events.CREDENTIALS_LANDINGSIGNUP, me._onSignupLanding.bind(me), me.$scope.$id);
     },
 
-    changeCredentialView: function(view,event){
+    changeCredentialView: function(view, event) {
         var me = this;
         if(!me._cloudElementsUtils.isEmpty(event)) {
             event.preventDefault();
@@ -82,13 +80,13 @@ var CredentialsController = BaseController.extend({
         me.$scope.showSignup = false;
         me.$scope.showNewPassword = false;
 
-        if(view == 'login'){
+        if(view == 'login') {
             me.$scope.showLogin = true;
-        }else if(view == 'signup'){
+        } else if(view == 'signup') {
             me.$scope.showSignup = true;
-        }else if(view == 'forgotpassword'){
+        } else if(view == 'forgotpassword') {
             me.$scope.showForgotPassword = true;
-        }else if(view == 'newpassword'){
+        } else if(view == 'newpassword') {
             me.$scope.showNewPassword = true;
         }
     },
@@ -112,7 +110,7 @@ var CredentialsController = BaseController.extend({
         me._maskLoader.show(me.$scope, msg);
     },
 
-    onLogin: function(){
+    onLogin: function() {
         var me = this;
 
         if(me._cloudElementsUtils.isEmpty(me.$scope.login.email)
@@ -213,7 +211,7 @@ var CredentialsController = BaseController.extend({
         }
     },
 
-    onSignup: function(){
+    onSignup: function() {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me.$scope.signup.email)
             || me._cloudElementsUtils.isEmpty(me.$scope.signup.password)
@@ -253,8 +251,7 @@ var CredentialsController = BaseController.extend({
 
 });
 
-CredentialsController.$inject = ['$scope','CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
-
+CredentialsController.$inject = ['$scope', 'CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('CredentialsController', CredentialsController);

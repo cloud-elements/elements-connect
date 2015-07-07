@@ -6,12 +6,13 @@
  */
 
 var Credentials = Class.extend({
-    _elementsService:null,
+    _elementsService: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    credentialsView: 'login',
 
-    _handleLoadError:function(error){
+    _handleLoadError: function(error) {
         //Ignore as these can be ignored or 404's
         console.log('Loading error' + error);
     },
@@ -36,14 +37,13 @@ var Credentials = Class.extend({
     _resetPasswordFailed: function(error) {
         var me = this;
 
-
         if(error.code == 206) {
             //Credentials expired, force user to change Password
             me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, error.data);
             return;
         }
 
-        if (me._cloudElementsUtils.isEmpty(error.data)) {
+        if(me._cloudElementsUtils.isEmpty(error.data)) {
             me._notifications.notify(bulkloader.events.ERROR,
                 "Error while resetting the password.");
         } else {
@@ -68,7 +68,7 @@ var Credentials = Class.extend({
     _updatePasswordFailed: function(error) {
         var me = this;
 
-        if (me._cloudElementsUtils.isEmpty(error.data)) {
+        if(me._cloudElementsUtils.isEmpty(error.data)) {
             me._notifications.notify(bulkloader.events.ERROR,
                 "Could not update password.");
         } else {
@@ -109,7 +109,7 @@ var Credentials = Class.extend({
             me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, error.data);
             return;
         }
-        if (me._cloudElementsUtils.isEmpty(error.data)) {
+        if(me._cloudElementsUtils.isEmpty(error.data)) {
             me._notifications.notify(bulkloader.events.ERROR,
                 "Could not retrieve application configuration for organization.");
         } else {
@@ -135,27 +135,22 @@ var Credentials = Class.extend({
     _loadSignupFailed: function(error) {
         var me = this;
 
-        if (me._cloudElementsUtils.isEmpty(error.data)) {
+        if(me._cloudElementsUtils.isEmpty(error.data)) {
             me._notifications.notify(bulkloader.events.ERROR,
                 "Could not Signup for the application.");
         } else {
             me._notifications.notify(bulkloader.events.ERROR,
                     "Could not Signup for the application. " + error.data.message);
         }
-    },
-    fromLanding: function (){
-        var me = this;
-        me._notifications.notify(bulkloader.events.CREDENTIALS_LANDINGSIGNUP);
     }
 
 });
-
 
 /**
  * Credentials Factory object creation
  *
  */
-(function (){
+(function() {
 
     var CredentialsObject = Class.extend({
 
@@ -164,7 +159,7 @@ var Credentials = Class.extend({
         /**
          * Initialize and configure
          */
-        $get:['CloudElementsUtils', 'ElementsService','Notifications', 'Picker', function(CloudElementsUtils, ElementsService, Notifications, Picker){
+        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', function(CloudElementsUtils, ElementsService, Notifications, Picker) {
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
@@ -174,5 +169,5 @@ var Credentials = Class.extend({
     });
 
     angular.module('bulkloaderApp')
-        .provider('Credentials',CredentialsObject);
+        .provider('Credentials', CredentialsObject);
 }());

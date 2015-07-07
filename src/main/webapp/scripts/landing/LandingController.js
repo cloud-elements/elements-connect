@@ -33,7 +33,6 @@ var LandingController = BaseController.extend({
 
         me.$scope.goToLogin = me.goToLogin.bind(me);
         me.$scope.goToSignup = me.goToSignup.bind(me);
-
     },
 
     defineListeners: function() {
@@ -41,14 +40,15 @@ var LandingController = BaseController.extend({
         me._super();
     },
 
-    goToLogin: function(){
+    goToLogin: function() {
         var me = this;
+        me._credentials.credentialsView = 'login';
         me.$location.path('/credentials');
     },
-    goToSignup: function(){
+    goToSignup: function() {
         var me = this;
+        me._credentials.credentialsView = 'signup';
         me.$location.path('/credentials');
-        me._credentials.fromLanding();
     }
 });
 
