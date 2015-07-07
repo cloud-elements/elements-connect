@@ -9,13 +9,13 @@ var JobHistoryController = BaseController.extend({
 
     _notifications: null,
     _cloudElementsUtils: null,
-    _picker: null,
+    _application: null,
     _history: null,
     _instances: null,
     _maskLoader: null,
     _credentials: null,
 
-    init: function($scope, CloudElementsUtils, Picker, JobHistory, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Application, JobHistory, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -23,7 +23,7 @@ var JobHistoryController = BaseController.extend({
         me._cloudElementsUtils = CloudElementsUtils;
         me._credentials = Credentials;
         me.$window = $window;
-        me._picker = Picker;
+        me._application = Application;
         me._history = JobHistory;
         me.$location = $location;
         me.$interval = $interval;
@@ -52,8 +52,12 @@ var JobHistoryController = BaseController.extend({
             paginationPageSize: 50,
             columnDefs: [
                 {field: 'rowNum', width: 120, name: 'Row number'},
-                {field: 'status', width: 450,cellTooltip: function(row, col) {return 'Click to read more';}},
-                {field: 'response',cellTooltip: function(row, col) {return 'Click to read more';}, cellTemplate:'<code class="error">{{row.entity.response}}</code>', cellClass:'errorCell'}
+                {field: 'status', width: 450, cellTooltip: function(row, col) {
+                    return 'Click to read more';
+                }},
+                {field: 'response', cellTooltip: function(row, col) {
+                    return 'Click to read more';
+                }, cellTemplate: '<code class="error">{{row.entity.response}}</code>', cellClass: 'errorCell'}
             ]
         };
         me.$scope.jobhistorydata = null;
@@ -83,12 +87,12 @@ var JobHistoryController = BaseController.extend({
     seedHistory: function() {
         var me = this;
 
-        if(me._picker.isSecretsPresent() == false) {
+        if(me._application.isSecretsPresent() == false) {
             me.$location.path('/');
             return;
         }
 
-        if(me._picker.getView() == 'datalist') {
+        if(me._application.getView() == 'datalist') {
             me.$scope.showTarget = false;
         }
 
@@ -120,7 +124,7 @@ var JobHistoryController = BaseController.extend({
         }
 
         //call the API for target error records
-        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetElementKey)) {
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetElementKey)) {
             return me._history.getJobErrors(me.$scope.selectedJob.targetElementKey, me.$scope.selectedJob.targetJobId).then(me._handleGetJobErrors.bind(me));
         } else {
             return me._history.getJobErrors(me.$scope.selectedJob.sourceElementKey, me.$scope.selectedJob.sourceJobId).then(me._handleGetJobErrors.bind(me));
@@ -133,11 +137,11 @@ var JobHistoryController = BaseController.extend({
         //Construct the message here based on the
         me.$scope.jobExecutions = results;
         var err = null;
-        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.sourceStatusMessage)) {
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.sourceStatusMessage)) {
             err = me.$scope.selectedJob.sourceStatusMessage
         }
 
-        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetStatusMessage)) {
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetStatusMessage)) {
             if(err == null) {
                 err = '';
             } else {
@@ -164,7 +168,7 @@ var JobHistoryController = BaseController.extend({
             err = 'No errors, data transfer completed successfully';
         }
 
-        if(err != null ) {
+        if(err != null) {
             me.$scope.showNoErrors = true;
             me.$scope.errorMessage = err;
         }
@@ -181,7 +185,7 @@ var JobHistoryController = BaseController.extend({
 
 });
 
-JobHistoryController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'JobHistory', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+JobHistoryController.$inject = ['$scope', 'CloudElementsUtils', 'Application', 'JobHistory', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('JobHistoryController', JobHistoryController);

@@ -9,14 +9,14 @@ var JobsController = BaseController.extend({
 
     _notifications: null,
     _cloudElementsUtils: null,
-    _picker: null,
+    _application: null,
     _jobs: null,
     _history: null,
     _instances: null,
     _maskLoader: null,
     _credentials: null,
 
-    init: function($scope, CloudElementsUtils, Picker, Jobs, JobHistory, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Application, Jobs, JobHistory, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -24,7 +24,7 @@ var JobsController = BaseController.extend({
         me._cloudElementsUtils = CloudElementsUtils;
         me._credentials = Credentials;
         me.$window = $window;
-        me._picker = Picker;
+        me._application = Application;
         me._jobs = Jobs;
         me._history = JobHistory;
         me.$location = $location;
@@ -87,7 +87,7 @@ var JobsController = BaseController.extend({
     _seedJobs: function() {
         var me = this;
 
-        if(me._picker.isSecretsPresent() == false) {
+        if(me._application.isSecretsPresent() == false) {
             me.$location.path('/');
             return;
         }
@@ -103,7 +103,6 @@ var JobsController = BaseController.extend({
 
     onSelectScheduledJob: function($index) {
         var me = this;
-
 
         me.$scope.noJobsMessage = false;
         me.$scope.selectedIndex = $index;
@@ -138,7 +137,7 @@ var JobsController = BaseController.extend({
         }
 
         //call the API for target error records
-        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetElementKey)) {
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetElementKey)) {
             return me._history.getJobErrors(me.$scope.selectedJob.targetElementKey, me.$scope.selectedJob.targetJobId).then(me._handleGetJobErrors.bind(me));
         } else {
             return me._history.getJobErrors(me.$scope.selectedJob.sourceElementKey, me.$scope.selectedJob.sourceJobId).then(me._handleGetJobErrors.bind(me));
@@ -151,11 +150,11 @@ var JobsController = BaseController.extend({
         //Construct the message here based on the
         me.$scope.jobExecutions = results;
         var err = null;
-        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.sourceStatusMessage)) {
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.sourceStatusMessage)) {
             err = me.$scope.selectedJob.sourceStatusMessage
         }
 
-        if (!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetStatusMessage)) {
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetStatusMessage)) {
             if(err == null) {
                 err = '';
             } else {
@@ -182,7 +181,7 @@ var JobsController = BaseController.extend({
             err = 'No errors, data transfer completed successfully';
         }
 
-        if(err != null ) {
+        if(err != null) {
             me.$scope.showNoErrors = true;
             me.$scope.errorMessage = err;
         }
@@ -262,7 +261,7 @@ var JobsController = BaseController.extend({
 
 });
 
-JobsController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Jobs', 'JobHistory', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+JobsController.$inject = ['$scope', 'CloudElementsUtils', 'Application', 'Jobs', 'JobHistory', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('JobsController', JobsController);

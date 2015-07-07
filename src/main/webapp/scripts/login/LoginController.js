@@ -9,7 +9,7 @@ var LoginController = BaseController.extend({
 
     _notifications: null,
     _cloudElementsUtils: null,
-    _picker: null,
+    _application: null,
     _datalist: null,
     _login: null,
     _instances: null,
@@ -17,12 +17,12 @@ var LoginController = BaseController.extend({
     $mdDialog: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Login, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog){
+    init: function($scope, CloudElementsUtils, Application, Datalist, Login, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
-        me._picker = Picker;
+        me._application = Application;
         me._datalist = Datalist;
         me._login = Login;
         me.$modal = $modal;
@@ -33,7 +33,7 @@ var LoginController = BaseController.extend({
         me._super($scope);
     },
 
-    defineScope:function() {
+    defineScope: function() {
         var me = this;
 
         me.$scope.cancel = me.cancel.bind(this);
@@ -43,7 +43,7 @@ var LoginController = BaseController.extend({
 
     },
 
-    defineListeners:function(){
+    defineListeners: function() {
         var me = this;
 
 //        me._notifications.addEventListener(bulkloader.events.SHOW_SCHEDULER, me._seedSchedule.bind(me));
@@ -56,14 +56,13 @@ var LoginController = BaseController.extend({
 
     save: function() {
         var me = this;
-        me._picker.setLogin(me.$scope.apiKey, me.$scope.userId);
+        me._application.setLogin(me.$scope.apiKey, me.$scope.userId);
         me._notifications.notify(bulkloader.events.LOGIN_ENTERED, "Done");
         me._login.closeLogin();
     }
 });
 
-LoginController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Login', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
-
+LoginController.$inject = ['$scope', 'CloudElementsUtils', 'Application', 'Datalist', 'Login', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('LoginController', LoginController);
