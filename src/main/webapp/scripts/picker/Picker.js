@@ -15,7 +15,7 @@ bulkloader.events.SCHEDULE_ERROR = 'SCHEDULE_ERROR';
 bulkloader.events.SHOW_CREATEINSTANCE = 'SHOW_CREATEINSTANCE';
 bulkloader.events.CONFIGURATION_LOAD = 'CONFIGURATION_LOAD';
 bulkloader.events.CREDENTIALS_EXPIRED = 'CREDENTIALS_EXPIRED';
-bulkloader.events.CREDENTIALS_LANDINGSIGNUP = 'CREDENTIALS_LANDINGSIGNUP';
+bulkloader.events.CONFIGURATION_LOADED = 'CONFIGURATION_LOADED';
 
 namespace('bulkloader.Picker').oauthElementKey = null;
 
@@ -51,7 +51,7 @@ var Picker = Class.extend({
     handleConfigurationSetUp: function(result) {
         var me = this;
         me._application.loadConfiguration(result.data);
-
+        me._notifications.notify(bulkloader.events.CONFIGURATION_LOADED);
         me._sources = result.data.userData.configuration.sources;
         me._targets = result.data.userData.configuration.targets;
 

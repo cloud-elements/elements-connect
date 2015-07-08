@@ -122,6 +122,10 @@ var DatalistController = BaseController.extend({
     _seedDatalist: function() {
         var me = this;
 
+        me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
+        me.$scope.sourceLogo = me.$scope.sourceElement.image;
+        me.$scope.sourceName = me.$scope.sourceElement.name;
+
         if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
             me.$location.path('/');
             return;

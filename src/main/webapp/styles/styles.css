@@ -346,7 +346,7 @@ body .header-navigation .ui.positive.button:hover {
 /*******************************/
 /* SERVICES LOGOS              */
 /*******************************/
-#picker, #mapper {
+#picker, #mapper, #data-list {
     color: #fff;
     text-align: center;
     padding: 0px;
@@ -1169,7 +1169,7 @@ body .header-navigation .ui.positive.button:hover {
     padding: 15px;
     overflow-y: auto;
     position: absolute;
-    top: 55px;
+    top: 35px;
     bottom: 0;
     right: 0;
     left: 0;
@@ -1485,7 +1485,7 @@ div#data-list-body.disabled:after {
     background-color: #eee;
 }
 
-#mapper-header {
+#mapper-header, #data-list-header {
     position: absolute;
     left: 0;
     right: 0;
@@ -2018,11 +2018,13 @@ li li.angular-ui-tree-placeholder{
     margin: 0 0 5px 0;
     height: 46px;
 }
-#mapper-header .target-source-link-img{
+#mapper-header .target-source-link-img,
+#data-list-header .target-source-link-img{
     float: left;
     display: inline-block;
 }
-#mapper-header .target-source-link-img span{
+#mapper-header .target-source-link-img span,
+#data-list-header .target-source-link-img span{
     background-size: 100%;
     background-position: center center;
     background-repeat: no-repeat;
@@ -2038,13 +2040,15 @@ li li.angular-ui-tree-placeholder{
     height: 40px;
     float: left;
 }
-#mapper-header .target-source-icon{
+#mapper-header .target-source-icon,
+#data-list-header .target-source-icon{
     width: 40px;
     height: 40px;
     display: inline-block;
     float: left;
 }
-#mapper-header .target-source-icon i{
+#mapper-header .target-source-icon i,
+#data-list-header .target-source-icon i{
     width: 100%;
     padding: 1em 0;
 }

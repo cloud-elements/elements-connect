@@ -66,12 +66,11 @@ var Application = Class.extend({
 
     getView: function() {
         var me = this;
-
-        var view = me.configuration.view;
-        if(me._cloudElementsUtils.isEmpty(view)) {
+        if(me._cloudElementsUtils.isEmpty(me.configuration)
+            || me._cloudElementsUtils.isEmpty( me.configuration.view)) {
             return 'datalist';
         }
-        return view;
+        return  me.configuration.view;
     },
 
     getDisplay: function() {

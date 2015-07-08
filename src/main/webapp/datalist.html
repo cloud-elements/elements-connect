@@ -5,8 +5,8 @@
 
   <!-- FIXED LIST HEADER & SELECTION -->
   <div id="data-list-header">
-    <div class="mapping-data-list ui grid">
-      <div class="column six wide" id="select-dropdown-container" style="padding: 0 30px;">
+    <div class="mapping-data-list" style="padding: .3rem 1rem;">
+      <div class="column sixteen wide padded" id="" style="padding: 0 30px;">
         <!--<ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"-->
                    <!--style="width: 100%;"-->
                    <!--ng-change="refreshObjectMetaData()">-->
@@ -20,20 +20,21 @@
           <!--</ui-select-choices>-->
         <!--</ui-select>-->
 
+        <div class="column eight wide padded target-source-link-img" style="float:left;">
+          <span style="background-image: url({{sourceLogo}})"></span>
+          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;color: #333; font-weight: bold;">
+            <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
+            <br/>source</p>
+        </div>
+
+
+
         <select
             data-ng-model="selectedObject.select"
             ng-options="o as o.name for o in instanceObjects"
-            ng-change="refreshObjectMetaData()" class="ui-select-datalist" style="width: 100%;">
+            ng-change="refreshObjectMetaData()" class="target-select" style="margin: 5px 30px; float: left;min-width: 200px;">
         </select>
 
-      </div>
-      <div class="column ten wide">
-        <!--<div class="button-container pull-right">-->
-          <!--<div class="ui tiny">-->
-            <!--<button type="submit" class="ui button tiny" ng-click="cancel()">Back</button>-->
-            <!--<button type="submit" class="ui inverted button tiny" ng-click="save()">Save and Schedule Job</button>-->
-          <!--</div>-->
-        <!--</div>-->
       </div>
     </div>
   </div>

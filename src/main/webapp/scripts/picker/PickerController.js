@@ -52,8 +52,6 @@ var PickerController = BaseController.extend({
         me.$scope.onSelectSchedule = me.onSelectSchedule.bind(me);
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
-        me.$scope.onJobHistory = me.onJobHistory.bind(me);
-        me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
 
         // Add this class to show Target section
@@ -61,7 +59,6 @@ var PickerController = BaseController.extend({
         me.$scope.showTarget = false;
         me.$scope.showWait = false;
         me.$scope.showSelectTarget = false;
-        me.$scope.showScheduling = false;
 
         me.$scope.targets = [];
         me.$scope.sources = [];
@@ -147,13 +144,6 @@ var PickerController = BaseController.extend({
         } else {
             me.$scope.showSelectTarget = false;
             me.$scope.showWait = true;
-        }
-
-        if(!me._cloudElementsUtils.isEmpty(me._application.getDisplay())
-            && me._application.getDisplay().scheduling == true) {
-            me.$scope.showScheduling = true;
-        } else {
-            me.$scope.showScheduling = false;
         }
 
         me._maskLoader.hide();
@@ -291,16 +281,6 @@ var PickerController = BaseController.extend({
         } else {
             me._handleConfigurationLoad(true);
         }
-    },
-
-    onJobHistory: function() {
-        var me = this;
-        me.$location.path('/jobhistory');
-    },
-
-    onScheduledJobs: function() {
-        var me = this;
-        me.$location.path('/jobs');
     },
 
     onEditInstance: function(elementKey, selection, $event) {

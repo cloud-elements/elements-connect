@@ -151,8 +151,11 @@ var ScheduleController = BaseController.extend({
 
     cancel: function() {
         var me = this;
-
-        me.$location.path('/mapper');
+        if(me._application.getView() == 'datalist') {
+            me.$location.path('/datalist');
+        }else{
+            me.$location.path('/mapper');
+        }
     },
 
     save: function() {
