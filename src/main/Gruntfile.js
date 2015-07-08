@@ -108,7 +108,7 @@ module.exports = function(grunt) {
                     }
                 }
             },
-            localCAaaS: {
+            localCaaas: {
                 options: {
                     dest: '<%= yeoman.app %>/scripts/config.js'
                 },
@@ -119,6 +119,62 @@ module.exports = function(grunt) {
                         userId: null,
                         apiKey: null,
                         elementsUrl: 'http://localhost:8080/elements/api-v2'
+                    }
+                }
+            },
+            snapshotCaaas: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js'
+                },
+                constants: {
+                    ENV: {
+                        appName: 'CAaaS',
+                        name: 'snapshot',
+                        userId: null,
+                        apiKey: null,
+                        elementsUrl: 'https://snapshot.cloud-elements.com/elements/api-v2'
+                    }
+                }
+            },
+            qaCaaas: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js'
+                },
+                constants: {
+                    ENV: {
+                        appName: 'CAaaS',
+                        name: 'qa',
+                        userId: null,
+                        apiKey: null,
+                        elementsUrl: 'https://qa.cloud-elements.com/elements/api-v2'
+                    }
+                }
+            },
+            stagingCaaas: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js'
+                },
+                constants: {
+                    ENV: {
+                        appName: 'CAaaS',
+                        name: 'staging',
+                        userId: null,
+                        apiKey: null,
+                        elementsUrl: 'https://staging.cloud-elements.com/elements/api-v2'
+                    }
+                }
+            },
+            productionCaaas: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js'
+                },
+                constants: {
+                    ENV: {
+                        appName: 'CAaaS',
+                        name: 'production',
+                        userId: null,
+                        apiKey: null,
+                        elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
                     }
                 }
             }
@@ -616,6 +672,101 @@ module.exports = function(grunt) {
         'autoprefixer',
         'concat',
         'ngAnnotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
+    grunt.registerTask('localCaaas', [
+        'clean:dist',
+        'ngconstant:localCaaas',
+        'wiredep',
+        'useminPrepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngAnnotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
+    grunt.registertask('snapshotCaaas', [
+        'clean:dist',
+        'ngconstant:snapshotCaaas',
+        'wiredep',
+        'useminprepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngannotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
+    grunt.registertask('qaCaaas', [
+        'clean:dist',
+        'ngconstant:qaCaaas',
+        'wiredep',
+        'useminprepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngannotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
+    grunt.registertask('stagingCaaas', [
+        'clean:dist',
+        'ngconstant:stagingCaaas',
+        'wiredep',
+        'useminprepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngannotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
+    grunt.registertask('buildCaaas', [
+        'clean:dist',
+        'ngconstant:productionCaaas',
+        'wiredep',
+        'useminprepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngannotate',
         'copy:dist',
         'cdnify',
         'cssmin',
