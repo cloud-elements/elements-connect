@@ -46,8 +46,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'Bulkloader',
                         name: 'local',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'http://localhost:8080/elements/api-v2'
                     }
                 }
@@ -60,8 +58,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'Bulkloader',
                         name: 'snapshot',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://snapshot.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -74,8 +70,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'Bulkloader',
                         name: 'qa',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://qa.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -88,8 +82,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'Bulkloader',
                         name: 'staging',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://staging.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -102,8 +94,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'Bulkloader',
                         name: 'production',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -116,8 +106,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'CAaaS',
                         name: 'local',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'http://localhost:8080/elements/api-v2'
                     }
                 }
@@ -130,8 +118,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'CAaaS',
                         name: 'snapshot',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://snapshot.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -144,8 +130,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'CAaaS',
                         name: 'qa',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://qa.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -158,8 +142,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'CAaaS',
                         name: 'staging',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://staging.cloud-elements.com/elements/api-v2'
                     }
                 }
@@ -172,8 +154,6 @@ module.exports = function(grunt) {
                     ENV: {
                         appName: 'CAaaS',
                         name: 'production',
-                        userId: null,
-                        apiKey: null,
                         elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
                     }
                 }
