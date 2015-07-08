@@ -1,3 +1,5 @@
+<div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
+     ng-include="'navigation.html'"></div>
 <!-- LIST SELECTION -->
 <section id="data-list" class="animated-panel">
 
@@ -26,12 +28,12 @@
 
       </div>
       <div class="column ten wide">
-        <div class="button-container pull-right">
-          <div class="ui tiny">
-            <button type="submit" class="ui button tiny" ng-click="cancel()">Back</button>
-            <button type="submit" class="ui inverted button tiny" ng-click="save()">Save and Schedule Job</button>
-          </div>
-        </div>
+        <!--<div class="button-container pull-right">-->
+          <!--<div class="ui tiny">-->
+            <!--<button type="submit" class="ui button tiny" ng-click="cancel()">Back</button>-->
+            <!--<button type="submit" class="ui inverted button tiny" ng-click="save()">Save and Schedule Job</button>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
   </div>
@@ -88,4 +90,7 @@
   </div>
 
 </section>
+
+<md-sidenav class="md-sidenav-left" md-component-id="left" ng-include="'sidenav.html'"
+            ng-controller="NavigationController"></md-sidenav>
 

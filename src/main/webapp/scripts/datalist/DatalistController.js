@@ -56,6 +56,7 @@ var DatalistController = BaseController.extend({
 
         me.$scope.checkAllInstance = me.checkAllInstance.bind(this);
         me.$scope.checkAllObjects = me.checkAllObjects.bind(this);
+        me.$scope.processtep = 'datalist';
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
         me._seedDatalist();
@@ -157,12 +158,20 @@ var DatalistController = BaseController.extend({
 
     },
 
+//    _onTransformationSave: function() {
+//        //Show the scheduler
+//        var me = this;
+//        me._maskLoader.hide();
+//        //me._notifications.notify(bulkloader.events.SHOW_SCHEDULER);
+//        me._schedule.openSchedule();
+//    },
+
+
     _onTransformationSave: function() {
-        //Show the scheduler
         var me = this;
+
         me._maskLoader.hide();
-        //me._notifications.notify(bulkloader.events.SHOW_SCHEDULER);
-        me._schedule.openSchedule();
+        me.$location.path('/schedule');
     },
 
     _onDatalistError: function(event, error) {
