@@ -55,7 +55,7 @@ var Picker = Class.extend({
         me._sources = result.data.userData.configuration.sources;
         me._targets = result.data.userData.configuration.targets;
 
-        if(me._targets.length == 1) {
+        if(me._targets && me._targets.length == 1) {
             me._target = result.data.userData.configuration.targets[0];
         }
     },
@@ -63,15 +63,10 @@ var Picker = Class.extend({
     validateConfiguration: function() {
         var me = this;
 
+        // allow for no targets to support CAaaS
         if(me._cloudElementsUtils.isEmpty(me._sources)) {
             // Throw an error here.
             me._notifications.notify(bulkloader.events.ERROR, "No source elements configured.");
-            return false;
-        }
-
-        if(me._cloudElementsUtils.isEmpty(me._targets)) {
-            // Throw an error here.
-            me._notifications.notify(bulkloader.events.ERROR, "No target elements configured.");
             return false;
         }
 

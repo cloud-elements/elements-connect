@@ -7,6 +7,11 @@ var Application = Class.extend({
     environment: null,
     configuration: null,
 
+    getApplicationName: function() {
+        var me = this;
+        return me.environment.appName;
+    },
+
     populateApplicationDetails: function() {
         var me = this;
 
