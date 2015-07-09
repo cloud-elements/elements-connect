@@ -16,7 +16,7 @@ var MapperController = BaseController.extend({
     _schedule: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog){
+    init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -33,7 +33,7 @@ var MapperController = BaseController.extend({
         me._super($scope);
     },
 
-    defineScope:function() {
+    defineScope: function() {
         var me = this;
 
         // This is for transitions
@@ -80,7 +80,7 @@ var MapperController = BaseController.extend({
         me._seedMapper();
     },
 
-    defineListeners:function(){
+    defineListeners: function() {
         var me = this;
         me._super();
 
@@ -92,7 +92,7 @@ var MapperController = BaseController.extend({
 
     },
 
-    destroy:function(){
+    destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
@@ -145,14 +145,14 @@ var MapperController = BaseController.extend({
             return false;
         }
         else {
-            if (parentModelVal.path != null){
+            if(parentModelVal.path != null) {
                 this._populateBackToMetaData(parentModelVal.path, parentModelVal.targetVendorType, parentModelVal.path, me.$scope.objectMetaData);
             }
             parentModelVal.path = modelVal.actualVendorPath;
-            parentModelVal.targetVendorType= modelVal.type;
+            parentModelVal.targetVendorType = modelVal.type;
 
             if(me._mapper._isLiteral(parentModelVal.type)) {
-                parentModelVal.fields=[];
+                parentModelVal.fields = [];
             }
             if(me.$scope.selectedObject.select.transformed == false) {
                 me.$scope.selectedObject.select.transformed = true;
@@ -178,15 +178,15 @@ var MapperController = BaseController.extend({
         uitree.toggle();
     },
 
-    refreshObjectMetaData: function(checkWhereFields) {
+    refreshObjectMetaData: function(checkWhereFields, checkRequired) {
         var me = this;
 
         //First check if existing Where condition mandatory ones are filled, if not warn user
         if((me._cloudElementsUtils.isEmpty(checkWhereFields) || checkWhereFields == true)
             && !me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere)) {
-            for (var i = 0; i < me.$scope.mapperwhere.length; i++) {
+            for(var i = 0; i < me.$scope.mapperwhere.length; i++) {
                 var mw = me.$scope.mapperwhere[i];
-                if (me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
+                if(me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
 
                     var confirm = me.$mdDialog.confirm()
                         .title('Missing required fields')
@@ -196,13 +196,36 @@ var MapperController = BaseController.extend({
 
                     me.$mdDialog.show(confirm).then(function() {
                         //continue
-                        me.refreshObjectMetaData(false);
+                        me.refreshObjectMetaData(false, true);
                     }, function() {
                         //Don't do anything
-                        me.$scope.selectedObject.select=me.$scope.selectedSourceObject;
+                        me.$scope.selectedObject.select = me.$scope.selectedSourceObject;
                     });
                     return false;
                 }
+            }
+        }
+
+        //Check to see if there are any missed required mappings and warn the user before switching
+        if(me._cloudElementsUtils.isEmpty(checkRequired) || checkRequired == true) {
+            //Check for missing required mappings and warning
+            var missingRequired = me._validateForRequiredMappings(this.$scope.mapperdata);
+            if(!me._cloudElementsUtils.isEmpty(missingRequired)) {
+                var confirm = me.$mdDialog.confirm()
+                    .title('Missing required mapping')
+                    .content("Missing required mapping " + missingRequired + " for object " + me.$scope.selectedTargetObject.name + ". Do you still want to continue ?")
+                    .ok('Yes')
+                    .cancel('No');
+
+                me.$mdDialog.show(confirm).then(function() {
+                    //continue
+                    me.refreshObjectMetaData(false, false);
+                }, function() {
+                    //Don't do anything
+                    me.$scope.selectedObject.select = me.$scope.selectedSourceObject;
+                });
+
+                return;
             }
         }
 
@@ -231,7 +254,7 @@ var MapperController = BaseController.extend({
         }
     },
 
-    _handleOnMetadataLoad: function(obj,data) {
+    _handleOnMetadataLoad: function(obj, data) {
         var me = this;
         me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'path');
         me.$scope.showTree = true;
@@ -244,16 +267,15 @@ var MapperController = BaseController.extend({
         //if so just set the target mapper
         //Very dirty fix, not sure how the angular promise is handled as it returns null,
         // handling this in try catch until the angular promise for null is figured out
-        try{
+        try {
             me._mapper.loadObjectMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name,
                 me._picker.targetElementInstance, me.$scope.objectMetaData)
                 .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedObject));
-        } catch (e) {
+        } catch(e) {
             me.$scope.showTargetObjectSelection = true;
             me._maskLoader.hide();
         }
     },
-
 
     refreshTargetObject: function() {
         var me = this;
@@ -296,7 +318,7 @@ var MapperController = BaseController.extend({
             if(me._mapper.hasDisplayName(me._picker.targetElementInstance, data.vendorName) == true) {
                 sortby = 'vendorDisplayName';
             }
-            me.$scope.mapperdata =  me._cloudElementsUtils.orderObjects(data.fields, sortby);
+            me.$scope.mapperdata = me._cloudElementsUtils.orderObjects(data.fields, sortby);
             me.$scope.showTargetTree = true;
 
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
@@ -357,9 +379,9 @@ var MapperController = BaseController.extend({
         //First check if existing Where condition mandatory ones are filled, if not warn user
         if((me._cloudElementsUtils.isEmpty(checkWhereFields) || checkWhereFields == true)
             && !me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere)) {
-            for (var i = 0; i < me.$scope.mapperwhere.length; i++) {
+            for(var i = 0; i < me.$scope.mapperwhere.length; i++) {
                 var mw = me.$scope.mapperwhere[i];
-                if (me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
+                if(me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
 
                     var confirm = me.$mdDialog.confirm()
                         .title('Missing required fields')
@@ -378,18 +400,65 @@ var MapperController = BaseController.extend({
             }
         }
 
-        me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me._picker.targetElementInstance, me.$scope.instanceObjects);
+        //Check for missing required mappings and warning
+        var missingRequired = me._validateForRequiredMappings(this.$scope.mapperdata);
+        if(!me._cloudElementsUtils.isEmpty(missingRequired)) {
+            var confirm = me.$mdDialog.confirm()
+                .title('Missing required mapping')
+                .content("Missing required mapping " + missingRequired + " for object " + me.$scope.selectedTargetObject.name + ". Do you still want to continue ?")
+                .ok('Yes')
+                .cancel('No');
 
+            me.$mdDialog.show(confirm).then(function() {
+                //continue
+                me._finalSave();
+            }, function() {
+                //Don't do anything
+            });
+        } else {
+            me._finalSave();
+        }
     },
 
-//    _onTransformationSave: function() {
-//        //Show the scheduler
-//        var me = this;
-//        me._maskLoader.hide();
-//        //me._notifications.notify(bulkloader.events.SHOW_SCHEDULER);
-//        me._schedule.openSchedule();
-//    },
+    _validateForRequiredMappings: function(mapperdata) {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(mapperdata)
+            || me._cloudElementsUtils.isEmpty(mapperdata.fields)
+            || mapperdata.fields.length == 0) {
+            return null;
+        }
+
+        var missingRequired = null;
+        for(var i = 0; i < mapperdata.fields.length; i++) {
+            var md = mapperdata.fields[i];
+
+            if(me._cloudElementsUtils.isEmpty(md.fields)
+                || md.fields.length == 0) {
+
+                if(md.vendorRequired == true &&
+                    me._cloudElementsUtils.isEmpty(md.path)) {
+                    missingRequired = (md.vendorDisplayName) == null ? md.vendorPath : md.vendorDisplayName;
+                }
+
+            } else {
+                missingRequired = me._validateForRequiredMappings(md);
+            }
+
+            if(!this._cloudElementsUtils.isEmpty(missingRequired)) {
+                break;
+            }
+        }
+
+        return missingRequired;
+    },
+
+    _finalSave: function() {
+        var me = this;
+
+        me._maskLoader.show(me.$scope, 'Saving...');
+        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me._picker.targetElementInstance, me.$scope.instanceObjects);
+    },
 
     _onTransformationSave: function() {
         var me = this;
@@ -397,7 +466,6 @@ var MapperController = BaseController.extend({
         me._maskLoader.hide();
         me.$location.path('/schedule');
     },
-
 
     _onMapperError: function(event, error) {
         var me = this;
@@ -412,11 +480,11 @@ var MapperController = BaseController.extend({
 
     checkAllInstance: function(cbState, cbObject) {
         var me = this;
-        for (var i = 0; i < me.$scope.objectMetaData.length; i++) {
+        for(var i = 0; i < me.$scope.objectMetaData.length; i++) {
             me.$scope.objectMetaData[i].transform = cbState;
-            if(me.$scope.objectMetaData[i].type == "object" || me.$scope.objectMetaData[i].type == "array"){
+            if(me.$scope.objectMetaData[i].type == "object" || me.$scope.objectMetaData[i].type == "array") {
                 var obj = me.$scope.objectMetaData[i].fields;
-                for(var metadata in obj){
+                for(var metadata in obj) {
                     var metoo = obj[metadata];
                     metoo.transform = cbState;
                 }
@@ -424,29 +492,29 @@ var MapperController = BaseController.extend({
         }
     },
 
-    unCheckObject: function(cbState, metadata, obj){
+    unCheckObject: function(cbState, metadata, obj) {
         var me = this;
         var o = obj.length;
         var ownerData;
 
         while(o--) {
             var n = metadata.actualVendorPath.indexOf(".");
-            if(metadata.actualVendorPath.slice(0,n) == obj[o].vendorPath || metadata.actualVendorPath == obj[o].vendorPath) {
+            if(metadata.actualVendorPath.slice(0, n) == obj[o].vendorPath || metadata.actualVendorPath == obj[o].vendorPath) {
                 ownerData = obj[o];
                 break;
             }
         }
 
         if(metadata.type == "object" || metadata.type == "array") {
-            for (var i = 0; i < metadata.fields.length; i++) {
+            for(var i = 0; i < metadata.fields.length; i++) {
                 metadata.fields[i].transform = cbState;
-                if(ownerData.type == "object" && cbState == false){
+                if(ownerData.type == "object" && cbState == false) {
                     ownerData.transform = cbState;
                 }
             }
-        }else{
+        } else {
             metadata.transform = cbState;
-            if(cbState == false){
+            if(cbState == false) {
                 ownerData.transform = cbState;
                 me.$scope.cbObject.checked = cbState;
             }
@@ -455,7 +523,7 @@ var MapperController = BaseController.extend({
 
     checkAllObjects: function(cbState, cbObject) {
         var me = this;
-        for (var i = 0; i < me.$scope.instanceObjects.length; i++) {
+        for(var i = 0; i < me.$scope.instanceObjects.length; i++) {
             me.$scope.instanceObjects[i].transformed = cbState;
         }
     },
@@ -470,14 +538,13 @@ var MapperController = BaseController.extend({
         }
         treenode.$nodeScope.$element.removeClass('mapped');
 
-
         this._populateBackToMetaData(obj.path, obj.targetVendorType, obj.path, me.$scope.objectMetaData);
         obj.path = null;
         obj.targetVendorType = null;
     },
 
     _findAndGetInnerMetadata: function(objField, metadatafields) {
-        for(var i=0; i< metadatafields.length; i++) {
+        for(var i = 0; i < metadatafields.length; i++) {
             var field = metadatafields[i];
 
             if(field.path == objField) {
@@ -511,7 +578,7 @@ var MapperController = BaseController.extend({
                 }
 
                 innerMetadata = {
-                    fields : [],
+                    fields: [],
                     path: objField,
                     actualVendorPath: objField,
                     type: t
@@ -520,9 +587,9 @@ var MapperController = BaseController.extend({
                 metadatafields.push(innerMetadata);
             }
 
-            me._populateBackToMetaData(fieldParts, targetVendorType,  actualTargetVendorPath, innerMetadata.fields);
+            me._populateBackToMetaData(fieldParts, targetVendorType, actualTargetVendorPath, innerMetadata.fields);
         }
-        else{
+        else {
 
             var oldObj = {
                 path: targetVendorPath,
@@ -536,17 +603,16 @@ var MapperController = BaseController.extend({
     }
 });
 
-MapperController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Mapper', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog', '$mdUtil', '$mdSidenav'];
-
+MapperController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog', '$mdUtil', '$mdSidenav'];
 
 angular.module('bulkloaderApp')
     .controller('MapperController', MapperController)
-    .filter('trust', function ($sce) {
-        return function (val) {
+    .filter('trust', function($sce) {
+        return function(val) {
             return $sce.trustAsHtml(val);
         };
     })
-    .config(function (uiTreeFilterSettingsProvider) {
+    .config(function(uiTreeFilterSettingsProvider) {
         uiTreeFilterSettingsProvider.addresses = ['path', 'vendorPath'];
         uiTreeFilterSettingsProvider.descendantCollection = 'fields'
     });
