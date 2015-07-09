@@ -10,7 +10,7 @@
         <div class="content light">
 
           <i class="settings icon light"></i> Select a Service
-          <div class="sub header light">That you would like to use with BulkLoader:</div>
+          <div class="sub header light">That you would like to use with {{appName}}:</div>
         </div>
       </h2>
 
@@ -26,15 +26,14 @@
       </div>
 
       <!--<div class="services-selections" ng-init="isDisabled = false">-->
-        <!--<a href ng-repeat="source in sources"-->
-           <!--ng-click='onSelect("{{source.elementKey}}", "source")'-->
-           <!--id="{{source.elementKey}}"-->
-           <!--data-instance="Connect to {{source.name}}"-->
-           <!--style='background-image: url("{{source.image}}");'>-->
-          <!--<i class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>-->
-        <!--</a>-->
+      <!--<a href ng-repeat="source in sources"-->
+      <!--ng-click='onSelect("{{source.elementKey}}", "source")'-->
+      <!--id="{{source.elementKey}}"-->
+      <!--data-instance="Connect to {{source.name}}"-->
+      <!--style='background-image: url("{{source.image}}");'>-->
+      <!--<i class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>-->
+      <!--</a>-->
       <!--</div>-->
-
 
 
     </div>
@@ -43,7 +42,8 @@
     <div class="vertical-align" style="width: 100%;">
       <h2 class="ui icon header">
         <i class="bullseye icon light"></i>
-        <div class="content light" ng-show="showSelectTarget" >
+
+        <div class="content light" ng-show="showSelectTarget">
           Connect to your Account at
           <!-- div class="sub header light">That you would like to use with BulkLoader:</div -->
         </div>
@@ -60,7 +60,7 @@
            data-instance="Connect to {{target.name}}"
            style='background-image: url("{{target.image}}");'>
           <!--<i ng-show="showWait" class="icon wait"-->
-             <!--ng-click='onSelectSchedule("{{target.elementKey}}", $event)'></i>-->
+          <!--ng-click='onSelectSchedule("{{target.elementKey}}", $event)'></i>-->
           <i class="icon write" ng-click='onEditInstance("{{target.elementKey}}", "target", $event)'> Edit</i>
         </a>
       </div>
