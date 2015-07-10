@@ -221,6 +221,8 @@ body .header-navigation a{
     float: right;
     padding: 5px 10px;
     margin: 0;
+    background-color: rgba(0,0,0,.1);
+    line-height: 2.5rem;
 }
 body .header-navigation a i{
 }
@@ -936,7 +938,8 @@ body .header-navigation .ui.positive.button:hover {
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid{
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-canvas{
-    background-color: #efe4e5;
+    /* background-color: #efe4e5; */
+     height: inherit;
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .errorCell{
     line-height: 2rem;
@@ -950,7 +953,10 @@ body .header-navigation .ui.positive.button:hover {
     border-radius: 0;
     display: block;
 }
-#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected{
+#jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected > div{
+    background-color: #efe4e5;
+    display: block;
+    float: left;
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell{
     background-color: transparent;

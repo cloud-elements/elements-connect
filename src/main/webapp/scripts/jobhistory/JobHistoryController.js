@@ -54,7 +54,7 @@ var JobHistoryController = BaseController.extend({
                 {field: 'rowNum', width: 120, name: 'Row number'},
                 {field: 'status', width: 450, cellTooltip: function(row, col) {
                     return 'Click to read more';
-                }},
+                }, cellTemplate: '<code class="error">{{row.entity.status}}</code>', cellClass: 'errorCell'},
                 {field: 'response', cellTooltip: function(row, col) {
                     return 'Click to read more';
                 }, cellTemplate: '<code class="error">{{row.entity.response}}</code>', cellClass: 'errorCell'}
