@@ -22,6 +22,7 @@
            style='background-image: url("{{source.image}}");'>
           <!--<i ng-show="showWait" class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>-->
           <i class="icon write" ng-click='onEditInstance("{{source.elementKey}}", "source", $event)'> Edit</i>
+          <i class="icon trash" ng-click='onDeleteInstance("{{source.elementKey}}", "target", $event)'></i>
         </a>
       </div>
 
@@ -62,6 +63,7 @@
           <!--<i ng-show="showWait" class="icon wait"-->
           <!--ng-click='onSelectSchedule("{{target.elementKey}}", $event)'></i>-->
           <i class="icon write" ng-click='onEditInstance("{{target.elementKey}}", "target", $event)'> Edit</i>
+          <i class="icon trash" ng-click='onDeleteInstance("{{target.elementKey}}", "target", $event)'></i>
         </a>
       </div>
 

@@ -295,6 +295,24 @@ var Picker = Class.extend({
         me._notifications.notify(bulkloader.events.ERROR, 'Provisioning failed. ' + error.data.message);
     },
 
+    deleteInstance: function(instance) {
+        var me = this;
+
+        return me._elementsService.deleteInstance(instance).then(
+            me._handleOnDeleteInstance.bind(me),
+            me._handleOnDeleteInstanceFailed.bind(me));
+    },
+
+    _handleOnDeleteInstance: function(response) {
+        var me = this;
+        return true;
+    },
+
+    _handleOnDeleteInstanceFailed: function(error) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, 'Error occured while deleting an instance. ' + error.data.message);
+    },
+
     getSourceElement: function(elementKey) {
         var me = this;
 

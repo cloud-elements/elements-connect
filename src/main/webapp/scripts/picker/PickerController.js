@@ -53,6 +53,7 @@ var PickerController = BaseController.extend({
         me.$scope.createInstance = me.createInstance.bind(me);
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
+        me.$scope.onDeleteInstance = me.onDeleteInstance.bind(me);
         me.$scope.appName = me._application.getApplicationName()
 
         // Add this class to show Target section
@@ -319,8 +320,66 @@ var PickerController = BaseController.extend({
         $event.preventDefault();
         $event.stopPropagation();
 
-    }
+    },
 
+    onDeleteInstance: function(elementKey, selection, $event) {
+        var me = this;
+
+        var confirm = me.$mdDialog.confirm()
+            .title('Warning !')
+            .content("Are you sure you want to delete the instance " + elementKey + " ?")
+            .ok('Yes')
+            .cancel('No');
+
+        me.$mdDialog.show(confirm).then(function() {
+            //continue
+            me.continueDelete(elementKey, selection);
+        }, function() {
+            //Don't do anything
+        });
+
+        $event.preventDefault();
+        $event.stopPropagation();
+    },
+
+    continueDelete: function(elementKey, selection) {
+        var me = this;
+
+        me._maskLoader.show(me.$scope, 'Deleting Instance...');
+
+        //Get Instance for ElementKey
+        var element = null;
+        var instance = null;
+
+        if(selection == 'source') {
+            element = me._picker.getSourceElement(elementKey);
+        } else {
+            element = me._picker.getTargetElement(elementKey);
+        }
+
+        var keys = Object.keys(me._picker._elementInstances);
+        for(var i = 0; i < keys.length; i++) {
+            var ins = me._instances[keys[i]];
+            if(ins.element.key === elementKey) {
+                instance = ins;
+                break;
+            }
+        }
+
+        me._picker.deleteInstance(instance)
+            .then(me._handleOnDelete.bind(me, elementKey));
+    },
+
+    _handleOnDelete: function(elementKey) {
+        var me = this;
+        me._maskLoader.hide();
+
+        angular.element(document.querySelector('#' + elementKey)).removeClass('highlightingElement');
+
+        //Refresh the instances from Server to get the latest and greatest
+        me._maskLoader.show(me.$scope, 'Refreshing Instances...');
+        me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
+    }
 
 });
 

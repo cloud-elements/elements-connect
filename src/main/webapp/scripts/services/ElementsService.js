@@ -182,6 +182,11 @@ var ElementsService = Class.extend({
 
     },
 
+    deleteInstance: function(elementInstance) {
+        var me = this;
+        return this._httpDelete(this._application.environment.elementsUrl + '/instances/' + elementInstance.id, this._getHeaders());
+    },
+
     loadElementDefaultTransformations: function(elementInstance) {
         var url = this._application.environment.elementsUrl + '/elements/' + elementInstance.element.key + '/transformations';
         return this._httpGet(url, this._getHeaders());
