@@ -515,7 +515,6 @@ body .header-navigation .ui.positive.button:hover {
     border-radius: 3px 3px 0 0;
     border: none;
 }
-
 #picker .services-selections > a i.wait {
     position: absolute;
     right: 1px;
@@ -529,6 +528,24 @@ body .header-navigation .ui.positive.button:hover {
     font-size: 140%;
     text-shadow: 0 -1px 0 rgba(255,255,255,.5);
     z-index:100;
+}
+
+#picker .services-selections > a i.trash {
+    position: absolute;
+    right: 1px;
+    bottom: 5px;
+    background-color: rgba(212,63,58,0);
+    height: 25px;
+    width: 25px;
+    line-height: 27px;
+    color: rgba(212,63,58,.6);
+    border-radius: 6px;
+    font-size: 90%;
+    z-index:100;
+}
+#picker .services-selections > a i.trash:hover {
+    background-color: rgba(212,63,58,.9);
+    color: rgba(255,255,255,1);
 }
 #picker .services-selections > a i.write {
     position: absolute;
@@ -599,7 +616,9 @@ body .header-navigation .ui.positive.button:hover {
     border: 3px solid #999;
 }
 
-#picker a i.wait, #picker a i.write {
+#picker a i.wait,
+#picker a i.write,
+#picker a i.trash {
     opacity: 0;
     visibility: hidden;
     -webkit-transform: scale(.8);
@@ -609,11 +628,15 @@ body .header-navigation .ui.positive.button:hover {
             transition: all 350ms ease-in;
 }
 
-#picker a.highlightingElement:hover i.wait, #picker a.highlightingElement:hover i.write{
+#picker a.highlightingElement:hover i.wait,
+#picker a.highlightingElement:hover i.write,
+#picker a.highlightingElement:hover i.trash{
     visibility: visible;
 }
 
-#picker a:hover i.wait, #picker a:hover i.write {
+#picker a:hover i.wait,
+#picker a:hover i.write,
+#picker a:hover i.trash {
     opacity: 1;
     -webkit-transform: scale(1);
         -ms-transform: scale(1);
