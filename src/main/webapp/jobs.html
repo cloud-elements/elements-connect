@@ -48,14 +48,14 @@
         </div>
 
         <div class="job-footer">
-          <button type="submit" ng-show="showEnable(metadata)" ng-click="onEnable(metadata, $event)"
+          <button type="submit" ng-show="showEnable(metadata)" ng-click="onDisable(metadata, $event)"
                   class="pull-left btn btn-link scheduledJobsEnabled">
             <i></i> <span>Enabled</span>
             <md-tooltip>
               Click to Disable
             </md-tooltip>
           </button>
-          <button type="submit" ng-show="showDisable(metadata)" ng-click="onDisable(metadata, $event)"
+          <button type="submit" ng-show="showDisable(metadata)" ng-click="onEnable(metadata, $event)"
                   class="pull-left btn btn-link scheduledJobsDisabled">
             <i></i>  <span>Disabled</span>
             <md-tooltip>

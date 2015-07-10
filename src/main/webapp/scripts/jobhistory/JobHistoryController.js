@@ -14,6 +14,7 @@ var JobHistoryController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
     _credentials: null,
+    _refreshtimer: null,
 
     init: function($scope, CloudElementsUtils, Application, JobHistory, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
@@ -41,6 +42,7 @@ var JobHistoryController = BaseController.extend({
         me.$scope.showTarget = true;
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.close = me.close.bind(this);
+        me.$scope.refresh = me.getHistory.bind(this);
 
         me.$scope.jobExecutionsOptions = {
             data: 'jobExecutions',
@@ -71,17 +73,16 @@ var JobHistoryController = BaseController.extend({
 
     defineListeners: function() {
         var me = this;
-        me._super();
-//        TODO Add handleError and showMask
-//        me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
-//        me._notifications.addEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+
     },
 
     destroy: function() {
         var me = this;
-//        TODO Add handleError and showMask
-//        me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
-//        me._notifications.removeEventListener(bulkloader.events.SHOW_MASK, me.showMask.bind(me), me.$scope.$id);
+
+        if(!me._cloudElementsUtils.isEmpty(me._refreshtimer)) {
+            me.$interval.cancel(me._refreshtimer);
+            me._refreshtimer = null;
+        }
     },
 
     seedHistory: function() {
@@ -96,6 +97,12 @@ var JobHistoryController = BaseController.extend({
             me.$scope.showTarget = false;
         }
 
+        me.getHistory();
+        me._refreshtimer = me.$interval(me.getHistory.bind(me), 30000);
+    },
+
+    getHistory: function() {
+        var me = this;
         me._history.getHistory().then(me._handleGetHistory.bind(me));
     },
 

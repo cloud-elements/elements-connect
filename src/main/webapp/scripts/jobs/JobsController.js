@@ -15,6 +15,7 @@ var JobsController = BaseController.extend({
     _instances: null,
     _maskLoader: null,
     _credentials: null,
+    _refreshtimer: null,
 
     init: function($scope, CloudElementsUtils, Application, Jobs, JobHistory, Notifications, Credentials, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
@@ -67,6 +68,12 @@ var JobsController = BaseController.extend({
 
     destroy: function() {
         var me = this;
+
+        if(!me._cloudElementsUtils.isEmpty(me._refreshtimer)) {
+            me.$interval.cancel(me._refreshtimer);
+            me._refreshtimer = null;
+        }
+
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
     },
 
@@ -92,6 +99,7 @@ var JobsController = BaseController.extend({
             return;
         }
         me._maskLoader.show(me.$scope, 'Loading...');
+        me._refreshtimer = me.$interval(me.getHistory.bind(me), 30000);
         me._jobs.getJobs().then(me._handleGetJobs.bind(me));
     },
 
@@ -110,6 +118,17 @@ var JobsController = BaseController.extend({
         me.$scope.noJobsMessageDetailsErrors = true;
 
         me.$scope.selectedJob = me.$scope.jobscheduledata[$index];
+        me.getHistory();
+    },
+
+    getHistory: function() {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(me.$scope.selectedJob)
+            || me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.jobId)) {
+            return;
+        }
+
         me._jobs.getHistory(me.$scope.selectedJob.jobId).then(me._handleGetHistory.bind(me));
     },
 
@@ -198,7 +217,7 @@ var JobsController = BaseController.extend({
 
     showEnable: function(job) {
         var me = this;
-        if(job.scheduleState == 'PAUSED') {
+        if(!(job.scheduleState == 'PAUSED')) {
             return true;
         }
         return false;
@@ -206,7 +225,7 @@ var JobsController = BaseController.extend({
 
     showDisable: function(job) {
         var me = this;
-        if(!(job.scheduleState == 'PAUSED')) {
+        if(job.scheduleState == 'PAUSED') {
             return true;
         }
         return false;
