@@ -7,11 +7,6 @@ var Application = Class.extend({
     environment: null,
     configuration: null,
 
-    getApplicationName: function() {
-        var me = this;
-        return me.environment.appName;
-    },
-
     populateApplicationDetails: function() {
         var me = this;
 
@@ -30,6 +25,22 @@ var Application = Class.extend({
         }
     },
 
+
+    getApplicationName: function() {
+        var me = this;
+        return me.environment.appName;
+    },
+
+    isBulkloader: function() {
+        var me = this;
+
+        if(me.environment.appName === 'Bulkloader') {
+            return true;
+        }
+
+        return false;
+    },
+
     isSecretsPresent: function() {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me.configuration)
@@ -39,6 +50,14 @@ var Application = Class.extend({
         }
 
         return true;
+    },
+
+    /**
+     * This will reset the configuration and secrets
+     */
+    resetConfiguration: function() {
+        var me = this;
+        me.configuration = null;
     },
 
     loadConfiguration: function(data) {

@@ -42,6 +42,8 @@ var ScheduleController = BaseController.extend({
     defineScope: function() {
         var me = this;
 
+        me.checkContinue();
+
         // This is for transitions
         me.$scope.pageClass = 'page-scheduler';
 
@@ -112,6 +114,15 @@ var ScheduleController = BaseController.extend({
     destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.SCHEDULE_ERROR, me._handleError.bind(me), me.$scope.$id);
+    },
+
+    //This function checks if we need to continue in scheduling
+    checkContinue: function() {
+        var me = this;
+        //Redirect to home page if null
+        if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+            me.$location.path('/');
+        }
     },
 
     _getMappingTransformations: function() {
@@ -185,7 +196,12 @@ var ScheduleController = BaseController.extend({
         }
         if(jobs != false) {
             me._schedule.scheduleJobs(me._picker.selectedElementInstance, me._picker.targetElementInstance, jobs, cronVal);
-            me.$location.path('/');
+
+            if(me.$scope.datatransfer === 'schedule') {
+                me.$location.path('/jobs');
+            } else {
+                me.$location.path('/jobhistory');
+            }
         }
         me._maskLoader.hide();
     },

@@ -36,6 +36,8 @@ var MapperController = BaseController.extend({
     defineScope: function() {
         var me = this;
 
+        me.checkContinue();
+
         // This is for transitions
         me.$scope.pageClass = 'page-datalist';
 
@@ -96,6 +98,15 @@ var MapperController = BaseController.extend({
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
+    },
+
+    //This function checks if we need to continue in scheduling
+    checkContinue: function() {
+        var me = this;
+        //Redirect to home page if null
+        if(me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+            me.$location.path('/');
+        }
     },
 
     onMetadataAccept: function(sourceNodeScope, destNodesScope, destIndex) {
