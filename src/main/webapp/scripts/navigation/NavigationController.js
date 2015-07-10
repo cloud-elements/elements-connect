@@ -53,9 +53,8 @@ var NavigationController = BaseController.extend({
 
         me.seedSteps();
 
-        if(!me._cloudElementsUtils.isEmpty(me._application.configuration) &&
-            !me._cloudElementsUtils.isEmpty(me._application.getDisplay())
-            && me._application.getDisplay().scheduling == true){
+        if(!me._cloudElementsUtils.isEmpty(me._application.configuration) && !me._cloudElementsUtils.isEmpty(me._application.getDisplay())
+            && me._application.getDisplay().scheduling == true) {
             me.$scope.showScheduling = true;
         } else {
             me.$scope.showScheduling = false;
@@ -65,6 +64,7 @@ var NavigationController = BaseController.extend({
 
     onSignout: function() {
         var me = this;
+        me._application.resetConfiguration();
         me.$location.path('/credentials');
     },
 
@@ -142,7 +142,13 @@ var NavigationController = BaseController.extend({
 
     onJobHistory: function() {
         var me = this;
-        me.$location.path('/jobhistory');
+
+        if(me._application.isBulkloader()) {
+            me.$location.path('/jobhistory');
+        } else {
+            me.$location.path('/caaashistory');
+        }
+
     },
 
     onScheduledJobs: function() {
