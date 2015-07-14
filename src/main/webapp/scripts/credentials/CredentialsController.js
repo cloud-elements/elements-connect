@@ -239,7 +239,11 @@ var CredentialsController = BaseController.extend({
         var me = this;
         me._maskLoader.hide();
         if(result == true) {
-            me.$location.path('/');
+            if(me._application.isCAaaS()) {
+                me.$location.path('/caaas');
+            } else {
+                me.$location.path('/');
+            }
         }
     },
 

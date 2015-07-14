@@ -25,10 +25,14 @@ var Application = Class.extend({
         }
     },
 
-
     getApplicationName: function() {
         var me = this;
         return me.environment.appName;
+    },
+
+    isCAaaS: function() {
+        var me = this;
+        return me.environment.appName === 'CAaaS';
     },
 
     isBulkloader: function() {
@@ -86,7 +90,7 @@ var Application = Class.extend({
     getView: function() {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me.configuration)
-            || me._cloudElementsUtils.isEmpty( me.configuration.view)) {
+            || me._cloudElementsUtils.isEmpty(me.configuration.view)) {
             return 'datalist';
         }
         return  me.configuration.view;

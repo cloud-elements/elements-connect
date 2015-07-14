@@ -7,6 +7,7 @@
 
 var DatalistController = BaseController.extend({
 
+    _application: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
@@ -15,9 +16,10 @@ var DatalistController = BaseController.extend({
     _schedule: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog){
+    init:function($scope, Application, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog){
         var me = this;
 
+        me._application = Application;
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
@@ -152,7 +154,11 @@ var DatalistController = BaseController.extend({
 
     cancel: function() {
         var me = this;
-        me.$location.path('/');
+        if (me._application.isCAaaS()) {
+            me.$location.path('/caaas');
+        } else {
+            me.$location.path('/');
+        }
     },
 
     save: function() {
@@ -241,7 +247,7 @@ var DatalistController = BaseController.extend({
     }
 });
 
-DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog'];
+DatalistController.$inject = ['$scope','Application', 'CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog'];
 
 
 angular.module('bulkloaderApp')

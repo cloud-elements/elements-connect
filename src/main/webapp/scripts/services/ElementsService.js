@@ -392,6 +392,10 @@ var ElementsService = Class.extend({
         return this._httpPost(url, headers, job);
     },
 
+    createWorkflowInstance: function() {
+        var me = this;
+    },
+
     getJobs: function() {
         var me = this;
 

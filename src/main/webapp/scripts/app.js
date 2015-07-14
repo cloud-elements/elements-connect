@@ -38,6 +38,10 @@ bulkloaderApp.config(function($routeProvider) {
             templateUrl: 'picker.html',
             controller: 'PickerController'
         })
+        .when('/caaas', {
+            templateUrl: 'caaaspicker.html',
+            controller: 'CAaaSPickerController'
+        })
         .when('/credentials', {
             templateUrl: 'credentials.html',
             controller: 'CredentialsController'
