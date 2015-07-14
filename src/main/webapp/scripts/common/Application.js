@@ -33,12 +33,7 @@ var Application = Class.extend({
 
     isBulkloader: function() {
         var me = this;
-
-        if(me.environment.appName === 'Bulkloader') {
-            return true;
-        }
-
-        return false;
+        return me.environment.appName === 'Bulkloader';
     },
 
     isSecretsPresent: function() {
