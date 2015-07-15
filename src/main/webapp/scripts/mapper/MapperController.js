@@ -489,7 +489,7 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me._maskLoader.hide();
-        me.$location.path('/');
+        me.$location.path('/workflows');
     },
 
     _onMapperError: function(event, error) {

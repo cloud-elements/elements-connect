@@ -53,7 +53,7 @@ var NavigationController = BaseController.extend({
         me.$scope.nextButtonText = 'Save and Schedule Job';
         // change the name of the 'Next' button text if this is for the CAaaS
         if(me._application.isCAaaS()) {
-            me.$scope.nextButtonText = 'Save';
+            me.$scope.nextButtonText = 'Save and Setup Workflow';
         }
 
         me.seedSteps();
