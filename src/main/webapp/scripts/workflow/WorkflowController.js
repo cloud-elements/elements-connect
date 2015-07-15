@@ -28,6 +28,7 @@ var WorkflowController = BaseController.extend({
 
     defineScope: function() {
         var me = this;
+        me.$scope.processtep = 'workflow';
     },
 
     defineListeners: function() {
