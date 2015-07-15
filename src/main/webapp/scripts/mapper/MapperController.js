@@ -7,6 +7,7 @@
 
 var MapperController = BaseController.extend({
 
+    _application: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
@@ -16,9 +17,10 @@ var MapperController = BaseController.extend({
     _schedule: null,
     _maskLoader: null,
 
-    init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog) {
+    init: function($scope, Application, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog) {
         var me = this;
 
+        me._application = Application;
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
@@ -89,13 +91,18 @@ var MapperController = BaseController.extend({
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
         //me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedMapper.bind(me));
 
-        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
+        if (me._application.isCAaaS()) {
+            me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED_CAAAS, me._onTransformationSaveCaaas.bind(me), me.$scope.$id);
+        } else {
+            me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
+        }
         me._notifications.addEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
 
     },
 
     destroy: function() {
         var me = this;
+        me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED_CAAAS, me._onTransformationSaveCaaas.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
     },
@@ -478,6 +485,13 @@ var MapperController = BaseController.extend({
         me.$location.path('/schedule');
     },
 
+    _onTransformationSaveCaaas: function() {
+        var me = this;
+
+        me._maskLoader.hide();
+        me.$location.path('/');
+    },
+
     _onMapperError: function(event, error) {
         var me = this;
         me._maskLoader.hide();
@@ -614,7 +628,7 @@ var MapperController = BaseController.extend({
     }
 });
 
-MapperController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog', '$mdUtil', '$mdSidenav'];
+MapperController.$inject = ['$scope', 'Application', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog', '$mdUtil', '$mdSidenav'];
 
 angular.module('bulkloaderApp')
     .controller('MapperController', MapperController)

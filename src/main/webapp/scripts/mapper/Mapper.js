@@ -6,12 +6,14 @@
  */
 
 bulkloader.events.TRANSFORMATION_SAVED = "Datalist.TRANSFORMATION_SAVED";
+bulkloader.events.TRANSFORMATION_SAVED_CAAAS = "Datalist.TRANSFORMATION_SAVED_CAAAS";
 
 var Mapper = Class.extend({
     _elementsService: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _application: null,
     _objectMetadata: null,
     _objectMetadataFlat: null,
 
@@ -1178,8 +1180,11 @@ var Mapper = Class.extend({
 
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length) {
-            this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
-            //return true;
+            if (this._application.isCAaaS()) {
+                this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED_CAAAS);
+            } else {
+                this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
+            }
         }
         else {
             return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter);
@@ -1202,11 +1207,12 @@ var Mapper = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', function(CloudElementsUtils, ElementsService, Notifications, Picker) {
+        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Application', 'Picker', function(CloudElementsUtils, ElementsService, Notifications, Application, Picker) {
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
             this.instance._picker = Picker;
+            this.instance._application = Application;
             return this.instance;
         }]
     });
