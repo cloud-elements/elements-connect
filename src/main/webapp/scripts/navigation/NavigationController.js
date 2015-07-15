@@ -99,6 +99,11 @@ var NavigationController = BaseController.extend({
                     step: '2',
                     stepname: 'map it',
                     description: 'drag and drop the fields you wish to map from the source to the target.'
+                },
+                {
+                    step: '3',
+                    stepname: 'configure it',
+                    description: 'choose the workflow template and configure it.'
                 }
             ]
         }
