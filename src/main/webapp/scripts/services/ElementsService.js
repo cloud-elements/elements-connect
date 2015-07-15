@@ -392,8 +392,20 @@ var ElementsService = Class.extend({
         return this._httpPost(url, headers, job);
     },
 
-    createWorkflowInstance: function() {
+    createWorkflowInstance: function(workflowId, name, configuration) {
         var me = this;
+        console.log('Attempting to create an instance of workflow: ' + workflowId + ' with name: ' + name);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
+        url = url.replace('{id}', workflowId);
+
+        var workflowInstance = {
+            'name': name,
+            'configuration': configuration
+        };
+
+        var headers = me._getHeaders();
+
+        return me._httpPost(url, headers, workflowInstance);
     },
 
     getJobs: function() {

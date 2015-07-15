@@ -6,9 +6,9 @@
 var CAaaSPickerController = PickerController.extend({
     _caaasPicker: null,
 
-    init: function($scope, CloudElementsUtils, Picker, CAaaSPicker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog) {
+    init: function($scope, ElementsService, CloudElementsUtils, Picker, CAaaSPicker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
-        me._super($scope, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog);
+        me._super($scope, ElementsService, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog);
         me._caaasPicker = CAaaSPicker;
         me._maskLoader.show(me.$scope, 'Loading...');
         me.checkKey();
@@ -38,7 +38,20 @@ var CAaaSPickerController = PickerController.extend({
             }
             configuration[elementKey + '.instance.id'] = instanceId;
         }
-        console.log(JSON.stringify(configuration));
+
+        // create a workflow instance for each element instance
+        for(i = 0; i < sources.length; i++) {
+            source = sources[i];
+            elementKey = source['elementKey'];
+
+            // create the workflow instance if there is a workflow template tied to the source
+            var workflowName = elementKey + "-workflow-instance";
+            var workflowTemplateId = source['workflowTemplateId'];
+            if(workflowTemplateId) {
+                me._elementsService.createWorkflowInstance(workflowTemplateId, workflowName, configuration);
+            }
+        }
+
         me._maskLoader.hide();
     },
 
@@ -55,7 +68,7 @@ var CAaaSPickerController = PickerController.extend({
     }
 });
 
-CAaaSPickerController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'CAaaSPicker',
+CAaaSPickerController.$inject = ['$scope', 'ElementsService', 'CloudElementsUtils', 'Picker', 'CAaaSPicker',
     'Schedule', 'Credentials', 'Notifications',
     'MaskLoader', 'CreateInstance', 'Login',
     'JobHistory', 'Help', 'Application',
