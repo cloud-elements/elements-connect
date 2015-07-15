@@ -6,7 +6,6 @@
  */
 
 bulkloader.events.TRANSFORMATION_SAVED = "Datalist.TRANSFORMATION_SAVED";
-bulkloader.events.TRANSFORMATION_SAVED_CAAAS = "Datalist.TRANSFORMATION_SAVED_CAAAS";
 
 var Mapper = Class.extend({
     _elementsService: null,
@@ -370,7 +369,7 @@ var Mapper = Class.extend({
         return me._stripSelectedInstanceMetadata(selectedInstance, targetInstance, selectedObject, objectMetadata);
     },
 
-    _stripSelectedInstanceMetadata: function(selectedInstance, targetInstance, selectedObject, objectMetadata){
+    _stripSelectedInstanceMetadata: function(selectedInstance, targetInstance, selectedObject, objectMetadata) {
         var me = this;
 
         //Check if there is a Transformation already applied for the Object, if so strip the rows which are already mapped
@@ -1105,7 +1104,7 @@ var Mapper = Class.extend({
         var tKeys = Object.keys(transformationArray);
 
         var fileteredArray = new Object;
-        for(var i=0; i < tKeys.length; i++) {
+        for(var i = 0; i < tKeys.length; i++) {
             var tkey = tKeys[i];
             var tObj = transformationArray[tkey];
             if(me._cloudElementsUtils.isEmpty(tObj.fields)
@@ -1180,11 +1179,7 @@ var Mapper = Class.extend({
 
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length) {
-            if (this._application.isCAaaS()) {
-                this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED_CAAAS);
-            } else {
-                this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
-            }
+            this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
         }
         else {
             return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter);

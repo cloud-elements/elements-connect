@@ -91,18 +91,13 @@ var MapperController = BaseController.extend({
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
         //me._notifications.addEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedMapper.bind(me));
 
-        if (me._application.isCAaaS()) {
-            me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED_CAAAS, me._onTransformationSaveCaaas.bind(me), me.$scope.$id);
-        } else {
-            me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
-        }
+        me._notifications.addEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
         me._notifications.addEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
 
     },
 
     destroy: function() {
         var me = this;
-        me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED_CAAAS, me._onTransformationSaveCaaas.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.TRANSFORMATION_SAVED, me._onTransformationSave.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._onMapperError.bind(me), me.$scope.$id);
     },
@@ -482,14 +477,11 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me._maskLoader.hide();
-        me.$location.path('/schedule');
-    },
-
-    _onTransformationSaveCaaas: function() {
-        var me = this;
-
-        me._maskLoader.hide();
-        me.$location.path('/workflows');
+        if(me._application.isCAaaS()) {
+            me.$location.path('/workflows');
+        } else {
+            me.$location.path('/schedule');
+        }
     },
 
     _onMapperError: function(event, error) {
