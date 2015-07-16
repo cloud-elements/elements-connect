@@ -1,5 +1,30 @@
+<!-- Top navigation header -->
 <div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
      ng-include="'navigation.html'"></div>
-<!-- TODO - JJW -->
+
+<!-- Workflow picker -->
+<section id="picker" class="show-target dark-background">
+  <div class="picker-source">
+    <div class="vertical-align" style="width: 100%;">
+      <h2 class="ui icon header">
+        <div class="content light">
+          <i class="settings icon light"></i> Select a Workflow Template
+          <div class="sub header light">That you would like to use with {{appName}}:</div>
+        </div>
+      </h2>
+
+      <div class="services-selections">
+        <a href ng-repeat="workflow in workflows"
+           ng-click='onSelect("{{workflow.name}}")'
+           id="{{workflow.name}}"
+           data-instance="Configure {{workflow.name}}"
+           style='background-image: url("https://pbs.twimg.com/profile_images/3345848205/67e4eda53c9e46253efc01b5032f2e0d_400x400.png");'>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Left panel navigation bar -->
 <md-sidenav class="md-sidenav-left" md-component-id="left" ng-include="'sidenav.html'"
             ng-controller="NavigationController"></md-sidenav>

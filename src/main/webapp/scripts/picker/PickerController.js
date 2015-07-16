@@ -56,7 +56,7 @@ var PickerController = BaseController.extend({
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
         me.$scope.onDeleteInstance = me.onDeleteInstance.bind(me);
-        me.$scope.appName = me._application.getApplicationName()
+        me.$scope.appName = me._application.getApplicationName();
 
         // Add this class to show Target section
         me.$scope.withTarget = '';

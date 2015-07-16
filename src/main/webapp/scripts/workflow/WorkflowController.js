@@ -29,6 +29,12 @@ var WorkflowController = BaseController.extend({
     defineScope: function() {
         var me = this;
         me.$scope.processtep = 'workflow';
+        me.$scope.appName = me._application.getApplicationName();
+        me.$scope.workflows = [
+            {
+                "name": "POSable to Quickbooks"
+            }
+        ];
     },
 
     defineListeners: function() {
@@ -37,6 +43,11 @@ var WorkflowController = BaseController.extend({
 
     destroy: function() {
         var me = this;
+    },
+
+    onSelect: function(workflowName) {
+        var me = this;
+        alert("Workflow: " + workflowName + " selected");
     }
 });
 
