@@ -2,7 +2,7 @@
 <div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
      ng-include="'navigation.html'"></div>
 
-<!-- Workflow picker -->
+<!-- Workflow template picker -->
 <section id="picker" class="show-target dark-background">
   <div class="picker-source">
     <div class="vertical-align" style="width: 100%;">
@@ -15,10 +15,10 @@
 
       <div class="services-selections">
         <a href ng-repeat="workflow in workflows"
-           ng-click='onSelect("{{workflow.name}}")'
+           ng-click='onSelect(workflow)'
            id="{{workflow.name}}"
            data-instance="Configure {{workflow.name}}"
-           style='background-image: url("https://pbs.twimg.com/profile_images/3345848205/67e4eda53c9e46253efc01b5032f2e0d_400x400.png");'>
+           style='background-image: url("images/workflow.png")'>
         </a>
       </div>
     </div>

@@ -223,6 +223,15 @@ var ElementsService = Class.extend({
     },
 
     /**
+     * Loads the workflow templates that are configured for this user's CE account
+     * @returns {*} The list of workflow templates or an empty list, if there are none
+     */
+    loadWorkflowTemplates: function() {
+        var url = this._application.environment.elementsUrl + '/workflows';
+        return this._httpGet(url, this._getHeaders());
+    },
+
+    /**
      * Query server and returns Object metadata
      * @return Service handler
      */
@@ -404,7 +413,6 @@ var ElementsService = Class.extend({
         };
 
         var headers = me._getHeaders();
-
         return me._httpPost(url, headers, workflowInstance);
     },
 
