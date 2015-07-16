@@ -31,6 +31,13 @@ var WorkflowController = BaseController.extend({
 
     defineScope: function() {
         var me = this;
+
+        // make sure the user is authenticated
+        if(me._application.isSecretsPresent() == false) {
+            me.$location.path('/');
+            return;
+        }
+
         me.$scope.processtep = 'workflow';
         me.$scope.appName = me._application.getApplicationName();
         me.$scope.onSelect = me.onSelect.bind(this);
@@ -39,7 +46,7 @@ var WorkflowController = BaseController.extend({
 
         // load the workflow templates
         me._maskLoader.show(me.$scope, 'Loading workflow templates...');
-        me._loadWorkflowTemplates();
+        me._loadWorkflowData();
     },
 
     defineListeners: function() {
@@ -81,12 +88,19 @@ var WorkflowController = BaseController.extend({
         me._workflowInstance.openCreateWorkflowInstance(workflowTemplate);
     },
 
-    _loadWorkflowTemplates: function() {
+    _loadWorkflowData: function() {
         var me = this;
         me._workflow.loadWorkflowTemplates().then(me._handleWorkflowTemplatesLoaded.bind(me));
     },
 
     _handleWorkflowTemplatesLoaded: function(workflowTemplates) {
+        var me = this;
+        me._maskLoader.hide();
+        console.log("Loaded " + workflowTemplates.length + " workflow templates");
+        me.$scope.workflows = workflowTemplates;
+    },
+
+    _handleWorkflowInstancesLoaded: function(workflowTemplates) {
         var me = this;
         me._maskLoader.hide();
         console.log("Loaded " + workflowTemplates.length + " workflow templates");
