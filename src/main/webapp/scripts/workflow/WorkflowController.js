@@ -1,5 +1,5 @@
 /**
- * Workflow controller for showing the available workflows
+ * Workflow controller for showing the available workflow templates and creating workflow instances from them
  * @author jjwyse
  */
 var WorkflowController = BaseController.extend({
@@ -30,6 +30,7 @@ var WorkflowController = BaseController.extend({
         var me = this;
         me.$scope.processtep = 'workflow';
         me.$scope.appName = me._application.getApplicationName();
+        me.$scope.onSelect = me.onSelect.bind(this);
         me.$scope.workflows = [
             {
                 "name": "POSable to Quickbooks"
