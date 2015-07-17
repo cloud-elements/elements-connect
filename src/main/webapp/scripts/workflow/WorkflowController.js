@@ -98,13 +98,6 @@ var WorkflowController = BaseController.extend({
         me._maskLoader.hide();
         console.log("Loaded " + workflowTemplates.length + " workflow templates");
         me.$scope.workflows = workflowTemplates;
-    },
-
-    _handleWorkflowInstancesLoaded: function(workflowTemplates) {
-        var me = this;
-        me._maskLoader.hide();
-        console.log("Loaded " + workflowTemplates.length + " workflow templates");
-        me.$scope.workflows = workflowTemplates;
     }
 });
 
