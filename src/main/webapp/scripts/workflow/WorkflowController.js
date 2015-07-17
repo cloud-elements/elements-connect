@@ -9,7 +9,6 @@ var WorkflowController = BaseController.extend({
     _application: null,
     _workflow: null,
     _workflowInstance: null,
-    _instances: null,
     _maskLoader: null,
 
     init: function($scope, CloudElementsUtils, Application, Workflow, WorkflowInstance, Notifications, ElementsService, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {

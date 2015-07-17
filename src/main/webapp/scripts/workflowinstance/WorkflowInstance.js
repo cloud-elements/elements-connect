@@ -44,13 +44,6 @@ var WorkflowInstance = Class.extend({
         return me._elementsService.createWorkflowInstance(me.workflowTemplate.id, workflowInstanceName, workflowInstanceConfiguration).then(
             me._workflow.handleOnCreateWorkflowInstance.bind(me._workflow, me.workflowTemplate.name),
             me._workflow.handleOnCreateWorkflowInstanceError.bind(me._workflow));
-    },
-
-    loadWorkflowInstances: function() {
-        var me = this;
-        return me._elementsService.loadWorkflowInstances(me.workflowTemplate.id, workflowInstanceName, workflowInstanceConfiguration).then(
-            me._workflow.handleOnCreateWorkflowInstance.bind(me._workflow, me.workflowTemplate.name),
-            me._workflow.handleOnCreateWorkflowInstanceError.bind(me._workflow));
     }
 });
 
