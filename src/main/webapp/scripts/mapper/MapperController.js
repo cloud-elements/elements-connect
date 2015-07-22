@@ -47,6 +47,7 @@ var MapperController = BaseController.extend({
         me.$scope.selectedTargetObject = {};
         me.$scope.objectMetaData = [];
         me.$scope.mapperdata = [];
+        me.$scope.mapper = {};
         me.$scope.cbObject = {};
         me.$scope.cbInstance = {};
         me.$scope.mapperwhere = [];
@@ -330,6 +331,7 @@ var MapperController = BaseController.extend({
             if(me._mapper.hasDisplayName(me._picker.targetElementInstance, data.vendorName) == true) {
                 sortby = 'vendorDisplayName';
             }
+            me.$scope.mapper = data;
             me.$scope.mapperdata = me._cloudElementsUtils.orderObjects(data.fields, sortby);
             me.$scope.showTargetTree = true;
 

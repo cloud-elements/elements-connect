@@ -757,8 +757,14 @@ var Mapper = Class.extend({
         me._constructAndSaveObjectDefinition(targetInstance, sourceInstance);
     },
 
-    //STEP 1: Get All the definitions that needs to be created or updated
-    //STEP 2: Save all the definitions
+    //STEP 1 : Get All the definitions that needs to be created or updated
+    //STEP 2 : Save all the definitions
+    //STEP 3 : Get all transformation for the target object
+    //STEP 4 : Save all the transformation for the target object
+    //STEP 5 : Bidirectional - Check if there are any definitions that needs to be saved for source element
+    //STEP 5.1 : Save all source definitions
+    //STEP 6 : Bidirectional - Get source transformations
+    //STEP 6 : Bidirectional - save all source transformations
 
     _constructAndSaveObjectDefinition: function(selectedInstance, sourceInstance) {
         var me = this;
@@ -830,23 +836,23 @@ var Mapper = Class.extend({
 
         //Save transformations once all the definitions are stored
         if(definitionSaveCounter == keys.length) {
-            return me._constructAndSaveObjectTransformation(selectedInstance, sourceInstance);
+            return me._constructAndSaveObjectTransformation(selectedInstance, sourceInstance, definitionArray);
         }
         else {
             return me._saveDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, definitionSaveCounter);
         }
     },
 
-    _constructAndSaveObjectTransformation: function(selectedInstance, sourceInstance) {
+    _constructAndSaveObjectTransformation: function(selectedInstance, sourceInstance, definitionArray) {
         var me = this;
 
         var transformationArray = me._transformationUtil.getAllTransformations(selectedInstance, sourceInstance);
 
         var transformationSaveCounter = 0;
-        return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter);
+        return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter);
     },
 
-    _saveTransformationFromArray: function(selectedInstance, transformationArray, transformationSaveCounter, useMethodType) {
+    _saveTransformationFromArray: function(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, useMethodType) {
         var me = this;
 
         var keys = Object.keys(transformationArray);
@@ -873,19 +879,19 @@ var Mapper = Class.extend({
         return me._elementsService.saveObjectTransformation(selectedInstance,
             key, transformationArray[key], 'instance', methodType)
             .then(
-            this._handleOnSaveTransformation.bind(this, selectedInstance, transformationArray, transformationSaveCounter),
-            this._handleOnSaveTransformationError.bind(this, selectedInstance, transformationArray, transformationSaveCounter));
+            this._handleOnSaveTransformation.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter),
+            this._handleOnSaveTransformationError.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter));
     },
 
-    _handleOnSaveTransformationError: function(selectedInstance, transformationArray, transformationSaveCounter, error) {
+    _handleOnSaveTransformationError: function(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, error) {
         var me = this;
         transformationSaveCounter--;
 
         if(error.status == 404) { //in this scenario it might be a PUT, but expecting a POST, so change this and make a POST call again
-            return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'POST');
+            return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, 'POST');
         }
         else if(error.status == 409) { //In this case a transformation might have already been present so make a PUT call
-            return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'PUT');
+            return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, 'PUT');
         }
         else {
             this._notifications.notify(bulkloader.events.ERROR, error.data.message);
@@ -893,7 +899,7 @@ var Mapper = Class.extend({
         }
     },
 
-    _handleOnSaveTransformation: function(selectedInstance, transformationArray, transformationSaveCounter, result) {
+    _handleOnSaveTransformation: function(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, result) {
         var me = this;
 
         var keys = Object.keys(transformationArray);
@@ -907,14 +913,176 @@ var Mapper = Class.extend({
 
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length) {
-            this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
-            //return true;
+            //this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
+            me._constructAndSaveSourceDefinition(selectedInstance, sourceInstance, definitionArray, transformationArray);
         }
         else {
-            return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter);
+            return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter);
+        }
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Source Instance Transformations and Definitions for Bi-directional mapping
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    _constructAndSaveSourceDefinition: function(selectedInstance, sourceInstance, definitionArray, transformationArray) {
+        var me = this;
+        var sourceDefinitionArray = me._transformationUtil.getDefinitionsForSource(selectedInstance, sourceInstance, definitionArray);
+        var dKeys = Object.keys(sourceDefinitionArray);
+
+        if(dKeys == null || me._cloudElementsUtils.isEmpty(dKeys.length) || dKeys.length == 0) {
+            me._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
+        }
+
+        var definitionSaveCounter = 0;
+        me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter);
+    },
+
+    _saveSourceDefinitionFromArray: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, useMethodType) {
+        var me = this;
+
+        var keys = Object.keys(sourceDefinitionArray);
+        var key = keys[definitionSaveCounter];
+
+        if(me._cloudElementsUtils.isEmpty(key))
+            return;
+
+        var methodType = 'POST';
+
+        var defs = me.all[sourceInstance.element.key].definitions;
+
+        if(!me._cloudElementsUtils.isEmpty(defs)
+            && !me._cloudElementsUtils.isEmpty(defs[key])
+            && defs[key].level == 'instance') {
+            methodType = 'PUT';
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(useMethodType)) {
+            methodType = useMethodType;
+        }
+
+        definitionSaveCounter++;
+
+        return me._elementsService.saveObjectDefinition(sourceInstance, key, sourceDefinitionArray[key], 'instance', methodType)
+            .then(
+            me._handleOnSaveSourceObjectDefinition.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter),
+            me._handleOnSaveSourceObjectDefinitionError.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter));
+    },
+
+    _handleOnSaveSourceObjectDefinitionError: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, error) {
+        var me = this;
+
+        definitionSaveCounter--;
+
+        if(error.status == 404) {
+            return me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, 'POST');
+        }
+        else if(error.status == 409) {
+            return me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, 'PUT');
+        }
+        else {
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
+            return error;
+        }
+    },
+
+    _handleOnSaveSourceObjectDefinition: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, result) {
+
+        var me = this;
+
+        var keys = Object.keys(definitionArray);
+
+        if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key].definitions)) {
+            me.all[sourceInstance.element.key].definitions = new Object();
+        }
+        //Setting the saved definition in case used for multiple save
+        var savedkey = keys[definitionSaveCounter - 1];
+        me.all[sourceInstance.element.key].definitions[savedkey] = sourceDefinitionArray[savedkey];
+
+        //Save transformations once all the definitions are stored
+        if(definitionSaveCounter == keys.length) {
+            return me._constructAndSaveSourceObjectTransformation(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray);
+        }
+        else {
+            return me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter);
+        }
+    },
+
+    _constructAndSaveSourceObjectTransformation: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray) {
+        var me = this;
+
+        var sourceTransformationArray = me._transformationUtil.getTransformationsForSource(selectedInstance, sourceInstance, transformationArray);
+
+        var transformationSaveCounter = 0;
+        return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter);
+    },
+
+    _saveSourceTransformationFromArray: function(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, useMethodType) {
+        var me = this;
+
+        var keys = Object.keys(sourceTransformationArray);
+        var key = keys[transformationSaveCounter];
+
+        if(me._cloudElementsUtils.isEmpty(key))
+            return;
+
+        var methodType = 'POST';
+
+        var trans = me.all[sourceInstance.element.key].transformations;
+
+        if(!me._cloudElementsUtils.isEmpty(trans)
+            && !me._cloudElementsUtils.isEmpty(trans[key])) {
+            methodType = 'PUT';
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(useMethodType)) {
+            methodType = useMethodType;
+        }
+
+        transformationSaveCounter++;
+
+        return me._elementsService.saveObjectTransformation(sourceInstance,
+            key, sourceTransformationArray[key], 'instance', methodType)
+            .then(
+            this._handleOnSaveSourceTransformation.bind(this, selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter),
+            this._handleOnSaveSourceTransformationError.bind(this, selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter));
+    },
+
+    _handleOnSaveSourceTransformationError: function(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, error) {
+        var me = this;
+        transformationSaveCounter--;
+
+        if(error.status == 404) { //in this scenario it might be a PUT, but expecting a POST, so change this and make a POST call again
+            return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, 'POST');
+        }
+        else if(error.status == 409) { //In this case a transformation might have already been present so make a PUT call
+            return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, 'PUT');
+        }
+        else {
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
+            return false;
+        }
+    },
+
+    _handleOnSaveSourceTransformation: function(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, result) {
+        var me = this;
+
+        var keys = Object.keys(sourceTransformationArray);
+
+        //Setting the saved transformation
+        if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key].transformations)) {
+            me.all[sourceInstance.element.key].transformations = new Object();
+        }
+        var savedkey = keys[transformationSaveCounter - 1];
+        me.all[sourceInstance.element.key].transformations[savedkey] = sourceTransformationArray[savedkey];
+
+        //Save transformations once all the definitions are stored
+        if(transformationSaveCounter == keys.length) {
+            this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
+        }
+        else {
+            return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter);
         }
     }
-
 
 });
 

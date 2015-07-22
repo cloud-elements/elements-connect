@@ -244,7 +244,7 @@ var TransformationUtil = Class.extend({
         var tKeys = Object.keys(transformationArray);
 
         var fileteredArray = new Object;
-        for(var i=0; i < tKeys.length; i++) {
+        for(var i = 0; i < tKeys.length; i++) {
             var tkey = tKeys[i];
             var tObj = transformationArray[tkey];
             if(me._cloudElementsUtils.isEmpty(tObj.fields)
@@ -256,8 +256,71 @@ var TransformationUtil = Class.extend({
         }
 
         return fileteredArray;
-    }
+    },
 
+    getDefinitionsForSource: function(selectedInstance, sourceInstance, definitionArray) {
+        var me = this;
+
+        //Check to see if bidirectional is enabled and handle for those objects
+
+        var mData = me.all[selectedInstance.element.key].metamapping;
+        var mKeys = Object.keys(mData);
+        var sourceDefinitionArray = new Object;
+
+        for(var i = 0; i < mKeys.length; i++) {
+            var mapping = mData[mKeys[i]];
+            if(mapping.bidirectional == true) {
+                var objectName = mKeys[i];
+                var o = objectName.split('_');
+                var newobjName = selectedInstance.element.key + '_' + o[2] + '_' + o[1];
+
+                //get all definitions for the objectName
+                sourceDefinitionArray = me._getDefinitionsStartingWith(definitionArray, objectName, newobjName, sourceDefinitionArray);
+            }
+        }
+
+        return sourceDefinitionArray;
+    },
+
+    _getDefinitionsStartingWith: function(definitionArray, objName, newobjName, sourceDefinitionArray) {
+        var me = this;
+        var dKeys = Object.keys(definitionArray);
+        for(var i = 0; i < dKeys.length; i++) {
+            if(dKeys[i].indexOf(objName) > -1) {
+                var finalNewObj = dKeys[i].replace(objName, newobjName);
+                //By doing this converting JSON to string and replacing any types of
+                // objectnames which are present to the new object name
+                var defStr = JSON.stringify(definitionArray[dKeys[i]]);
+                defStr = defStr.replace(objName, finalNewObj);
+                sourceDefinitionArray[finalNewObj] = JSON.parse(defStr);
+            }
+        }
+
+        return sourceDefinitionArray;
+    },
+
+    getTransformationsForSource: function(selectedInstance, sourceInstance, transformationArray) {
+        var me = this;
+
+        //Check to see if bidirectional is enabled and handle for those objects
+
+        var mData = me.all[selectedInstance.element.key].metamapping;
+        var mKeys = Object.keys(mData);
+        var sourceTransformationArray = new Object;
+
+        for(var i = 0; i < mKeys.length; i++) {
+            var mapping = mData[mKeys[i]];
+            if(mapping.bidirectional == true) {
+                var objectName = mKeys[i];
+                var o = objectName.split('_');
+                var newobjName = selectedInstance.element.key + '_' + o[2] + '_' + o[1];
+
+                sourceTransformationArray[newobjName]  = transformationArray[objectName];
+            }
+        }
+
+        return sourceTransformationArray;
+    }
 });
 
 /**
