@@ -12,11 +12,12 @@ var MapperController = BaseController.extend({
     _picker: null,
     _datalist: null,
     _mapper: null,
+    _application: null,
     _instances: null,
     _schedule: null,
     _maskLoader: null,
 
-    init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, Application, $window, $location, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -28,6 +29,7 @@ var MapperController = BaseController.extend({
         me.$window = $window;
         me.$location = $location;
         me._maskLoader = MaskLoader;
+        me._application = Application;
         me.$mdDialog = $mdDialog;
         me.$filter = $filter;
         me._super($scope);
@@ -293,21 +295,6 @@ var MapperController = BaseController.extend({
     refreshTargetObject: function() {
         var me = this;
 
-        //First Check if there is me.$scope.mapperdata, if so reload the information from source
-        //TODO Think of the model of implementing this
-//        if(!me._cloudElementsUtils.isEmpty(me.$scope.mapperdata)) {
-//            var metadata = null;
-//            if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat)) {
-//                metadata = me._mapper.all[me._picker.selectedElementInstance.element.key].metadataflat[me.$scope.selectedObject.select.name];
-//            }
-//
-//            if(!me._cloudElementsUtils.isEmpty(metadata)) {
-//                var data = me._mapper.loadObjectMetaDataFromCache(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance);
-//                me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'path');
-//                me.$scope.showTree = true;
-//            }
-//        }
-
         me._maskLoader.show(me.$scope, "Loading mapping...");
 
         //Get the targetmapping
@@ -356,7 +343,6 @@ var MapperController = BaseController.extend({
             return;
         }
 
-        me.$scope.bidirectionalMapping = false; //TODO Find if their is bidirectional mapping exists..thats looking at the source transformations
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
         me.$scope.targetLogo = me._picker._target.image;
@@ -368,6 +354,12 @@ var MapperController = BaseController.extend({
         //Load the objects for the element
         me._mapper.loadInstanceObjects(me._picker.selectedElementInstance, me._picker.targetElementInstance)
             .then(me._handleOnInstanceObjectsLoad.bind(me));
+
+        if(me._application.isMapperBiDirectional() == true) {
+            me.$scope.bidirectionalMapping = true;
+        } else {
+            me.$scope.bidirectionalMapping = false;
+        }
 
     },
 
@@ -620,7 +612,7 @@ var MapperController = BaseController.extend({
     }
 });
 
-MapperController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog', '$mdUtil', '$mdSidenav'];
+MapperController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Datalist', 'Mapper', 'Notifications', 'Schedule', 'MaskLoader', 'Application', '$window', '$location', '$filter', '$route', '$mdDialog', '$mdUtil', '$mdSidenav'];
 
 angular.module('bulkloaderApp')
     .controller('MapperController', MapperController)

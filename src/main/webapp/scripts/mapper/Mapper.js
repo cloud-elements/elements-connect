@@ -13,6 +13,7 @@ var Mapper = Class.extend({
     _cloudElementsUtils: null,
     _picker: null,
     _transformationUtil: null,
+    _application: null,
     _objectMetadata: null,
     _objectMetadataFlat: null,
 
@@ -64,15 +65,15 @@ var Mapper = Class.extend({
     // Load selected Instance Objects
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    loadInstanceObjects: function(selectedInstance, targetInstance) {
+    loadInstanceObjects: function(sourceInstance, targetInstance) {
         var me = this;
 
-        var selectedInstance = angular.fromJson(selectedInstance);
+        var sourceInstance = angular.fromJson(sourceInstance);
         var targetInstance = angular.fromJson(targetInstance);
 
-        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key])) {
-            me.all[selectedInstance.element.key] = new Object;
-            me.all[selectedInstance.element.key].instance = selectedInstance;
+        if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key])) {
+            me.all[sourceInstance.element.key] = new Object;
+            me.all[sourceInstance.element.key].instance = sourceInstance;
         }
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key])) {
@@ -80,11 +81,32 @@ var Mapper = Class.extend({
             me.all[targetInstance.element.key].instance = targetInstance;
         }
 
-        //Load target instance definitions
+        // Load target and source instance definitions,
+        // the only reason for this call is for making appropriate POST/PUT calls while saving
         me.loadInstanceDefinitions(targetInstance);
 
+        if(me._application.isMapperBiDirectional() == true) {
+            me.loadInstanceDefinitions(sourceInstance);
+
+            me._elementsService.loadInstanceTransformations(sourceInstance)
+                .then(
+                this._handleLoadSourceInstanceTransformations.bind(this, sourceInstance),
+                this._handleLoadSourceInstanceTransformationsError.bind(this, sourceInstance));
+        }
+
         //Load source objects
-        return me._loadObjects(selectedInstance, targetInstance);
+        return me._loadObjects(sourceInstance, targetInstance);
+    },
+
+    _handleLoadSourceInstanceTransformationsError: function(sourceInstance, result) {
+        var me = this;
+        me.all[sourceInstance.element.key].transformationsLoaded = true;
+    },
+
+    _handleLoadSourceInstanceTransformations: function(sourceInstance, result) {
+        var me = this;
+        me.all[sourceInstance.element.key].transformationsLoaded = true;
+        me.all[sourceInstance.element.key].transformations = result.data;
     },
 
     //------------------------------------------------------------------
@@ -706,6 +728,24 @@ var Mapper = Class.extend({
         newMapping['name'] = name;
         newMapping['vendorName'] = targetObjectName;
         newMapping['fields'] = objectMetadata.fields;
+
+        //Check if bidirectional is enabled,
+        // if so check if there is a transformation of the same on the source Object and enable bidirection
+        if(me._application.isMapperBiDirectional() == true
+            && !me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
+            var sourceObjName =  targetInstance.element.key + '_' + targetObjectName + '_' + selectedInstanceObject;
+
+            //Check if the object exists in transformation
+            var trans = me.all[selectedInstance.element.key].transformations[sourceObjName];
+            if(!me._cloudElementsUtils.isEmpty(trans)) {
+                newMapping['bidirectional'] = true;
+            } else {
+                newMapping['bidirectional'] = false;
+            }
+        } else {
+            newMapping['bidirectional'] = false;
+        }
+
         me.all[targetInstance.element.key].metamapping[name] = newMapping;
         return newMapping;
     },
@@ -989,7 +1029,7 @@ var Mapper = Class.extend({
 
         var me = this;
 
-        var keys = Object.keys(definitionArray);
+        var keys = Object.keys(sourceDefinitionArray);
 
         if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key].definitions)) {
             me.all[sourceInstance.element.key].definitions = new Object();
@@ -1099,12 +1139,13 @@ var Mapper = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', 'TransformationUtil', function(CloudElementsUtils, ElementsService, Notifications, Picker, TransformationUtil) {
+        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', 'Application', 'TransformationUtil', function(CloudElementsUtils, ElementsService, Notifications, Picker, Application, TransformationUtil) {
             var me = this;
             me.instance._cloudElementsUtils = CloudElementsUtils;
             me.instance._elementsService = ElementsService;
             me.instance._notifications = Notifications;
             me.instance._picker = Picker;
+            me.instance._application = Application;
             me.instance._transformationUtil = TransformationUtil;
 
             me.instance._transformationUtil.all = me.instance.all;

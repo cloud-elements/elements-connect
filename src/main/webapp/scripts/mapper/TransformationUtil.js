@@ -271,9 +271,7 @@ var TransformationUtil = Class.extend({
             var mapping = mData[mKeys[i]];
             if(mapping.bidirectional == true) {
                 var objectName = mKeys[i];
-                var o = objectName.split('_');
-                var newobjName = selectedInstance.element.key + '_' + o[2] + '_' + o[1];
-
+                var newobjName = me._sourceObjectName(objectName, selectedInstance);
                 //get all definitions for the objectName
                 sourceDefinitionArray = me._getDefinitionsStartingWith(definitionArray, objectName, newobjName, sourceDefinitionArray);
             }
@@ -312,14 +310,18 @@ var TransformationUtil = Class.extend({
             var mapping = mData[mKeys[i]];
             if(mapping.bidirectional == true) {
                 var objectName = mKeys[i];
-                var o = objectName.split('_');
-                var newobjName = selectedInstance.element.key + '_' + o[2] + '_' + o[1];
-
+                var newobjName = me._sourceObjectName(objectName, selectedInstance);
                 sourceTransformationArray[newobjName]  = transformationArray[objectName];
             }
         }
 
         return sourceTransformationArray;
+    },
+
+    _sourceObjectName: function(objectName, selectedInstance) {
+        var me =  this;
+        var o = objectName.split('_');
+        return selectedInstance.element.key + '_' + o[2] + '_' + o[1];
     }
 });
 
