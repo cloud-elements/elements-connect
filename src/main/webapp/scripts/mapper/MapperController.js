@@ -59,6 +59,7 @@ var MapperController = BaseController.extend({
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
         me.$scope.showTargetTree = false;
+        me.$scope.bidirectionalMapping = false;
 
         //Handling Action Methods
         me.$scope.save = me.save.bind(this);
@@ -353,6 +354,7 @@ var MapperController = BaseController.extend({
             return;
         }
 
+        me.$scope.bidirectionalMapping = false; //TODO Find if their is bidirectional mapping exists..thats looking at the source transformations
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
         me.$scope.sourceLogo = me.$scope.sourceElement.image;
         me.$scope.targetLogo = me._picker._target.image;
@@ -422,12 +424,12 @@ var MapperController = BaseController.extend({
 
             me.$mdDialog.show(confirm).then(function() {
                 //continue
-                me._finalSave();
+                me._continueToSave();
             }, function() {
                 //Don't do anything
             });
         } else {
-            me._finalSave();
+            me._continueToSave();
         }
     },
 
@@ -464,11 +466,13 @@ var MapperController = BaseController.extend({
         return missingRequired;
     },
 
-    _finalSave: function() {
+    _continueToSave: function() {
         var me = this;
 
         me._maskLoader.show(me.$scope, 'Saving...');
-        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance, me._picker.targetElementInstance, me.$scope.instanceObjects);
+        var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance,
+                                                                    me._picker.targetElementInstance,
+                                                                    me.$scope.instanceObjects);
     },
 
     _onTransformationSave: function() {
