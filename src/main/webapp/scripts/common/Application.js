@@ -102,6 +102,20 @@ var Application = Class.extend({
         return me.configuration.display;
     },
 
+    getMapper: function() {
+        var me = this;
+        return me.configuration.mapper;
+    },
+
+    isMapperBiDirectional: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)
+            || me._cloudElementsUtils.isEmpty( me.configuration.mapper)) {
+            return false;
+        }
+        return  me.configuration.mapper.bi-directional;
+    },
+
     isTargetHidden: function() {
         var me = this;
         var show = me.configuration.showTarget;

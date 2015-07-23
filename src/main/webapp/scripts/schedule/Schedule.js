@@ -209,12 +209,14 @@ var Schedule = Class.extend({
 
         job.targetConfiguration = targetConfiguration;
 
-        var notificationConfiguration = new Object();
+        if(!me._cloudElementsUtils.isEmpty(me._application.configuration.notificationToken)) {
+            var notificationConfiguration = new Object();
 
-        notificationConfiguration.token = me._application.configuration.notificationToken;
-        notificationConfiguration.to = me._application.configuration.notificationEmail;
+            notificationConfiguration.token = me._application.configuration.notificationToken;
+            notificationConfiguration.to = me._application.configuration.notificationEmail;
 
-        job.notificationConfiguration = notificationConfiguration;
+            job.notificationConfiguration = notificationConfiguration;
+        }
 
         return job;
     },
