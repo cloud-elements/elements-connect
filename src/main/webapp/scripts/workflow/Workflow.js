@@ -2,6 +2,9 @@
  * Workflow factor class as a helper to the Workflow controller
  * @author jjwyse
  */
+
+bulkloader.events.NEW_WORKFLOW_INSTANCE_CREATED = 'NEW_WORKFLOW_INSTANCE_CREATED';
+
 var Workflow = Class.extend({
     _elementsService: null,
     _notifications: null,
@@ -37,8 +40,8 @@ var Workflow = Class.extend({
         // adding the newly created workflow instance to _workflowInstances
         me._workflowInstances[workflowName] = httpResult.data;
 
-        // TODO - JJW
-        alert("Successfully created " + workflowName + " instance");
+        // notifying for new workflow instance creation
+        me._notifications.notify(bulkloader.events.NEW_WORKFLOW_INSTANCE_CREATED);
 
         return httpResult.data;
     },

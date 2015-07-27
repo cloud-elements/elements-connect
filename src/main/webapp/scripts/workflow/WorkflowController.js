@@ -53,11 +53,13 @@ var WorkflowController = BaseController.extend({
     defineListeners: function() {
         var me = this;
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.NEW_WORKFLOW_INSTANCE_CREATED, me._onWorkflowInstancesRefresh.bind(me), me.$scope.$id);
     },
 
     destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.NEW_WORKFLOW_INSTANCE_CREATED, me._onWorkflowInstancesRefresh.bind(me), me.$scope.$id);
     },
 
     cancel: function() {
@@ -113,6 +115,12 @@ var WorkflowController = BaseController.extend({
         }
 
         // check for existing workflow instances
+        me._highlightWorkflowInstances();
+    },
+
+    _highlightWorkflowInstances: function() {
+        var me = this;
+
         if(me.$scope.workflows) {
             for(var i = 0; i < me.$scope.workflows.length; i++) {
                 var workflowTemplate = me.$scope.workflows[i];
@@ -168,6 +176,12 @@ var WorkflowController = BaseController.extend({
             }
         }
         return filteredWorkflowTemplates;
+    },
+
+    _onWorkflowInstancesRefresh: function() {
+        var me = this;
+        console.log("Refreshing workflow instances");
+        me._highlightWorkflowInstances();
     }
 });
 
