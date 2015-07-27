@@ -416,6 +416,16 @@ var ElementsService = Class.extend({
         return me._httpPost(url, headers, workflowInstance);
     },
 
+    findWorkflowInstances: function(workflowId) {
+        var me = this;
+        console.log('Attempting to find instances of workflow: ' + workflowId);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
+        url = url.replace('{id}', workflowId);
+
+        var headers = me._getHeaders();
+        return me._httpGet(url, headers);
+    },
+
     getJobs: function() {
         var me = this;
 

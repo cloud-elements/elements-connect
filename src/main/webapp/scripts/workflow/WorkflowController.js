@@ -65,6 +65,11 @@ var WorkflowController = BaseController.extend({
         me.$location.path('/mapper');
     },
 
+    _handleLoadError: function(error) {
+        // ignore as these can be ignored or 404's
+        console.log('Loading error' + error);
+    },
+
     onSelect: function(workflowTemplate) {
         var me = this;
         // TODO - JJW check to see if the workflow instance already exists
@@ -105,6 +110,26 @@ var WorkflowController = BaseController.extend({
         } else {
             // if we do NOT have any workflows defined in our app config, then just show all of the workflow templates
             me.$scope.workflows = workflowTemplates;
+        }
+
+        // check for existing workflow instances
+        if(me.$scope.workflows) {
+            for(var i = 0; i < me.$scope.workflows.length; i++) {
+                var workflowTemplate = me.$scope.workflows[i];
+                me._elementsService.findWorkflowInstances(workflowTemplate.id).then(
+                    me._handleLoadWorkflowInstances.bind(me, workflowTemplate.name),
+                    me._handleLoadError.bind(me));
+            }
+        }
+    },
+
+    _handleLoadWorkflowInstances: function(workflowName, httpResult) {
+        var me = this;
+
+        var workflowInstances = httpResult.data;
+
+        if(workflowInstances && workflowInstances.length > 0) {
+            angular.element(document.getElementById(workflowName)).addClass('highlightingElement');
         }
     },
 
