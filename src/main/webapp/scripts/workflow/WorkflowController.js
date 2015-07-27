@@ -10,8 +10,9 @@ var WorkflowController = BaseController.extend({
     _workflow: null,
     _workflowInstance: null,
     _maskLoader: null,
+    _picker: null,
 
-    init: function($scope, CloudElementsUtils, Application, Workflow, WorkflowInstance, Notifications, ElementsService, MaskLoader, $window, $location, $interval, $filter, $route, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Application, Workflow, WorkflowInstance, Notifications, ElementsService, MaskLoader, Picker, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
@@ -21,6 +22,7 @@ var WorkflowController = BaseController.extend({
         me._application = Application;
         me._workflow = Workflow;
         me._workflowInstance = WorkflowInstance;
+        me._picker = Picker;
         me.$window = $window;
         me.$location = $location;
         me.$interval = $interval;
@@ -96,11 +98,47 @@ var WorkflowController = BaseController.extend({
         var me = this;
         me._maskLoader.hide();
         console.log("Loaded " + workflowTemplates.length + " workflow templates");
-        me.$scope.workflows = workflowTemplates;
+
+        if(me._application.configuration.workflows && me._application.configuration.workflows.length > 0) {
+            // if there is a workflows section in the app configuration, then filter out any that are not specified there
+            var filteredWorkflowTemplates = [];
+            for(var i = 0; i < me._application.configuration.workflows.length; i++) {
+                var workflowAppConfig = me._application.configuration.workflows[i];
+
+                // look through each workflow template we loaded and we have a workflow template with the name in the workflow app config, then include it
+                for(var j = 0; j < workflowTemplates.length; j++) {
+                    var workflowTemplate = workflowTemplates[j];
+                    if(workflowAppConfig.name === workflowTemplate.name) {
+
+                        // go through each config on the workflow template, and set default values with our target and source element instances, if possible
+                        if(workflowTemplate.configuration) {
+                            for(var k = 0; k < workflowTemplate.configuration.length; k++) {
+                                var workflowTemplateConfig = workflowTemplate.configuration[k];
+                                if(workflowTemplateConfig.type === 'elementInstance') {
+                                    var configKey = workflowTemplateConfig.key;
+                                    var elementKey = configKey.substr(0, configKey.indexOf('.'));
+                                    console.log("Looking for source or target instance with key: " + elementKey);
+                                    if(me._picker.selectedElementInstance.element.key === elementKey) {
+                                        workflowTemplateConfig.defaultElementInstance = me._picker.selectedElementInstance;
+                                    } else if(me._picker.targetElementInstance.element.key === elementKey) {
+                                        workflowTemplateConfig.defaultElementInstance = me._picker.targetElementInstance;
+                                    }
+                                }
+                            }
+                        }
+                        filteredWorkflowTemplates.push(workflowTemplate);
+                    }
+                }
+            }
+            me.$scope.workflows = filteredWorkflowTemplates;
+        } else {
+            // if we do NOT have any workflows defined in our app config, then just show all of the workflow templates
+            me.$scope.workflows = workflowTemplates;
+        }
     }
 });
 
-WorkflowController.$inject = ['$scope', 'CloudElementsUtils', 'Application', 'Workflow', 'WorkflowInstance', 'Notifications', 'ElementsService', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+WorkflowController.$inject = ['$scope', 'CloudElementsUtils', 'Application', 'Workflow', 'WorkflowInstance', 'Notifications', 'ElementsService', 'MaskLoader', 'Picker', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('WorkflowController', WorkflowController);

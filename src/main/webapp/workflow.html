@@ -17,7 +17,7 @@
         <a href ng-repeat="workflow in workflows"
            ng-click='onSelect(workflow)'
            id="{{workflow.name}}"
-           data-instance="Configure {{workflow.name}}"
+           data-instance="{{workflow.name}}"
            style='background-image: url("images/workflow.png")'>
         </a>
       </div>

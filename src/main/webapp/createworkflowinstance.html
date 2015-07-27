@@ -8,7 +8,8 @@
   <div class="content">
     <div ng-repeat="config in workflowConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;">
       <p>{{config.name}}</p>
-      <input type="{{config.type}}" name="{{config.key}}" ng-model='workflowInstanceData[config.key]' placeholder="">
+      <input type="text" name="{{config.key}}" ng-model="workflowInstanceData[config.key]"
+             value="{{config.defaultElementInstance.id}}">
     </div>
   </div>
   <div class="actions">
