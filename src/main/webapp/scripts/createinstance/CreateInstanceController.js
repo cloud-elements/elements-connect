@@ -78,11 +78,11 @@ var CreateInstanceController = BaseController.extend({
                 "key"  : ele.elementKey
             };
 
-            me._maskLoader.show(me.$scope, 'Creating Instance...');
+            me._maskLoader.show(me.$scope, 'Connecting...');
             me._createinstance.onSaveInstance(elementProvision);
         } else {
 
-            me._maskLoader.show(me.$scope, 'Creating Instance...');
+            me._maskLoader.show(me.$scope, 'Connecting...');
             var elementConfig = me._picker.getElementConfig(ele.elementKey, me._createinstance.selection);
             if(me._cloudElementsUtils.isEmpty(elementConfig.other)) {
                 elementConfig.other = new Object();

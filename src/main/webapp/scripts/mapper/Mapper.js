@@ -12,6 +12,7 @@ var Mapper = Class.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _transformationUtil: null,
     _application: null,
     _objectMetadata: null,
     _objectMetadataFlat: null,
@@ -64,15 +65,15 @@ var Mapper = Class.extend({
     // Load selected Instance Objects
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    loadInstanceObjects: function(selectedInstance, targetInstance) {
+    loadInstanceObjects: function(sourceInstance, targetInstance) {
         var me = this;
 
-        var selectedInstance = angular.fromJson(selectedInstance);
+        var sourceInstance = angular.fromJson(sourceInstance);
         var targetInstance = angular.fromJson(targetInstance);
 
-        if(me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key])) {
-            me.all[selectedInstance.element.key] = new Object;
-            me.all[selectedInstance.element.key].instance = selectedInstance;
+        if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key])) {
+            me.all[sourceInstance.element.key] = new Object;
+            me.all[sourceInstance.element.key].instance = sourceInstance;
         }
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key])) {
@@ -80,11 +81,32 @@ var Mapper = Class.extend({
             me.all[targetInstance.element.key].instance = targetInstance;
         }
 
-        //Load target instance definitions
+        // Load target and source instance definitions,
+        // the only reason for this call is for making appropriate POST/PUT calls while saving
         me.loadInstanceDefinitions(targetInstance);
 
+        if(me._application.isMapperBiDirectional() == true) {
+            me.loadInstanceDefinitions(sourceInstance);
+
+            me._elementsService.loadInstanceTransformations(sourceInstance)
+                .then(
+                this._handleLoadSourceInstanceTransformations.bind(this, sourceInstance),
+                this._handleLoadSourceInstanceTransformationsError.bind(this, sourceInstance));
+        }
+
         //Load source objects
-        return me._loadObjects(selectedInstance, targetInstance);
+        return me._loadObjects(sourceInstance, targetInstance);
+    },
+
+    _handleLoadSourceInstanceTransformationsError: function(sourceInstance, result) {
+        var me = this;
+        me.all[sourceInstance.element.key].transformationsLoaded = true;
+    },
+
+    _handleLoadSourceInstanceTransformations: function(sourceInstance, result) {
+        var me = this;
+        me.all[sourceInstance.element.key].transformationsLoaded = true;
+        me.all[sourceInstance.element.key].transformations = result.data;
     },
 
     //------------------------------------------------------------------
@@ -176,7 +198,7 @@ var Mapper = Class.extend({
 
     _handleLoadInstanceObjectError: function(result) {
         var me = this;
-        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects or Instance is bad");
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting the discovery objects or connection to provider is bad");
         //return "Error getting the discovery object";
     },
 
@@ -706,6 +728,24 @@ var Mapper = Class.extend({
         newMapping['name'] = name;
         newMapping['vendorName'] = targetObjectName;
         newMapping['fields'] = objectMetadata.fields;
+
+        //Check if bidirectional is enabled,
+        // if so check if there is a transformation of the same on the source Object and enable bidirection
+        if(me._application.isMapperBiDirectional() == true
+            && !me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
+            var sourceObjName =  targetInstance.element.key + '_' + targetObjectName + '_' + selectedInstanceObject;
+
+            //Check if the object exists in transformation
+            var trans = me.all[selectedInstance.element.key].transformations[sourceObjName];
+            if(!me._cloudElementsUtils.isEmpty(trans)) {
+                newMapping['bidirectional'] = true;
+            } else {
+                newMapping['bidirectional'] = false;
+            }
+        } else {
+            newMapping['bidirectional'] = false;
+        }
+
         me.all[targetInstance.element.key].metamapping[name] = newMapping;
         return newMapping;
     },
@@ -752,193 +792,24 @@ var Mapper = Class.extend({
     saveDefinitionAndTransformation: function(sourceInstance, targetInstance, objects) {
         var me = this;
 
-        //Convert objects to map of objectName key and transformed value
-        var objectsAndTrans = objects.reduce(function(total, objects) {
-            total[ objects.name ] = objects.transformed;
-            return total;
-        }, {});
-
-        me.all[targetInstance.element.key].objectsAndTrans = objectsAndTrans;
-
         //Construct the Object Definition and inner Object definitions
         //Save all the definitions at instance level
         me._constructAndSaveObjectDefinition(targetInstance, sourceInstance);
     },
 
-    _findDefinition: function(definitionArray, objectName, p, currentDefinition) {
-        var me = this;
-
-        var pArray = p.split('.');
-
-        var name = objectName;
-        var objectDefinition = null;
-        for(var i = 0; i < pArray.length - 1; i++) {
-            var pathStep = pArray[i];
-            name = name + '_' + pathStep;
-
-            if(me._cloudElementsUtils.isEmpty(definitionArray[name])) {
-                var objDef = {
-                    fields: []
-                };
-                definitionArray[name] = objDef;
-                objectDefinition = objDef;
-
-                currentDefinition.fields.push({
-                    'path': pathStep,
-                    'type': name
-                });
-
-                currentDefinition = objectDefinition;
-
-            } else {
-                objectDefinition = definitionArray[name];
-                currentDefinition = objectDefinition;
-            }
-        }
-
-        return objectDefinition;
-    },
-
-    _addToDefinition: function(definitionArray, objectName, mData, objDefinition) {
-        var me = this;
-
-        if(objDefinition == null) {
-            objDefinition = {
-                fields: []
-            };
-
-            if(me._cloudElementsUtils.isEmpty(definitionArray[objectName])) {
-                definitionArray[objectName] = objDefinition;
-            } else {
-                objDefinition = definitionArray[objectName];
-            }
-
-        }
-
-        for(var i = 0; i < mData.fields.length; i++) {
-            var mapperData = mData.fields[i];
-
-            if(me._cloudElementsUtils.isEmpty(mapperData.type)) {
-                mapperData.type = 'string'; //this is dirty fix for setting a type value by default
-            }
-
-            if(this._isLiteral(mapperData.type.toLowerCase())
-                || this._isDateFormat(mapperData.type)) {
-                var t = mapperData.type;
-                var p = mapperData.path;
-
-                if(this._isDateFormat(t)) {
-                    t = 'date';
-                }
-
-                if(!this._cloudElementsUtils.isEmpty(p) && p.indexOf('.') > 0) {
-                    var objDef = me._findDefinition(definitionArray, objectName, p, objDefinition);
-                    var pArray = p.split('.');
-                    objDef.fields.push({
-                        'path': pArray[pArray.length - 1],
-                        'type': t
-                    });
-                }
-                else if(!this._cloudElementsUtils.isEmpty(p)) {
-                    objDefinition.fields.push({
-                        'path': p,
-                        'type': t
-                    });
-                }
-            }
-            else {
-                me._addToDefinition(definitionArray, objectName, mapperData);
-            }
-        }
-    },
-
-    //Definition that will be created is always in flat structure
-    _constructDefinition: function(definitionArray, objectName, mData, objDefinition) {
-        var me = this;
-
-        if(objDefinition == null) {
-            objDefinition = {
-                fields: []
-            };
-
-            definitionArray[objectName] = objDefinition;
-        }
-
-        for(var i = 0; i < mData.fields.length; i++) {
-            var mapperData = mData.fields[i];
-
-            if(me._cloudElementsUtils.isEmpty(mapperData.type)) {
-                mapperData.type = 'string'; //this is dirty fix for setting a type value by default
-            }
-
-            if(this._isLiteral(mapperData.type.toLowerCase())
-                || this._isDateFormat(mapperData.type)) {
-                var t = mapperData.type;
-                var p = mapperData.path;
-
-                if(this._isDateFormat(t)) {
-                    t = 'date';
-                }
-
-                if(!this._cloudElementsUtils.isEmpty(p)) {
-                    objDefinition.fields.push({
-                        'path': p,
-                        'type': t
-                    });
-                }
-            }
-            else {
-                //This is where its of type Object so create a definition out of it
-                // and also add it to the base definition
-                var name = mapperData.path;
-                if(me._cloudElementsUtils.isEmpty(name) || name.length == 0) {
-                    name = mapperData.vendorPath
-                }
-
-                if(mapperData.type == 'array') {
-                    name = name.replace('[*]', '');
-                }
-
-                name = objectName + '_' + name;
-                me._constructDefinition(definitionArray, name, mapperData);
-
-                var t = mapperData.vendorPath;
-                var p = mapperData.path;
-                if(this._cloudElementsUtils.isEmpty(p) || p.length == 0) {
-                    p = mapperData.vendorPath
-                }
-                if(mapperData.type == 'array') {
-                    t = 'array[' + mapperData.vendorPath.replace('[*]', '') + ']';
-                    p = p + '[*]';
-                }
-
-                if(this._cloudElementsUtils.isEmpty(t)) {
-                    t = mapperData.actualVendorPath;
-                }
-
-                objDefinition.fields.push({
-                    'path': p,
-                    'type': t
-                });
-            }
-        }
-    },
+    //STEP 1 : Get All the definitions that needs to be created or updated
+    //STEP 2 : Save all the definitions
+    //STEP 3 : Get all transformation for the target object
+    //STEP 4 : Save all the transformation for the target object
+    //STEP 5 : Bidirectional - Check if there are any definitions that needs to be saved for source element
+    //STEP 5.1 : Save all source definitions
+    //STEP 6 : Bidirectional - Get source transformations
+    //STEP 6 : Bidirectional - save all source transformations
 
     _constructAndSaveObjectDefinition: function(selectedInstance, sourceInstance) {
         var me = this;
-
-        var mData = me.all[selectedInstance.element.key].metamapping;
-        var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
-
-        var mKeys = Object.keys(mData);
-
-        var definitionArray = new Object;
-        for(var i = 0; i < mKeys.length; i++) {
-            me._addToDefinition(definitionArray, mKeys[i], mData[mKeys[i]]);
-        }
-
+        var definitionArray = me._transformationUtil.getAllDefinitions(selectedInstance, sourceInstance);
         var definitionSaveCounter = 0;
-
         return me._saveDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, definitionSaveCounter);
     },
 
@@ -1005,120 +876,23 @@ var Mapper = Class.extend({
 
         //Save transformations once all the definitions are stored
         if(definitionSaveCounter == keys.length) {
-            return me._constructAndSaveObjectTransformation(selectedInstance, sourceInstance);
+            return me._constructAndSaveObjectTransformation(selectedInstance, sourceInstance, definitionArray);
         }
         else {
             return me._saveDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, definitionSaveCounter);
         }
     },
 
-    _constructDeeperTransformation: function(objectTransformation, objectMapperData, objectName) {
-
+    _constructAndSaveObjectTransformation: function(selectedInstance, sourceInstance, definitionArray) {
         var me = this;
 
-        if(objectMapperData.type == 'array') {
-            objectName = objectName + '[*]';
-        }
-
-        for(var i = 0; i < objectMapperData.fields.length; i++) {
-            var mapperData = objectMapperData.fields[i];
-            var mapperType = mapperData.type.toLowerCase();
-
-            if(this._isLiteral(mapperType)
-                || this._isDateFormat(mapperData.type)) {
-                var p = mapperData.vendorPath;
-                if(this._isLiteralArray(mapperData.type)) {
-                    p = p + '[*]';
-                }
-
-                if(!me._cloudElementsUtils.isEmpty(mapperData.path)) {
-                    var vp = mapperData.vendorPath;
-                    if(!me._cloudElementsUtils.isEmpty(objectName)) {
-                        vp = objectName + '.' + vp;
-                    }
-
-                    objectTransformation.fields.push({
-                        'path': mapperData.path,
-                        'vendorPath': vp
-                    });
-                }
-            }
-            else {
-                var newObjectName = mapperData.vendorPath;
-                if(!me._cloudElementsUtils.isEmpty(objectName)) {
-                    newObjectName = objectName + '.' + mapperData.vendorPath;
-                }
-                this._constructDeeperTransformation(objectTransformation, mapperData, newObjectName);
-            }
-        }
-    },
-
-    _constructTransformation: function(selectedInstance, transformationArray, name, vendorName, metaData) {
-        var me = this;
-
-        var objectTransformation = {
-            'vendorName': vendorName,
-            //For setting ignore unmapped, only the ones which are mapped will be returned
-            'configuration': [
-                {
-                    "type": "passThrough",
-                    "properties": {
-                        "fromVendor": false,
-                        "toVendor": false
-                    }
-                }
-            ],
-            fields: []
-        };
-        me._constructDeeperTransformation(objectTransformation, metaData);
-        transformationArray[name] = objectTransformation;
-    },
-
-    _constructAndSaveObjectTransformation: function(selectedInstance, sourceInstance) {
-        var me = this;
-
-        var mData = me.all[selectedInstance.element.key].metamapping;
-        var objectsAndTrans = me.all[selectedInstance.element.key].objectsAndTrans;
-        var mKeys = Object.keys(mData);
-
-        var transformationArray = new Object;
-
-        for(var i = 0; i < mKeys.length; i++) {
-            me._constructTransformation(selectedInstance, transformationArray, mKeys[i], mData[mKeys[i]].vendorName, mData[mKeys[i]]);
-        }
-
-        //Filter transformations for empty fields
-        var fileteredArray = me._filterTransformationsForEmpty(transformationArray);
+        var transformationArray = me._transformationUtil.getAllTransformations(selectedInstance, sourceInstance);
 
         var transformationSaveCounter = 0;
-        return me._saveTransformationFromArray(selectedInstance, fileteredArray, transformationSaveCounter);
+        return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter);
     },
 
-    _filterTransformationsForEmpty: function(transformationArray) {
-        var me = this;
-
-        if(me._cloudElementsUtils.isEmpty(transformationArray)) {
-            return transformationArray;
-        }
-
-        var tKeys = Object.keys(transformationArray);
-
-        var fileteredArray = new Object;
-        for(var i = 0; i < tKeys.length; i++) {
-            var tkey = tKeys[i];
-            var tObj = transformationArray[tkey];
-            if(me._cloudElementsUtils.isEmpty(tObj.fields)
-                || tObj.fields.length == 0) {
-                continue;
-            }
-
-            fileteredArray[tkey] = tObj;
-        }
-
-        return fileteredArray;
-    },
-
-    _saveTransformationFromArray: function(selectedInstance, transformationArray, transformationSaveCounter, useMethodType) {
+    _saveTransformationFromArray: function(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, useMethodType) {
         var me = this;
 
         var keys = Object.keys(transformationArray);
@@ -1145,19 +919,19 @@ var Mapper = Class.extend({
         return me._elementsService.saveObjectTransformation(selectedInstance,
             key, transformationArray[key], 'instance', methodType)
             .then(
-            this._handleOnSaveTransformation.bind(this, selectedInstance, transformationArray, transformationSaveCounter),
-            this._handleOnSaveTransformationError.bind(this, selectedInstance, transformationArray, transformationSaveCounter));
+            this._handleOnSaveTransformation.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter),
+            this._handleOnSaveTransformationError.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter));
     },
 
-    _handleOnSaveTransformationError: function(selectedInstance, transformationArray, transformationSaveCounter, error) {
+    _handleOnSaveTransformationError: function(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, error) {
         var me = this;
         transformationSaveCounter--;
 
         if(error.status == 404) { //in this scenario it might be a PUT, but expecting a POST, so change this and make a POST call again
-            return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'POST');
+            return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, 'POST');
         }
         else if(error.status == 409) { //In this case a transformation might have already been present so make a PUT call
-            return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter, 'PUT');
+            return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, 'PUT');
         }
         else {
             this._notifications.notify(bulkloader.events.ERROR, error.data.message);
@@ -1165,7 +939,7 @@ var Mapper = Class.extend({
         }
     },
 
-    _handleOnSaveTransformation: function(selectedInstance, transformationArray, transformationSaveCounter, result) {
+    _handleOnSaveTransformation: function(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter, result) {
         var me = this;
 
         var keys = Object.keys(transformationArray);
@@ -1179,18 +953,181 @@ var Mapper = Class.extend({
 
         //Save transformations once all the definitions are stored
         if(transformationSaveCounter == keys.length) {
+            //this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
+            me._constructAndSaveSourceDefinition(selectedInstance, sourceInstance, definitionArray, transformationArray);
+        }
+        else {
+            return me._saveTransformationFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, transformationSaveCounter);
+        }
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Source Instance Transformations and Definitions for Bi-directional mapping
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    _constructAndSaveSourceDefinition: function(selectedInstance, sourceInstance, definitionArray, transformationArray) {
+        var me = this;
+        var sourceDefinitionArray = me._transformationUtil.getDefinitionsForSource(selectedInstance, sourceInstance, definitionArray);
+        var dKeys = Object.keys(sourceDefinitionArray);
+
+        if(dKeys == null || me._cloudElementsUtils.isEmpty(dKeys.length) || dKeys.length == 0) {
+            me._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
+        }
+
+        var definitionSaveCounter = 0;
+        me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter);
+    },
+
+    _saveSourceDefinitionFromArray: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, useMethodType) {
+        var me = this;
+
+        var keys = Object.keys(sourceDefinitionArray);
+        var key = keys[definitionSaveCounter];
+
+        if(me._cloudElementsUtils.isEmpty(key))
+            return;
+
+        var methodType = 'POST';
+
+        var defs = me.all[sourceInstance.element.key].definitions;
+
+        if(!me._cloudElementsUtils.isEmpty(defs)
+            && !me._cloudElementsUtils.isEmpty(defs[key])
+            && defs[key].level == 'instance') {
+            methodType = 'PUT';
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(useMethodType)) {
+            methodType = useMethodType;
+        }
+
+        definitionSaveCounter++;
+
+        return me._elementsService.saveObjectDefinition(sourceInstance, key, sourceDefinitionArray[key], 'instance', methodType)
+            .then(
+            me._handleOnSaveSourceObjectDefinition.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter),
+            me._handleOnSaveSourceObjectDefinitionError.bind(this, selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter));
+    },
+
+    _handleOnSaveSourceObjectDefinitionError: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, error) {
+        var me = this;
+
+        definitionSaveCounter--;
+
+        if(error.status == 404) {
+            return me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, 'POST');
+        }
+        else if(error.status == 409) {
+            return me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, 'PUT');
+        }
+        else {
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
+            return error;
+        }
+    },
+
+    _handleOnSaveSourceObjectDefinition: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter, result) {
+
+        var me = this;
+
+        var keys = Object.keys(sourceDefinitionArray);
+
+        if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key].definitions)) {
+            me.all[sourceInstance.element.key].definitions = new Object();
+        }
+        //Setting the saved definition in case used for multiple save
+        var savedkey = keys[definitionSaveCounter - 1];
+        me.all[sourceInstance.element.key].definitions[savedkey] = sourceDefinitionArray[savedkey];
+
+        //Save transformations once all the definitions are stored
+        if(definitionSaveCounter == keys.length) {
+            return me._constructAndSaveSourceObjectTransformation(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray);
+        }
+        else {
+            return me._saveSourceDefinitionFromArray(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray, definitionSaveCounter);
+        }
+    },
+
+    _constructAndSaveSourceObjectTransformation: function(selectedInstance, sourceInstance, definitionArray, transformationArray, sourceDefinitionArray) {
+        var me = this;
+
+        var sourceTransformationArray = me._transformationUtil.getTransformationsForSource(selectedInstance, sourceInstance, transformationArray);
+
+        var transformationSaveCounter = 0;
+        return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter);
+    },
+
+    _saveSourceTransformationFromArray: function(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, useMethodType) {
+        var me = this;
+
+        var keys = Object.keys(sourceTransformationArray);
+        var key = keys[transformationSaveCounter];
+
+        if(me._cloudElementsUtils.isEmpty(key))
+            return;
+
+        var methodType = 'POST';
+
+        var trans = me.all[sourceInstance.element.key].transformations;
+
+        if(!me._cloudElementsUtils.isEmpty(trans)
+            && !me._cloudElementsUtils.isEmpty(trans[key])) {
+            methodType = 'PUT';
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(useMethodType)) {
+            methodType = useMethodType;
+        }
+
+        transformationSaveCounter++;
+
+        return me._elementsService.saveObjectTransformation(sourceInstance,
+            key, sourceTransformationArray[key], 'instance', methodType)
+            .then(
+            this._handleOnSaveSourceTransformation.bind(this, selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter),
+            this._handleOnSaveSourceTransformationError.bind(this, selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter));
+    },
+
+    _handleOnSaveSourceTransformationError: function(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, error) {
+        var me = this;
+        transformationSaveCounter--;
+
+        if(error.status == 404) { //in this scenario it might be a PUT, but expecting a POST, so change this and make a POST call again
+            return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, 'POST');
+        }
+        else if(error.status == 409) { //In this case a transformation might have already been present so make a PUT call
+            return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, 'PUT');
+        }
+        else {
+            this._notifications.notify(bulkloader.events.ERROR, error.data.message);
+            return false;
+        }
+    },
+
+    _handleOnSaveSourceTransformation: function(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter, result) {
+        var me = this;
+
+        var keys = Object.keys(sourceTransformationArray);
+
+        //Setting the saved transformation
+        if(me._cloudElementsUtils.isEmpty(me.all[sourceInstance.element.key].transformations)) {
+            me.all[sourceInstance.element.key].transformations = new Object();
+        }
+        var savedkey = keys[transformationSaveCounter - 1];
+        me.all[sourceInstance.element.key].transformations[savedkey] = sourceTransformationArray[savedkey];
+
+        //Save transformations once all the definitions are stored
+        if(transformationSaveCounter == keys.length) {
             this._notifications.notify(bulkloader.events.TRANSFORMATION_SAVED);
         }
         else {
-            return me._saveTransformationFromArray(selectedInstance, transformationArray, transformationSaveCounter);
+            return me._saveSourceTransformationFromArray(selectedInstance, sourceInstance, sourceTransformationArray, transformationSaveCounter);
         }
     }
-
 
 });
 
 /**
- * Picker Factory object creation
+ * TransformationUtil Factory object creation
  *
  */
 (function() {
@@ -1202,13 +1139,17 @@ var Mapper = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Application', 'Picker', function(CloudElementsUtils, ElementsService, Notifications, Application, Picker) {
-            this.instance._cloudElementsUtils = CloudElementsUtils;
-            this.instance._elementsService = ElementsService;
-            this.instance._notifications = Notifications;
-            this.instance._picker = Picker;
-            this.instance._application = Application;
-            return this.instance;
+        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', 'Application', 'TransformationUtil', function(CloudElementsUtils, ElementsService, Notifications, Picker, Application, TransformationUtil) {
+            var me = this;
+            me.instance._cloudElementsUtils = CloudElementsUtils;
+            me.instance._elementsService = ElementsService;
+            me.instance._notifications = Notifications;
+            me.instance._picker = Picker;
+            me.instance._application = Application;
+            me.instance._transformationUtil = TransformationUtil;
+
+            me.instance._transformationUtil.all = me.instance.all;
+            return me.instance;
         }]
     });
 

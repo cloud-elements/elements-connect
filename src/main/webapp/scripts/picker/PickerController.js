@@ -93,9 +93,9 @@ var PickerController = BaseController.extend({
 
         var keys = Object.keys(me._instances);
 
-        for(var i = 0; i < keys.length; i++) {
-            console.log('Checking jobs for element instance ID: ' + me._instances[keys[i]].id + '...');
-        }
+//        for(var i = 0; i < keys.length; i++) {
+//            console.log('Checking jobs for element instance ID: ' + me._instances[keys[i]].id + '...');
+//        }
     },
 
     _handleError: function(event, error) {
@@ -180,7 +180,7 @@ var PickerController = BaseController.extend({
             var element = me._picker.getElementConfig(elementKey, selection);
             if(me._cloudElementsUtils.isEmpty(element.configs)) {
 
-                me._maskLoader.show(me.$scope, 'Creating Instance...');
+                me._maskLoader.show(me.$scope, 'Connecting to application...');
                 me.openedWindow = me.$window.open('', '_blank');
                 me._picker.getOAuthUrl(elementKey, selection)
                     .then(me._handleOnOAuthUrl.bind(me));
@@ -236,7 +236,7 @@ var PickerController = BaseController.extend({
     _onElementInstanceSelect: function(instance) {
         var me = this;
 
-        me._maskLoader.show(me.$scope, 'Loading Instance Data...');
+        me._maskLoader.show(me.$scope, 'Loading...');
 
         if(me._application.getView() == 'mapper') {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
@@ -311,7 +311,7 @@ var PickerController = BaseController.extend({
 
         if(me._cloudElementsUtils.isEmpty(element.configs)) {
 
-            me._maskLoader.show(me.$scope, 'Editing Instance...');
+            me._maskLoader.show(me.$scope, 'Editing application...');
             me.openedWindow = me.$window.open('', '_blank');
             me._picker.getOAuthUrl(elementKey, selection, instance)
                 .then(me._handleOnOAuthUrl.bind(me));
@@ -379,7 +379,7 @@ var PickerController = BaseController.extend({
         angular.element(document.querySelector('#' + elementKey)).removeClass('highlightingElement');
 
         //Refresh the instances from Server to get the latest and greatest
-        me._maskLoader.show(me.$scope, 'Refreshing Instances...');
+        me._maskLoader.show(me.$scope, 'Refreshing...');
         me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
     }
 
