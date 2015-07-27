@@ -68,6 +68,11 @@ var CreateInstanceController = BaseController.extend({
     save: function() {
         var me = this;
 
+        if(me.$scope.myForm.$invalid == true) {
+            me.$scope.myForm.$dirty = true;
+            return;
+        }
+
         var ele = me._createinstance.element;
 
         if(me._cloudElementsUtils.isEmpty(ele.callbackUrl)) {

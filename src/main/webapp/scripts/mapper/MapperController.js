@@ -298,15 +298,15 @@ var MapperController = BaseController.extend({
         me._maskLoader.show(me.$scope, "Loading mapping...");
 
         //Get the targetmapping
-        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedObject.select.name, me.$scope.selectedTargetObject);
+        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedObject.select.name, me.$scope.selectedTargetObject.name);
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
             //Calling the API to load the target objectmetadata and mapping
             var trn = new Object();
-            trn.vendorName = me.$scope.selectedTargetObject;
+            trn.vendorName = me.$scope.selectedTargetObject.name;
             me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, trn)
-                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject.name));
         } else {
-            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping);
+            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject.name, targetMetaMapping);
         }
     },
 
@@ -322,8 +322,10 @@ var MapperController = BaseController.extend({
             me.$scope.mapperdata = me._cloudElementsUtils.orderObjects(data.fields, sortby);
             me.$scope.showTargetTree = true;
 
-            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
-                me.$scope.selectedTargetObject = data.vendorName;
+            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject) || me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject.name)) {
+                me.$scope.selectedTargetObject = new Object();
+                me.$scope.selectedTargetObject.name = data.vendorName;
+                me.$scope.selectedTargetObject.displayName = me._mapper.all[me._picker.targetElementInstance.element.key].objectDisplayName[data.vendorName];
             }
             me.$scope.showTargetObjectSelection = false;
         } else {
@@ -370,7 +372,7 @@ var MapperController = BaseController.extend({
         }
 
         me.$scope.instanceObjects = data;
-        me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objects;
+        me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objectDetails;
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
         me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
     },

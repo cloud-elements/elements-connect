@@ -161,10 +161,20 @@ var Mapper = Class.extend({
                 angular.copy(sourceElement.objects, srcObjects);
 
                 var objects = new Array();
+                var objectsVendorDisplayName = new Object();
                 var objectsWhere = new Object();
+                var objectDetails= new Array();
                 for(var i in srcObjects) {
                     var obj = srcObjects[i];
                     objects.push(obj.vendorPath);
+                    objectDetails.push({
+                        name: obj.vendorPath,
+                        displayName: obj.vendorDisplayName
+                    });
+
+                    if(!me._cloudElementsUtils.isEmpty(obj.vendorDisplayName)) {
+                        objectsVendorDisplayName[obj.vendorPath] = obj.vendorDisplayName;
+                    }
 
                     if(!me._cloudElementsUtils.isEmpty(obj.where) && obj.where.length > 0) {
                         objectsWhere[obj.vendorPath] = obj.where;
@@ -188,7 +198,9 @@ var Mapper = Class.extend({
                 }
 
                 me.all[selectedInstance.element.key].objects = objects;
+                me.all[selectedInstance.element.key].objectDetails = objectDetails;
                 me.all[selectedInstance.element.key].objectsWhere = objectsWhere;
+                me.all[selectedInstance.element.key].objectDisplayName = objectsVendorDisplayName;
                 result.data = objects;
             }
         }
@@ -249,6 +261,14 @@ var Mapper = Class.extend({
 
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].objects)) {
             me._loadTargetInstanceObjectsFromConfig(targetInstance);
+        } else {
+            var objectDetails = new Array();
+            for(var i in result.data) {
+                objectDetails.push({
+                    name: result.data[i]
+                });
+            }
+            me.all[targetInstance.element.key].objectDetails = objectDetails;
         }
 
         me._findAndUpdateTransformation(targetInstance, selectedInstance);
@@ -264,9 +284,17 @@ var Mapper = Class.extend({
         }
 
         var objects = new Array();
+        var objectDetails = new Array();
+        var objectDisplayName = new Object();
         for(var i in targetElement.objects) {
             var obj = targetElement.objects[i];
             objects.push(obj.vendorPath);
+            objectDetails.push({
+                name: obj.vendorPath,
+                displayName: obj.vendorDisplayName
+            });
+
+            objectDisplayName[obj.vendorPath] = obj.vendorDisplayName;
 
             if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metadata)) {
                 me.all[targetInstance.element.key].metadata = new Object;
@@ -284,6 +312,8 @@ var Mapper = Class.extend({
         }
 
         me.all[targetInstance.element.key].objects = objects;
+        me.all[targetInstance.element.key].objectDetails = objectDetails;
+        me.all[targetInstance.element.key].objectDisplayName = objectDisplayName;
     },
 
     _findAndUpdateTransformation: function(targetInstance, selectedInstance) {
@@ -323,6 +353,7 @@ var Mapper = Class.extend({
                 var obj = new Object();
                 obj.vendorName = targetObjectName;
                 obj.name = selectObjectName;
+                obj.displayName = me.all[selectedInstance.element.key].objectDisplayName[selectObjectName];
                 obj.transformed = true;
                 objectsAndTransformation.push(obj);
 
@@ -337,6 +368,7 @@ var Mapper = Class.extend({
             if(me._cloudElementsUtils.isEmpty(tempObjectNames[objName])) {
                 var obj = {
                     name: objName,
+                    displayName: me.all[selectedInstance.element.key].objectDisplayName[selectObjectName],
                     transformed: false
                 };
                 objectsAndTransformation.push(obj);

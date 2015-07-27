@@ -1,22 +1,29 @@
 <!-- Create Instance MODAL -->
 <div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
   <i class="close icon" ng-click="cancel()"></i>
-  <div class="header">
-     Provide your credentials for <span style="color: #58bde8">{{elementName}}</span>
-  </div>
-  <div class="content">
-    <div ng-repeat="configs in elementConfigs track by $index" class="two ui icon input fluid"
-         style="margin-bottom: 10px;">
-      <p>{{configs.name}}</p>
-      <!--<input type="text" name="{{configs.key}}" data-ng-model="user"/>-->
-      <input type="{{configs.type}}"  name="{{configs.key}}" ng-model='elementData[configs.key]' placeholder=" ">
 
-    </div>
+  <div class="header">
+    Provide your credentials for <span style="color: #58bde8">{{elementName}}</span>
   </div>
-  <div class="actions">
-    <div class="one fluid ui inverted buttons">
-      <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
-        <i class="checkmark icon"></i> Create</button>
+  <form name="myForm">
+    <div class="content">
+      <div ng-repeat="configs in elementConfigs track by $index" class="two ui icon input fluid"
+           style="margin-bottom: 10px;">
+        <p>{{configs.name}}</p>
+        <input type="{{configs.type}}" name="{{configs.key}}" ng-model='elementData[configs.key]'
+               ng-required="{{configs.required}}" placeholder=" ">
+        <span style="color:red" ng-show="myForm.$dirty && myForm[configs.key].$error.required">{{configs.name}} is
+          required.</span>
+
+      </div>
     </div>
-  </div>
+
+    <div class="actions">
+      <div class="one fluid ui inverted buttons">
+        <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
+          <i class="checkmark icon"></i> Create
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
