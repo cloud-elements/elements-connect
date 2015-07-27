@@ -118,10 +118,12 @@ var WorkflowController = BaseController.extend({
                                     var configKey = workflowTemplateConfig.key;
                                     var elementKey = configKey.substr(0, configKey.indexOf('.'));
                                     console.log("Looking for source or target instance with key: " + elementKey);
+
+                                    workflowTemplateConfig.defaultValues = {};
                                     if(me._picker.selectedElementInstance.element.key === elementKey) {
-                                        workflowTemplateConfig.defaultElementInstance = me._picker.selectedElementInstance;
+                                        workflowTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
                                     } else if(me._picker.targetElementInstance.element.key === elementKey) {
-                                        workflowTemplateConfig.defaultElementInstance = me._picker.targetElementInstance;
+                                        workflowTemplateConfig.defaultValue = me._picker.targetElementInstance.id;
                                     }
                                 }
                             }

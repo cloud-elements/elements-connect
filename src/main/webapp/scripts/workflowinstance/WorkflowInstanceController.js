@@ -28,9 +28,9 @@ var WorkflowInstanceController = BaseController.extend({
         var me = this;
 
         // model that will be populated in the UI
-        me.$scope.workflowInstanceData = {};
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
+        me.$scope.workflowInstanceData = me._parseDefaults(me._workflowInstance.workflowTemplate);
         me.$scope.workflowName = me._workflowInstance.workflowTemplate.name;
         me.$scope.workflowConfiguration = me._workflowInstance.workflowTemplate.configuration;
     },
@@ -54,6 +54,17 @@ var WorkflowInstanceController = BaseController.extend({
         var workflowInstanceName = me.$scope.workflowName + "-instance";
         me._workflowInstance.createWorkflowInstance(workflowInstanceName, me.$scope.workflowInstanceData).
             then(me._handleWorkflowInstanceSaved.bind(me));
+    },
+
+    _parseDefaults: function(workflowTemplate) {
+        var defaultConfiguration = {};
+        if(workflowTemplate && workflowTemplate.configuration) {
+            for(var i = 0; i < workflowTemplate.configuration.length; i++) {
+                var configuration = workflowTemplate.configuration[i];
+                defaultConfiguration[configuration.key] = configuration.defaultValue;
+            }
+        }
+        return defaultConfiguration;
     },
 
     _handleWorkflowInstanceSaved: function() {
