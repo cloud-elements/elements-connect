@@ -247,7 +247,7 @@ var Picker = Class.extend({
             return;
         }
 
-        me._notifications.notify(bulkloader.events.SHOW_MASK, 'Creating Instance');
+        me._notifications.notify(bulkloader.events.SHOW_MASK, 'Connecting...');
         var elementKey = bulkloader.Picker.oauthElementKey;
         var elementConfig = me.getElementConfig(elementKey);
 
@@ -310,7 +310,7 @@ var Picker = Class.extend({
 
     _handleOnDeleteInstanceFailed: function(error) {
         var me = this;
-        me._notifications.notify(bulkloader.events.ERROR, 'Error occured while deleting an instance. ' + error.data.message);
+        me._notifications.notify(bulkloader.events.ERROR, 'Error occurred while removing the connection to application. ' + error.data.message);
     },
 
     getSourceElement: function(elementKey) {
