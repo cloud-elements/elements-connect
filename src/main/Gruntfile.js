@@ -681,7 +681,7 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('snapshotCaaas', [
+    grunt.registerTask('snapshotCaaas', [
         'clean:dist',
         'ngconstant:snapshotCaaas',
         'wiredep',
@@ -700,7 +700,7 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('qaCaaas', [
+    grunt.registerTask('qaCaaas', [
         'clean:dist',
         'ngconstant:qaCaaas',
         'wiredep',
@@ -719,7 +719,7 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('stagingCaaas', [
+    grunt.registerTask('stagingCaaas', [
         'clean:dist',
         'ngconstant:stagingCaaas',
         'wiredep',
@@ -738,7 +738,7 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('buildCaaas', [
+    grunt.registerTask('buildCaaas', [
         'clean:dist',
         'ngconstant:productionCaaas',
         'wiredep',
