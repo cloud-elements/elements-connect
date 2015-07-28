@@ -210,6 +210,11 @@ var Picker = Class.extend({
     getOAuthUrl: function(elementKey, selection, instance) {
         var me = this;
 
+        //Adding the logic to be consistent for OAuth1 nd OAuth2 flows irrespective of authentication Types
+        // 1) Get request token
+        // 2) Get Oauth URL
+
+
         namespace('bulkloader.Picker').oauthElementKey = elementKey;
         namespace('bulkloader.Picker').oauthElementInstance = instance;
 
@@ -221,11 +226,48 @@ var Picker = Class.extend({
             return;
         }
 
+        if(elementConfig.oauth1 == true) {
+            return me._makeOAuthRequestTokenCall(elementConfig);
+        } else {
+            return me._makeOAuthUrlCall(elementConfig);
+        }
+
+    },
+
+    _makeOAuthRequestTokenCall: function(elementConfig) {
+        var me = this;
+
+        return me._elementsService.getOAuthRequestToken(elementConfig).then(
+            me._handleGetOauthRequestToken.bind(me, elementConfig),
+            me._handleGetOauthRequestTokenError.bind(me, elementConfig));
+    },
+
+    _handleGetOauthRequestTokenError: function(elementConfig, err) {
+        var me = this;
+        me._notifications.notify(bulkloader.events.ERROR, "Error getting OAuth information");
+    },
+
+    _handleGetOauthRequestToken: function(elementConfig, result) {
+        var me = this;
+
+        if(!me._cloudElementsUtils.isEmpty(result.data)) {
+            if(me._cloudElementsUtils.isEmpty(elementConfig.other)) {
+                elementConfig.other = new Object();
+            }
+            elementConfig.other['secret'] = result.data.secret;
+            elementConfig.other['requestToken'] = result.data.token;
+        }
+
+        return me._makeOAuthUrlCall(elementConfig);
+    },
+
+    _makeOAuthUrlCall: function(elementConfig) {
+        var me = this;
+
         return me._elementsService.getOAuthUrl(elementConfig).then(
             me._handleGetOauthUrl.bind(me),
             me._handleGetOauthUrlError.bind(me));
     },
-
     _handleGetOauthUrlError: function(err) {
         var me = this;
         me._notifications.notify(bulkloader.events.ERROR, "Error getting OAuth information");
@@ -262,6 +304,10 @@ var Picker = Class.extend({
         if(!me._cloudElementsUtils.isEmpty(bulkloader.Picker.oauthElementInstance)) {
             var methodType = 'PUT';
             var insId = bulkloader.Picker.oauthElementInstance.id;
+        }
+
+        if(elementConfig.oauth1 == true) {
+            pageParameters.secret = elementConfig.other.secret;
         }
 
         return me._elementsService.createInstance(elementConfig, pageParameters, insId, methodType).then(

@@ -120,6 +120,29 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders());
     },
 
+    getOAuthRequestToken: function(elementConfig) {
+        var me = this;
+
+        var parameters = {
+            'elementKeyOrId': elementConfig.elementKey,
+            'apiKey': elementConfig.apiKey,
+            'apiSecret': elementConfig.apiSecret,
+            'callbackUrl': elementConfig.callbackUrl
+        };
+
+        if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
+            for(key in elementConfig.other) {
+                if(elementConfig.other.hasOwnProperty(key)) {
+                    parameters[key] = elementConfig.other[key];
+                }
+            }
+        }
+
+        var url = this._application.environment.elementsUrl + '/elements/' + elementConfig.elementKey + '/oauth/token';
+
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
     getOAuthUrl: function(elementConfig) {
         var me = this;
 
