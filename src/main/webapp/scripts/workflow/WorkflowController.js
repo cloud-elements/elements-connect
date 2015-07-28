@@ -45,6 +45,7 @@ var WorkflowController = BaseController.extend({
         me.$scope.onEditWorkflowInstance = me.onEditWorkflowInstance.bind(this);
         me.$scope.onDeleteWorkflowInstance = me.onDeleteWorkflowInstance.bind(this);
         me.$scope.cancel = me.cancel.bind(this);
+        me.$scope.done = me.done.bind(this);
         me.$scope.workflows = [];
 
         // load the workflow templates
@@ -64,6 +65,11 @@ var WorkflowController = BaseController.extend({
         me._notifications.removeEventListener(bulkloader.events.NEW_WORKFLOW_INSTANCE_CREATED, me._onWorkflowInstancesRefresh.bind(me), me.$scope.$id);
     },
 
+    done: function() {
+        var me = this;
+        me.$location.path('/');
+    },
+
     cancel: function() {
         var me = this;
         me.$location.path('/mapper');
@@ -76,22 +82,77 @@ var WorkflowController = BaseController.extend({
 
     onSelect: function(workflowTemplate) {
         var me = this;
-        // TODO - JJW check to see if the workflow instance already exists
-        me._createWorkflowInstance(workflowTemplate);
+        if(workflowTemplate.instanceId) {
+            me._editWorkflowInstance(workflowTemplate.id, workflowTemplate.instanceId);
+        } else {
+            me._createWorkflowInstance(workflowTemplate);
+        }
     },
 
-    onEditWorkflowInstance: function(workflowId, workflowInstanceId, $event) {
+    onEditWorkflowInstance: function(workflowTemplate, $event) {
         var me = this;
+
+        var workflowId = workflowTemplate.id;
+        var workflowInstanceId = workflowTemplate.instanceId;
+
+        me._editWorkflowInstance(workflowId, workflowInstanceId);
 
         $event.preventDefault();
         $event.stopPropagation();
     },
 
-    onDeleteWorkflowInstance: function(workflowId, workflowInstanceId, $event) {
+    _editWorkflowInstance: function(workflowId, workflowInstanceId) {
+
+    },
+
+    onDeleteWorkflowInstance: function(workflowTemplate, $event) {
         var me = this;
+
+        var workflowId = workflowTemplate.id;
+        var workflowName = workflowTemplate.name;
+        var workflowInstanceId = workflowTemplate.instanceId;
+
+        me._deleteWorkflowInstance(workflowId, workflowName, workflowInstanceId);
 
         $event.preventDefault();
         $event.stopPropagation();
+    },
+
+    _deleteWorkflowInstance: function(workflowId, workflowName, workflowInstanceId) {
+        var me = this;
+
+        var confirm = me.$mdDialog.confirm()
+            .title('Warning!')
+            .content("Are you sure you want to delete your instance of the workflow: " + workflowName + "?")
+            .ok('Yes')
+            .cancel('No');
+
+        me.$mdDialog.show(confirm).then(function() {
+            //continue
+            me.continueDelete(workflowId, workflowName, workflowInstanceId);
+        }, function() {
+            //Don't do anything
+        });
+    },
+
+    continueDelete: function(workflowId, workflowName, workflowInstanceId) {
+        var me = this;
+
+        me._maskLoader.show(me.$scope, 'Deleting workflow instance...');
+
+        me._elementsService.deleteWorkflowInstance(workflowId, workflowInstanceId)
+            .then(me._handleOnDeleteWorkflowInstance.bind(me, workflowName));
+    },
+
+    _handleOnDeleteWorkflowInstance: function(workflowName) {
+        var me = this;
+        me._maskLoader.hide();
+
+        angular.element(document.getElementById(workflowName)).removeClass('highlightingElement');
+
+        // refresh the workflows from server to get the latest and greatest
+        me._maskLoader.show(me.$scope, 'Refreshing...');
+        me._loadWorkflowData();
     },
 
     _handleError: function(event, error) {
@@ -124,7 +185,7 @@ var WorkflowController = BaseController.extend({
 
         if(me._application.configuration.workflows && me._application.configuration.workflows.length > 0) {
             // if there is a workflows section in the app configuration, then filter out any that are not specified there
-            me.$scope.workflows = me._filterWorkflowTemplates(workflowTemplates);
+            me._filterWorkflowTemplates(workflowTemplates);
         } else {
             // if we do NOT have any workflows defined in our app config, then just show all of the workflow templates
             me.$scope.workflows = workflowTemplates;
@@ -162,6 +223,8 @@ var WorkflowController = BaseController.extend({
     _filterWorkflowTemplates: function(workflowTemplates) {
         var me = this;
 
+        console.log("Filtering out workflows based on application configuration");
+
         var filteredWorkflowTemplates = [];
         for(var i = 0; i < me._application.configuration.workflows.length; i++) {
             var workflowAppConfig = me._application.configuration.workflows[i];
@@ -192,7 +255,7 @@ var WorkflowController = BaseController.extend({
                 }
             }
         }
-        return filteredWorkflowTemplates;
+        me.$scope.workflows = filteredWorkflowTemplates;
     },
 
     _onWorkflowInstancesRefresh: function() {
