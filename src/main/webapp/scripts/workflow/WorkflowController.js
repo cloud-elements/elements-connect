@@ -82,22 +82,78 @@ var WorkflowController = BaseController.extend({
 
     onSelect: function(workflowTemplate) {
         var me = this;
-        // TODO - JJW check to see if the workflow instance already exists
-        me._createWorkflowInstance(workflowTemplate);
+        if(workflowTemplate.instanceId) {
+            me._editWorkflowInstance(workflowTemplate.id, workflowTemplate.instanceId);
+        } else {
+            me._createWorkflowInstance(workflowTemplate);
+        }
     },
 
-    onEditWorkflowInstance: function(workflowId, workflowInstanceId, $event) {
+    onEditWorkflowInstance: function(workflowTemplate, $event) {
         var me = this;
+
+        var workflowId = workflowTemplate.id;
+        var workflowInstanceId = workflowTemplate.instanceId;
+
+        me._editWorkflowInstance(workflowId, workflowInstanceId);
 
         $event.preventDefault();
         $event.stopPropagation();
     },
 
-    onDeleteWorkflowInstance: function(workflowId, workflowInstanceId, $event) {
+    _editWorkflowInstance: function(workflowId, workflowInstanceId) {
+
+    },
+
+    onDeleteWorkflowInstance: function(workflowTemplate, $event) {
         var me = this;
+
+        var workflowId = workflowTemplate.id;
+        var workflowName = workflowTemplate.name;
+        var workflowInstanceId = workflowTemplate.instanceId;
+
+        me._deleteWorkflowInstance(workflowId, workflowName, workflowInstanceId);
 
         $event.preventDefault();
         $event.stopPropagation();
+    },
+
+    _deleteWorkflowInstance: function(workflowId, workflowName, workflowInstanceId) {
+        var me = this;
+
+        var confirm = me.$mdDialog.confirm()
+            .title('Warning!')
+            .content("Are you sure you want to delete your instance of the workflow: " + workflowName + "?")
+            .ok('Yes')
+            .cancel('No');
+
+        me.$mdDialog.show(confirm).then(function() {
+            //continue
+            me.continueDelete(workflowId, workflowName, workflowInstanceId);
+        }, function() {
+            //Don't do anything
+        });
+    },
+
+    continueDelete: function(workflowId, workflowName, workflowInstanceId) {
+        var me = this;
+
+        me._maskLoader.show(me.$scope, 'Deleting workflow instance...');
+
+        me._elementsService.deleteWorkflowInstance(workflowId, workflowInstanceId)
+            .then(me._handleOnDeleteWorkflowInstance.bind(me, workflowName));
+    },
+
+    _handleOnDeleteWorkflowInstance: function(workflowName) {
+        var me = this;
+        me._maskLoader.hide();
+
+        angular.element(document.getElementById(workflowName)).removeClass('highlightingElement');
+        me.$scope.workflows = [];
+
+        // refresh the workflows from server to get the latest and greatest
+        me._maskLoader.show(me.$scope, 'Refreshing...');
+        me._loadWorkflowData();
     },
 
     _handleError: function(event, error) {
