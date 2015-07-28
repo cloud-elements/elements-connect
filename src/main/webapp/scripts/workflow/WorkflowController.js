@@ -191,6 +191,9 @@ var WorkflowController = BaseController.extend({
             me.$scope.workflows = workflowTemplates;
         }
 
+        // add any element instances we already know
+        me._addDefaultValuesForConfig();
+
         // check for existing workflow instances
         me._highlightWorkflowInstances();
     },
@@ -204,6 +207,33 @@ var WorkflowController = BaseController.extend({
                 me._elementsService.findWorkflowInstances(workflowTemplate.id).then(
                     me._handleLoadWorkflowInstances.bind(me, workflowTemplate),
                     me._handleLoadError.bind(me));
+            }
+        }
+    },
+
+    _addDefaultValuesForConfig: function() {
+        var me = this;
+
+        // go through each config on the workflow template, and set default values with our target and source element instances, if possible
+        if(me.$scope.workflows) {
+            for(var i = 0; i < me.$scope.workflows.length; i++) {
+                var workflowTemplate = me.$scope.workflows[i];
+                if(workflowTemplate.configuration) {
+                    for(var k = 0; k < workflowTemplate.configuration.length; k++) {
+                        var workflowTemplateConfig = workflowTemplate.configuration[k];
+                        if(workflowTemplateConfig.type === 'elementInstance') {
+                            var configKey = workflowTemplateConfig.key;
+                            var elementKey = configKey.substr(0, configKey.indexOf('.'));
+                            console.log("Looking for source or target instance with key: " + elementKey);
+
+                            if(me._picker.selectedElementInstance.element.key === elementKey) {
+                                workflowTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
+                            } else if(me._picker.targetElementInstance.element.key === elementKey) {
+                                workflowTemplateConfig.defaultValue = me._picker.targetElementInstance.id;
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -233,24 +263,6 @@ var WorkflowController = BaseController.extend({
             for(var j = 0; j < workflowTemplates.length; j++) {
                 var workflowTemplate = workflowTemplates[j];
                 if(workflowAppConfig.name === workflowTemplate.name) {
-
-                    // go through each config on the workflow template, and set default values with our target and source element instances, if possible
-                    if(workflowTemplate.configuration) {
-                        for(var k = 0; k < workflowTemplate.configuration.length; k++) {
-                            var workflowTemplateConfig = workflowTemplate.configuration[k];
-                            if(workflowTemplateConfig.type === 'elementInstance') {
-                                var configKey = workflowTemplateConfig.key;
-                                var elementKey = configKey.substr(0, configKey.indexOf('.'));
-                                console.log("Looking for source or target instance with key: " + elementKey);
-
-                                if(me._picker.selectedElementInstance.element.key === elementKey) {
-                                    workflowTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
-                                } else if(me._picker.targetElementInstance.element.key === elementKey) {
-                                    workflowTemplateConfig.defaultValue = me._picker.targetElementInstance.id;
-                                }
-                            }
-                        }
-                    }
                     filteredWorkflowTemplates.push(workflowTemplate);
                 }
             }
