@@ -42,6 +42,8 @@ var WorkflowController = BaseController.extend({
         me.$scope.processtep = 'workflow';
         me.$scope.appName = me._application.getApplicationName();
         me.$scope.onSelect = me.onSelect.bind(this);
+        me.$scope.onEditWorkflowInstance = me.onEditWorkflowInstance.bind(this);
+        me.$scope.onDeleteWorkflowInstance = me.onDeleteWorkflowInstance.bind(this);
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.workflows = [];
 
@@ -76,6 +78,20 @@ var WorkflowController = BaseController.extend({
         var me = this;
         // TODO - JJW check to see if the workflow instance already exists
         me._createWorkflowInstance(workflowTemplate);
+    },
+
+    onEditWorkflowInstance: function(workflowId, workflowInstanceId, $event) {
+        var me = this;
+
+        $event.preventDefault();
+        $event.stopPropagation();
+    },
+
+    onDeleteWorkflowInstance: function(workflowId, workflowInstanceId, $event) {
+        var me = this;
+
+        $event.preventDefault();
+        $event.stopPropagation();
     },
 
     _handleError: function(event, error) {
@@ -125,19 +141,21 @@ var WorkflowController = BaseController.extend({
             for(var i = 0; i < me.$scope.workflows.length; i++) {
                 var workflowTemplate = me.$scope.workflows[i];
                 me._elementsService.findWorkflowInstances(workflowTemplate.id).then(
-                    me._handleLoadWorkflowInstances.bind(me, workflowTemplate.name),
+                    me._handleLoadWorkflowInstances.bind(me, workflowTemplate),
                     me._handleLoadError.bind(me));
             }
         }
     },
 
-    _handleLoadWorkflowInstances: function(workflowName, httpResult) {
+    _handleLoadWorkflowInstances: function(workflowTemplate, httpResult) {
         var me = this;
 
         var workflowInstances = httpResult.data;
 
+        // assuming we limited the workflow to only have one instance
         if(workflowInstances && workflowInstances.length > 0) {
-            angular.element(document.getElementById(workflowName)).addClass('highlightingElement');
+            workflowTemplate.instanceId = workflowInstances[0].id;
+            angular.element(document.getElementById(workflowTemplate.name)).addClass('highlightingElement');
         }
     },
 
@@ -162,7 +180,6 @@ var WorkflowController = BaseController.extend({
                                 var elementKey = configKey.substr(0, configKey.indexOf('.'));
                                 console.log("Looking for source or target instance with key: " + elementKey);
 
-                                workflowTemplateConfig.defaultValues = {};
                                 if(me._picker.selectedElementInstance.element.key === elementKey) {
                                     workflowTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
                                 } else if(me._picker.targetElementInstance.element.key === elementKey) {

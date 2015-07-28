@@ -19,6 +19,8 @@
            id="{{workflow.name}}"
            data-instance="{{workflow.name}}"
            style='background-image: url("images/workflow.png")'>
+          <i class="icon write" ng-click='onEditWorkflowInstance("{{workflow.id}}", "{{workflow.instanceId}}", $event)'> Edit</i>
+          <i class="icon trash" ng-click='onDeleteWorkflowInstance("{{workflow.id}}", "{{workflow.instanceId}}", $event)'></i>
         </a>
       </div>
     </div>
