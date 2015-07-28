@@ -40,7 +40,11 @@
   </div>
   <div ng-if="processtep == 'workflow'" class="pull-right" style="padding-top: 5px;">
     <button type="submit" class="ui labeled button" ng-click="cancel()">
-      <i class="icon arrow left"></i>Back</button>
+      <i class="icon arrow left"></i>Back
+    </button>
+    <button type="submit" class="positive ui right labeled button" ng-click="done()">
+      Done <i class="checkmark icon"></i>
+    </button>
   </div>
   <div ng-if="processtep == 'schedule'" class="pull-right" style="padding-top: 5px;">
     <button type="submit" class="ui labeled button" ng-click="cancel()">Back</button>

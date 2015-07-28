@@ -439,6 +439,17 @@ var ElementsService = Class.extend({
         return me._httpPost(url, headers, workflowInstance);
     },
 
+    deleteWorkflowInstance: function(workflowId, workflowInstanceId) {
+        var me = this;
+        console.log('Attempting to delete workflow instance ' + workflowInstanceId);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances/{workflowInstanceId}';
+        url = url.replace('{id}', workflowId);
+        url = url.replace('{workflowInstanceId}', workflowInstanceId);
+
+        var headers = me._getHeaders();
+        return me._httpDelete(url, headers);
+    },
+
     findWorkflowInstances: function(workflowId) {
         var me = this;
         console.log('Attempting to find instances of workflow: ' + workflowId);
