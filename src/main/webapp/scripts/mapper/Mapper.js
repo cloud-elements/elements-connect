@@ -320,7 +320,7 @@ var Mapper = Class.extend({
         var me = this;
 
         var trans = me.all[targetInstance.element.key].transformations;
-        var objectsAndTransformation = new Array();
+        var objectsAndTransformation = new Object();
         var tempObjectNames = new Object();
 
         if(!me._cloudElementsUtils.isEmpty(trans)) {
@@ -355,13 +355,14 @@ var Mapper = Class.extend({
                 obj.name = selectObjectName;
                 obj.displayName = me.all[selectedInstance.element.key].objectDisplayName[selectObjectName];
                 obj.transformed = true;
-                objectsAndTransformation.push(obj);
+                objectsAndTransformation[selectObjectName] = obj;
 
                 tempObjectNames[selectObjectName] = true;
             }
         }
 
         //Now navigate through all the objects from source and push the pending objects to
+        var sortedObjectsAndTransformation = new Array();
         var objs = me.all[selectedInstance.element.key].objects;
         for(var i = 0; i < objs.length; i++) {
             var objName = objs[i];
@@ -371,11 +372,13 @@ var Mapper = Class.extend({
                     displayName: me.all[selectedInstance.element.key].objectDisplayName[selectObjectName],
                     transformed: false
                 };
-                objectsAndTransformation.push(obj);
+                sortedObjectsAndTransformation.push(obj);
+            } else {
+                sortedObjectsAndTransformation.push(objectsAndTransformation[objName]);
             }
         }
 
-        me.all[selectedInstance.element.key].objectsAndTransformation = objectsAndTransformation;
+        me.all[selectedInstance.element.key].objectsAndTransformation = sortedObjectsAndTransformation;
     },
 
     //----------------------------------------------------------------------------------------------------------------
