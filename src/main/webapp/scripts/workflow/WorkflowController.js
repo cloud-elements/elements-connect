@@ -45,6 +45,7 @@ var WorkflowController = BaseController.extend({
         me.$scope.onEditWorkflowInstance = me.onEditWorkflowInstance.bind(this);
         me.$scope.onDeleteWorkflowInstance = me.onDeleteWorkflowInstance.bind(this);
         me.$scope.cancel = me.cancel.bind(this);
+        me.$scope.done = me.done.bind(this);
         me.$scope.workflows = [];
 
         // load the workflow templates
@@ -62,6 +63,11 @@ var WorkflowController = BaseController.extend({
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
         me._notifications.removeEventListener(bulkloader.events.NEW_WORKFLOW_INSTANCE_CREATED, me._onWorkflowInstancesRefresh.bind(me), me.$scope.$id);
+    },
+
+    done: function() {
+        var me = this;
+        me.$location.path('/');
     },
 
     cancel: function() {
