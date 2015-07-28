@@ -35,8 +35,12 @@
     <button type="submit" class="ui labeled button" ng-click="cancel()">
       <i class="icon arrow left"></i>Back</button>
     <button type="submit" class="positive ui right labeled button" ng-click="save()">
-      Save and Schedule Job<i class="icon arrow right"></i>
+      {{nextButtonText}}<i class="icon arrow right"></i>
     </button>
+  </div>
+  <div ng-if="processtep == 'workflow'" class="pull-right" style="padding-top: 5px;">
+    <button type="submit" class="ui labeled button" ng-click="cancel()">
+      <i class="icon arrow left"></i>Back</button>
   </div>
   <div ng-if="processtep == 'schedule'" class="pull-right" style="padding-top: 5px;">
     <button type="submit" class="ui labeled button" ng-click="cancel()">Back</button>

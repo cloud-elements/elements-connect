@@ -7,6 +7,7 @@
 
 var DatalistController = BaseController.extend({
 
+    _application: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
@@ -15,9 +16,10 @@ var DatalistController = BaseController.extend({
     _schedule: null,
     _maskLoader: null,
 
-    init:function($scope, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog){
+    init: function($scope, Application, CloudElementsUtils, Picker, Datalist, Notifications, Schedule, MaskLoader, $window, $location, $filter, $route, $mdDialog) {
         var me = this;
 
+        me._application = Application;
         me._notifications = Notifications;
         me._cloudElementsUtils = CloudElementsUtils;
         me._picker = Picker;
@@ -30,7 +32,7 @@ var DatalistController = BaseController.extend({
         me._super($scope);
     },
 
-    defineScope:function() {
+    defineScope: function() {
         var me = this;
 
         // This is for transitions
@@ -62,7 +64,7 @@ var DatalistController = BaseController.extend({
         me._seedDatalist();
     },
 
-    defineListeners:function(){
+    defineListeners: function() {
         var me = this;
         me._super();
         //Needed this for back and forth between datalist and Picker, if the datalist is reinitializes every time, this is not required
@@ -72,7 +74,7 @@ var DatalistController = BaseController.extend({
 
     },
 
-    destroy:function(){
+    destroy: function() {
         var me = this;
 
         me._notifications.removeEventListener(bulkloader.events.VIEW_CHANGE_DATALIST, me._seedDatalist.bind(me), me.$scope.$id);
@@ -110,7 +112,7 @@ var DatalistController = BaseController.extend({
         uitree.toggle();
     },
 
-    _handleOnMetadataLoad: function(obj,data) {
+    _handleOnMetadataLoad: function(obj, data) {
         var me = this;
         me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'vendorPath');
 //        me.$scope.selectedObject.select = objectname;
@@ -170,7 +172,6 @@ var DatalistController = BaseController.extend({
 //        me._schedule.openSchedule();
 //    },
 
-
     _onTransformationSave: function() {
         var me = this;
 
@@ -192,11 +193,11 @@ var DatalistController = BaseController.extend({
 
     checkAllInstance: function(cbState, cbObject) {
         var me = this;
-        for (var i = 0; i < me.$scope.objectMetaData.length; i++) {
+        for(var i = 0; i < me.$scope.objectMetaData.length; i++) {
             me.$scope.objectMetaData[i].transform = cbState;
-            if(me.$scope.objectMetaData[i].type == "object" || me.$scope.objectMetaData[i].type == "array"){
+            if(me.$scope.objectMetaData[i].type == "object" || me.$scope.objectMetaData[i].type == "array") {
                 var obj = me.$scope.objectMetaData[i].fields;
-                for(var metadata in obj){
+                for(var metadata in obj) {
                     var metoo = obj[metadata];
                     metoo.transform = cbState;
                 }
@@ -204,29 +205,29 @@ var DatalistController = BaseController.extend({
         }
     },
 
-    unCheckObject: function(cbState, metadata, obj){
+    unCheckObject: function(cbState, metadata, obj) {
         var me = this;
         var o = obj.length;
         var ownerData;
 
         while(o--) {
             var n = metadata.actualVendorPath.indexOf(".");
-            if(metadata.actualVendorPath.slice(0,n) == obj[o].vendorPath || metadata.actualVendorPath == obj[o].vendorPath) {
+            if(metadata.actualVendorPath.slice(0, n) == obj[o].vendorPath || metadata.actualVendorPath == obj[o].vendorPath) {
                 ownerData = obj[o];
                 break;
             }
         }
 
         if(metadata.type == "object" || metadata.type == "array") {
-            for (var i = 0; i < metadata.fields.length; i++) {
+            for(var i = 0; i < metadata.fields.length; i++) {
                 metadata.fields[i].transform = cbState;
-                if(ownerData.type == "object" && cbState == false){
+                if(ownerData.type == "object" && cbState == false) {
                     ownerData.transform = cbState;
                 }
             }
-        }else{
+        } else {
             metadata.transform = cbState;
-            if(cbState == false){
+            if(cbState == false) {
                 ownerData.transform = cbState;
                 me.$scope.cbObject.checked = cbState;
             }
@@ -235,14 +236,13 @@ var DatalistController = BaseController.extend({
 
     checkAllObjects: function(cbState, cbObject) {
         var me = this;
-        for (var i = 0; i < me.$scope.instanceObjects.length; i++) {
+        for(var i = 0; i < me.$scope.instanceObjects.length; i++) {
             me.$scope.instanceObjects[i].transformed = cbState;
         }
     }
 });
 
-DatalistController.$inject = ['$scope','CloudElementsUtils','Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog'];
-
+DatalistController.$inject = ['$scope', 'Application', 'CloudElementsUtils', 'Picker', 'Datalist', 'Notifications', 'Schedule', 'MaskLoader', '$window', '$location', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('DatalistController', DatalistController);

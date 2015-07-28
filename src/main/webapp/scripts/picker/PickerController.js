@@ -8,6 +8,7 @@ bulkloader.events.VIEW_CHANGE_DATALIST = 'datalist';
 
 var PickerController = BaseController.extend({
 
+    _elementsService: null,
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
@@ -17,9 +18,10 @@ var PickerController = BaseController.extend({
     _lastSelection: null,
     _application: null,
 
-    init: function($scope, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog) {
+    init: function($scope, ElementsService, CloudElementsUtils, Picker, Schedule, Credentials, Notifications, MaskLoader, CreateInstance, Login, JobHistory, Help, Application, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
+        me._elementsService = ElementsService;
         me._notifications = Notifications;
         me._maskLoader = MaskLoader;
         me._cloudElementsUtils = CloudElementsUtils;
@@ -54,7 +56,7 @@ var PickerController = BaseController.extend({
         me.$scope.checkStatus = me.checkStatus.bind(me);
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
         me.$scope.onDeleteInstance = me.onDeleteInstance.bind(me);
-        me.$scope.appName = me._application.getApplicationName()
+        me.$scope.appName = me._application.getApplicationName();
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
@@ -383,7 +385,7 @@ var PickerController = BaseController.extend({
 
 });
 
-PickerController.$inject = ['$scope', 'CloudElementsUtils', 'Picker',
+PickerController.$inject = ['$scope', 'ElementsService', 'CloudElementsUtils', 'Picker',
     'Schedule', 'Credentials', 'Notifications',
     'MaskLoader', 'CreateInstance', 'Login',
     'JobHistory', 'Help', 'Application',

@@ -139,7 +139,7 @@ var Picker = Class.extend({
                 }
             }
 
-            if(continueNext == true) {
+            if(continueNext == true && me._targets) {
                 for(var j = 0; j < me._targets.length; j++) {
                     var target = me._targets[j];
 
@@ -243,7 +243,7 @@ var Picker = Class.extend({
 
         if(not_approved) {
             // Show that not approved
-            me._notifications.notify(bulkloader.events.ERROR, "Not Authoried to access the " + bulkloader.Picker.oauthElementKey + " information");
+            me._notifications.notify(bulkloader.events.ERROR, "Not authorized to access the " + bulkloader.Picker.oauthElementKey + " information");
             return;
         }
 

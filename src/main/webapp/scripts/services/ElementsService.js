@@ -223,6 +223,15 @@ var ElementsService = Class.extend({
     },
 
     /**
+     * Loads the workflow templates that are configured for this user's CE account
+     * @returns {*} The list of workflow templates or an empty list, if there are none
+     */
+    loadWorkflowTemplates: function() {
+        var url = this._application.environment.elementsUrl + '/workflows';
+        return this._httpGet(url, this._getHeaders());
+    },
+
+    /**
      * Query server and returns Object metadata
      * @return Service handler
      */
@@ -390,6 +399,31 @@ var ElementsService = Class.extend({
         }
 
         return this._httpPost(url, headers, job);
+    },
+
+    createWorkflowInstance: function(workflowId, name, configuration) {
+        var me = this;
+        console.log('Attempting to create an instance of workflow: ' + workflowId + ' with name: ' + name);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
+        url = url.replace('{id}', workflowId);
+
+        var workflowInstance = {
+            'name': name,
+            'configuration': configuration
+        };
+
+        var headers = me._getHeaders();
+        return me._httpPost(url, headers, workflowInstance);
+    },
+
+    findWorkflowInstances: function(workflowId) {
+        var me = this;
+        console.log('Attempting to find instances of workflow: ' + workflowId);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
+        url = url.replace('{id}', workflowId);
+
+        var headers = me._getHeaders();
+        return me._httpGet(url, headers);
     },
 
     getJobs: function() {
