@@ -31,6 +31,7 @@ var CreateInstance = Class.extend({
         me.element = element;
         me.selection = selection;
         me.instance = instance;
+        me.closeCreateInstance();
 
         if(me._cloudElementsUtils.isEmpty(me._openedModal)) {
             me._openedModal = me.$modal.open({
@@ -45,8 +46,10 @@ var CreateInstance = Class.extend({
 
     closeCreateInstance: function () {
         var me = this;
-        me._openedModal.close();
-        me._openedModal = null;
+        if(me._openedModal) {
+            me._openedModal.close();
+            me._openedModal = null;
+        }
     },
 
     onSaveInstance: function(elementProvision){

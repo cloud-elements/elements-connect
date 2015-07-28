@@ -51,8 +51,8 @@ bulkloaderApp.config(function($routeProvider) {
             controller: 'MapperController'
         })
         .when('/schedule', {
-          templateUrl: 'schedule.html',
-          controller: 'ScheduleController'
+            templateUrl: 'schedule.html',
+            controller: 'ScheduleController'
         })
         .when('/jobhistory', {
             templateUrl: 'jobhistory.html',
@@ -69,5 +69,9 @@ bulkloaderApp.config(function($routeProvider) {
         .when('/elementloader', {
             templateUrl: 'elementloader.html',
             controller: 'LandingController'
+        })
+        .when('/workflows', {
+            templateUrl: 'workflow.html',
+            controller: 'WorkflowController'
         });
 });
