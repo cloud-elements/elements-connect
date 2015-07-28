@@ -149,7 +149,6 @@ var WorkflowController = BaseController.extend({
         me._maskLoader.hide();
 
         angular.element(document.getElementById(workflowName)).removeClass('highlightingElement');
-        me.$scope.workflows = [];
 
         // refresh the workflows from server to get the latest and greatest
         me._maskLoader.show(me.$scope, 'Refreshing...');
@@ -186,7 +185,7 @@ var WorkflowController = BaseController.extend({
 
         if(me._application.configuration.workflows && me._application.configuration.workflows.length > 0) {
             // if there is a workflows section in the app configuration, then filter out any that are not specified there
-            me.$scope.workflows = me._filterWorkflowTemplates(workflowTemplates);
+            me._filterWorkflowTemplates(workflowTemplates);
         } else {
             // if we do NOT have any workflows defined in our app config, then just show all of the workflow templates
             me.$scope.workflows = workflowTemplates;
@@ -224,6 +223,8 @@ var WorkflowController = BaseController.extend({
     _filterWorkflowTemplates: function(workflowTemplates) {
         var me = this;
 
+        console.log("Filtering out workflows based on application configuration");
+
         var filteredWorkflowTemplates = [];
         for(var i = 0; i < me._application.configuration.workflows.length; i++) {
             var workflowAppConfig = me._application.configuration.workflows[i];
@@ -254,7 +255,7 @@ var WorkflowController = BaseController.extend({
                 }
             }
         }
-        return filteredWorkflowTemplates;
+        me.$scope.workflows = filteredWorkflowTemplates;
     },
 
     _onWorkflowInstancesRefresh: function() {
