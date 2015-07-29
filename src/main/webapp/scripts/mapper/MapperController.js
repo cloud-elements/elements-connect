@@ -370,7 +370,10 @@ var MapperController = BaseController.extend({
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject) || me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject.name)) {
                 me.$scope.selectedTargetObject = new Object();
                 me.$scope.selectedTargetObject.name = data.vendorName;
-                me.$scope.selectedTargetObject.displayName = me._mapper.all[me._picker.targetElementInstance.element.key].objectDisplayName[data.vendorName];
+                if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.targetElementInstance.element.key].objectDisplayName)) {
+                    me.$scope.selectedTargetObject.displayName = me._mapper.all[me._picker.targetElementInstance.element.key].objectDisplayName[data.vendorName];
+                }
+
             }
             me.$scope.showTargetObjectSelection = false;
         } else {
