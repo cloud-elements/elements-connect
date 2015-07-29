@@ -75,15 +75,15 @@
     </div>
 
     <div class="ui grid fields configContainer" style="padding: 0;" ng-if="mapperMetaDataById">
-      <div class="sixteen wide column ui input field">
+      <div class="sixteen wide column ui inverted grid input field" style="margin: 0;">
 
-        <label>Load fields by providing {{mapperMetaDataById.name}}</label>
+        <label style="padding:0;">Load fields by providing {{mapperMetaDataById.name}}</label>
 
-        <div>
-          <input type="{{mapperMetaDataById.type}}" name="{{mapperMetaDataById.key}}"
-                 ng-model='mapperMetaDataById.value' placeholder=" " style="width:200px; float: left;">
-          <button type="submit" ng-click="loadMetaData()" style="width:200px; float: left;">Load</button>
-        </div>
+        <input class="ten wide column" type="{{mapperMetaDataById.type}}" name="{{mapperMetaDataById.key}}"
+               ng-model='mapperMetaDataById.value' placeholder=" ">
+        <button class="five wide column ui inverted green basic button" type="submit" ng-click="loadMetaData()" style="margin: 0;
+        height: 32px;padding: 0em;float: right;margin-left: 5px;">Load</button>
+
       </div>
     </div>
 
