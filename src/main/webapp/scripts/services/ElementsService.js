@@ -130,6 +130,10 @@ var ElementsService = Class.extend({
             'callbackUrl': elementConfig.callbackUrl
         };
 
+        if(!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)){
+            parameters.siteAddress = elementConfig.siteAddress;
+        }
+
         if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
             for(key in elementConfig.other) {
                 if(elementConfig.other.hasOwnProperty(key)) {
@@ -152,6 +156,10 @@ var ElementsService = Class.extend({
             'apiSecret': elementConfig.apiSecret,
             'callbackUrl': elementConfig.callbackUrl
         };
+
+        if(!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)){
+            parameters.siteAddress = elementConfig.siteAddress;
+        }
 
         if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
             for(key in elementConfig.other) {
