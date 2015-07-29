@@ -50,6 +50,11 @@ var NavigationController = BaseController.extend({
         me.$scope.showStepTitle = me.showStepTitle.bind(me);
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
         me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
+        me.$scope.nextButtonText = 'Save and Schedule Job';
+        // change the name of the 'Next' button text if this is for the CAaaS
+        if(me._application.isCAaaS()) {
+            me.$scope.nextButtonText = 'Save and Configure Workflow';
+        }
 
         me.seedSteps();
 
@@ -59,7 +64,6 @@ var NavigationController = BaseController.extend({
         } else {
             me.$scope.showScheduling = false;
         }
-
     },
 
     onSignout: function() {
@@ -83,7 +87,27 @@ var NavigationController = BaseController.extend({
 
     seedSteps: function() {
         var me = this;
-        if(me._application.getView() == 'datalist') {
+        // the CAaaS/mapper only has two steps
+        if(me._application.isCAaaS() && me._application.getView() == 'mapper') {
+            me.$scope.steps = [
+                {
+                    step: '1',
+                    stepName: 'select it',
+                    description: 'select the services, the source and target for your data.'
+                },
+                {
+                    step: '2',
+                    stepName: 'map it',
+                    description: 'drag and drop the fields you wish to map from the source to the target.'
+                },
+                {
+                    step: '3',
+                    stepName: 'configure it',
+                    description: 'choose the workflow template and configure it.'
+                }
+            ]
+        }
+        else if(me._application.isBulkloader() && me._application.getView() == 'datalist') {
             me.$scope.steps = [
                 {
                     step: '1',
@@ -105,37 +129,37 @@ var NavigationController = BaseController.extend({
             me.$scope.steps = [
                 {
                     step: '1',
-                    stepName: 'Select it',
-                    description: 'Select the services, the source and target for your data.'
+                    stepName: 'select it',
+                    description: 'select the services, the source and target for your data.'
                 },
                 {
                     step: '2',
-                    stepName: 'Map it',
-                    description: 'Drag and drop the fields you wish to map from the source to the target.'
+                    stepName: 'map it',
+                    description: 'drag and drop the fields you wish to map from the source to the target.'
                 },
                 {
                     step: '3',
-                    stepName: 'Schedule it',
-                    description: 'Select Transfer Now or Schedule. Data will be pulled from your system starting from this date to the present time.'
+                    stepName: 'schedule it',
+                    description: 'select transfer now or schedule. data will be pulled from your system starting from this date to the present time.'
                 }
             ]
         }
     },
 
-    stepClass: function(step, stepname) {
+    stepClass: function(step, stepName) {
         var me = this;
 
-        if((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '2' && stepname == 'datalist') || (step == '3' && stepname == 'schedule')) {
+        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'workflow')) {
             return 'active'
         }
-        else if((step == '1' && stepname == 'mapper') || (step == '1' && stepname == 'schedule') || (step == '2' && stepname == 'schedule') || (step == '1' && stepname == 'datalist')) {
+        else if((step == '1' && stepName == 'mapper') || (step == '1' && stepName == 'schedule') || (step == '2' && stepName == 'schedule') || (step == '1' && stepName == 'datalist') || (step == '1' && stepName == 'workflow') || (step == '2' && stepName == 'workflow')) {
             return 'completed'
         }
 
     },
 
-    showStepTitle: function(step, stepname) {
-        if((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '2' && stepname == 'datalist') || (step == '3' && stepname == 'schedule')) {
+    showStepTitle: function(step, stepName) {
+        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'workflow')) {
             return true
         }
     },

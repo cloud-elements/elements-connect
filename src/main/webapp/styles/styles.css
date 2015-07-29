@@ -232,6 +232,7 @@ body .header-navigation a:hover{
 body .header-navigation #progressbar{
     display: block;
     -webkit-flex: 1;
+    -ms-flex: 1;
     flex: 1;
 }
 body .header-navigation #progressbar {
@@ -339,6 +340,7 @@ body .header-navigation .ui.positive.button:hover {
     color: #fff;
     text-decoration: none;
     margin-bottom: 5px;
+    font-size: .9rem;
 }
 
 /**********************/
@@ -359,6 +361,8 @@ body .header-navigation .ui.positive.button:hover {
     display: flex;
     -webkit-flex-direction: column;
     flex-direction: column;
+    -webkit-flex: 1;
+    -ms-flex: 1;
     flex: 1;
     position: relative;
 }
@@ -656,6 +660,7 @@ body .header-navigation .ui.positive.button:hover {
 #picker.show-target .picker-source{
     display:block;
     -webkit-flex: 3;
+    -ms-flex: 3;
     flex: 3;
     -webkit-flex-direction: row;
     flex-direction: row;
@@ -669,6 +674,7 @@ body .header-navigation .ui.positive.button:hover {
 #picker.show-target .picker-target {
     width: 100%;
     -webkit-flex: 3;
+    -ms-flex: 3;
     flex: 3;
     -webkit-flex-direction: row;
     flex-direction: row;
@@ -714,12 +720,14 @@ body .header-navigation .ui.positive.button:hover {
 #jobhistory-body > div{
     display: block;
     -webkit-flex: 2;
+    -ms-flex: 2;
     flex: 2;
 }
 
 #jobhistory .jobslist{
     background-color: #f2f2f2;
     -webkit-flex: 1;
+    -ms-flex: 1;
     flex: 1;
     position: relative;
     min-width: 400px;
@@ -1651,6 +1659,7 @@ div#data-list-body.disabled:after {
     color: #222;
     border: none;
     -webkit-flex: 1;
+    -ms-flex: 1;
     flex:1;
     padding-left: 10px;
 }
@@ -1683,6 +1692,7 @@ div#data-list-body.disabled:after {
 #mapping-data-list-body #mapper-data-list-source .list{
     display: block;
     -webkit-flex: 1;
+    -ms-flex: 1;
     flex: 1;
     position: relative;
     top: inherit;
@@ -2148,9 +2158,16 @@ li li.angular-ui-tree-placeholder{
     height: 312px;
     overflow: scroll;
     display: block;
-    margin: 1rem;
+    margin: 0 1rem;
     width: auto;
     background-color: #fff;}
+#scheduler .content .noteheader{
+    background-color: #e8e8e8;
+    margin: 0 1rem;
+    font-size: .8rem;
+    color: #444;
+    text-align: right;
+}
 #scheduler .content .transformations .row{
     padding: 5px;
     border-bottom: 1px solid #ccc;

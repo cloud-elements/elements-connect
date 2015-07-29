@@ -681,15 +681,15 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('snapshotCaaas', [
+    grunt.registerTask('snapshotCaaas', [
         'clean:dist',
         'ngconstant:snapshotCaaas',
         'wiredep',
-        'useminprepare',
+        'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
         'concat',
-        'ngannotate',
+        'ngAnnotate',
         'copy:dist',
         'cdnify',
         'cssmin',
@@ -700,15 +700,15 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('qaCaaas', [
+    grunt.registerTask('qaCaaas', [
         'clean:dist',
         'ngconstant:qaCaaas',
         'wiredep',
-        'useminprepare',
+        'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
         'concat',
-        'ngannotate',
+        'ngAnnotate',
         'copy:dist',
         'cdnify',
         'cssmin',
@@ -719,15 +719,15 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('stagingCaaas', [
+    grunt.registerTask('stagingCaaas', [
         'clean:dist',
         'ngconstant:stagingCaaas',
         'wiredep',
-        'useminprepare',
+        'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
         'concat',
-        'ngannotate',
+        'ngAnnotate',
         'copy:dist',
         'cdnify',
         'cssmin',
@@ -738,15 +738,15 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registertask('buildCaaas', [
+    grunt.registerTask('buildCaaas', [
         'clean:dist',
         'ngconstant:productionCaaas',
         'wiredep',
-        'useminprepare',
+        'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
         'concat',
-        'ngannotate',
+        'ngAnnotate',
         'copy:dist',
         'cdnify',
         'cssmin',
