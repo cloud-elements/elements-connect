@@ -441,15 +441,16 @@ var Mapper = Class.extend({
                 transformation = trans[targetObject];
 
                 var selectObjectName = null;
+                var sourceEle = null;
                 try {
                     var spl = targetObject.split('_');
                     selectObjectName = spl[1];
+                    sourceEle = spl[0];
                 }
-                    //Ignore the error
-                catch(err) {
+                catch(err) { //Ignore the error
                 }
 
-                if(selectObjectName == selectedObject) {
+                if(selectObjectName == selectedObject && sourceEle == selectedInstance.element.key) {
                     break;
                 }
                 else {
