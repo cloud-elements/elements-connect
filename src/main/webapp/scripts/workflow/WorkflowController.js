@@ -150,9 +150,13 @@ var WorkflowController = BaseController.extend({
 
         angular.element(document.getElementById(workflowName)).removeClass('highlightingElement');
 
-        // refresh the workflows from server to get the latest and greatest
-        me._maskLoader.show(me.$scope, 'Refreshing...');
-        me._loadWorkflowData();
+        // set the instance ID on this workflow to be null so the UI doesn't think it still exists and we can create a new one
+        for(var i = 0; i < me.$scope.workflows.length; i++) {
+            var workflow = me.$scope.workflows[i];
+            if(workflow.name == workflowName) {
+                workflow.instanceId = null;
+            }
+        }
     },
 
     _handleError: function(event, error) {

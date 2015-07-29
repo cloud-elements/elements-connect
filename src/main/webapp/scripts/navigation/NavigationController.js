@@ -92,17 +92,17 @@ var NavigationController = BaseController.extend({
             me.$scope.steps = [
                 {
                     step: '1',
-                    stepname: 'select it',
+                    stepName: 'select it',
                     description: 'select the services, the source and target for your data.'
                 },
                 {
                     step: '2',
-                    stepname: 'map it',
+                    stepName: 'map it',
                     description: 'drag and drop the fields you wish to map from the source to the target.'
                 },
                 {
                     step: '3',
-                    stepname: 'configure it',
+                    stepName: 'configure it',
                     description: 'choose the workflow template and configure it.'
                 }
             ]
@@ -129,37 +129,37 @@ var NavigationController = BaseController.extend({
             me.$scope.steps = [
                 {
                     step: '1',
-                    stepname: 'select it',
+                    stepName: 'select it',
                     description: 'select the services, the source and target for your data.'
                 },
                 {
                     step: '2',
-                    stepname: 'map it',
+                    stepName: 'map it',
                     description: 'drag and drop the fields you wish to map from the source to the target.'
                 },
                 {
                     step: '3',
-                    stepname: 'schedule it',
+                    stepName: 'schedule it',
                     description: 'select transfer now or schedule. data will be pulled from your system starting from this date to the present time.'
                 }
             ]
         }
     },
 
-    stepClass: function(step, stepname) {
+    stepClass: function(step, stepName) {
         var me = this;
 
-        if((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '2' && stepname == 'datalist') || (step == '3' && stepname == 'schedule') || (step == '3' && stepname == 'workflow')) {
+        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'workflow')) {
             return 'active'
         }
-        else if((step == '1' && stepname == 'mapper') || (step == '1' && stepname == 'schedule') || (step == '2' && stepname == 'schedule') || (step == '1' && stepname == 'datalist') || (step == '1' && stepname == 'workflow') || (step == '2' && stepname == 'workflow')) {
+        else if((step == '1' && stepName == 'mapper') || (step == '1' && stepName == 'schedule') || (step == '2' && stepName == 'schedule') || (step == '1' && stepName == 'datalist') || (step == '1' && stepName == 'workflow') || (step == '2' && stepName == 'workflow')) {
             return 'completed'
         }
 
     },
 
-    showStepTitle: function(step, stepname) {
-        if((step == '1' && stepname == 'picker') || (step == '2' && stepname == 'mapper') || (step == '2' && stepname == 'datalist') || (step == '3' && stepname == 'schedule') || (step == '3' && stepname == 'workflow')) {
+    showStepTitle: function(step, stepName) {
+        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'workflow')) {
             return true
         }
     },
