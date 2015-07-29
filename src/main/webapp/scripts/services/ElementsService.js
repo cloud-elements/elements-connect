@@ -120,6 +120,33 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders());
     },
 
+    getOAuthRequestToken: function(elementConfig) {
+        var me = this;
+
+        var parameters = {
+            'elementKeyOrId': elementConfig.elementKey,
+            'apiKey': elementConfig.apiKey,
+            'apiSecret': elementConfig.apiSecret,
+            'callbackUrl': elementConfig.callbackUrl
+        };
+
+        if(!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)){
+            parameters.siteAddress = elementConfig.siteAddress;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
+            for(key in elementConfig.other) {
+                if(elementConfig.other.hasOwnProperty(key)) {
+                    parameters[key] = elementConfig.other[key];
+                }
+            }
+        }
+
+        var url = this._application.environment.elementsUrl + '/elements/' + elementConfig.elementKey + '/oauth/token';
+
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
     getOAuthUrl: function(elementConfig) {
         var me = this;
 
@@ -129,6 +156,10 @@ var ElementsService = Class.extend({
             'apiSecret': elementConfig.apiSecret,
             'callbackUrl': elementConfig.callbackUrl
         };
+
+        if(!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)){
+            parameters.siteAddress = elementConfig.siteAddress;
+        }
 
         if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
             for(key in elementConfig.other) {
@@ -219,6 +250,15 @@ var ElementsService = Class.extend({
 
     loadAccounts: function() {
         var url = this._application.environment.elementsUrl + '/accounts?where=type=\'CompanyAccount\'';
+        return this._httpGet(url, this._getHeaders());
+    },
+
+    /**
+     * Loads the workflow templates that are configured for this user's CE account
+     * @returns {*} The list of workflow templates or an empty list, if there are none
+     */
+    loadWorkflowTemplates: function() {
+        var url = this._application.environment.elementsUrl + '/workflows';
         return this._httpGet(url, this._getHeaders());
     },
 
@@ -394,6 +434,42 @@ var ElementsService = Class.extend({
         }
 
         return this._httpPost(url, headers, job);
+    },
+
+    createWorkflowInstance: function(workflowId, name, configuration) {
+        var me = this;
+        console.log('Attempting to create an instance of workflow: ' + workflowId + ' with name: ' + name);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
+        url = url.replace('{id}', workflowId);
+
+        var workflowInstance = {
+            'name': name,
+            'configuration': configuration
+        };
+
+        var headers = me._getHeaders();
+        return me._httpPost(url, headers, workflowInstance);
+    },
+
+    deleteWorkflowInstance: function(workflowId, workflowInstanceId) {
+        var me = this;
+        console.log('Attempting to delete workflow instance ' + workflowInstanceId);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances/{workflowInstanceId}';
+        url = url.replace('{id}', workflowId);
+        url = url.replace('{workflowInstanceId}', workflowInstanceId);
+
+        var headers = me._getHeaders();
+        return me._httpDelete(url, headers);
+    },
+
+    findWorkflowInstances: function(workflowId) {
+        var me = this;
+        console.log('Attempting to find instances of workflow: ' + workflowId);
+        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
+        url = url.replace('{id}', workflowId);
+
+        var headers = me._getHeaders();
+        return me._httpGet(url, headers);
     },
 
     getJobs: function() {

@@ -101,6 +101,8 @@ var CreateInstanceController = BaseController.extend({
                     elementConfig.apiKey = me.$scope.elementData[keys[key]];
                 } else if('oauth.api.secret' === keys[key]) {
                     elementConfig.apiSecret = me.$scope.elementData[keys[key]];
+                } else if('site.address' === keys[key]) {
+                    elementConfig.siteAddress = me.$scope.elementData[keys[key]];
                 }
             }
             me.openedWindow = me.$window.open('', '_blank');

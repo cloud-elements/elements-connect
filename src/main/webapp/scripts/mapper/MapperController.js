@@ -523,7 +523,11 @@ var MapperController = BaseController.extend({
         var me = this;
 
         me._maskLoader.hide();
-        me.$location.path('/schedule');
+        if(me._application.isCAaaS()) {
+            me.$location.path('/workflows');
+        } else {
+            me.$location.path('/schedule');
+        }
     },
 
     _onMapperError: function(event, error) {

@@ -35,6 +35,9 @@ hr.clear {
     clear: both;
     border: none;
 }
+p{
+    color: inherit;
+}
 
 
 /*********************************
@@ -127,7 +130,11 @@ INDEX: BOXES and Buttons;
   width: 50%;
   float: right;
   padding-top: 20px;
-  }
+}
+
+#contact-logo p, #contact-info p{
+    color: #999;
+}
 
 #contact-logo li {
   list-style: none;
