@@ -207,6 +207,25 @@ var Picker = Class.extend({
         return null;
     },
 
+    getElementObjectDetails: function(elementKey, selection, objectName) {
+        var me = this;
+
+        var elementConfig = me.getElementConfig(elementKey, selection);
+        if(me._cloudElementsUtils.isEmpty(elementConfig.objects)) {
+            return null;
+        }
+
+        for(var i = 0; i < elementConfig.objects.length; i++) {
+            var obj = elementConfig.objects[i];
+
+            if(obj.vendorPath === objectName) {
+                return obj;
+            }
+        }
+
+        return null;
+    },
+
     getOAuthUrl: function(elementKey, selection, instance) {
         var me = this;
 

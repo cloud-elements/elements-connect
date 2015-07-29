@@ -163,7 +163,7 @@ var Mapper = Class.extend({
                 var objects = new Array();
                 var objectsVendorDisplayName = new Object();
                 var objectsWhere = new Object();
-                var objectDetails= new Array();
+                var objectDetails = new Array();
                 for(var i in srcObjects) {
                     var obj = srcObjects[i];
                     objects.push(obj.vendorPath);
@@ -386,9 +386,9 @@ var Mapper = Class.extend({
     // Load selected Object metadata
     //----------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------
-    loadObjectMetaData: function(selectedInstance, selectedObject, targetInstance) {
+    loadObjectMetaData: function(selectedInstance, selectedObject, targetInstance, discoveryId) {
 
-        return this._elementsService.loadObjectMetaData(selectedInstance, selectedObject)
+        return this._elementsService.loadObjectMetaData(selectedInstance, selectedObject, discoveryId)
             .then(
             this._handleLoadObjectMetadata.bind(this, selectedInstance, selectedObject, targetInstance),
             this._handleLoadErrorObjectMetadata.bind(this));
@@ -768,7 +768,7 @@ var Mapper = Class.extend({
         // if so check if there is a transformation of the same on the source Object and enable bidirection
         if(me._application.isMapperBiDirectional() == true
             && !me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].transformations)) {
-            var sourceObjName =  targetInstance.element.key + '_' + targetObjectName + '_' + selectedInstanceObject;
+            var sourceObjName = targetInstance.element.key + '_' + targetObjectName + '_' + selectedInstanceObject;
 
             //Check if the object exists in transformation
             var trans = me.all[selectedInstance.element.key].transformations[sourceObjName];
