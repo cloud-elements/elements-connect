@@ -738,7 +738,7 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
-    grunt.registerTask('buildCaaas', [
+    grunt.registerTask('productionCaaas', [
         'clean:dist',
         'ngconstant:productionCaaas',
         'wiredep',
