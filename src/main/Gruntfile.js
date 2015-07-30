@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        appName: 'CAaaS',
+                        appName: 'Elements Connect',
                         name: 'local',
                         elementsUrl: 'http://localhost:8080/elements/api-v2'
                     }
@@ -116,7 +116,7 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        appName: 'CAaaS',
+                        appName: 'Elements Connect',
                         name: 'snapshot',
                         elementsUrl: 'https://snapshot.cloud-elements.com/elements/api-v2'
                     }
@@ -128,7 +128,7 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        appName: 'CAaaS',
+                        appName: 'Elements Connect',
                         name: 'qa',
                         elementsUrl: 'https://qa.cloud-elements.com/elements/api-v2'
                     }
@@ -140,7 +140,7 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        appName: 'CAaaS',
+                        appName: 'Elements Connect',
                         name: 'staging',
                         elementsUrl: 'https://staging.cloud-elements.com/elements/api-v2'
                     }
@@ -152,7 +152,7 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        appName: 'CAaaS',
+                        appName: 'Elements Connect',
                         name: 'production',
                         elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
                     }
