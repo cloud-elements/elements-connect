@@ -266,10 +266,14 @@ var ElementsService = Class.extend({
      * Query server and returns Object metadata
      * @return Service handler
      */
-    loadObjectMetaData: function(elementInstance, objectName) {
-
+    loadObjectMetaData: function(elementInstance, objectName, discoveryId) {
+        var me = this;
         var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects/' + objectName +
             '/metadata';
+
+        if(!me._cloudElementsUtils.isEmpty(discoveryId)) {
+            url += '?discoveryId=' + discoveryId;
+        }
 
         return this._httpGet(url, this._getHeaders(elementInstance.token));
     },

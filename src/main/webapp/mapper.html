@@ -2,59 +2,59 @@
      ng-include="'navigation.html'"></div>
 <!-- LIST SELECTION -->
 <section id="mapper" class="">
-  <!-- FIXED LIST HEADER & SELECTION -->
-  <div id="mapper-header" class="sixteen" >
-    <div class="ui column padded grid">
-      <div class="column six wide padded" style="background-color: #333333; padding: .3rem 1rem;">
-        <div class="target-source-link-img">
-          <span style="background-image: url({{sourceLogo}})"></span>
-          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;">
-            <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
-            <br/>source</p>
-        </div>
-        <div class="target-source-icon pull-right" style="margin-bottom: 0">
-          <i class="long arrow right icon"></i>
-        </div>
+<!-- FIXED LIST HEADER & SELECTION -->
+<div id="mapper-header" class="sixteen">
+  <div class="ui column padded grid">
+    <div class="column six wide padded" style="background-color: #333333; padding: .3rem 1rem;">
+      <div class="target-source-link-img">
+        <span style="background-image: url({{sourceLogo}})"></span>
+        <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;">
+          <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
+          <br/>source</p>
       </div>
-      <div class="column ten wide" style="padding: .3rem 1rem;">
-        <div class="target-source-link-img">
-          <span style="background-image: url({{targetLogo}})"></span>
-          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;font-weight: bold; color: #333;">
-            <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>
-            <br/> target</p>
-        </div>
-        <p ng-show="bidirectionalMapping" style="float: right;
-         padding: 0;line-height: 1.3em;padding-right: 5px;font-weight: bold; color: #333;">
-          Bi-directional
-          <md-switch class="two wide column md-primary-green"
-                     ng-model="mapper.bidirectional" aria-label></md-switch>
-        </p>
+      <div class="target-source-icon pull-right" style="margin-bottom: 0">
+        <i class="long arrow right icon"></i>
       </div>
     </div>
+    <div class="column ten wide" style="padding: .3rem 1rem;">
+      <div class="target-source-link-img">
+        <span style="background-image: url({{targetLogo}})"></span>
+        <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;font-weight: bold; color: #333;">
+          <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>
+          <br/> target</p>
+      </div>
+      <p ng-show="bidirectionalMapping" style="float: right;
+         padding: 0;line-height: 1.3em;padding-right: 5px;font-weight: bold; color: #333;">
+        Bi-directional
+        <md-switch class="two wide column md-primary-green"
+                   ng-model="mapper.bidirectional" aria-label></md-switch>
+      </p>
+    </div>
   </div>
+</div>
 
- <div id="mapping-data-list-body" class="mapping-data-list ui padded grid">
+<div id="mapping-data-list-body" class="mapping-data-list ui padded grid">
   <!-- mapper BODY -->
   <div id="mapper-data-list-source" class="column six wide ui padded grid">
 
     <div class="column sixteen wide" id="select-dropdown-container" style="padding: 0 30px;">
       <!--<ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"-->
-                 <!--style="width: 100%;"-->
-                 <!--ng-change="refreshObjectMetaData()">-->
-        <!--<ui-select-match>{{$select.selected.name}}</ui-select-match>-->
-        <!--<ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">-->
-          <!--<md-switch class="md-primary-green" aria-label="Enable Object"-->
-                     <!--ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">-->
-          <!--</md-switch>-->
-          <!--<div ng-bind-html="selectedObject.name | highlight: $select.search">-->
-          <!--</div>-->
-        <!--</ui-select-choices>-->
+      <!--style="width: 100%;"-->
+      <!--ng-change="refreshObjectMetaData()">-->
+      <!--<ui-select-match>{{$select.selected.name}}</ui-select-match>-->
+      <!--<ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">-->
+      <!--<md-switch class="md-primary-green" aria-label="Enable Object"-->
+      <!--ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">-->
+      <!--</md-switch>-->
+      <!--<div ng-bind-html="selectedObject.name | highlight: $select.search">-->
+      <!--</div>-->
+      <!--</ui-select-choices>-->
       <!--</ui-select>-->
 
       <select
-          data-ng-model="selectedObject.select"
-          ng-options="o as o.name for o in instanceObjects"
-          ng-change="refreshObjectMetaData()" class="ui-select-datalist" style="width: 100%;">
+              data-ng-model="selectedObject.select"
+              ng-options="o as o.displayName == null ? o.name : o.displayName for o in instanceObjects"
+              ng-change="refreshObjectMetaData()" class="ui-select-datalist" style="width: 100%;">
       </select>
 
     </div>
@@ -62,66 +62,80 @@
     <div class="searchbarContainer">
       <input type="text" placeholder="Search" class="ui searchbar" data-ng-model="searchtarget"
              ng-focus="hasFocus = true" ng-blur="hasFocus = false"/>
-      <a class="btn btn-link" data-ng-click="searchtarget = '' " tabindex="0" ng-class="{'showBtn': hasFocus || searchtarget.length}">
+      <a class="btn btn-link" data-ng-click="searchtarget = '' " tabindex="0"
+         ng-class="{'showBtn': hasFocus || searchtarget.length}">
         clear</a>
     </div>
 
     <div class="ui grid fields configContainer" style="padding: 0;" ng-if="mapperwhere">
       <div ng-repeat="configs in mapperwhere track by $index" class="eight wide column ui input field">
         <label>{{configs.name}}</label>
-        <input type="{{configs.type}}"  name="{{configs.key}}" ng-model='configs.value' placeholder=" ">
+        <input type="{{configs.type}}" name="{{configs.key}}" ng-model='configs.value' placeholder=" ">
+      </div>
+    </div>
+
+    <div class="ui grid fields configContainer" style="padding: 0;" ng-if="mapperMetaDataById">
+      <div class="sixteen wide column ui inverted grid input field" style="margin: 0;">
+
+        <label style="padding:0;">Load fields by providing {{mapperMetaDataById.name}}</label>
+
+        <input class="ten wide column" type="{{mapperMetaDataById.type}}" name="{{mapperMetaDataById.key}}"
+               ng-model='mapperMetaDataById.value' placeholder=" ">
+        <button class="five wide column ui inverted green basic button" type="submit" ng-click="loadMetaData()" style="margin: 0;
+        height: 32px;padding: 0em;float: right;margin-left: 5px;">Load</button>
+
       </div>
     </div>
 
     <script type="text/ng-template" id="objectFields.html" data-nodrop>
 
-    <!--Show tree node for object undraggable-->
-    <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container"
-         data-nodrag ng-if="showTreeToggle(metadata)">
-      <button type="submit" ng-show=true data-nodrop
-              class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)">
+      <!--Show tree node for object undraggable-->
+      <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container"
+           data-nodrag ng-if="showTreeToggle(metadata)">
+        <button type="submit" ng-show=true data-nodrop
+                class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)">
         <span data-nodrop class="glyphicon glyphicon-remove"
               ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
-      </button>
-      <div data-nodrop ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
-      <label data-nodrop>{{metadata.path}}</label>
-      <span class="type" data-nodrop>{{metadata.type}}</span>
-    </div>
+        </button>
+        <div data-nodrop ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
+        <label data-nodrop>{{metadata.path}}</label>
+        <span class="type" data-nodrop>{{metadata.type}}</span>
+      </div>
 
-    <!--Show tree node for object draggable-->
-    <div ui-tree-handle data-nodrop
-         class="tree-node ui toggle tree-root-li-li-container" ng-if="!showTreeToggle(metadata)">
-      <button type="submit" ng-show=false data-nodrop
-              class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)">
+      <!--Show tree node for object draggable-->
+      <div ui-tree-handle data-nodrop
+           class="tree-node ui toggle tree-root-li-li-container" ng-if="!showTreeToggle(metadata)">
+        <button type="submit" ng-show=false data-nodrop
+                class="pull-left btn btn-success btn-xs toogle-tree-btn" ng-click="toggle(this)">
         <span data-nodrop class="glyphicon glyphicon-remove"
               ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
-      </button>
-      <div data-nodrop ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
-      <label data-nodrop>{{metadata.path}}</label>
-      <span class="type" data-nodrop>{{metadata.type}}</span>
-    </div>
+        </button>
+        <div data-nodrop ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer"></div>
+        <label data-nodrop>{{metadata.path}}</label>
+        <span class="type" data-nodrop>{{metadata.type}}</span>
+      </div>
 
-    <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}" >
-      <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop
-          id="tree1-root-node" ng-include="'objectFields.html'"
-          collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
-      </li>
-    </ul>
-
-  </script>
-
-  <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
-       class="list source-list" data-nodrop>
-    <li class="tree-root-li" data-nodrop>
-      <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
-        <li ng-repeat="metadata in objectMetaData"
-            ui-tree-node data-nodrop id="tree1-root-node" ng-include="'objectFields.html'"
-            collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)" >
+      <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
+        <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop
+            id="tree1-root-node" ng-include="'objectFields.html'"
+            collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
         </li>
       </ul>
-    </li>
 
-  </div>
+    </script>
+
+    <div ui-tree="mapperTreeOptions" id="tree1-root" data-drag-enabled="true" ng-show="showTree"
+         class="list source-list" data-nodrop>
+      <li class="tree-root-li" data-nodrop>
+        <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
+          <li ng-repeat="metadata in objectMetaData"
+              ui-tree-node data-nodrop id="tree1-root-node" ng-include="'objectFields.html'"
+              collapsed="false" ng-hide="!treeFilter(metadata, searchtarget)">
+          </li>
+        </ul>
+      </li>
+
+    </div>
 
   </div>
 
@@ -129,9 +143,10 @@
   <div id="mapper-data-list-target" class="column ten wide ui grid">
     <label ng-show="showTargetObjectSelection" style="margin: 28px
      0 0;color: #444;font-size: 120%;padding-left: 20px;font-weight: bold;">Select target object:</label>
+
     <select
             ng-show="showTargetObjectSelection" data-ng-model="selectedTargetObject"
-            ng-options="o as o for o in targetObjects"
+            ng-options="o as o.displayName == null ? o.name : o.displayName for o in targetObjects"
             ng-change="refreshTargetObject()" class="column eight wide target-select" style="padding: 5px 1rem;
             margin-left: 0;">
     </select>
@@ -163,10 +178,12 @@
       </ul>
     </script>
 
-    <div ui-tree="mapperTreeOptions" id="tree2-root"  ng-show="showTargetTree" class="list" data-drag-enabled="true"
-            ng-style="!showTargetObjectSelection && {'top': '20px'}">
+    <div ui-tree="mapperTreeOptions" id="tree2-root" ng-show="showTargetTree" class="list" data-drag-enabled="true"
+         ng-style="!showTargetObjectSelection && {'top': '20px'}">
       <div class="ui-tree-heading">
-        <h1 class="column eight">{{selectedTargetObject}}</h1>
+        <h1 class="column eight">{{selectedTargetObject.displayName == null ? selectedTargetObject.name:
+          selectedTargetObject.displayName}}</h1>
+
         <div class="searchbarContainer">
           <input type="text" placeholder="Search" class="column eight ui searchbar" data-ng-model="searchsource"
                  ng-focus="hasFocus = true" ng-blur="hasFocus = false"/>

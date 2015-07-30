@@ -53,11 +53,13 @@ var MapperController = BaseController.extend({
         me.$scope.cbObject = {};
         me.$scope.cbInstance = {};
         me.$scope.mapperwhere = [];
+        me.$scope.mapperMetaDataById = null;
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
         me.$scope.removeMapPath = me.removeMapPath.bind(this);
+        me.$scope.loadMetaData = me.loadMetaData.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
@@ -193,6 +195,36 @@ var MapperController = BaseController.extend({
         uitree.toggle();
     },
 
+    loadMetaData: function() {
+        var me = this;
+
+        var objectDetails = me._picker.getElementObjectDetails(me._picker.selectedElementInstance.element.key, 'source', me.$scope.selectedObject.select.name);
+        if(me._cloudElementsUtils.isEmpty(objectDetails.metaDataById)) {
+            return;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(objectDetails.metaDataById.value)) {
+            var confirm = me.$mdDialog.alert()
+                .title('Warning')
+                .content('Missing required ' + objectDetails.metaDataById.name + ' to get metadata')
+                .ok('OK');
+            me.$mdDialog.show(confirm);
+            return;
+        }
+        me._maskLoader.show(me.$scope, "Loading Object fields...");
+        me.$scope.showTargetObjectSelection = false;
+        me.$scope.selectedSourceObject = me.$scope.selectedObject.select;
+        if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key])
+            && !me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.selectedElementInstance.element.key].objectsWhere)) {
+            me.$scope.mapperwhere = me._mapper.all[me._picker.selectedElementInstance.element.key].objectsWhere[me.$scope.selectedObject.select.name];
+        } else {
+            me.$scope.mapperwhere = null;
+        }
+
+        me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, objectDetails.metaDataById.value)
+            .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
+    },
+
     refreshObjectMetaData: function(checkWhereFields, checkRequired) {
         var me = this;
 
@@ -244,6 +276,19 @@ var MapperController = BaseController.extend({
             }
         }
 
+        //Get Object details
+        var objectDetails = me._picker.getElementObjectDetails(me._picker.selectedElementInstance.element.key, 'source', me.$scope.selectedObject.select.name);
+        if(!me._cloudElementsUtils.isEmpty(objectDetails.metaDataById)) {
+            me.$scope.mapperMetaDataById = objectDetails.metaDataById;
+            me.$scope.mapperwhere = null;
+            me.$scope.objectMetaData = null;
+            me.$scope.showTargetTree = false;
+            me._maskLoader.hide();
+            return;
+        } else {
+            me.$scope.mapperMetaDataById = null;
+        }
+
         me._maskLoader.show(me.$scope, "Loading Object fields...");
         me.$scope.showTargetObjectSelection = false;
         me.$scope.selectedSourceObject = me.$scope.selectedObject.select;
@@ -273,7 +318,7 @@ var MapperController = BaseController.extend({
         var me = this;
         me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(data.fields, 'path');
         me.$scope.showTree = true;
-
+        me.$scope.mapperMetaDataById = null;
         me.$scope.mapperdata = null;
         me.$scope.selectedTargetObject = null;
         me.$scope.showTargetTree = false;
@@ -298,15 +343,15 @@ var MapperController = BaseController.extend({
         me._maskLoader.show(me.$scope, "Loading mapping...");
 
         //Get the targetmapping
-        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedObject.select.name, me.$scope.selectedTargetObject);
+        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedObject.select.name, me.$scope.selectedTargetObject.name);
         if(me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
             //Calling the API to load the target objectmetadata and mapping
             var trn = new Object();
-            trn.vendorName = me.$scope.selectedTargetObject;
+            trn.vendorName = me.$scope.selectedTargetObject.name;
             me._mapper.loadTargetObjectMetaMapping(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, trn)
-                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject));
+                .then(me._handleOnTargetMetamappingLoad.bind(me, me.$scope.selectedTargetObject.name));
         } else {
-            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject, targetMetaMapping);
+            me._handleOnTargetMetamappingLoad(me.$scope.selectedTargetObject.name, targetMetaMapping);
         }
     },
 
@@ -322,8 +367,13 @@ var MapperController = BaseController.extend({
             me.$scope.mapperdata = me._cloudElementsUtils.orderObjects(data.fields, sortby);
             me.$scope.showTargetTree = true;
 
-            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
-                me.$scope.selectedTargetObject = data.vendorName;
+            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject) || me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject.name)) {
+                me.$scope.selectedTargetObject = new Object();
+                me.$scope.selectedTargetObject.name = data.vendorName;
+                if(!me._cloudElementsUtils.isEmpty(me._mapper.all[me._picker.targetElementInstance.element.key].objectDisplayName)) {
+                    me.$scope.selectedTargetObject.displayName = me._mapper.all[me._picker.targetElementInstance.element.key].objectDisplayName[data.vendorName];
+                }
+
             }
             me.$scope.showTargetObjectSelection = false;
         } else {
@@ -370,7 +420,7 @@ var MapperController = BaseController.extend({
         }
 
         me.$scope.instanceObjects = data;
-        me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objects;
+        me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objectDetails;
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
         me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
     },
@@ -465,8 +515,8 @@ var MapperController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Saving...');
         var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance,
-                                                                    me._picker.targetElementInstance,
-                                                                    me.$scope.instanceObjects);
+            me._picker.targetElementInstance,
+            me.$scope.instanceObjects);
     },
 
     _onTransformationSave: function() {
