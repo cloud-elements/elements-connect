@@ -112,7 +112,7 @@ var Application = Class.extend({
             || me._cloudElementsUtils.isEmpty( me.configuration.mapper)) {
             return false;
         }
-        return  me.configuration.mapper.bi-directional;
+        return  me.configuration.mapper.bidirectional;
     },
 
     isTargetHidden: function() {
