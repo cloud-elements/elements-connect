@@ -32,7 +32,7 @@ var Application = Class.extend({
 
     isCAaaS: function() {
         var me = this;
-        return me.environment.appName === 'Elements Connect';
+        return me.environment.appName === 'POSable';
     },
 
     isBulkloader: function() {
