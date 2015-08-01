@@ -353,7 +353,9 @@ var Mapper = Class.extend({
                 var obj = new Object();
                 obj.vendorName = targetObjectName;
                 obj.name = selectObjectName;
-                obj.displayName = me.all[selectedInstance.element.key].objectDisplayName[selectObjectName];
+                if(!me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].objectDisplayName)) {
+                    obj.displayName = me.all[selectedInstance.element.key].objectDisplayName[selectObjectName];
+                }
                 obj.transformed = true;
                 objectsAndTransformation[selectObjectName] = obj;
 
@@ -369,9 +371,12 @@ var Mapper = Class.extend({
             if(me._cloudElementsUtils.isEmpty(tempObjectNames[objName])) {
                 var obj = {
                     name: objName,
-                    displayName: me.all[selectedInstance.element.key].objectDisplayName[selectObjectName],
                     transformed: false
                 };
+
+                if(!me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].objectDisplayName)) {
+                    obj['displayName'] = me.all[selectedInstance.element.key].objectDisplayName[selectObjectName];
+                }
                 sortedObjectsAndTransformation.push(obj);
             } else {
                 sortedObjectsAndTransformation.push(objectsAndTransformation[objName]);
@@ -780,6 +785,11 @@ var Mapper = Class.extend({
             }
         } else {
             newMapping['bidirectional'] = false;
+        }
+
+        var targetTrans = me.all[targetInstance.element.key].transformations[name];
+        if(!me._cloudElementsUtils.isEmpty(targetTrans) && !me._cloudElementsUtils.isEmpty(targetTrans.script)) {
+            newMapping['script'] = targetTrans.script;
         }
 
         me.all[targetInstance.element.key].metamapping[name] = newMapping;

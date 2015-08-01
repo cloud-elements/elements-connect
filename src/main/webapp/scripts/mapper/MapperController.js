@@ -278,7 +278,7 @@ var MapperController = BaseController.extend({
 
         //Get Object details
         var objectDetails = me._picker.getElementObjectDetails(me._picker.selectedElementInstance.element.key, 'source', me.$scope.selectedObject.select.name);
-        if(!me._cloudElementsUtils.isEmpty(objectDetails.metaDataById)) {
+        if(!me._cloudElementsUtils.isEmpty(objectDetails) && !me._cloudElementsUtils.isEmpty(objectDetails.metaDataById)) {
             me.$scope.mapperMetaDataById = objectDetails.metaDataById;
             me.$scope.mapperwhere = null;
             me.$scope.objectMetaData = null;

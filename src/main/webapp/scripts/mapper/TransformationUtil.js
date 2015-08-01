@@ -230,6 +230,11 @@ var TransformationUtil = Class.extend({
             ],
             fields: []
         };
+
+        if(!me._cloudElementsUtils.isEmpty(metaData.script)) {
+            objectTransformation['script'] = metaData.script;
+        }
+
         me._constructDeeperTransformation(objectTransformation, metaData);
         transformationArray[name] = objectTransformation;
     },
