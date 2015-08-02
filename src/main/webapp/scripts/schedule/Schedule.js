@@ -114,6 +114,8 @@ var Schedule = Class.extend({
             if(!me._cloudElementsUtils.isEmpty(mw.value)) {
                 if(where == '') {
                     where = ' where ';
+                } else {
+                    where += ' and '
                 }
                 where += mw.key + ' = ' + mw.value;
             } else if(me._cloudElementsUtils.isEmpty(mw.value) && mw.required == true) {
