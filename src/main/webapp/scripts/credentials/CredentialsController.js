@@ -28,7 +28,7 @@ var CredentialsController = BaseController.extend({
         me.$interval = $interval;
         me.$mdDialog = $mdDialog;
         me._super($scope);
-
+        document.title = me._application.getApplicationName();
     },
 
     defineScope: function() {

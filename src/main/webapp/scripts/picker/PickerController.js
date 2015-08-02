@@ -40,6 +40,7 @@ var PickerController = BaseController.extend({
         me._super($scope);
 
         me._maskLoader.show(me.$scope, 'Loading...');
+        document.title = me._application.getApplicationName();
         me.checkKey();
     },
 
