@@ -7,7 +7,14 @@
   <div class="content">
     <script type="text/ng-template" id="helpimages.html">
       <img src="images/{{items.imageURL}}" width="100%"/>
-      <p style="width:100%; margin-top: 20px; color: #fff;">{{items.text}}</p>
+      <div style="width:100%; margin-top: 20px;">
+        <p style="color: #fff;" ng-modal="items.steps" ng-repeat="step in items.steps"
+           ng-include="'helpsteps.html'"></p>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="helpsteps.html">
+      {{step.text}}
     </script>
 
     <slick infinite="false" slides-to-show="1" slides-to-scroll="1" arrows="true" ng-modal="helpList">
