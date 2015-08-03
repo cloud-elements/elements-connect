@@ -2729,3 +2729,35 @@ Animate the stripes
         background-position: 50px 50px;
     }
 }
+
+
+
+/*
+Slick Plugin override
+*/
+.slick-next, .slick-prev {
+    display: inline-block;
+    opacity: 1;
+    height: 0.9em;
+    font-family: 'Icons';
+    font-style: normal;
+    line-height: 1;
+    font-weight: normal;
+    text-decoration: inherit;
+    text-align: center;
+    speak: none;
+    font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.slick-next:before {
+    content: "\f138";
+    background: none !important;
+    font-family: 'Icons';
+}
+.slick-prev:before {
+    content: "\f137";
+    background: none !important;
+    font-family: 'Icons';
+}
