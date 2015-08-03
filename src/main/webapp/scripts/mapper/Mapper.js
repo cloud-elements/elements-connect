@@ -787,7 +787,10 @@ var Mapper = Class.extend({
             newMapping['bidirectional'] = false;
         }
 
-        var targetTrans = me.all[targetInstance.element.key].transformations[name];
+        var targetTrans = null;
+        if(!me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].transformations)) {
+            targetTrans = me.all[targetInstance.element.key].transformations[name];
+        }
         if(!me._cloudElementsUtils.isEmpty(targetTrans) && !me._cloudElementsUtils.isEmpty(targetTrans.script)) {
             newMapping['script'] = targetTrans.script;
         }
