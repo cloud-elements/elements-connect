@@ -90,16 +90,10 @@ var Credentials = Class.extend({
         if(result.status == 205) {
             //Credentials expired, force user to change Password
             me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, status.data);
-            return;
-        }
-
-        me._picker.handleConfigurationSetUp(result);
-
-        if(!me._picker.validateConfiguration()) {
             return false;
         }
 
-        return true;
+        return me._picker.handleConfigurationSetUp(result);
     },
 
     _loadConfigurationFailed: function(error) {
@@ -107,7 +101,7 @@ var Credentials = Class.extend({
         if(error.status == 205) {
             //Credentials expired, force user to change Password
             me._notifications.notify(bulkloader.events.CREDENTIALS_EXPIRED, error.data);
-            return;
+            return false;
         }
         if(me._cloudElementsUtils.isEmpty(error.data)) {
             me._notifications.notify(bulkloader.events.ERROR,
@@ -116,6 +110,8 @@ var Credentials = Class.extend({
             me._notifications.notify(bulkloader.events.ERROR,
                     "Could not retrieve application configuration for organization. " + error.data.message);
         }
+
+        return false;
     },
 
     signup: function(signup) {

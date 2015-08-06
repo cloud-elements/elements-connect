@@ -133,6 +133,9 @@ var PickerController = BaseController.extend({
 
     _handleConfigurationLoad: function(instances) {
         var me = this;
+        if(!me._cloudElementsUtils.isEmpty(instances) && instances == false) {
+            return;
+        }
         me.$scope.sources = me._picker._sources;
         me.$scope.targets = me._picker._targets;
 
@@ -153,6 +156,7 @@ var PickerController = BaseController.extend({
 
         me._maskLoader.hide();
         me._maskLoader.show(me.$scope, 'Loading Instances...');
+
         me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
     },
 

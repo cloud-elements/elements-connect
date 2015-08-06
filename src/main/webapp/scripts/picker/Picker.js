@@ -58,6 +58,8 @@ var Picker = Class.extend({
         if(me._targets && me._targets.length == 1) {
             me._target = result.data.userData.configuration.targets[0];
         }
+
+        return me.validateConfiguration();
     },
 
     validateConfiguration: function() {

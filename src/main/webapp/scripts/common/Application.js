@@ -109,7 +109,7 @@ var Application = Class.extend({
     isMapperBiDirectional: function() {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me.configuration)
-            || me._cloudElementsUtils.isEmpty( me.configuration.mapper)) {
+            || me._cloudElementsUtils.isEmpty(me.configuration.mapper)) {
             return false;
         }
         return  me.configuration.mapper.bidirectional;
@@ -117,6 +117,9 @@ var Application = Class.extend({
 
     isTargetHidden: function() {
         var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)) {
+            return false;
+        }
         var show = me.configuration.showTarget;
         if(me._cloudElementsUtils.isEmpty(show)) {
             show = false;
