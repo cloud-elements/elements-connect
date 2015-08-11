@@ -2750,6 +2750,7 @@ Slick Plugin override
     -moz-osx-font-smoothing: grayscale;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    height: 20px;
 }
 .slick-next:before {
     content: "\f138";

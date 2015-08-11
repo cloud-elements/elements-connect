@@ -74,8 +74,8 @@ var NavigationController = BaseController.extend({
 
     onHelp: function($event) {
         var me = this;
-        event.preventDefault();
-        event.stopPropagation();
+        $event.preventDefault();
+        $event.stopPropagation();
         me._help.openHelp();
     },
 
