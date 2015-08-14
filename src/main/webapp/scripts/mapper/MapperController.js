@@ -221,6 +221,18 @@ var MapperController = BaseController.extend({
             me.$scope.mapperwhere = null;
         }
 
+        //Substitue the Object by id for the where condition if the key matches
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere) && !me._cloudElementsUtils.isEmpty(objectDetails.metaDataById)
+            && !me._cloudElementsUtils.isEmpty(objectDetails.metaDataById.value)) {
+            for(var i=0; i<me.$scope.mapperwhere.length; i++){
+                var mw = me.$scope.mapperwhere[i];
+                if(me._cloudElementsUtils.isEmpty(mw.value) && mw.key == objectDetails.metaDataById.key) {
+                    mw.value = objectDetails.metaDataById.value;
+                    break;
+                }
+            }
+        }
+
         me._mapper.loadObjectMetaData(me._picker.selectedElementInstance, me.$scope.selectedObject.select.name, me._picker.targetElementInstance, objectDetails.metaDataById.value)
             .then(me._handleOnMetadataLoad.bind(me, me.$scope.selectedObject));
     },
