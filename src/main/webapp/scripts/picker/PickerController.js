@@ -281,7 +281,7 @@ var PickerController = BaseController.extend({
                 return;
             }
             else {
-                me.$location.path('/credentials');
+                me.$location.path(me._application.getLandingPage());
                 return;
             }
 

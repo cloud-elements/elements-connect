@@ -131,6 +131,16 @@ var Application = Class.extend({
         var me = this;
         me.environment.apiKey = key;
         me.environment.userId = userId;
+    },
+
+    //This is very dirty way as there is no other option of directing only hubspot to a different landing page
+    getLandingPage: function() {
+        var me = this;
+        if(window.location.href.indexOf('hubspot') > -1) {
+            return '/elementloader';
+        }
+
+        return '/credentials';
     }
 });
 
