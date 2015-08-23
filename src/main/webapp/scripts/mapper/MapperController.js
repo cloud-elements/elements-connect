@@ -163,14 +163,28 @@ var MapperController = BaseController.extend({
         }
         else {
             if(parentModelVal.path != null) {
-                this._populateBackToMetaData(parentModelVal.path, parentModelVal.targetVendorType, parentModelVal.path, me.$scope.objectMetaData);
+                this._populateBackToMetaData(parentModelVal.path, parentModelVal.targetVendorType, parentModelVal.path, me.$scope.objectMetaData, parentModelVal.targetMask);
             }
             parentModelVal.path = modelVal.actualVendorPath;
             parentModelVal.targetVendorType = modelVal.type;
+            parentModelVal.targetMask = modelVal.mask;
 
             if(me._mapper._isLiteral(parentModelVal.type)) {
                 parentModelVal.fields = [];
             }
+
+            if(me._mapper._isDateFormat(parentModelVal.type)) {
+                parentModelVal["configuration"] = [
+                    {
+                        "type": "transformDate",
+                        "properties": {
+                            "vendorPattern": parentModelVal.mask,
+                            "pattern": modelVal.mask
+                        }
+                    }
+                ];
+            }
+
             if(me.$scope.selectedObject.select.transformed == false) {
                 me.$scope.selectedObject.select.transformed = true;
             }
@@ -613,7 +627,7 @@ var MapperController = BaseController.extend({
         }
         treenode.$nodeScope.$element.removeClass('mapped');
 
-        this._populateBackToMetaData(obj.path, obj.targetVendorType, obj.path, me.$scope.objectMetaData);
+        this._populateBackToMetaData(obj.path, obj.targetVendorType, obj.path, me.$scope.objectMetaData, obj.targetMask);
         obj.path = null;
         obj.targetVendorType = null;
     },
@@ -628,7 +642,7 @@ var MapperController = BaseController.extend({
         }
     },
 
-    _populateBackToMetaData: function(targetVendorPath, targetVendorType, actualTargetVendorPath, metadatafields) {
+    _populateBackToMetaData: function(targetVendorPath, targetVendorType, actualTargetVendorPath, metadatafields, targetMask) {
         var me = this;
 
         if(me._cloudElementsUtils.isEmpty(targetVendorType)) {
@@ -662,13 +676,14 @@ var MapperController = BaseController.extend({
                 metadatafields.push(innerMetadata);
             }
 
-            me._populateBackToMetaData(fieldParts, targetVendorType, actualTargetVendorPath, innerMetadata.fields);
+            me._populateBackToMetaData(fieldParts, targetVendorType, actualTargetVendorPath, innerMetadata.fields, targetMask);
         }
         else {
 
             var oldObj = {
                 path: targetVendorPath,
                 type: targetVendorType,
+                mask: targetMask,
                 actualVendorPath: actualTargetVendorPath
             };
 

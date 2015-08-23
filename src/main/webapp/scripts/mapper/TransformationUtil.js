@@ -197,10 +197,18 @@ var TransformationUtil = Class.extend({
                         vp = objectName + '.' + vp;
                     }
 
-                    objectTransformation.fields.push({
-                        'path': mapperData.path,
-                        'vendorPath': vp
-                    });
+                    if(!me._cloudElementsUtils.isEmpty(mapperData.configuration)) {
+                        objectTransformation.fields.push({
+                            'path': mapperData.path,
+                            'vendorPath': vp,
+                            'configuration': mapperData.configuration
+                        });
+                    } else {
+                        objectTransformation.fields.push({
+                            'path': mapperData.path,
+                            'vendorPath': vp
+                        });
+                    }
                 }
             }
             else {

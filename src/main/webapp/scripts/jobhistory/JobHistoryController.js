@@ -187,6 +187,12 @@ var JobHistoryController = BaseController.extend({
 
     close: function() {
         var me = this;
+
+        if(!me._cloudElementsUtils.isEmpty(me._refreshtimer)) {
+            me.$interval.cancel(me._refreshtimer);
+            me._refreshtimer = null;
+        }
+
         me.$location.path('/');
     }
 

@@ -54,7 +54,8 @@ var Mapper = Class.extend({
             || type == "dd/MM/yyy'T'HH:mm:ssXXX"
             || type == "dd/MM/yyy"
             || type == "milliseconds"
-            || type == "Vendor date format") {
+            || type == "Vendor date format"
+            || type == "date") {
             return true;
         }
         return false;
@@ -720,7 +721,7 @@ var Mapper = Class.extend({
             //Before restructuring, set the Path values from trasformation so that its easy in mapping
             for(var i = 0; i < transformation.fields.length; i++) {
                 var t = transformation.fields[i];
-                me._setPathInMetaData(objectMetadata, t.path, t.vendorPath);
+                me._setPathInMetaData(objectMetadata, t.path, t.vendorPath, t.configuration);
             }
         }
 
@@ -799,11 +800,15 @@ var Mapper = Class.extend({
         return newMapping;
     },
 
-    _setPathInMetaData: function(objectMetadata, path, vendorPath) {
+    _setPathInMetaData: function(objectMetadata, path, vendorPath, configuration) {
+        var me = this;
         for(var i = 0; i < objectMetadata.fields.length; i++) {
             var field = objectMetadata.fields[i];
             if(field.vendorPath === vendorPath) {
                 field.path = path;
+                if(!me._cloudElementsUtils.isEmpty(configuration)) {
+                    field.configuration = configuration;
+                }
                 break;
             }
         }
