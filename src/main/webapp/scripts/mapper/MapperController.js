@@ -62,11 +62,12 @@ var MapperController = BaseController.extend({
         me.$scope.removeMapPath = me.removeMapPath.bind(this);
         me.$scope.loadMetaData = me.loadMetaData.bind(this);
         me.$scope.aceLoaded = me._aceLoaded.bind(this);
-        me.$scope.jsCustomization = me.jsCustomization.bind(this);
-        me.$scope.closeJS = me.closeJS.bind(this);
+        me.$scope.jsCustomization = me._jsCustomization.bind(this);
+        me.$scope.closeJS = me._closeJS.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
+        me.$scope.showJSEditor = false;
         me.$scope.showTargetTree = false;
         me.$scope.bidirectionalMapping = false;
 
@@ -244,7 +245,7 @@ var MapperController = BaseController.extend({
         //Substitue the Object by id for the where condition if the key matches
         if(!me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere) && !me._cloudElementsUtils.isEmpty(objectDetails.metaDataById)
             && !me._cloudElementsUtils.isEmpty(objectDetails.metaDataById.value)) {
-            for(var i=0; i<me.$scope.mapperwhere.length; i++){
+            for(var i = 0; i < me.$scope.mapperwhere.length; i++) {
                 var mw = me.$scope.mapperwhere[i];
                 if(me._cloudElementsUtils.isEmpty(mw.value) && mw.key == objectDetails.metaDataById.key) {
                     mw.value = objectDetails.metaDataById.value;
@@ -307,6 +308,8 @@ var MapperController = BaseController.extend({
                 return;
             }
         }
+
+        me._setJSTransformationValue();
 
         //Get Object details
         var objectDetails = me._picker.getElementObjectDetails(me._picker.selectedElementInstance.element.key, 'source', me.$scope.selectedObject.select.name);
@@ -398,6 +401,16 @@ var MapperController = BaseController.extend({
             me.$scope.mapper = data;
             me.$scope.mapperdata = me._cloudElementsUtils.orderObjects(data.fields, sortby);
             me.$scope.showTargetTree = true;
+            me.$scope.collapsedAce = true;
+
+            if(!me._cloudElementsUtils.isEmpty(me._aceEditor)) {
+                if(me._cloudElementsUtils.isEmpty(data.script)
+                    || me._cloudElementsUtils.isEmpty(data.script.body)) {
+                    me._aceEditor.setValue("");
+                } else {
+                    me._aceEditor.setValue(data.script.body, 1);
+                }
+            }
 
             if(me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject) || me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject.name)) {
                 me.$scope.selectedTargetObject = new Object();
@@ -423,6 +436,12 @@ var MapperController = BaseController.extend({
 
             me.$location.path('/');
             return;
+        }
+
+        if(me._application.isJSEditorHidden() == true) {
+            me.$scope.showJSEditor = false;
+        } else {
+            me.$scope.showJSEditor = true;
         }
 
         me.$scope.sourceElement = me._picker.getElementConfig(me._picker.selectedElementInstance.element.key, 'source');
@@ -544,6 +563,8 @@ var MapperController = BaseController.extend({
 
     _continueToSave: function() {
         var me = this;
+
+        me._setJSTransformationValue();
 
         me._maskLoader.show(me.$scope, 'Saving...');
         var saveStatus = me._mapper.saveDefinitionAndTransformation(me._picker.selectedElementInstance,
@@ -703,20 +724,39 @@ var MapperController = BaseController.extend({
         me._aceEditor = _editor;
     },
 
-    jsCustomization: function($event) {
+    _jsCustomization: function($event) {
         var me = this;
-        $event.preventDefault();
+//        $event.preventDefault();
         $event.stopPropagation();
-        me.$scope.collapsedTabWrapper = false;
         me.$scope.collapsedAce = false;
-        me.$scope.collapsedTryout = true;
+
+        me._aceEditor.setValue(me._aceEditor.getValue());
+        me._aceEditor.resize()
     },
 
-    closeJS: function() {
+    _closeJS: function() {
         var me = this;
-        me.$scope.collapsedTabWrapper = true;
         me.$scope.collapsedAce = true;
-        me.$scope.collapsedTryout = true;
+    },
+
+    _setJSTransformationValue: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.$scope.selectedSourceObject)) {
+            return;
+        }
+        //Get Script if available to save with the transformation
+        //Populate it with the me.$scope.mapperdata
+        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedSourceObject.name, me.$scope.selectedTargetObject.name);
+        if(!me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
+            var script = me._aceEditor.getValue();
+            if(me._cloudElementsUtils.isEmpty(script)) {
+                me.$scope.mapperdata.script = null;
+            } else {
+                targetMetaMapping["script"] = new Object();
+                targetMetaMapping["script"].body = script;
+                targetMetaMapping["script"].mimeType = "application/javascript";
+            }
+        }
     }
 });
 

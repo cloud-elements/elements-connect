@@ -740,19 +740,21 @@ var Mapper = Class.extend({
 
         var displayName = false;
         var count = 0;
-        for(var i = 0; i < metadataflat.fields.length; i++) {
-            var field = metadataflat.fields[i];
+        if(!me._cloudElementsUtils.isEmpty(metadataflat.fields)) {
+            for(var i = 0; i < metadataflat.fields.length; i++) {
+                var field = metadataflat.fields[i];
 
-            if(!this._cloudElementsUtils.isEmpty(field.vendorDisplayName)) {
-                displayName = true;
-                break;
+                if(!this._cloudElementsUtils.isEmpty(field.vendorDisplayName)) {
+                    displayName = true;
+                    break;
+                }
+                //Just dont want to loop all the field to find out
+                //Should be a good number to decide what to sort on
+                if(count == 10) {
+                    break;
+                }
+                count++;
             }
-            //Just dont want to loop all the field to find out
-            //Should be a good number to decide what to sort on
-            if(count == 10) {
-                break;
-            }
-            count++;
         }
 
         return displayName;
