@@ -17,6 +17,7 @@ var bulkloaderApp = angular
         'ngRoute',
         'ngSanitize',
         'ngTouch',
+        'ui.ace',
         'ui.tree',
         'ui.tree-filter',
         'ui.select',

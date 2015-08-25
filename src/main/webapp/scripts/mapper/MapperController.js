@@ -16,6 +16,7 @@ var MapperController = BaseController.extend({
     _instances: null,
     _schedule: null,
     _maskLoader: null,
+    _aceEditor: null,
 
     init: function($scope, CloudElementsUtils, Picker, Datalist, Mapper, Notifications, Schedule, MaskLoader, Application, $window, $location, $filter, $route, $mdDialog) {
         var me = this;
@@ -60,6 +61,7 @@ var MapperController = BaseController.extend({
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
         me.$scope.removeMapPath = me.removeMapPath.bind(this);
         me.$scope.loadMetaData = me.loadMetaData.bind(this);
+        me.$scope.aceLoaded = this._aceLoaded.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
@@ -690,6 +692,11 @@ var MapperController = BaseController.extend({
             metadatafields.push(oldObj);
             me.$scope.objectMetaData = me._cloudElementsUtils.orderObjects(me.$scope.objectMetaData, 'path');
         }
+    },
+
+    _aceLoaded: function(_editor) {
+        var me = this;
+        me._aceEditor = _editor;
     }
 });
 

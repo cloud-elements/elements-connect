@@ -205,6 +205,45 @@
 
     </div>
 
+    <div class="ui-ace-tab">
+      <a href='#' type="button" class="btn-tab" ng-click="jsCustomization()" style="margin-left: -150px">
+        Add <b>JS</b> Customization</a>
+    </div>
+    <div class="ace-editor-wrapper" ng-show="!collapsedAce">
+
+      <div class="ace-editor-toolbar top" style="background-color: #389dc8; padding: 5px;"
+           ng-show="!collapsedAce">
+        <button type="button" class="btn btn-default navbar-btn btn-xs pull-right"
+                ng-click="closeJS();" ng-show="!collapsedAce"
+                style="color: #fff;">
+          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>Close
+        </button>
+
+      </div>
+      <div class="ace-editor-toolbar top" ng-show="!collapsedAce">
+        <p style="position: relative;"> function <b>transform</b>(transformedObject, originalObject)
+          { </p>
+
+      </div>
+      <div class="ui-ace-container" ng-show="!collapsedAce" ui-ace="{
+                          showGutter: true,
+                          firstLineNumber: 2,
+                          mode: 'javascript',
+                          theme:'twilight',
+                          require: ['language_tools', 'beautify'],
+                          onLoad: aceLoaded,
+                          advanced: {
+                              enableSnippets: true,
+                              enableBasicAutocompletion: true,
+                              enableLiveAutocompletion: true
+                          }
+                        }">
+        {{originalObject}}
+      </div>
+      <div class="ace-editor-toolbar bottom" ng-show="!collapsedAce">
+        <p style="padding-top: 10px;">}</p>
+      </div>
+    </div>
 
   </div>
 
