@@ -730,7 +730,10 @@ var MapperController = BaseController.extend({
         $event.stopPropagation();
         me.$scope.collapsedAce = false;
 
-        me._aceEditor.setValue(me._aceEditor.getValue());
+        if(me._aceEditor.getValue() != null) {
+            me._aceEditor.setValue(me._aceEditor.getValue());
+        }
+
         me._aceEditor.resize()
     },
 
