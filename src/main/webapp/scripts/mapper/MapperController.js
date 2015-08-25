@@ -61,7 +61,9 @@ var MapperController = BaseController.extend({
         me.$scope.refreshTargetObject = me.refreshTargetObject.bind(this);
         me.$scope.removeMapPath = me.removeMapPath.bind(this);
         me.$scope.loadMetaData = me.loadMetaData.bind(this);
-        me.$scope.aceLoaded = this._aceLoaded.bind(this);
+        me.$scope.aceLoaded = me._aceLoaded.bind(this);
+        me.$scope.jsCustomization = me.jsCustomization.bind(this);
+        me.$scope.closeJS = me.closeJS.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
@@ -697,6 +699,20 @@ var MapperController = BaseController.extend({
     _aceLoaded: function(_editor) {
         var me = this;
         me._aceEditor = _editor;
+    },
+
+    jsCustomization: function() {
+        var me = this;
+        me.$scope.collapsedTabWrapper = false;
+        me.$scope.collapsedAce = false;
+        me.$scope.collapsedTryout = true;
+    },
+
+    closeJS: function() {
+        var me = this;
+        me.$scope.collapsedTabWrapper = true;
+        me.$scope.collapsedAce = true;
+        me.$scope.collapsedTryout = true;
     }
 });
 
