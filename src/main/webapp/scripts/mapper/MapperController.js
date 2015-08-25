@@ -89,6 +89,8 @@ var MapperController = BaseController.extend({
             accept: this.onMetadataAccept.bind(this)
         };
 
+        me.$scope.collapsedAce = true;
+
         me._seedMapper();
     },
 
@@ -701,8 +703,10 @@ var MapperController = BaseController.extend({
         me._aceEditor = _editor;
     },
 
-    jsCustomization: function() {
+    jsCustomization: function($event) {
         var me = this;
+        $event.preventDefault();
+        $event.stopPropagation();
         me.$scope.collapsedTabWrapper = false;
         me.$scope.collapsedAce = false;
         me.$scope.collapsedTryout = true;
