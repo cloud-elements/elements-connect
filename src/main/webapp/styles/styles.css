@@ -1631,7 +1631,7 @@ div#data-list-body.disabled:after {
     left: 20px;
     right: 20px;
     min-height: 400px;
-    bottom: 35px;
+    bottom: 50px;
     overflow: hidden;
 }
 #mapping-data-list-body .searchbarContainer{
@@ -2100,6 +2100,74 @@ li li.angular-ui-tree-placeholder{
     border-radius: 2px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
 }
+
+#mapper-data-list-target .editor-container{
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    left: 20px;
+}
+#mapper-data-list-target .ui-ace-tab{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+    height: 30px;
+    border-top: 1px solid #389dc8;
+}
+#mapper-data-list-target .ui-ace-tab .btn-tab {
+    width: 200px;
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    margin-left: -90px;
+    background: -webkit-linear-gradient(#58bde8, #389dc8);
+    background: linear-gradient(#58bde8, #389dc8);
+    border: none;
+    display: inline-block;
+    z-index: 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    text-align: center;
+    height: 30px;
+    line-height: 2em;
+    color: #ffffff;
+}
+#mapper-data-list-target .ace-editor-wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 300px;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    left: 0;
+}
+#mapper-data-list-target .ace-editor-wrapper .ace-editor-toolbar {
+    height: auto;
+    display: block;
+    width: 100%;
+    background-color: #141414;
+}
+#mapper-data-list-target .ace-editor-wrapper .ui-ace-container {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+#mapper-data-list-target .ace-editor-wrapper .ace-editor-toolbar p {
+    font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    border-left: 41px solid #232323;
+    padding: 0;
+    margin: 0;
+    float: left;
+    color: #ffffff;
+    padding: 5px;
+}
+#mapper-data-list-target .list.showaceinlist{bottom: 320px;}
 /***********************/
 /* END MAPPER          */
 /***********************/

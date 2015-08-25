@@ -127,6 +127,22 @@ var Application = Class.extend({
         return !show;
     },
 
+    isJSEditorHidden: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)) {
+            return true;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration.display)) {
+            return true;
+        }
+        else if(me.configuration.display.showJSEditor == true) {
+            return false;
+        }
+
+        return true;
+    },
+
     setLogin: function(key, userId) {
         var me = this;
         me.environment.apiKey = key;
