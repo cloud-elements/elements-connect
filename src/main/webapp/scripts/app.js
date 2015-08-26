@@ -67,8 +67,12 @@ bulkloaderApp.config(function($routeProvider) {
             templateUrl: 'jobs.html',
             controller: 'JobsController'
         })
+        .when('/hubspotelementloader', {
+            templateUrl: 'landingpages/hubspotlanding.html',
+            controller: 'LandingController'
+        })
         .when('/elementloader', {
-            templateUrl: 'elementloader.html',
+            templateUrl: 'landingpages/elementloader.html',
             controller: 'LandingController'
         })
         .when('/workflows', {

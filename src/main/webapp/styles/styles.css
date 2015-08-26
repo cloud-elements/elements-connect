@@ -212,9 +212,19 @@ body .page{
     left: 0;
     right: 0;
     position: absolute;}
-body .header-navigation a{
+body .header-navigation .navButton{
+    color: #fff;
+    background-color: rgba(0,0,0,.25);
+    font-size: 1.1em;
+    font-weight: bold;
+}
+body .header-navigation .navButton:hover{
+    text-decoration: none;
+}
+
+body .header-navigation a.help{
     color: #eeeeee;
-    font-size: 12px;
+    font-size: 1.1em;
     font-weight: bold;
     text-align: right;
     display: block;
@@ -983,6 +993,7 @@ body .header-navigation .ui.positive.button:hover {
     white-space: nowrap;
     border-radius: 0;
     display: block;
+    overflow: auto;
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-row-selected > div{
     background-color: #efe4e5;
@@ -1085,6 +1096,56 @@ body .header-navigation .ui.positive.button:hover {
 /************************/
 /* END JOB HISTORY      */
 /************************/
+
+/************************/
+/* CAaas HISTORY          */
+/************************/
+
+#caaashistory-header {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 55px;
+    background: rgba(0,0,0,.5);
+    padding: 5px;
+}
+#caaashistory-header h1{
+    color: #ffffff;
+}
+
+
+#caaashistory-body{
+    color: #000;
+    text-align:left;
+    padding:0px;
+    position: absolute;
+    top: 55px;
+    bottom: 0;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    left: 0;
+    right: 0;
+    margin: 0;
+
+}
+#caaashistory-body > div{
+    display: block;
+    -webkit-flex: 2;
+    -ms-flex: 2;
+    flex: 2;
+}
+
+#caaashistory .caaasinstanceslist{
+    background-color: #f2f2f2;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    position: relative;
+    min-width: 400px;
+}
 
 
 /************************/

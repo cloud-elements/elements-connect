@@ -37,7 +37,7 @@ var Application = Class.extend({
 
     isBulkloader: function() {
         var me = this;
-        return me.environment.appName === 'Bulkloader';
+        return me.environment.appName === 'Bulk Loader';
     },
 
     isSecretsPresent: function() {
@@ -153,7 +153,7 @@ var Application = Class.extend({
     getLandingPage: function() {
         var me = this;
         if(window.location.href.indexOf('hubspot') > -1) {
-            return '/elementloader';
+            return '/hubspotelementloader';
         }
 
         return '/credentials';
