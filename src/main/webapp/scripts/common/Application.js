@@ -32,7 +32,7 @@ var Application = Class.extend({
 
     isCAaaS: function() {
         var me = this;
-        return me.environment.appName === 'POSable';
+        return (me.environment.appName === 'POSable' || me.environment.appName === 'CAaaS' || me.environment.appName === 'Element Connect');
     },
 
     isBulkloader: function() {
@@ -142,6 +142,23 @@ var Application = Class.extend({
 
         return true;
     },
+
+    ignoreMapper: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)) {
+            return false;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration.display)) {
+            return false;
+        }
+        else if(me.configuration.display.showMapper == false) {
+            return true;
+        }
+
+        return false;
+    },
+
 
     setLogin: function(key, userId) {
         var me = this;

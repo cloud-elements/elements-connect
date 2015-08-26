@@ -88,21 +88,35 @@ var NavigationController = BaseController.extend({
     seedSteps: function() {
         var me = this;
         // the CAaaS/mapper only has two steps
-        if(me._application.isCAaaS() && me._application.getView() == 'mapper') {
+        if(me._application.isCAaaS() && me._application.ignoreMapper() == true) {
             me.$scope.steps = [
                 {
                     step: '1',
-                    stepName: 'select it',
+                    stepName: 'Select it',
                     description: 'select the services, the source and target for your data.'
                 },
                 {
                     step: '2',
-                    stepName: 'map it',
+                    stepName: 'Configure it',
+                    description: 'choose the workflow template and configure it.'
+                }
+            ]
+        }
+        else if(me._application.isCAaaS() && me._application.getView() == 'mapper') {
+            me.$scope.steps = [
+                {
+                    step: '1',
+                    stepName: 'Select it',
+                    description: 'select the services, the source and target for your data.'
+                },
+                {
+                    step: '2',
+                    stepName: 'Map it',
                     description: 'drag and drop the fields you wish to map from the source to the target.'
                 },
                 {
                     step: '3',
-                    stepName: 'configure it',
+                    stepName: 'Configure it',
                     description: 'choose the workflow template and configure it.'
                 }
             ]
@@ -129,17 +143,17 @@ var NavigationController = BaseController.extend({
             me.$scope.steps = [
                 {
                     step: '1',
-                    stepName: 'select it',
+                    stepName: 'Select it',
                     description: 'select the services, the source and target for your data.'
                 },
                 {
                     step: '2',
-                    stepName: 'map it',
+                    stepName: 'Map it',
                     description: 'drag and drop the fields you wish to map from the source to the target.'
                 },
                 {
                     step: '3',
-                    stepName: 'schedule it',
+                    stepName: 'Schedule it',
                     description: 'select transfer now or schedule. data will be pulled from your system starting from this date to the present time.'
                 }
             ]

@@ -243,12 +243,22 @@ var PickerController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Loading...');
 
-        if(me._application.getView() == 'mapper') {
+        if(me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
-            me.$location.path('/mapper');
+        }
 
+        if(me._application.ignoreMapper() == false) {
+            if(me._application.getView() == 'mapper') {
+                me.$location.path('/mapper');
+            } else {
+                me.$location.path('/datalist');
+            }
         } else {
-            me.$location.path('/datalist');
+            if(me._application.isCAaaS()) {
+                me.$location.path('/workflows');
+            } else {
+                me.$location.path('/schedule');
+            }
         }
 
         //Notify about the VIEW Change
