@@ -23,6 +23,10 @@ var Application = Class.extend({
         if(!me._cloudElementsUtils.isEmpty(pageParameters.token)) {
             me.environment.token = pageParameters.token;
         }
+
+        if(!me._cloudElementsUtils.isEmpty(pageParameters.appName)) {
+            me.environment.appName = pageParameters.appName;
+        }
     },
 
     getApplicationName: function() {
@@ -32,7 +36,8 @@ var Application = Class.extend({
 
     isCAaaS: function() {
         var me = this;
-        return (me.environment.appName === 'POSable' || me.environment.appName === 'CAaaS' || me.environment.appName === 'Element Connect');
+        return (me.environment.appName === 'POSable' || me.environment.appName === 'CAaaS' || me.environment.appName === 'Element Connect'
+            || !(me.environment.appName === 'Bulk Loader'));
     },
 
     isBulkloader: function() {

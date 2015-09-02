@@ -72,7 +72,11 @@ var WorkflowController = BaseController.extend({
 
     cancel: function() {
         var me = this;
-        me.$location.path('/mapper');
+        if(me._application.ignoreMapper() == false) {
+            me.$location.path('/mapper');
+        } else {
+            me.$location.path('/');
+        }
     },
 
     _handleLoadError: function(error) {

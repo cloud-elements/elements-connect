@@ -32,7 +32,8 @@ var CloudElementsUtils = Class.extend({
             window.location.href = window.location.origin + window.location.pathname;
             return;
         } else if (!me.isEmpty(locationString) && locationString.length > 0
-            && locationString.indexOf('token') > -1) {
+            && (locationString.indexOf('token') > -1
+            || locationString.indexOf('appName') > -1)) {
             //In this scenario just extract the token and refresh the window with out token
             me.$cookies.cebulkparams = locationString;
             var params = this.getParamsFromURI(locationString);
