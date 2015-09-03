@@ -241,8 +241,6 @@ var PickerController = BaseController.extend({
     _onElementInstanceSelect: function(instance) {
         var me = this;
 
-        me._maskLoader.show(me.$scope, 'Loading...');
-
         if(!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
         }
@@ -250,18 +248,19 @@ var PickerController = BaseController.extend({
         if(me._application.ignoreMapper() == false) {
             if(me._application.getView() == 'mapper') {
                 if(me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
-                    me._maskLoader.hide();
                     return;
                 }
+                me._maskLoader.show(me.$scope, 'Loading...');
                 me.$location.path('/mapper');
             } else {
+                me._maskLoader.show(me.$scope, 'Loading...');
                 me.$location.path('/datalist');
             }
         } else {
             if(me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
-                me._maskLoader.hide();
                 return;
             }
+            me._maskLoader.show(me.$scope, 'Loading...');
             if(me._application.isCAaaS()) {
                 me.$location.path('/workflows');
             } else {
