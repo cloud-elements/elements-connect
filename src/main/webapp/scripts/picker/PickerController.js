@@ -250,6 +250,7 @@ var PickerController = BaseController.extend({
         if(me._application.ignoreMapper() == false) {
             if(me._application.getView() == 'mapper') {
                 if(me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
+                    me._maskLoader.hide();
                     return;
                 }
                 me.$location.path('/mapper');
@@ -258,6 +259,7 @@ var PickerController = BaseController.extend({
             }
         } else {
             if(me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
+                me._maskLoader.hide();
                 return;
             }
             if(me._application.isCAaaS()) {
