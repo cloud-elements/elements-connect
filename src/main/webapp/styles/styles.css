@@ -1147,6 +1147,196 @@ body .header-navigation .ui.positive.button:hover {
     min-width: 400px;
 }
 
+#caaashistory .caaasinstanceslist .job-tree {
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    overflow-x: hidden;
+}
+
+#caaashistory .caaasinstanceslist .job-tree-node {
+    float: left;
+    display: initial;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-bottom-color: #999999;
+}
+#caaashistory .caaasinstanceslist .job-tree-node:hover {
+    border: 1px solid #389dc8;
+}
+#caaashistory .caaasinstanceslist .job-tree-node.selectJob {
+    background-color: #389dc8;
+    border-color: #389dc8;
+}
+
+#caaashistory .caaasinstanceslist .job-tree-node div {
+    display: block;
+    float: left;
+    width: 100%;
+    color: #555555;
+    padding: 10px 10px 5px;
+    position: relative;
+}
+
+#caaashistory .caaasinstanceslist .job-tree-node div.job-header{
+    font-size: 11px;
+    color: #aaaaaa;
+    text-align: left;
+    padding: 0;
+}
+
+#caaashistory .caaasinstanceslist .job-tree-node div.job-header span{
+    display: inline-block;
+    padding: 10px;
+    float: left;
+    font-size: 13px;
+    color: #666;
+}
+
+#caaashistory .caaasinstanceslist .job-tree-node div.job-header span.status{
+    text-align: right;
+    background-color: #888;
+    color: #fff;
+    float: right;
+}
+#caaashistory .caaasinstanceslist .job-tree-node div.job-header span.status.status-active{
+    background-color: #8dc63f;
+}
+
+#caaashistory .caaasinstanceslist .job-tree-node div.job-body{
+    position: relative;
+}
+#caaashistory .caaasinstanceslist .job-tree-node div.job-body img{
+    float: left;
+    margin: 0 20px;
+}
+#caaashistory .caaasinstanceslist .job-tree-node div.job-body p{
+    display: inline-block;
+    float: left;
+    color: #555;
+    text-align: left;
+    line-height: 1.2em;
+    font-size: 1.5em;
+}
+#caaashistory .caaasinstanceslist .job-tree-node.selectJob div.job-body p{
+    color: #fff;
+}
+
+#caaashistory div.executionslist {
+    padding: 20px;
+    position: relative;
+}
+
+#caaashistory div.executionslist h2 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#caaashistory div.executionslist .ui-grid {
+    position: absolute;
+    bottom: 20px;
+    top: 60px;
+    left: 20px;
+    right: 20px;
+    background-color: #fff;
+    border: none;
+    height: auto;
+}
+#caaashistory div.executionslist .ui-grid .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell{
+    background-color: #b4e7f9;
+}
+
+#caaashistory .executionsvalue{
+    position: relative;
+    width: 300px;
+    background-color: #222;
+    -webkit-flex: inherit;
+    -ms-flex: inherit;
+    flex: inherit;
+}
+
+#caaashistory .executionsvalue .job-tree {
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 60px;
+    overflow-x: hidden;
+}
+
+#caaashistory .executionsvalue .job-tree-node {
+    float: left;
+    display: initial;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    background-color: #666;
+}
+
+#caaashistory .executionsvalue .job-tree-node div {
+    display: block;
+    float: left;
+    width: 100%;
+    color: #555555;
+    padding: 10px 10px 5px;
+    position: relative;
+}
+
+#caaashistory .executionsvalue .job-tree-node div.job-header{
+    font-size: 11px;
+    color: #aaaaaa;
+    text-align: left;
+    padding: 0;
+}
+
+#caaashistory .executionsvalue .job-tree-node div.job-header span{
+    display: inline-block;
+    padding: 10px;
+    float: left;
+    font-size: 13px;
+    color: #666;
+}
+
+#caaashistory .executionsvalue .job-tree-node div.job-header span.status{
+    text-align: right;
+    background-color: #999;
+    color: #fff;
+    width: 100%;
+    text-align: left;
+}
+#caaashistory .executionsvalue .job-tree-node div.job-header span.status.status-active{
+    background-color: #8dc63f;
+}
+
+#caaashistory .executionsvalue .job-tree-node div.job-body{
+    position: relative;
+}
+#caaashistory .executionsvalue .job-tree-node div.job-body img{
+    float: left;
+    margin: 0 20px;
+}
+#caaashistory .executionsvalue .job-tree-node div.job-body p{
+    display: inline-block;
+    float: left;
+    color: #aaa;
+    text-align: left;
+    line-height: 1.5em;
+    font-size: .8em;
+}
+#caaashistory .executionsvalue .job-tree-node div.job-body p span b{
+    color: #fff;
+    font-size: 1.3em;
+    font-weight: bold;}
+#caaashistory .executionsvalue .job-tree-node.selectJob div.job-body p{
+    color: #fff;
+}
 
 /************************/
 /* ANIMATION STYLES     */

@@ -412,11 +412,56 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
+    getCaaasHistory: function(jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/workflows/instances';
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
     getJobErrors: function(elementInstance, jobId) {
 
         var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/' + jobId + '/errors';
 
         return this._httpGet(url, this._getHeaders(elementInstance.token));
+    },
+
+    getWorkflowInstanceExecutions: function(workflowId, instanceId, jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/workflows/'+ workflowId +'/instances/'+ instanceId +'/executions';
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    getInstanceExecutionValues: function(workflowId, instanceId, executionId, jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/workflows/'+ workflowId +'/instances/'+ instanceId +'/executions/'+executionId;
+        return this._httpGet(url, this._getHeaders(), parameters);
     },
 
     /**
