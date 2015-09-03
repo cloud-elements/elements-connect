@@ -243,17 +243,23 @@ var PickerController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Loading...');
 
-        if(me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
+        if(!me._cloudElementsUtils.isEmpty(me._picker.getTargetElementKey())) {
             me._picker.targetElementInstance = me._instances[me._picker.getTargetElementKey()];
         }
 
         if(me._application.ignoreMapper() == false) {
             if(me._application.getView() == 'mapper') {
+                if(me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
+                    return;
+                }
                 me.$location.path('/mapper');
             } else {
                 me.$location.path('/datalist');
             }
         } else {
+            if(me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
+                return;
+            }
             if(me._application.isCAaaS()) {
                 me.$location.path('/workflows');
             } else {
