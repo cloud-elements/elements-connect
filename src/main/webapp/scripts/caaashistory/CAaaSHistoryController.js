@@ -55,6 +55,7 @@ var CAaaSHistoryController = BaseController.extend({
                 {field: 'updatedDate'}
             ]
         };
+        me.$scope.appName = me._application.getApplicationName();
 
         me.$scope.jobExecutionsOptions.onRegisterApi = function(gridApi){
             //set gridApi on scope
