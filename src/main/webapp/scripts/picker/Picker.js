@@ -28,6 +28,7 @@ var Picker = Class.extend({
     _sources: null,
     _targets: null,
     _target: null,
+    _appname: null,
     selectedElementInstance: null,
     targetElementInstance: null,
 
@@ -54,7 +55,7 @@ var Picker = Class.extend({
         me._notifications.notify(bulkloader.events.CONFIGURATION_LOADED);
         me._sources = result.data.userData.configuration.sources;
         me._targets = result.data.userData.configuration.targets;
-
+        me._appname = result.data.name;
         if(me._targets && me._targets.length == 1) {
             me._target = result.data.userData.configuration.targets[0];
         }
@@ -451,6 +452,11 @@ var Picker = Class.extend({
             }
         }
         return target.bulkSequence;
+    },
+
+    getSubscription: function(){
+        var me = this;
+        return me._appname;
     }
 });
 

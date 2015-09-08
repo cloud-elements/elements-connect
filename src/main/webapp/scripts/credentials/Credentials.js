@@ -79,7 +79,6 @@ var Credentials = Class.extend({
 
     login: function(login) {
         var me = this;
-
         return me._elementsService.loginAndloadConfiguration(login.email, login.password).then(
             me._loadConfigurationSucceeded.bind(me),
             me._loadConfigurationFailed.bind(me));

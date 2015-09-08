@@ -15,12 +15,13 @@ var CredentialsController = BaseController.extend({
     _credentials: null,
     _application: null,
 
-    init: function($scope, CloudElementsUtils, Notifications, Credentials, MaskLoader, Application, $window, $location, $interval, $filter, $route, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Notifications, Credentials, MaskLoader, Application, Picker, $window, $location, $interval, $filter, $route, $mdDialog) {
         var me = this;
 
         me._notifications = Notifications;
         me._maskLoader = MaskLoader;
         me._cloudElementsUtils = CloudElementsUtils;
+        me._picker = Picker;
         me._credentials = Credentials;
         me._application = Application;
         me.$window = $window;
@@ -239,6 +240,9 @@ var CredentialsController = BaseController.extend({
         var me = this;
         me._maskLoader.hide();
         if(result == true) {
+            if (me._application.getEnv()){
+                chmln.setup({uid: me.$scope.login.email, email: me.$scope.login.email, subscription: me._picker.getSubscription()});
+            }
             me.$location.path('/');
         }
     },
@@ -255,7 +259,7 @@ var CredentialsController = BaseController.extend({
 
 });
 
-CredentialsController.$inject = ['$scope', 'CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', 'Application', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
+CredentialsController.$inject = ['$scope', 'CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', 'Application', 'Picker', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 
 angular.module('bulkloaderApp')
     .controller('CredentialsController', CredentialsController);

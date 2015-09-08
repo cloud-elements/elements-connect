@@ -179,6 +179,19 @@ var Application = Class.extend({
         }
 
         return '/credentials';
+    },
+
+    //This is to filter user and no create Chmln users from non-staging env.
+    getEnv: function(){
+        var me = this;
+
+        if((window.location.href.indexOf('http://qa') > -1) || (window.location.href.indexOf('http://staging') > -1) ||
+            (window.location.href.indexOf('https://qa') > -1) || (window.location.href.indexOf('https://staging') > -1) ||
+            (window.location.href.indexOf('localhost') > -1) || (window.location.href.indexOf('ngrok.io') > -1)) {
+            return false;
+        }
+
+        return true;
     }
 });
 
