@@ -747,6 +747,10 @@ var MapperController = BaseController.extend({
         if(me._cloudElementsUtils.isEmpty(me.$scope.selectedSourceObject)) {
             return;
         }
+
+        if(me._cloudElementsUtils.isEmpty(me._aceEditor)) {
+            return;
+        }
         //Get Script if available to save with the transformation
         //Populate it with the me.$scope.mapperdata
         var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedSourceObject.name, me.$scope.selectedTargetObject.name);
