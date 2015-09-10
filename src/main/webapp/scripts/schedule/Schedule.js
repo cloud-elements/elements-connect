@@ -28,9 +28,14 @@ var Schedule = Class.extend({
     _scheduledConfirmation: function(ev) {
         var me = this;
 
+        var msg = me._application.getTransferNowMessage();
+        if(me._cloudElementsUtils.isEmpty(msg)) {
+            msg = 'You will receive an email when the job is completed.';
+        }
+
         var confirm = me.$mdDialog.alert()
             .title('Your job has been scheduled')
-            .content('You will receive an email when the job is completed.')
+            .content(msg)
             .ariaLabel('Password notification')
             .ok('OK')
             .targetEvent(ev);

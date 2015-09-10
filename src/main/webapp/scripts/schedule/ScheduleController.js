@@ -183,6 +183,30 @@ var ScheduleController = BaseController.extend({
         //Construct CRON string if there is a selection
         var cronVal = null;
         if(me.$scope.datatransfer === 'schedule') {
+            if(me._cloudElementsUtils.isEmpty(me.$scope.selectedScheduleType)
+                || me._cloudElementsUtils.isEmpty(me.$scope.selectedScheduleType.value)) {
+                var confirm = me.$mdDialog.alert()
+                    .title('Missing How Often ?')
+                    .content('Select how often you want to run.')
+                    .ok('OK');
+
+                me.$mdDialog.show(confirm);
+                me._maskLoader.hide();
+                return;
+            }
+
+            if((me.$scope.selectedScheduleType.value === 'weekly' || me.$scope.selectedScheduleType.value === 'monthly')
+                && me._cloudElementsUtils.isEmpty(me.$scope.selectedScheduleType.typeValue)) {
+                var confirm = me.$mdDialog.alert()
+                    .title('Missing scheduling options')
+                    .content('Select the options for the run.')
+                    .ok('OK');
+
+                me.$mdDialog.show(confirm);
+                me._maskLoader.hide();
+                return;
+            }
+
             cronVal = me._schedule.constructCronExpression(me.$scope.selectedScheduleType);
         }
 

@@ -181,6 +181,20 @@ var Application = Class.extend({
         return '/credentials';
     },
 
+    getTransferNowMessage: function() {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration) || me._cloudElementsUtils.isEmpty(me.configuration.display)) {
+            return null;
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(me.configuration.display.transferNowMessage)) {
+            return me.configuration.display.transferNowMessage;
+        }
+
+        return null;
+    },
+
     //This is to filter user and no create Chmln users from non-staging env.
     getEnv: function(){
         var me = this;
