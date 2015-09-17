@@ -463,8 +463,9 @@ var Schedule = Class.extend({
         var me = this;
 
         var sequence = me._picker.getTargetElementBulkSequence(targetInstance.element.key);
+        var sourceSequence = me._picker.getSourceElementBulkSequence(selectedInstance.element.key);
 
-        if(me._cloudElementsUtils.isEmpty(sequence)) {
+        if(me._cloudElementsUtils.isEmpty(sequence) && me._cloudElementsUtils.isEmpty(sourceSequence)) {
             for(key in jobs) {
                 var js = new Array();
                 js.push(jobs[key]);
@@ -479,15 +480,30 @@ var Schedule = Class.extend({
             //Create a sequence for the Jobs in the JS array
             var js = new Array();
 
-            //Loop through the sequence and also loop through the jobs to create the sequence of jobs to be sent
-            for(field in sequence) {
-                for(key in jobs) {
-                    var j = jobs[key];
-                    var targetObj = j.targetConfiguration.objectName;
-                    var targetObjectName = targetObj.split('_')[2];
+            //Check for target sequence if not then go for source sequence
+            if(!me._cloudElementsUtils.isEmpty(sequence)) {
+                //Loop through the sequence and also loop through the jobs to create the sequence of jobs to be sent
+                for(field in sequence) {
+                    for(key in jobs) {
+                        var j = jobs[key];
+                        var targetObj = j.targetConfiguration.objectName;
+                        var targetObjectName = targetObj.split('_')[2];
 
-                    if(targetObjectName === sequence[field]) {
-                        js.push(j);
+                        if(targetObjectName === sequence[field]) {
+                            js.push(j);
+                        }
+                    }
+                }
+            } else {
+                for(field in sourceSequence) {
+                    for(key in jobs) {
+                        var j = jobs[key];
+                        var targetObj = j.targetConfiguration.objectName;
+                        var sourceObjectName = targetObj.split('_')[1];
+
+                        if(sourceObjectName === sourceSequence[field]) {
+                            js.push(j);
+                        }
                     }
                 }
             }

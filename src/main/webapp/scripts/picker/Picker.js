@@ -454,6 +454,18 @@ var Picker = Class.extend({
         return target.bulkSequence;
     },
 
+    getSourceElementBulkSequence: function(elementKey) {
+        var me = this;
+        var source = null;
+        for(var i in me._sources) {
+            source = me._sources[i];
+            if(source.elementKey == elementKey) {
+                break;
+            }
+        }
+        return source.bulkSequence;
+    },
+
     getSubscription: function(){
         var me = this;
         return me._appname;
