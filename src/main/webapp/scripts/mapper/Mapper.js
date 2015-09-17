@@ -767,8 +767,13 @@ var Mapper = Class.extend({
             me.all[targetInstance.element.key].metamapping = new Object;
         }
 
-        var newMapping = new Object;
         var name = selectedInstance.element.key + '_' + selectedInstanceObject + '_' + targetObjectName;
+
+        if(!me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].metamapping[name])) {
+            return me.all[targetInstance.element.key].metamapping[name];
+        }
+
+        var newMapping = new Object;
         newMapping['name'] = name;
         newMapping['vendorName'] = targetObjectName;
         newMapping['fields'] = objectMetadata.fields;

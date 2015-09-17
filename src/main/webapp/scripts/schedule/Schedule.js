@@ -145,12 +145,7 @@ var Schedule = Class.extend({
             selectObjectName = objectName;
         } else {
             selectObjectName = objectName.split('_')[1]; // Second field in the objectname is source objectname
-            var fieldsList = me._buildFieldList(fields, allObjects, targetInstance, objectName);
-            if(me._cloudElementsUtils.isEmpty(fieldsList) || fieldsList.length == 0) {
-                // No transformations setup, so ignore
-                return;
-            }
-            query = "select " + fieldsList + " from " + selectObjectName;
+            query = "select * from " + selectObjectName;
 
             //Construct the where clause if has and append it to the query
             var where = me._buildWhereClause(selectedInstance, allObjects, selectObjectName);
