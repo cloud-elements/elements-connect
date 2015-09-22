@@ -184,7 +184,7 @@ var NavigationController = BaseController.extend({
         if(me._application.isBulkloader()) {
             me.$location.path('/jobhistory');
         } else {
-            me.$location.path('/caaashistory');
+            me.$location.path('/history');
         }
 
     },

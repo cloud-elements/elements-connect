@@ -59,7 +59,7 @@ bulkloaderApp.config(function($routeProvider) {
             templateUrl: 'jobhistory.html',
             controller: 'JobHistoryController'
         })
-        .when('/caaashistory', {
+        .when('/history', {
             templateUrl: 'caaashistory.html',
             controller: 'CAaaSHistoryController'
         })
