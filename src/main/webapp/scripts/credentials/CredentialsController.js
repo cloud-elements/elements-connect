@@ -53,6 +53,7 @@ var CredentialsController = BaseController.extend({
         me.$scope.changeCredentialView = me.changeCredentialView.bind(me);
         me.$scope.onForgot = me.onForgot.bind(me);
         me.$scope.onSetNewPassword = me.onSetNewPassword.bind(me);
+        me.$scope.hsanalytics = me._application.isHS();
 
         me.changeCredentialView(me._credentials.credentialsView);
     },

@@ -189,6 +189,15 @@ var Application = Class.extend({
 
         return '/credentials';
     },
+    //This is very dirty way as there is no other option of adding hubspot only analytics
+    isHS: function() {
+        var me = this;
+        if(window.location.href.indexOf('hubspot') > -1) {
+            return true;
+        }
+
+        return false;
+    },
 
     getTransferNowMessage: function() {
         var me = this;
