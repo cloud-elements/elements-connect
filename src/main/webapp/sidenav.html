@@ -4,7 +4,7 @@
 <a ng-show="showScheduling" href class="scheduled pull-right" ng-click='onScheduledJobs()'>
   <i class="wait icon"></i> Scheduled Jobs
 </a>
-<a href class="help" ng-click='onHelp($event)'>
+<a href class="help" ng-click='onHelp($event)' ng-show="{{branding.showhelp || !branding}}">
   <i class="icon help circle"></i> Help
 </a>
 <a

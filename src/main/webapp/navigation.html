@@ -4,7 +4,7 @@
   <button type="submit" class="btn btn-link navButton" ng-click="openSideNav('left')">
     <i class="icon sidebar"></i> Menu
   </button>
-  <a href class="help" ng-click='onHelp($event)'>
+  <a href class="help" ng-click='onHelp($event)' ng-show="{{branding.showhelp || !branding}}">
     <i class="icon help circle"></i> Help
   </a>
 
@@ -33,7 +33,7 @@
   <div ng-if="processtep == 'mapper'" class="pull-right" style="padding-top: 5px;">
     <button type="submit" class="ui labeled button" ng-click="cancel()">
       <i class="icon arrow left"></i>Back</button>
-    <button type="submit" class="positive ui right labeled button" ng-click="save()">
+    <button type="submit" class="next ui right labeled button" ng-click="save()">
       {{nextButtonText}}<i class="icon arrow right"></i>
     </button>
   </div>
@@ -41,21 +41,21 @@
     <button type="submit" class="ui labeled button" ng-click="cancel()">
       <i class="icon arrow left"></i>Back
     </button>
-    <button type="submit" class="positive ui right labeled button" ng-click="done()">
+    <button type="submit" class="next ui right labeled button" ng-click="done()">
       Done <i class="checkmark icon"></i>
     </button>
   </div>
   <div ng-if="processtep == 'schedule'" class="pull-right" style="padding-top: 5px;">
     <button type="submit" class="ui labeled button" ng-click="cancel()"><i class="icon arrow left"></i>Back</button>
-    <button type="submit" class="positive ui right labeled button" ng-click="save()" ng-show="datatransfer == 'transfernow'">Transfer
+    <button type="submit" class="next ui right labeled button" ng-click="save()" ng-show="datatransfer == 'transfernow'">Transfer
       Now <i class="checkmark icon"></i></button>
-    <button type="submit" class="positive ui right labeled button" ng-click="save()"
+    <button type="submit" class="next ui right labeled button" ng-click="save()"
             ng-show="datatransfer == 'schedule'">Schedule Transfer <i class="checkmark icon"></i></button>
   </div>
   <div ng-if="processtep == 'datalist'" class="pull-right" style="padding-top: 5px;">
       <button type="submit" class="ui labeled button" ng-click="cancel()">
         <i class="icon arrow left"></i>Back</button>
-      <button type="submit" class="positive ui right labeled button" ng-click="save()">
+      <button type="submit" class="next ui right labeled button" ng-click="save()">
         Save and Schedule Job <i class="checkmark icon"></i></button>
   </div>
 

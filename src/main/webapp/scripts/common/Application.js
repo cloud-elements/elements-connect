@@ -101,6 +101,15 @@ var Application = Class.extend({
         return  me.configuration.view;
     },
 
+    getBranding: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)
+            || me._cloudElementsUtils.isEmpty(me.configuration.branding)) {
+            return false;
+        }
+        return  me.configuration.branding;
+    },
+
     getDisplay: function() {
         var me = this;
         return me.configuration.display;

@@ -41,7 +41,10 @@ var PickerController = BaseController.extend({
 
         me._maskLoader.show(me.$scope, 'Loading...');
         document.title = me._application.getApplicationName();
+        me.$scope.branding = me._application.getBranding();
         me.checkKey();
+
+        me.getBranding();
     },
 
     defineScope: function() {
@@ -124,7 +127,7 @@ var PickerController = BaseController.extend({
         me._instances = me._picker._elementInstances;
 
         angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).addClass('highlightingElement');
-        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).attr('data-instance', me._instances[bulkloader.Picker.oauthElementKey].name);
+        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).attr('data-instance', me._instances[bulkloader.Picker.oauthElementKey].element.name);
 
         if(!me._cloudElementsUtils.isEmpty(bulkloader.Picker.oauthElementKey)) {
             me.onSelect(bulkloader.Picker.oauthElementKey, me._lastSelection);
@@ -169,7 +172,7 @@ var PickerController = BaseController.extend({
             var keys = Object.keys(me._instances);
             for(var i = 0; i < keys.length; i++) {
                 angular.element(document.querySelector('#' + keys[i])).addClass('highlightingElement');
-                angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].name);
+                angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].element.name);
             }
         }
     },
@@ -403,6 +406,61 @@ var PickerController = BaseController.extend({
         //Refresh the instances from Server to get the latest and greatest
         me._maskLoader.show(me.$scope, 'Refreshing...');
         me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
+    },
+
+    getBranding: function(){
+        var me = this;
+        var branding = me._application.getBranding();
+
+        if(branding == false){
+            return;
+        }
+
+        var colorOneBkg = 'body .header-navigation,body .header-navigation #progressbar li .step-incomplete,#picker .picker-source,.md-sidenav-left';
+        var colorOneBorder = '#picker .services-selections > a.highlightingElement';
+
+        var colorTwoBkg = '#mapping-data-list-body #mapper-data-list-source,#mapper-header .dropdownmenu,#mapping-data-list-body ul,#mapping-data-list-body .ui-tree-heading,#picker.show-target .picker-target';
+
+        var accentOneBkg = 'body .header-navigation #progressbar li.completed .step-incomplete i.step-complete, body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after, body .header-navigation .ui.next.button, body .header-navigation .ui.next.button:hover';
+        var accentOneBorder = 'body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after';
+
+        var accentTwoBkg = 'md-radio-button.md-checked.md-checked-green .md-on, .dropdown-menu .btn-info.active,.angular-ui-tree-drag .angular-ui-tree-node .tree-node.angular-ui-tree-handle';
+        var accentTwoBorder = 'md-radio-button.md-checked.md-checked-green .md-off, .dropdown-menu .btn-info.active, #mapping-data-list-body li li.mapped div.tree-root-li-li-container:before, li li.angular-ui-tree-placeholder';
+        var accentTwoColor = '#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.source';
+
+
+        if(!me._cloudElementsUtils.isEmpty(branding.brandingbarcolor)){
+            me.addCSSRule(document.styleSheets[0], '#branding-bar', "background-color: #"+branding.brandingbarcolor);
+        }
+        if(!me._cloudElementsUtils.isEmpty(branding.color1)){
+            me.addCSSRule(document.styleSheets[0], colorOneBkg, "background-color: #"+branding.color1 +" !important");
+            me.addCSSRule(document.styleSheets[0], colorOneBorder, "border-color: #"+branding.color1 +" !important");
+        }
+        if(!me._cloudElementsUtils.isEmpty(branding.color2)){
+            me.addCSSRule(document.styleSheets[0], colorTwoBkg, "background-color: #"+branding.color2 +" !important");
+        }
+        if(!me._cloudElementsUtils.isEmpty(branding.accent1)){
+            me.addCSSRule(document.styleSheets[0], accentOneBkg, "background-color: #"+branding.accent1 +"!important");
+            me.addCSSRule(document.styleSheets[0], accentOneBorder, "border-color: #"+branding.accent1 +"!important");
+        }
+        if(!me._cloudElementsUtils.isEmpty(branding.accent2)){
+            me.addCSSRule(document.styleSheets[0], accentTwoBkg, "background-color: #"+branding.accent2 +" !important");
+            me.addCSSRule(document.styleSheets[0], accentTwoBorder, "border-color: #"+branding.accent2 +" !important");
+            me.addCSSRule(document.styleSheets[0], accentTwoColor, "color: #"+branding.accent2 +" !important");
+        }
+
+
+    },
+
+    addCSSRule: function(sheet, selector, rules) {
+        if("insertRule" in sheet) {
+            var index = sheet.rules.length;
+            sheet.insertRule(selector + "{" + rules + "}");
+        }
+        else if("addRule" in sheet) {
+            var index = sheet.rules.length;
+            sheet.addRule(selector, rules);
+        }
     }
 
 });

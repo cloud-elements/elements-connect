@@ -1,3 +1,4 @@
+<div class="header-navigation" ng-include="'branddingbar.html'"></div>
 <div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
      ng-include="'navigation.html'"></div>
 <!-- LIST SELECTION -->
@@ -5,7 +6,7 @@
 <!-- FIXED LIST HEADER & SELECTION -->
 <div id="mapper-header" class="sixteen">
   <div class="ui column padded grid">
-    <div class="column six wide padded" style="background-color: #333333; padding: .3rem 1rem;">
+    <div class="column six wide padded dropdownmenu">
       <div class="target-source-link-img">
         <span style="background-image: url({{sourceLogo}})"></span>
         <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;">
@@ -16,7 +17,7 @@
         <i class="long arrow right icon"></i>
       </div>
     </div>
-    <div class="column ten wide" style="padding: .3rem 1rem;">
+    <div class="column ten wide" style="padding: .3rem 1rem; background-color: rgba(0,0,0,.05);">
       <div class="target-source-link-img">
         <span style="background-image: url({{targetLogo}})"></span>
         <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;font-weight: bold; color: #333;">

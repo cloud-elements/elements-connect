@@ -102,6 +102,8 @@ var ScheduleController = BaseController.extend({
         me.$scope.columnWidth = 'sixteen';
         me.$scope.processtep = 'schedule';
 
+        me.$scope.branding = me._application.getBranding();
+
         me._seedSchedule();
     },
 

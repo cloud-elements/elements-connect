@@ -91,6 +91,7 @@ var MapperController = BaseController.extend({
         };
 
         me.$scope.collapsedAce = true;
+        me.$scope.branding = me._application.getBranding();
 
         me._seedMapper();
     },
