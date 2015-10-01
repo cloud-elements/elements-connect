@@ -342,7 +342,7 @@ body .header-navigation .ui.next.button:hover {
 .md-sidenav-left a{
     width: 100%;
     float: left;
-    background-color: rgba(0,0,0,.1);
+    background-color: rgba(0,0,0,.2);
     padding: 10px;
     text-align: center;
     color: #fff;
@@ -2370,7 +2370,7 @@ li li.angular-ui-tree-placeholder{
     right: 20px;
     left: 20px;
     height: 30px;
-    border-top: 1px solid #389dc8;
+    border-top: 1px solid #58bde8;
 }
 #mapper-data-list-target .ui-ace-tab .btn-tab {
     width: 200px;
@@ -2378,8 +2378,7 @@ li li.angular-ui-tree-placeholder{
     position: absolute;
     left: 50%;
     margin-left: -90px;
-    background: -webkit-linear-gradient(#58bde8, #389dc8);
-    background: linear-gradient(#58bde8, #389dc8);
+    background-color: #58bde8;
     border: none;
     display: inline-block;
     z-index: 0;
@@ -2407,7 +2406,7 @@ li li.angular-ui-tree-placeholder{
     height: auto;
     display: block;
     width: 100%;
-    background-color: #141414;
+    background-color: #389dc8;
 }
 #mapper-data-list-target .ace-editor-wrapper .ui-ace-container {
     -webkit-box-flex: 1;
@@ -2430,7 +2429,9 @@ li li.angular-ui-tree-placeholder{
 /***********************/
 
 .bulkloaderModalWindow .header{}
-
+.bulkloaderModalWindow .header .highlightElement{
+    color: #58bde8;
+}
 .bulkloaderModalWindow .content .h3{
     font-size: 1.5rem;
     padding: 0 1rem;
@@ -3135,4 +3136,9 @@ body .header-navigation #progressbar li.completed .step-incomplete, body .header
 #mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.source{
 }
 .angular-ui-tree-drag .angular-ui-tree-node .tree-node.angular-ui-tree-handle{
+}
+
+
+/*contrast color*/
+#picker.show-target .picker-source h2 .content, #picker.show-target .picker-source h2 .icon, #picker.show-target .picker-source h2 .sub.header{
 }
