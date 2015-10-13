@@ -265,7 +265,7 @@ var PickerController = BaseController.extend({
             }
             me._maskLoader.show(me.$scope, 'Loading...');
             if(me._application.isCAaaS()) {
-                me.$location.path('/workflows');
+                me.$location.path('/formulas');
             } else {
                 me.$location.path('/schedule');
             }

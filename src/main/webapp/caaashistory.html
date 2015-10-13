@@ -25,7 +25,7 @@
           <span ng-if="metadata.active == false" class="status">No Active</span>
         </div>
         <div class="job-body">
-          <img src="images/workflow.png" title="{{metadata.name}}" width="60">
+          <img src="images/formula.png" title="{{metadata.name}}" width="60">
           <p>
             <span style="font-size: .6em;">Instance Name:</span><br />
             <span><b>{{metadata.name}}</b></span>
@@ -44,7 +44,7 @@
     </div>
     <div class="executionslist">
       <div>
-        <h2 ng-show="noJobsMessage">Select a workflow instance to see more details</h2>
+        <h2 ng-show="noJobsMessage">Select a formula instance to see more details</h2>
         <h2 ng-show="showNoErrors" class="errorTitle">{{errorMessage}}</h2>
         <h2 ng-show="showErrors">Executions</h2>
       </div>
