@@ -167,7 +167,11 @@ var NavigationController = BaseController.extend({
                 }
             ]
         }
-        me.$scope.shownav = true;
+
+        // To Hide navbar style on first time load or reload
+        if(!me._cloudElementsUtils.isEmpty(me._picker._appname)){
+            me.$scope.shownav = true;
+        }
 
     },
 

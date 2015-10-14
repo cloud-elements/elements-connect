@@ -47,6 +47,7 @@ var FormulaController = BaseController.extend({
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.done = me.done.bind(this);
         me.$scope.formulas = [];
+        me.$scope.branding = me._application.getBranding();
 
         // load the formula templates
         me._maskLoader.show(me.$scope, 'Loading formula templates...');
