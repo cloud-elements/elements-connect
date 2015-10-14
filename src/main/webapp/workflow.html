@@ -1,3 +1,5 @@
+<div class="header-navigation" ng-include="'branddingbar.html'"></div>
+
 <!-- Top navigation header -->
 <div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
      ng-include="'navigation.html'"></div>
@@ -14,6 +16,7 @@
       </h2>
 
       <div class="services-selections">
+
         <a href ng-repeat="workflow in workflows"
            ng-click='onSelect(workflow)'
            id="{{workflow.name}}"

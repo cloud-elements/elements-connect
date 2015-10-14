@@ -13,7 +13,7 @@
     {{metadata.stepName}} <i class="icon info circle">
     <md-tooltip>{{metadata.description}}</md-tooltip></i>
   </script>
-  <div class="steptitle" ng-model="steps">
+  <div class="steptitle" ng-model="steps"  style="margin-left:20px;">
     <p class="stepname" ng-repeat="metadata in steps" ng-include="'steptitle.html'" ng-show="showStepTitle(metadata.step, processtep)"></p>
   </div>
 

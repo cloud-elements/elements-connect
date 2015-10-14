@@ -244,6 +244,7 @@ var CredentialsController = BaseController.extend({
             if (me._application.getEnv()){
                 chmln.setup({uid: me.$scope.login.email, email: me.$scope.login.email, subscription: me._picker.getSubscription()});
             }
+            me._picker.getBranding();
             me.$location.path('/');
         }
     },

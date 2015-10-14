@@ -42,9 +42,10 @@ var NavigationController = BaseController.extend({
     defineScope: function() {
         var me = this;
 
-        me.$scope.shownav = true;
+        me.$scope.shownav = false;
         me.$scope.onSignout = me.onSignout.bind(me);
         me.$scope.onHelp = me.onHelp.bind(me);
+        me.$scope.contactSupport = me.contactSupport.bind(me);
         me.$scope.openSideNav = me.openSideNav.bind(me);
         me.$scope.stepClass = me.stepClass.bind(me);
         me.$scope.showStepTitle = me.showStepTitle.bind(me);
@@ -77,12 +78,20 @@ var NavigationController = BaseController.extend({
         $event.preventDefault();
         $event.stopPropagation();
         me._help.openHelp();
+        me.$mdSidenav('left').close();
+    },
+
+    contactSupport: function($event) {
+        var me = this;
+        $event.preventDefault();
+        $event.stopPropagation();
+        window.open("http://support.cloud-elements.com/hc/en-us/requests/new?preview%5Btheme_id%5D=203658075&preview_as_role=end_user&use_theme_settings=false", "_blank");
+        me.$mdSidenav('left').close();
     },
 
     openSideNav: function(navID) {
         var me = this;
-        me.$mdSidenav(navID)
-            .toggle();
+        me.$mdSidenav(navID).toggle();
     },
 
     seedSteps: function() {
@@ -158,6 +167,8 @@ var NavigationController = BaseController.extend({
                 }
             ]
         }
+        me.$scope.shownav = true;
+
     },
 
     stepClass: function(step, stepName) {

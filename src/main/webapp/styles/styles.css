@@ -314,10 +314,10 @@ body .header-navigation #progressbar li.completed .step-incomplete i.step-comple
     color: #fff;
 }
 body .header-navigation p.stepname{
-    padding: 5px 20px;
+    padding: 5px 20px 5px 0;
     font-size: 1.3em;
     font-weight: bold;
-    min-width: 175px;
+    min-width: 155px;
     text-align: right;
 }
 body .header-navigation p.stepname i{
@@ -482,7 +482,7 @@ body .header-navigation .ui.next.button:hover {
 #picker .services-selections > a:before {
     content: attr(data-instance);
     display: block;
-    background: #3498db;
+    background-color: #3498db;
     margin: 0 auto;
     color: #fff;
     padding: 5px 0;
@@ -2427,8 +2427,13 @@ li li.angular-ui-tree-placeholder{
 /***********************/
 /* END MAPPER          */
 /***********************/
-
-.bulkloaderModalWindow .header{}
+.bulkloaderModalWindow .ui.basic.modal > .close {
+    right: 0;
+}
+.bulkloaderModalWindow .header{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
 .bulkloaderModalWindow .header .highlightElement{
     color: #58bde8;
 }
