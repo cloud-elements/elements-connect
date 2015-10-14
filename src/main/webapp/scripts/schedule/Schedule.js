@@ -206,7 +206,10 @@ var Schedule = Class.extend({
         }
 
         targetConfiguration.parameters = parameters;
-        targetConfiguration.elementKey = targetInstance.element.key;
+        if(me._cloudElementsUtils.isEmpty(targetInstance) == false) {
+            targetConfiguration.elementKey = targetInstance.element.key;
+        }
+
         targetConfiguration.objectName = objectName;
 
         job.targetConfiguration = targetConfiguration;
@@ -462,7 +465,10 @@ var Schedule = Class.extend({
     scheduleJobs: function(selectedInstance, targetInstance, jobs, cronVal) {
         var me = this;
 
-        var sequence = me._picker.getTargetElementBulkSequence(targetInstance.element.key);
+        var sequence = null;
+        if(!me._cloudElementsUtils.isEmpty(targetInstance)) {
+            sequence = me._picker.getTargetElementBulkSequence(targetInstance.element.key);
+        }
         var sourceSequence = me._picker.getSourceElementBulkSequence(selectedInstance.element.key);
 
         if(me._cloudElementsUtils.isEmpty(sequence) && me._cloudElementsUtils.isEmpty(sourceSequence)) {
