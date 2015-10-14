@@ -578,7 +578,7 @@ var MapperController = BaseController.extend({
 
         me._maskLoader.hide();
         if(me._application.isCAaaS()) {
-            me.$location.path('/workflows');
+            me.$location.path('/formulas');
         } else {
             me.$location.path('/schedule');
         }

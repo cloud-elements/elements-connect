@@ -254,11 +254,11 @@ var ElementsService = Class.extend({
     },
 
     /**
-     * Loads the workflow templates that are configured for this user's CE account
-     * @returns {*} The list of workflow templates or an empty list, if there are none
+     * Loads the formula templates that are configured for this user's CE account
+     * @returns {*} The list of formula templates or an empty list, if there are none
      */
-    loadWorkflowTemplates: function() {
-        var url = this._application.environment.elementsUrl + '/workflows';
+    loadFormulaTemplates: function() {
+        var url = this._application.environment.elementsUrl + '/formulas';
         return this._httpGet(url, this._getHeaders());
     },
 
@@ -423,7 +423,7 @@ var ElementsService = Class.extend({
             parameters.jobId = jobId;
         }
 
-        var url = this._application.environment.elementsUrl + '/workflows/instances';
+        var url = this._application.environment.elementsUrl + '/formulas/instances';
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
@@ -434,7 +434,7 @@ var ElementsService = Class.extend({
         return this._httpGet(url, this._getHeaders(elementInstance.token));
     },
 
-    getWorkflowInstanceExecutions: function(workflowId, instanceId, jobId) {
+    getFormulaInstanceExecutions: function(formulaId, instanceId, jobId) {
 
         var parameters = {
             'page': 1,
@@ -445,11 +445,11 @@ var ElementsService = Class.extend({
             parameters.jobId = jobId;
         }
 
-        var url = this._application.environment.elementsUrl + '/workflows/'+ workflowId +'/instances/'+ instanceId +'/executions';
+        var url = this._application.environment.elementsUrl + '/formulas/'+ formulaId +'/instances/'+ instanceId +'/executions';
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
-    getInstanceExecutionValues: function(workflowId, instanceId, executionId, jobId) {
+    getInstanceExecutionValues: function(formulaId, instanceId, executionId, jobId) {
 
         var parameters = {
             'page': 1,
@@ -460,7 +460,7 @@ var ElementsService = Class.extend({
             parameters.jobId = jobId;
         }
 
-        var url = this._application.environment.elementsUrl + '/workflows/'+ workflowId +'/instances/'+ instanceId +'/executions/'+executionId;
+        var url = this._application.environment.elementsUrl + '/formulas/'+ formulaId +'/instances/'+ instanceId +'/executions/'+executionId;
         return this._httpGet(url, this._getHeaders(), parameters);
     },
 
@@ -470,7 +470,7 @@ var ElementsService = Class.extend({
      */
     scheduleJob: function(elementInstance, job, cronVal) {
 
-        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
+        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/formulas';
 
         console.log(JSON.stringify(job));
         var headers = this._getHeaders(elementInstance.token);
@@ -481,37 +481,37 @@ var ElementsService = Class.extend({
         return this._httpPost(url, headers, job);
     },
 
-    createWorkflowInstance: function(workflowId, name, configuration) {
+    createFormulaInstance: function(formulaId, name, configuration) {
         var me = this;
-        console.log('Attempting to create an instance of workflow: ' + workflowId + ' with name: ' + name);
-        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
-        url = url.replace('{id}', workflowId);
+        console.log('Attempting to create an instance of formula: ' + formulaId + ' with name: ' + name);
+        var url = me._application.environment.elementsUrl + '/formulas/{id}/instances';
+        url = url.replace('{id}', formulaId);
 
-        var workflowInstance = {
+        var formulaInstance = {
             'name': name,
             'configuration': configuration
         };
 
         var headers = me._getHeaders();
-        return me._httpPost(url, headers, workflowInstance);
+        return me._httpPost(url, headers, formulaInstance);
     },
 
-    deleteWorkflowInstance: function(workflowId, workflowInstanceId) {
+    deleteFormulaInstance: function(formulaId, formulaInstanceId) {
         var me = this;
-        console.log('Attempting to delete workflow instance ' + workflowInstanceId);
-        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances/{workflowInstanceId}';
-        url = url.replace('{id}', workflowId);
-        url = url.replace('{workflowInstanceId}', workflowInstanceId);
+        console.log('Attempting to delete formula instance ' + formulaInstanceId);
+        var url = me._application.environment.elementsUrl + '/formulas/{id}/instances/{formulaInstanceId}';
+        url = url.replace('{id}', formulaId);
+        url = url.replace('{formulaInstanceId}', formulaInstanceId);
 
         var headers = me._getHeaders();
         return me._httpDelete(url, headers);
     },
 
-    findWorkflowInstances: function(workflowId) {
+    findFormulaInstances: function(formulaId) {
         var me = this;
-        console.log('Attempting to find instances of workflow: ' + workflowId);
-        var url = me._application.environment.elementsUrl + '/workflows/{id}/instances';
-        url = url.replace('{id}', workflowId);
+        console.log('Attempting to find instances of formula: ' + formulaId);
+        var url = me._application.environment.elementsUrl + '/formulas/{id}/instances';
+        url = url.replace('{id}', formulaId);
 
         var headers = me._getHeaders();
         return me._httpGet(url, headers);

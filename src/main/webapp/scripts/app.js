@@ -75,8 +75,8 @@ bulkloaderApp.config(function($routeProvider) {
             templateUrl: 'landingpages/elementloader.html',
             controller: 'LandingController'
         })
-        .when('/workflows', {
-            templateUrl: 'workflow.html',
-            controller: 'WorkflowController'
+        .when('/formulas', {
+            templateUrl: 'formula.html',
+            controller: 'FormulaController'
         });
 });
