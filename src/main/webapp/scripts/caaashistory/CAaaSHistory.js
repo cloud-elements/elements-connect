@@ -41,9 +41,9 @@ var CAaaSHistory = Class.extend({
 
     },
 
-    getInstanceExecution: function(workflowId, instanceId){
+    getInstanceExecution: function(formulaId, instanceId){
         var me = this;
-        return me._elementsService.getWorkflowInstanceExecutions(workflowId, instanceId).then(
+        return me._elementsService.getFormulaInstanceExecutions(formulaId, instanceId).then(
             me._handleGetInstanceExecution.bind(me),
             me._handleGetInstanceExecutionFailed.bind(me));
     },
@@ -57,9 +57,9 @@ var CAaaSHistory = Class.extend({
         var me = this;
     },
 
-    getExecutionValues: function(workflowId, instanceId, executionId){
+    getExecutionValues: function(formulaId, instanceId, executionId){
         var me = this;
-        return me._elementsService.getInstanceExecutionValues(workflowId, instanceId, executionId).then(
+        return me._elementsService.getInstanceExecutionValues(formulaId, instanceId, executionId).then(
             me._handleGeExecutionValues.bind(me),
             me._handleGeExecutionValuesFailed.bind(me));
     },

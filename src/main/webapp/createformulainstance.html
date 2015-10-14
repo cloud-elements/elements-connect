@@ -3,12 +3,12 @@
   <i class="close icon" ng-click="cancel()"></i>
 
   <div class="header">
-    Configure the <span class="highlightElement">{{workflowName}}</span> workflow
+    Configure the <span class="highlightElement">{{formulaName}}</span> formula
   </div>
   <div class="content">
-    <div ng-repeat="config in workflowConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;">
+    <div ng-repeat="config in formulaConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;">
       <p>{{config.name}}</p>
-      <input type="text" name="{{config.key}}" ng-model="workflowInstanceData[config.key]" required>
+      <input type="text" name="{{config.key}}" ng-model="formulaInstanceData[config.key]" required>
     </div>
   </div>
   <div class="actions">

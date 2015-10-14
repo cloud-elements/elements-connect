@@ -54,7 +54,7 @@ var NavigationController = BaseController.extend({
         me.$scope.nextButtonText = 'Save and Schedule Job';
         // change the name of the 'Next' button text if this is for the CAaaS
         if(me._application.isCAaaS()) {
-            me.$scope.nextButtonText = 'Save and Configure Workflow';
+            me.$scope.nextButtonText = 'Save and Configure Formula';
         }
 
         me.seedSteps();
@@ -107,7 +107,7 @@ var NavigationController = BaseController.extend({
                 {
                     step: '2',
                     stepName: 'Configure it',
-                    description: 'choose the workflow template and configure it.'
+                    description: 'choose the formula template and configure it.'
                 }
             ]
         }
@@ -126,7 +126,7 @@ var NavigationController = BaseController.extend({
                 {
                     step: '3',
                     stepName: 'Configure it',
-                    description: 'choose the workflow template and configure it.'
+                    description: 'choose the formula template and configure it.'
                 }
             ]
         }
@@ -174,17 +174,17 @@ var NavigationController = BaseController.extend({
     stepClass: function(step, stepName) {
         var me = this;
 
-        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'workflow')) {
+        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'formula')) {
             return 'active'
         }
-        else if((step == '1' && stepName == 'mapper') || (step == '1' && stepName == 'schedule') || (step == '2' && stepName == 'schedule') || (step == '1' && stepName == 'datalist') || (step == '1' && stepName == 'workflow') || (step == '2' && stepName == 'workflow')) {
+        else if((step == '1' && stepName == 'mapper') || (step == '1' && stepName == 'schedule') || (step == '2' && stepName == 'schedule') || (step == '1' && stepName == 'datalist') || (step == '1' && stepName == 'formula') || (step == '2' && stepName == 'formula')) {
             return 'completed'
         }
 
     },
 
     showStepTitle: function(step, stepName) {
-        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'workflow')) {
+        if((step == '1' && stepName == 'picker') || (step == '2' && stepName == 'mapper') || (step == '2' && stepName == 'datalist') || (step == '3' && stepName == 'schedule') || (step == '3' && stepName == 'formula')) {
             return true
         }
     },

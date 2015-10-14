@@ -50,7 +50,6 @@ var WorkflowController = BaseController.extend({
 
         // load the workflow templates
         me._maskLoader.show(me.$scope, 'Loading workflow templates...');
-        me.$scope.branding = me._application.getBranding();
         me._loadWorkflowData();
     },
 

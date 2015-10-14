@@ -117,7 +117,7 @@ var CAaaSHistoryController = BaseController.extend({
 
 
         //call the API for execution error records
-        return me._history.getInstanceExecution(me.$scope.selectedJob.workflow.id, me.$scope.selectedJob.id).then(me._handleGetJobExecutions.bind(me));
+        return me._history.getInstanceExecution(me.$scope.selectedJob.formula.id, me.$scope.selectedJob.id).then(me._handleGetJobExecutions.bind(me));
     },
 
     _handleGetJobExecutions: function(results) {
@@ -133,7 +133,7 @@ var CAaaSHistoryController = BaseController.extend({
 
     selectExecution: function(row){
         var me = this;
-        return me._history.getExecutionValues(me.$scope.selectedJob.workflow.id, me.$scope.selectedJob.id, row.entity.id).then(me._handleGetJobExecutionValue.bind(me));
+        return me._history.getExecutionValues(me.$scope.selectedJob.formula.id, me.$scope.selectedJob.id, row.entity.id).then(me._handleGetJobExecutionValue.bind(me));
     },
 
     _handleGetJobExecutionValue: function(results) {
