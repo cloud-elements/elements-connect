@@ -56,6 +56,8 @@ var CredentialsController = BaseController.extend({
         me.$scope.hsanalytics = me._application.isHS();
 
         me.changeCredentialView(me._credentials.credentialsView);
+        me.credentialsBranding(me._application.isST());
+
     },
 
     defineListeners: function() {
@@ -257,6 +259,19 @@ var CredentialsController = BaseController.extend({
     _onSignupLanding: function(event, error) {
         var me = this;
         me.changeCredentialView('signup');
+    },
+
+    credentialsBranding: function(isST){
+        var me = this;
+        if(isST){
+            me._picker.addCSSRule(document.styleSheets[0], '#credentials', "background-color: #777 !important;");
+            me._picker.addCSSRule(document.styleSheets[0], '#credentials .credentials-logo', "background-image: url('images/sailthru-logo.png') !important; width: 100% !important; height: 70px !important; display: block !important; background-repeat: no-repeat !important; background-position: center center !important; -webkit-background-size: contain !important; -moz-background-size: contain !important; -o-background-size: contain !important; background-size: contain !important;");
+            me._picker.addCSSRule(document.styleSheets[0], '#credentials .credentials-container p > a', "color: #edaf4f !important;");
+            me._picker.addCSSRule(document.styleSheets[0], '#credentials .buttons .ui.inverted.green.basic.button', "background: #00ccec !important; background-clip: padding-box !important; box-shadow: 0 4px #0399B1 !important; text-transform: uppercase !important; font-weight: bold !important;");
+            me._picker.addCSSRule(document.styleSheets[0], '#credentials .buttons .ui.inverted.green.basic.button:hover', "box-shadow: 0 3px #0399B1 !important; top: 2px !important; color: #fff !important;");
+            me._picker.addCSSRule(document.styleSheets[0], '#credentials .buttons .ui.inverted.green.basic.button:active', "box-shadow: 0 0 #0399B1 !important; top: 6px !important; outline: none !important; color: #fff !important;");
+        }
+
     }
 
 });

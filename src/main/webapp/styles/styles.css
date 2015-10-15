@@ -150,6 +150,9 @@ md-tooltip span{
     top: 0;
     bottom: 0;
 }
+.credentials-logo{
+    display: none;
+}
 .credentials-container{
     width: 30%;
     min-width: 250px;
@@ -3147,3 +3150,26 @@ body .header-navigation #progressbar li.completed .step-incomplete, body .header
 /*contrast color*/
 #picker.show-target .picker-source h2 .content, #picker.show-target .picker-source h2 .icon, #picker.show-target .picker-source h2 .sub.header{
 }
+
+
+/*****************************/
+/* Credentials Customization */
+/*****************************/
+
+#credentials{
+}
+#credentials .credentials-logo{
+}
+#credentials .credentials-container p > a{
+}
+
+#credentials .buttons .ui.inverted.green.basic.button{
+
+}
+#credentials .buttons .ui.inverted.green.basic.button:hover{
+
+}
+#credentials .buttons .ui.inverted.green.basic.button:active{
+
+}
+

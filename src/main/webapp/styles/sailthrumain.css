@@ -1,0 +1,488 @@
+/*********************************
+GENERAL
+**********************************/
+
+body {
+    font-family: 'Lato', sans-serif;
+    overflow: auto;
+    font-weight: bold;
+}
+
+body .page {
+    display: block;
+    top: inherit;
+    bottom: inherit;
+    left: inherit;
+    right: inherit;
+    position: relative;
+    background-color: #fff;
+}
+
+#wrapper {
+    max-width: 940px;
+    margin: 0 auto;
+    background-color: #fff;
+    width: 100%;
+}
+a {
+    text-decoration: none;
+}
+img {
+    max-width: 100%;
+}
+/*********************************
+HEADING
+**********************************/
+
+header {
+    margin: 0 0 20px 0;
+    padding: 5em 0;
+    width: 100%;
+}
+#logo {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 25px;
+    padding-bottom: 20px;
+}
+h1 {
+    margin: 15px 0;
+    font-size: 1.75em;
+    font-weight: normal;
+    line-height: 0.8em;
+    width: 100%;
+}
+h2 {
+    margin: 15px 0;
+    font-size: 1.50em;
+    font-weight: normal;
+    line-height: 0.8em;
+    width: 100%;
+}
+.title {
+    text-align: center;
+    margin: 40px 0;
+}
+/*********************************
+FOOTER
+**********************************/
+
+footer {
+    font-size: 0.75em;
+    text-align: center;
+    clear: both;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #ccc;
+    background-color: #252525;
+}
+/*********************************
+INDEX: BOXES and Buttons;
+**********************************/
+
+/***THREE COLUMN LAYOUT STYLES****/
+
+#gallery {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+#gallery li {
+    float: left;
+    width: 45%;
+    margin: 2.5%;
+    color: #bdc3c7;
+}
+#gallery li p {
+    margin: 0;
+    padding: 5%;
+    color: #bdc3c7;
+    text-align: center;
+}
+#gallery li {
+    width: 28.3333%;
+}
+/***CLOUD SERVICES LOGO AND TEXT****/
+
+.element-container {
+    width: 100%;
+    text-align: center;
+    color: #bdc3c7;
+    clear: both;
+    padding-top: 50px;
+}
+.element-headline {
+    width: 100%;
+    text-align: center;
+    color: #999;
+    clear: both;
+    padding-bottom: 20px;
+}
+/***TWO COLUMN LAYOUT STYLES****/
+
+/***SCREEN SHOTS SECTION****/
+
+.screenshot-headline {
+    width: 100%;
+    text-align: center;
+    color: #999;
+    clear: both;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.screenshot-container {
+    width: 100%;
+    float: left;
+}
+.screenshot-container ul{
+    width: 100%;
+    float: left;
+    padding: 0 40px;
+}
+.screenshot-container li {
+    list-style: none;
+    width: 100%;
+    float: left;
+}
+
+.screenshot-container li p {
+    display: inline-block;
+    float: left;
+    width: 45%;
+    padding-right: 40px;
+    color: #999;
+}
+
+.screenshot-container li:nth-child(even) p {
+    display: inline-block;
+    float: right;
+    width: 45%;
+    padding-left: 40px;
+}
+
+.screenshot-container li img {
+    display: inline-block;
+    width: 47.5%;
+    float: right;
+}
+
+.screenshot-container li:nth-child(even) img {
+    display: inline-block;
+    width: 47.5%;
+}
+
+#contact-logo {
+    width: 50%;
+    float: left;
+    padding-top: 20px;
+    clear: both;
+}
+
+#contact-info {
+    width: 50%;
+    float: right;
+    padding-top: 20px;
+}
+
+#contact-logo li {
+    list-style: none;
+}
+
+#contact-info li {
+    list-style: none;
+}
+
+/* Hubspot form style */
+
+#contact-info-form .hs-form.stacked .actions{
+    padding: 0;
+    margin: 0;
+}
+
+/***TABLE STYLES****/
+
+table {
+    width: 100%;
+}
+caption {
+    font-size: 1.6em;
+    font-weight: 400;
+    padding: 10px 0;
+}
+thead th {
+    font-weight: 400;
+    background: #ED7023;
+    color: #FFF;
+}
+tr {
+    background: #f4f7f8;
+    border-bottom: 1px solid #FFF;
+    margin-bottom: 5px;
+}
+th,
+td {
+    text-align: center;
+    padding: 20px 0;
+    font-weight: 300;
+    position: relative;
+}
+.table-row-hover {} .table-row-hover i {
+                        font-size: 22px;
+                    }
+.table-row-hover table.hovering td {
+    opacity: .7;
+}
+.table-row-hover table.hovering tr.hover td {
+    opacity: 1;
+    cursor: pointer;
+}
+/***TABLE TOOLTIPS STYLES****/
+
+
+.headline {
+    width: 100%;
+    text-align: center;
+    color: #999;
+    clear: both;
+}
+.tooltips:after {
+    font-size: .5em;
+    content: attr(data-title);
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 50px;
+    margin-left: -40%;
+    display: block;
+    width:150px;
+    cursor: pointer;
+    -webkit-transition: all 300ms ease-in;
+    transition: all 300ms ease-in;
+}
+.tooltips.hover:after {
+    font-size: .5em;
+    content: attr(data-title);
+    opacity: 1;
+    position: absolute;
+    top: -43px;
+    left: 50%;
+    margin-left: -35%;
+    display: block;
+    background-color: #fff;
+    padding: 6px;
+    border-radius: 11px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    cursor: pointer;
+}
+.tooltips:before {
+    font-size: .5em;
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    margin-left: -1px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #ffffff;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    z-index: 2;
+    opacity:0;
+    cursor: pointer;
+
+    -webkit-transition: all 300ms ease-in;
+    transition: all 300ms ease-in;
+}
+.tooltips.hover:before {
+    font-size: .5em;
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    margin-left: -1px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #ffffff;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    z-index: 2;
+    opacity:1;
+    cursor: pointer;
+
+}
+/***BUTTON HEADER STYLES****/
+
+.buttonHolder {
+    text-align: center;
+    padding: 30px;
+}
+
+.btn-credentials {
+    background-color: #ffffff;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #00cced;
+    font-family: "Open Sans";
+    font-size: 16px;
+    padding: 10px 60px;
+    text-decoration: none;
+    border: none;
+    margin: 20px;
+}
+.btn-credentials:hover {
+    color: #edaf4f;
+}
+.btn-credentials:active {
+    position: relative;
+    top: 1px;
+    color: #edaf4f;
+}
+.btn-credentials a {
+    color: #edaf4f
+}
+
+
+/***POWERED BY SECTION STYLES****/
+
+section p {
+    text-align: center;
+}
+section img {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    padding-bottom: 20px;
+}
+/*********************************
+COLORS
+**********************************/
+
+/* site body */
+
+body {
+    background-color: #fff;
+    color: #999;
+}
+/* blue header */
+
+header {
+    background: #00cced;
+}
+/* logo text */
+
+h1 {
+    color: #fff;
+}
+h2 {
+    color: #fff;
+}
+/* links */
+
+a {
+    color: #5DBEE6;
+}
+/* nav link */
+
+nav a,
+nav a:visited {
+    color: #3A8B65;
+}
+/* selected nav link */
+
+nav a.selected,
+nav a:hover {
+    color: #4894B3;
+}
+/*********************************
+MEDIA QUERIES
+**********************************/
+
+@media (max-width: 644px) {
+    #wrapper {
+        max-width: 644px;
+        margin: 0 auto;
+        padding: 0 5%;
+    }
+    header {
+        margin: 0 0 20px 0;
+        padding: 5px 0 0 0;
+        width: 100%;
+        /*    height: 500px;*/
+        text-align: center;
+    }
+    #logo {
+        width: 150px;
+    }
+    h1 {
+        font-size: 1.1em;
+    }
+    .buttonHolder {
+        text-align: center;
+    }
+    .btn-sign-up {
+        width: 150px;
+    }
+    .btn-log-in {
+        width: 150px;
+    }
+    #gallery {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    #gallery li {
+        float: left;
+        width: 100%;
+        margin: 2.5%;
+        color: #bdc3c7;
+    }
+    #gallery li p {
+        margin: 0;
+        padding: 5%;
+        color: #bdc3c7;
+        text-align: center;
+    }
+    #gallery li {
+        width: 100%;
+    }
+    #gallery img {
+        width: 60%;
+    }
+    #contact-logo {
+        width: 100%;
+        float: left;
+        padding-top: 20px;
+        text-align: center;
+    }
+    #contact-info {
+        width: 100%;
+        float: right;
+        padding-top: 20px;
+        text-align: center;
+    }
+    #contact-logo li {
+        list-style: none;
+    }
+    #contact-info li {
+        list-style: none;
+    }
+}
+@media (max-width: 529px) {
+    .btn-sign-up {
+        display: block;
+        width: 90px;
+        margin-left: 68px;
+    }
+    .btn-log-in {
+        display: block;
+        width: 80px;
+        margin-left: 75px;
+        margin-top: 20px;
+    }
+}

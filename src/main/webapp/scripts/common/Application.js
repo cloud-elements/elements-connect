@@ -180,19 +180,30 @@ var Application = Class.extend({
         me.environment.userId = userId;
     },
 
-    //This is very dirty way as there is no other option of directing only hubspot to a different landing page
+    //This is very dirty way as there is no other option of directing only hubspot & sailthru to a different landing page
     getLandingPage: function() {
         var me = this;
         if(window.location.href.indexOf('hubspot') > -1) {
             return '/hubspotelementloader';
         }
-
+//        if(window.location.href.indexOf('sailthru') > -1) {
+//            return '/sailthruelementloader';
+//        }
         return '/credentials';
     },
     //This is very dirty way as there is no other option of adding hubspot only analytics
     isHS: function() {
         var me = this;
         if(window.location.href.indexOf('hubspot') > -1) {
+            return true;
+        }
+
+        return false;
+    },
+    //This is very dirty way as there is no other option of adding Sailthru only credentials branding
+    isST: function() {
+        var me = this;
+        if(window.location.href.indexOf('sailthru') > -1) {
             return true;
         }
 
