@@ -269,10 +269,38 @@ var FormulaController = BaseController.extend({
             var formulaAppConfig = me._application.configuration.formulas[i];
 
             // look through each formula template we loaded and we have a formula template with the name in the formula app config, then include it
-            for(var j = 0; j < formulaTemplates.length; j++) {
-                var formulaTemplate = formulaTemplates[j];
-                if(formulaAppConfig === formulaTemplate.name) {
-                    filteredFormulaTemplates.push(formulaTemplate);
+            if (typeof formulaAppConfig === 'string') {
+                for(var j = 0; j < formulaTemplates.length; j++) {
+                    var formulaTemplate = formulaTemplates[j];
+                    if(formulaAppConfig === formulaTemplate.name) {
+                        filteredFormulaTemplates.push(formulaTemplate);
+                    }
+                }
+            }
+            else {
+                for(var j = 0; j < formulaTemplates.length; j++) {
+                    var formulaTemplate = formulaTemplates[j];
+                    if(formulaAppConfig.name === formulaTemplate.name) {
+                        if (formulaAppConfig.sourceKey && formulaAppConfig.targetKey) {
+                            if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key &&
+                                formulaAppConfig.targetKey === me._picker._target.elementKey) {
+                                filteredFormulaTemplates.push(formulaTemplate);
+                            }
+                        }
+                        else if (formulaAppConfig.sourceKey) {
+                            if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key) {
+                                filteredFormulaTemplates.push(formulaTemplate);
+                            }
+                        }
+                        else if (formulaAppConfig.targetKey) {
+                            if (formulaAppConfig.targetKey === me._picker._target.elementKey) {
+                                filteredFormulaTemplates.push(formulaTemplate);
+                            }
+                        }
+                        else {
+                            filteredFormulaTemplates.push(formulaTemplate);
+                        }
+                    }
                 }
             }
         }
