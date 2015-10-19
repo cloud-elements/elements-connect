@@ -259,6 +259,28 @@ var FormulaController = BaseController.extend({
         }
     },
 
+    /*
+    When configuring formulas, the code expects a list of either objects or strings.  If strings are provided, then
+    they represent the names of the formulas that should be displayed for all cases.  An example is shown below:
+
+        "formulas": ["formula1","formula2"]
+
+    Otherwise, they should be objects with a required property of "name" and optional properties of "sourceKey" and
+    "targetKey".  To limit a formula to a specific target, provide the targetKey and to limit the workflow to a
+    specific source, provide the sourceKey.  "name" is the name of a formula.  An example is shown below:
+
+        "formulas:" [
+            {
+                "name": "formula1",
+                "sourceKey": "hubspot"
+            },
+            {
+                "name": "formula2",
+                "targetKey": "marketo"
+            }
+        ]
+     */
+    
     _filterFormulaTemplates: function(formulaTemplates) {
         var me = this;
 
