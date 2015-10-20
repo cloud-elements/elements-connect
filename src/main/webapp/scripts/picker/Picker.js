@@ -473,6 +473,8 @@ var Picker = Class.extend({
 
     getBranding: function(){
         var me = this;
+        var stylesheet = document.getElementById('customestyle');
+            stylesheet = stylesheet.sheet;
         var branding = me._application.getBranding();
 
         if(branding == false){
@@ -496,29 +498,29 @@ var Picker = Class.extend({
 
 
         if(!me._cloudElementsUtils.isEmpty(branding.brandingbarcolor)){
-            me.addCSSRule(document.styleSheets[0], '#branding-bar', "background-color: #"+branding.brandingbarcolor);
+            me.addCSSRule(stylesheet, '#branding-bar', "background-color: #"+branding.brandingbarcolor);
         }
         if(!me._cloudElementsUtils.isEmpty(branding.color1)){
-            me.addCSSRule(document.styleSheets[0], colorOneBkg, "background-color: #"+branding.color1 +" !important");
-            me.addCSSRule(document.styleSheets[0], colorOneBorder, "border-color: #"+branding.color1 +" !important");
+            me.addCSSRule(stylesheet, colorOneBkg, "background-color: #"+branding.color1 +" !important");
+            me.addCSSRule(stylesheet, colorOneBorder, "border-color: #"+branding.color1 +" !important");
 
             var contrastColor = branding.color1.charAt(2)
             if(contrastColor == 'a' || contrastColor == 'b' || contrastColor == 'c' || contrastColor == 'd' || contrastColor == 'e' || contrastColor == 'f'){
-                me.addCSSRule(document.styleSheets[0], colorContrast, "color: #444444 !important");
+                me.addCSSRule(stylesheet, colorContrast, "color: #444444 !important");
             }
         }
         if(!me._cloudElementsUtils.isEmpty(branding.color2)){
-            me.addCSSRule(document.styleSheets[0], colorTwoBkg, "background-color: #"+branding.color2 +" !important");
+            me.addCSSRule(stylesheet, colorTwoBkg, "background-color: #"+branding.color2 +" !important");
         }
         if(!me._cloudElementsUtils.isEmpty(branding.accent1)){
-            me.addCSSRule(document.styleSheets[0], accentOneBkg, "background-color: #"+branding.accent1 +"!important");
-            me.addCSSRule(document.styleSheets[0], accentOneBorder, "border-color: #"+branding.accent1 +"!important");
-            me.addCSSRule(document.styleSheets[0], accentOneColor, "color: #"+branding.accent1 +"!important");
+            me.addCSSRule(stylesheet, accentOneBkg, "background-color: #"+branding.accent1 +"!important");
+            me.addCSSRule(stylesheet, accentOneBorder, "border-color: #"+branding.accent1 +"!important");
+            me.addCSSRule(stylesheet, accentOneColor, "color: #"+branding.accent1 +"!important");
         }
         if(!me._cloudElementsUtils.isEmpty(branding.accent2)){
-            me.addCSSRule(document.styleSheets[0], accentTwoBkg, "background-color: #"+branding.accent2 +" !important");
-            me.addCSSRule(document.styleSheets[0], accentTwoBorder, "border-color: #"+branding.accent2 +" !important");
-            me.addCSSRule(document.styleSheets[0], accentTwoColor, "color: #"+branding.accent2 +" !important");
+            me.addCSSRule(stylesheet, accentTwoBkg, "background-color: #"+branding.accent2 +" !important");
+            me.addCSSRule(stylesheet, accentTwoBorder, "border-color: #"+branding.accent2 +" !important");
+            me.addCSSRule(stylesheet, accentTwoColor, "color: #"+branding.accent2 +" !important");
         }
 
         return true;
@@ -526,11 +528,11 @@ var Picker = Class.extend({
 
     addCSSRule: function(sheet, selector, rules) {
         if("insertRule" in sheet) {
-            var index = sheet.rules.length;
-            sheet.insertRule(selector + "{" + rules + "}");
+            var index = sheet.cssRules.length;
+            sheet.insertRule(selector + "{" + rules + "}", 0);
         }
         else if("addRule" in sheet) {
-            var index = sheet.rules.length;
+            var index = sheet.cssRules.length;
             sheet.addRule(selector, rules);
         }
     }
