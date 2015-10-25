@@ -470,7 +470,7 @@ var ElementsService = Class.extend({
      */
     scheduleJob: function(elementInstance, job, cronVal) {
 
-        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/formulas';
+        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
         console.log(JSON.stringify(job));
         var headers = this._getHeaders(elementInstance.token);
