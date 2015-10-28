@@ -6,9 +6,26 @@
     Configure the <span class="highlightElement">{{formulaName}}</span> formula
   </div>
   <div class="content">
-    <div ng-repeat="config in formulaConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;">
+    <div ng-repeat="config in formulaConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;"
+         ng-hide="{{config.hidden}}">
+
       <p>{{config.name}}</p>
-      <input type="text" name="{{config.key}}" ng-model="formulaInstanceData[config.key]" required>
+
+      <input type="text" name="{{config.key}}" ng-model="formulaInstanceData[config.key]" required
+             ng-if="!config.properties">
+
+      <ui-select ng-model="config.properties.options.selected" theme="select2" ng-disabled="disabled"
+                 ng-if="config.properties && config.properties.type == 'combo'" id="formulaInstanceDropdown">
+        <ui-select-match placeholder="Select ...">{{$select.selected.title}}</ui-select-match>
+        <ui-select-choices
+                repeat="option in config.properties.options | filter: {title: $select.search}">
+          <div ng-bind-html="option.title | highlight: $select.search"></div>
+          <small>
+            id: {{option.id}}
+          </small>
+        </ui-select-choices>
+      </ui-select>
+
     </div>
   </div>
   <div class="actions">

@@ -10,6 +10,7 @@ var FormulaInstance = Class.extend({
     _mdDialog: null,
     _formula: null,
     formulaTemplate: null,
+    _picker: null,
 
     _handleLoadError: function(error) {
         // ignore as these can be ignored or 404's
@@ -45,6 +46,8 @@ var FormulaInstance = Class.extend({
             me._formula.handleOnCreateFormulaInstance.bind(me._formula, me.formulaTemplate.name),
             me._formula.handleOnCreateFormulaInstanceError.bind(me._formula));
     }
+
+
 });
 
 /**
@@ -59,10 +62,11 @@ var FormulaInstance = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Formula', 'Notifications', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Formula, Notifications, $modal, $mdDialog) {
+        $get: ['CloudElementsUtils', 'ElementsService', 'Picker', 'Formula', 'Notifications', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Picker, Formula, Notifications, $modal, $mdDialog) {
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
+            this.instance._picker = Picker;
             this.instance._formula = Formula;
             this.instance.$modal = $modal;
             this.instance.$mdDialog = $mdDialog;

@@ -157,6 +157,22 @@ var Application = Class.extend({
         return true;
     },
 
+    isMultipleInstance: function() {
+        var me = this;
+        if(me.configuration.display.multipleInstance) {
+            return true;
+        }
+        return false;
+    },
+
+    isInstanceTitle: function() {
+        var me = this;
+        if(me.configuration.display.multipleInstance &&
+            !me._cloudElementsUtils.isEmpty(me.configuration.display.formulaInstanceName)) {
+            return me.configuration.display.formulaInstanceName;
+        }
+        return 'instances';
+    },
     ignoreMapper: function() {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me.configuration)) {

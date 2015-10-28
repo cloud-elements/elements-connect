@@ -5,7 +5,7 @@
      ng-include="'navigation.html'"></div>
 
 <!-- Formula template picker -->
-<section id="picker" class="show-target dark-background">
+<section id="formula-picker" class="show-target dark-background">
   <div class="picker-source">
     <div class="vertical-align" style="width: 100%;">
       <h2 class="ui icon header">
@@ -18,7 +18,7 @@
       <div class="services-selections">
         <a href ng-repeat="formula in formulas"
            ng-click='onSelect(formula)'
-           id="{{formula.name}}"
+           id="instance-{{formula.id}}"
            data-instance="{{formula.name}}"
            style='background-image: url("images/formula.png")'>
           <!--<i class="icon write" ng-click='onEditFormulaInstance(formula, $event)'> Edit</i>-->
@@ -27,7 +27,31 @@
       </div>
     </div>
   </div>
+  <div id="multipleFormula" class="formula-instance-list" ng-show="showFormulaInstaces">
+    <h3>{{instanceTitle}} Scheduled/synchronized</h3>
+    <div id="select-dropdown-container" ng-show="selectedFormula.length > 1">
+      <select
+              data-ng-model="selectedFormula.selected"
+              ng-options="o.name for o in selectedFormula"
+              ng-change="refreshFormula()" class="ui-select-datalist">
+      </select>
+    </div>
+    <ul ng-style="selectedFormula.length == 1 && {'top': '60px'}">
+      <li ng-repeat="instances in formulaInstances">
+        <p>{{instances.name}}</p>
+        <button class="circular mini ui red right floated icon button"
+                ng-click="onDeleteFormulaInstance(formula, $event, instances.id)">
+          <i class="icon remove"></i>
+        </button>
+      </li>
+    </ul>
+    <div ng-hide="formulaInstances.length" style="padding: 20px;">No {{instanceTitle}} found</div>
+  </div>
 </section>
+
+
+
+
 
 <!-- Left panel navigation bar -->
 <md-sidenav class="md-sidenav-left" md-component-id="left" ng-include="'sidenav.html'"

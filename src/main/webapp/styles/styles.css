@@ -361,7 +361,7 @@ body .header-navigation .ui.next.button:hover {
 /*******************************/
 /* SERVICES LOGOS              */
 /*******************************/
-#picker, #mapper, #data-list {
+#picker, #mapper, #data-list, #formula-picker {
     color: #fff;
     text-align: center;
     padding: 0px;
@@ -377,18 +377,24 @@ body .header-navigation .ui.next.button:hover {
     flex: 1;
     position: relative;
 }
-
-#picker h1 {
+#formula-picker {
+    -webkit-flex-direction: row;
+    flex-direction: row;
+}
+#picker h1,
+#formula-picker h1{
     margin:15px;
 }
 
-#picker .services-selections {
+#picker .services-selections,
+#formula-picker .services-selections{
     margin:0 auto;
     text-align:center;
 }
 
 
-#picker .services-selections > a{
+#picker .services-selections > a,
+#formula-picker .services-selections > a{
     background-size:5em;
     background-position: center center;
     background-repeat:no-repeat;
@@ -406,11 +412,13 @@ body .header-navigation .ui.next.button:hover {
     -webkit-transition: all 150ms ease-in;
             transition: all 150ms ease-in;
 }
-#picker .picker-source{
+#picker .picker-source,
+#formula-picker .picker-source{
     background-color: #58bde8;
     display: none;
 }
-#picker .picker-source .services-selections > a{
+#picker .picker-source .services-selections > a,
+#formula-picker .picker-source .services-selections > a{
     background-size:5em;
     background-position: center center;
     background-repeat:no-repeat;
@@ -428,7 +436,8 @@ body .header-navigation .ui.next.button:hover {
     -webkit-transition: all 150ms ease-in;
             transition: all 150ms ease-in;
 }
-#picker .services-selections > a.highlightingElement{
+#picker .services-selections > a.highlightingElement,
+#formula-picker .services-selections > a.highlightingElement{
     opacity:1;
     border: 1px solid #3498db;
     -webkit-box-shadow: 0 0 5px rgba(52, 152, 219, 1);
@@ -438,7 +447,8 @@ body .header-navigation .ui.next.button:hover {
             transform: scale(1.05);
 }
 
-#picker .services-selections > a:hover {
+#picker .services-selections > a:hover,
+#formula-picker .services-selections > a:hover{
     opacity:1;
     box-shadow: 0 0px 2px rgba(0,0,0,.5);
     -webkit-transform: scale(1.1);
@@ -446,10 +456,12 @@ body .header-navigation .ui.next.button:hover {
             transform: scale(1.1);
     text-decoration: none;
 }
-#picker .services-selections > a:focus {
+#picker .services-selections > a:focus,
+#formula-picker .services-selections > a:focus{
     outline: none;
 }
-#picker .services-selections > a.highlightingElement.selectedTarget{
+#picker .services-selections > a.highlightingElement.selectedTarget,
+#formula-picker .services-selections > a.highlightingElement.selectedTarget{
     border: 3px solid #8dc63f;
     -webkit-transform: scale(1.1);
         -ms-transform: scale(1.1);
@@ -457,7 +469,8 @@ body .header-navigation .ui.next.button:hover {
     box-shadow: 0 0px 2px rgba(0,0,0,.5);
 }
 
-#picker .services-selections > a:after {
+#picker .services-selections > a:after,
+#formula-picker .services-selections > a:after {
     content:attr(alt);
     display:block;
     background:#333;
@@ -478,11 +491,13 @@ body .header-navigation .ui.next.button:hover {
             transform: rotateX(90deg);
 }
 
-#picker .services-selections > a.add-new:before {
+#picker .services-selections > a.add-new:before,
+#formula-picker .services-selections > a.add-new:before {
     display:none;
 }
 
-#picker .services-selections > a:before {
+#picker .services-selections > a:before,
+#formula-picker .services-selections > a:before {
     content: attr(data-instance);
     display: block;
     background-color: #3498db;
@@ -505,23 +520,27 @@ body .header-navigation .ui.next.button:hover {
     border-top: 1px solid rgba(255,255,255,.3);
     box-shadow: none;
 }
-#picker .services-selections > a.selectedTarget:hover:before{
+#picker .services-selections > a.selectedTarget:hover:before,
+#formula-picker .services-selections > a.selectedTarget:hover:before{
     border-radius: 3px 3px 0 0;
     border-top: none;
 }
 
-#picker .services-selections > a:hover:after {
+#picker .services-selections > a:hover:after,
+#formula-picker .services-selections > a:hover:after {
 
 }
 
-#picker .services-selections > a:hover:before {
+#picker .services-selections > a:hover:before,
+#formula-picker .services-selections > a:hover:before {
     -webkit-transform: translateY(0px);
         -ms-transform: translateY(0px);
             transform: translateY(0px);
     opacity:1;
 }
 
-#picker .services-selections > a.selectedTarget:before {
+#picker .services-selections > a.selectedTarget:before,
+#formula-picker .services-selections > a.selectedTarget:before {
     background: #8dc63f;
     -webkit-transform: translateY(0px);
         -ms-transform: translateY(0px);
@@ -530,7 +549,8 @@ body .header-navigation .ui.next.button:hover {
     border-radius: 3px 3px 0 0;
     border: none;
 }
-#picker .services-selections > a i.wait {
+#picker .services-selections > a i.wait,
+#formula-picker .services-selections > a i.wait {
     position: absolute;
     right: 1px;
     bottom: 5px;
@@ -545,7 +565,8 @@ body .header-navigation .ui.next.button:hover {
     z-index:100;
 }
 
-#picker .services-selections > a i.trash {
+#picker .services-selections > a i.trash,
+#formula-picker .services-selections > a i.trash {
     position: absolute;
     right: 1px;
     bottom: 5px;
@@ -558,11 +579,13 @@ body .header-navigation .ui.next.button:hover {
     font-size: 90%;
     z-index:100;
 }
-#picker .services-selections > a i.trash:hover {
+#picker .services-selections > a i.trash:hover,
+#formula-picker .services-selections > a i.trash:hover {
     background-color: rgba(212,63,58,.9);
     color: rgba(255,255,255,1);
 }
-#picker .services-selections > a i.write {
+#picker .services-selections > a i.write,
+#formula-picker .services-selections > a i.write {
     position: absolute;
     bottom: -30px;
     left: 0;
@@ -575,24 +598,29 @@ body .header-navigation .ui.next.button:hover {
     font-size: 80%;
     z-index:100;
 }
-#picker .services-selections > a i.write:hover{
+#picker .services-selections > a i.write:hover,
+#formula-picker .services-selections > a i.write:hover{
     background: rgba(0,0,0,.05);
     font-size: 85%;
 }
-#picker .picker-target{
+#picker .picker-target,
+#formula-picker .picker-target{
     width: 100%;
 }
-#picker .picker-target.disabled{
+#picker .picker-target.disabled,
+#formula-picker .picker-target.disabled{
     opacity: .2;
 }
-#picker .picker-target.disabled .services-selections > a:hover {
+#picker .picker-target.disabled .services-selections > a:hover,
+#formula-picker .picker-target.disabled .services-selections > a:hover {
     opacity: .5;
     box-shadow: 0 1px 2px rgba(0,0,0,.5);
     -webkit-transform: scale(1);
         -ms-transform: scale(1);
             transform: scale(1);
 }
-#picker .picker-target.disabled .services-selections > a:hover:before {
+#picker .picker-target.disabled .services-selections > a:hover:before,
+#formula-picker .picker-target.disabled .services-selections > a:hover:before {
     -webkit-transform: translateY(-40px);
         -ms-transform: translateY(-40px);
             transform: translateY(-40px);
@@ -625,6 +653,7 @@ body .header-navigation .ui.next.button:hover {
 #picker .sfdcservicecloud, #mapper .sfdcservicecloud {
     background-image:url(../images/sfdcservicecloud.png);
 }
+#picker .add-new,
 #picker .add-new {
     background-color: transparent !important;
     box-shadow: 0px 3px 5px rgba(0,0,0,.5) !important;
@@ -633,7 +662,10 @@ body .header-navigation .ui.next.button:hover {
 
 #picker a i.wait,
 #picker a i.write,
-#picker a i.trash {
+#picker a i.trash,
+#formula-picker a i.wait,
+#formula-picker a i.write,
+#formula-picker a i.trash {
     opacity: 0;
     visibility: hidden;
     -webkit-transform: scale(.8);
@@ -645,13 +677,19 @@ body .header-navigation .ui.next.button:hover {
 
 #picker a.highlightingElement:hover i.wait,
 #picker a.highlightingElement:hover i.write,
-#picker a.highlightingElement:hover i.trash{
+#picker a.highlightingElement:hover i.trash,
+#formula-picker a.highlightingElement:hover i.wait,
+#formula-picker a.highlightingElement:hover i.write,
+#formula-picker a.highlightingElement:hover i.trash{
     visibility: visible;
 }
 
 #picker a:hover i.wait,
 #picker a:hover i.write,
-#picker a:hover i.trash {
+#picker a:hover i.trash,
+#formula-picker a:hover i.wait,
+#formula-picker a:hover i.write,
+#formula-picker a:hover i.trash {
     opacity: 1;
     -webkit-transform: scale(1);
         -ms-transform: scale(1);
@@ -659,7 +697,8 @@ body .header-navigation .ui.next.button:hover {
 
 }
 
-#picker .add-new i {
+#picker .add-new i,
+#formula-picker .add-new i {
     position: absolute;
     top: 41px;
     color: #ddd;
@@ -668,7 +707,8 @@ body .header-navigation .ui.next.button:hover {
     margin-left: -37px;
 }
 
-#picker.show-target .picker-source{
+#picker.show-target .picker-source,
+#formula-picker.show-target .picker-source{
     display:block;
     -webkit-flex: 3;
     -ms-flex: 3;
@@ -677,12 +717,22 @@ body .header-navigation .ui.next.button:hover {
     flex-direction: row;
     position: relative;
 }
+#formula-picker.show-target #multipleFormula {
+    display: block;
+    -webkit-flex: 2;
+    -ms-flex: 2;
+    flex: 2;
+    background-color: #333;
+    position: relative;
+}
 
-#picker.show-target.dark-background .picker-source{
+#picker.show-target.dark-background .picker-source,
+#formula-picker.show-target.dark-background .picker-source{
     background-color: transparent !important;
 }
 
-#picker.show-target .picker-target {
+#picker.show-target .picker-target,
+#formula-picker.show-target .picker-target {
     width: 100%;
     -webkit-flex: 3;
     -ms-flex: 3;
@@ -696,6 +746,41 @@ body .header-navigation .ui.next.button:hover {
 }
 #picker.show-target .picker-target h2{
 }
+#formula-picker.show-target #multipleFormula h1{
+    padding: 5px;
+}
+#formula-picker.show-target #multipleFormula ul{
+    position: absolute;
+    top: 120px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 10px;
+}
+#formula-picker.show-target #multipleFormula ul li{
+    width: 100%;
+    display: block;
+    float: left;
+    padding: 10px;
+    margin-left: 0;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    background-image: none;
+    background-color: rgba(255,255,255,.1);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+}
+#formula-picker.show-target #multipleFormula ul li p{
+    float: left;
+    display: block;
+}
+#multipleFormula h3{
+    background-color: rgba(0,0,0,.1);
+    margin: 0;
+    padding: 1em 0;
+    border-bottom: 1px solid #eee;
+    text-transform: capitalize;}
 
 /************************/
 /* JOB HISTORY          */
@@ -1692,6 +1777,7 @@ body .header-navigation .ui.next.button:hover {
 .select2-results .select2-result-label{
     float: left;
     width: 100%
+    color: #000;
 }
 
 #select-dropdown-container > select{
@@ -1705,9 +1791,10 @@ body .header-navigation .ui.next.button:hover {
     color: #fff;
     height: 66px;
     cursor: pointer;
-
 }
 
+#multipleFormula > select{
+}
 #select-dropdown-container .select2-drop-active {
     cursor: auto;
     background: #ffffff;
@@ -2214,7 +2301,6 @@ div#data-list-body.disabled:after {
     padding: 0;
     margin: 0;
 }
-
 #select-dropdown-container .select2-results li.ui-select-choices-group ul li{
     color: rgba(0, 0, 0, 0.8);
     padding: 10px !important;
@@ -2873,6 +2959,58 @@ md-switch.md-default-theme.md-primary-green.md-checked .md-thumb {
     font-weight: bold;
 }
 
+md-select.md-default-theme{
+    width: 100%;
+    margin-top: 0px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.8);
+    border-radius: 0.2857rem;
+}
+md-select.md-default-theme .md-select-label{
+    border-bottom-color: rgba(255,255,255,1);
+    padding: 0.67861em 1em;
+    line-height: 1.2142em !important;
+}
+md-select.md-default-theme .md-select-label span{
+    width: 100%;
+}
+md-select.md-default-theme .md-select-label span.md-select-icon{
+    width: 30px;
+}
+.md-select-menu-container{
+    z-index: 2500;
+}
+md-select.md-default-theme:not([disabled]):focus .md-select-label {
+    border-bottom-color: rgba(255,255,255,1);
+}
+
+#formulaInstanceDropdown{
+    width: 100%;
+}
+#formulaInstanceDropdown.select2-container .select2-choice{
+    padding: 0.67861em 1em;
+    height: 42px;
+}
+#formulaInstanceDropdown .select2-results li{
+    color: #222222 !important;
+    display: block;
+    float: left;
+    width: 100%;
+}
+#formulaInstanceDropdown .select2-results li.select2-highlighted {
+    background-color: #cccccc;
+}
+#formulaInstanceDropdown.select2-container .select2-choice > .select2-chosen{
+    margin: 0;
+    line-height: 1em;
+}
+#formulaInstanceDropdown .select-md-switch-container{
+    display: none !important;
+}
+#formulaInstanceDropdown.select2-container .select2-choice .select2-arrow b{
+    background: url(../images/select2.png) no-repeat 0 8px;
+}
 #mapper-data-list-source .select-md-switch-container{
     background-color: #aaaaaa;
 }
@@ -3097,6 +3235,12 @@ Slick Plugin override
     font-family: 'Icons';
 }
 
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi){
+    .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
+        background-image: url('../images/select2.png') !important;
+    }
+}
 
 
 /***************************/

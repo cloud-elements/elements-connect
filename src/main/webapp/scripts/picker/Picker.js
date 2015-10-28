@@ -481,18 +481,18 @@ var Picker = Class.extend({
             return;
         }
 
-        var colorOneBkg = 'body .header-navigation,body .header-navigation #progressbar li .step-incomplete,#picker .picker-source,.md-sidenav-left';
-        var colorOneBorder = '#picker .services-selections > a.highlightingElement';
+        var colorOneBkg = 'body .header-navigation,body .header-navigation #progressbar li .step-incomplete,#picker .picker-source,.md-sidenav-left,#formula-picker .picker-source,.md-sidenav-left';
+        var colorOneBorder = '#picker .services-selections > a.highlightingElement, #formula-picker .services-selections > a.highlightingElement';
 
         var colorContrast = '#picker.show-target .picker-source h2 .content, #picker.show-target .picker-source h2 .icon, #picker.show-target .picker-source h2 .sub.header';
 
-        var colorTwoBkg = '#mapping-data-list-body #mapper-data-list-source,#mapper-header .dropdownmenu,#mapping-data-list-body ul,#mapping-data-list-body .ui-tree-heading,#picker.show-target .picker-target';
+        var colorTwoBkg = '#mapping-data-list-body #mapper-data-list-source,#mapper-header .dropdownmenu,#mapping-data-list-body ul,#mapping-data-list-body .ui-tree-heading,#picker.show-target .picker-target,#formula-picker.show-target .picker-target';
 
-        var accentOneBkg = '#picker .services-selections > a:hover:before, body .header-navigation #progressbar li.completed .step-incomplete i.step-complete, body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after, body .header-navigation .ui.next.button, body .header-navigation .ui.next.button:hover';
+        var accentOneBkg = '#picker .services-selections > a:hover:before, #formula-picker .services-selections > a:hover:before, body .header-navigation #progressbar li.completed .step-incomplete i.step-complete, body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after, body .header-navigation .ui.next.button, body .header-navigation .ui.next.button:hover';
         var accentOneBorder = 'body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after';
         var accentOneColor = '.bulkloaderModalWindow .header .highlightElement';
 
-        var accentTwoBkg = '#picker .services-selections > a.selectedTarget:before, md-radio-button.md-checked.md-checked-green .md-on, .dropdown-menu .btn-info.active,.angular-ui-tree-drag .angular-ui-tree-node .tree-node.angular-ui-tree-handle, #mapper-data-list-target .ui-ace-tab .btn-tab, #mapper-data-list-target .ace-editor-wrapper .ace-editor-toolbar';
+        var accentTwoBkg = '#picker .services-selections > a.selectedTarget:before, #formula-picker .services-selections > a.selectedTarget:before, md-radio-button.md-checked.md-checked-green .md-on, .dropdown-menu .btn-info.active,.angular-ui-tree-drag .angular-ui-tree-node .tree-node.angular-ui-tree-handle, #mapper-data-list-target .ui-ace-tab .btn-tab, #mapper-data-list-target .ace-editor-wrapper .ace-editor-toolbar';
         var accentTwoBorder = 'md-radio-button.md-checked.md-checked-green .md-off, .dropdown-menu .btn-info.active, #mapping-data-list-body li li.mapped div.tree-root-li-li-container:before, li li.angular-ui-tree-placeholder, #mapper-data-list-target .ui-ace-tab';
         var accentTwoColor = '#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.source';
 

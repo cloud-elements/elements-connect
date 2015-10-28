@@ -48,6 +48,12 @@ var FormulaController = BaseController.extend({
         me.$scope.done = me.done.bind(this);
         me.$scope.formulas = [];
         me.$scope.branding = me._application.getBranding();
+        me.$scope.showFormulaInstaces = me._application.isMultipleInstance();
+        me.$scope.multipleInstance = me._application.isMultipleInstance();
+        me.$scope.refreshFormula = me.refreshFormula.bind(this);
+        me.$scope.formulaInstances = {};
+        me.$scope.selectedFormula = {};
+        me.$scope.instanceTitle = me._application.isInstanceTitle();
 
         // load the formula templates
         me._maskLoader.show(me.$scope, 'Loading formula templates...');
@@ -87,10 +93,15 @@ var FormulaController = BaseController.extend({
 
     onSelect: function(formulaTemplate) {
         var me = this;
-        if(formulaTemplate.instanceId) {
-            me._editFormulaInstance(formulaTemplate.id, formulaTemplate.instanceId);
-        } else {
-            me._createFormulaInstance(formulaTemplate);
+        if(me.$scope.multipleInstance){
+                me._createFormulaInstance(formulaTemplate);
+        }else{
+            if(formulaTemplate.instanceId) {
+                me._editFormulaInstance(formulaTemplate.id, formulaTemplate.instanceId);
+                angular.element(document.getElementById("instance-"+formulaTemplate.id)).addClass('selectedTarget');
+            } else {
+                me._createFormulaInstance(formulaTemplate);
+            }
         }
     },
 
@@ -110,12 +121,19 @@ var FormulaController = BaseController.extend({
 
     },
 
-    onDeleteFormulaInstance: function(formulaTemplate, $event) {
+    onDeleteFormulaInstance: function(formulaTemplate, $event, instanceId) {
         var me = this;
 
-        var formulaId = formulaTemplate.id;
-        var formulaName = formulaTemplate.name;
-        var formulaInstanceId = formulaTemplate.instanceId;
+        if(!me.$scope.multipleInstance){
+            var formulaId = formulaTemplate.id;
+            var formulaName = formulaTemplate.name;
+            var formulaInstanceId = formulaTemplate.instanceId;
+        }else{
+            var indx = me.$scope.selectedFormula.indexOf(me.$scope.selectedFormula.selected);
+            var formulaId = me.$scope.selectedFormula[indx].id;
+            var formulaName = me.$scope.selectedFormula[indx].name;
+            var formulaInstanceId = instanceId;
+        }
 
         me._deleteFormulaInstance(formulaId, formulaName, formulaInstanceId);
 
@@ -128,7 +146,7 @@ var FormulaController = BaseController.extend({
 
         var confirm = me.$mdDialog.confirm()
             .title('Warning!')
-            .content("Are you sure you want to delete your instance of the formula: " + formulaName + "?")
+            .content("Are you sure you want to delete your "+me.$scope.instanceTitle+" of the formula: " + formulaName + "?")
             .ok('Yes')
             .cancel('No');
 
@@ -153,15 +171,19 @@ var FormulaController = BaseController.extend({
         var me = this;
         me._maskLoader.hide();
 
-        angular.element(document.getElementById(formulaName)).removeClass('highlightingElement');
+        angular.element(document.getElementById("instance-"+formulaName.id)).removeClass('highlightingElement');
 
         // set the instance ID on this formula to be null so the UI doesn't think it still exists and we can create a new one
         for(var i = 0; i < me.$scope.formulas.length; i++) {
             var formula = me.$scope.formulas[i];
             if(formula.name == formulaName) {
-                formula.instanceId = null;
+                if(!me.$scope.multipleInstance) {
+                    formula.instanceId = null;
+                }
             }
         }
+
+        me.refreshFormula();
     },
 
     _handleError: function(event, error) {
@@ -198,13 +220,19 @@ var FormulaController = BaseController.extend({
         } else {
             // if we do NOT have any formulas defined in our app config, then just show all of the formula templates
             me.$scope.formulas = formulaTemplates;
+            me.$scope.selectedFormula = formulaTemplates;
+            me.$scope.selectedFormula.selected = formulaTemplates[0];
         }
 
         // add any element instances we already know
         me._addDefaultValuesForConfig();
 
         // check for existing formula instances
-        me._highlightFormulaInstances();
+        if(!me.$scope.multipleInstance){
+            me._highlightFormulaInstances();
+        }else{
+            me._findMultipleFormulaInstances(0);
+        }
     },
 
     _highlightFormulaInstances: function() {
@@ -217,6 +245,16 @@ var FormulaController = BaseController.extend({
                     me._handleLoadFormulaInstances.bind(me, formulaTemplate),
                     me._handleLoadError.bind(me));
             }
+        }
+    },
+
+    _findMultipleFormulaInstances: function(index) {
+        var me = this;
+        if(me.$scope.formulas) {
+            var formulaTemplate = me.$scope.formulas[index];
+            me._elementsService.findFormulaInstances(formulaTemplate.id).then(
+                me._handleLoadFormulaInstances.bind(me, formulaTemplate),
+                me._handleLoadError.bind(me));
         }
     },
 
@@ -252,10 +290,18 @@ var FormulaController = BaseController.extend({
 
         var formulaInstances = httpResult.data;
 
-        // assuming we limited the formula to only have one instance
-        if(formulaInstances && formulaInstances.length > 0) {
-            formulaTemplate.instanceId = formulaInstances[0].id;
-            angular.element(document.getElementById(formulaTemplate.name)).addClass('highlightingElement');
+        // Handle multiple Instance
+        if (!me.$scope.multipleInstance){
+            // limiting the formula to only have one instance
+            if(formulaInstances && formulaInstances.length > 0) {
+                formulaTemplate.instanceId = formulaInstances[0].id;
+                angular.element(document.getElementById("instance-"+formulaTemplate.id)).addClass('highlightingElement');
+            }
+        }else{
+            if(formulaInstances && formulaInstances.length >= 0) {
+                formulaTemplate.instances = formulaInstances;
+                me.$scope.formulaInstances = formulaInstances;
+            }
         }
     },
 
@@ -306,16 +352,25 @@ var FormulaController = BaseController.extend({
                         if (formulaAppConfig.sourceKey && formulaAppConfig.targetKey) {
                             if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key &&
                                 formulaAppConfig.targetKey === me._picker._target.elementKey) {
+                                if(!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                    formulaTemplate.configuration = formulaAppConfig.configuration;
+                                }
                                 filteredFormulaTemplates.push(formulaTemplate);
                             }
                         }
                         else if (formulaAppConfig.sourceKey) {
                             if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key) {
+                                if(!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                    formulaTemplate.configuration = formulaAppConfig.configuration;
+                                }
                                 filteredFormulaTemplates.push(formulaTemplate);
                             }
                         }
                         else if (formulaAppConfig.targetKey) {
                             if (formulaAppConfig.targetKey === me._picker._target.elementKey) {
+                                if(!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                    formulaTemplate.configuration = formulaAppConfig.configuration;
+                                }
                                 filteredFormulaTemplates.push(formulaTemplate);
                             }
                         }
@@ -333,6 +388,12 @@ var FormulaController = BaseController.extend({
         var me = this;
         console.log("Refreshing formula instances");
         me._highlightFormulaInstances();
+    },
+
+    refreshFormula: function(){
+        var me = this;
+        var indx = me.$scope.selectedFormula.indexOf(me.$scope.selectedFormula.selected);
+        me._findMultipleFormulaInstances(indx);
     }
 });
 

@@ -517,6 +517,15 @@ var ElementsService = Class.extend({
         return me._httpGet(url, headers);
     },
 
+    findFormulaConfigOpts: function(path, elementInstance) {
+        var me = this;
+        console.log('Attempting to find instances of formula config options');
+        var url = me._application.environment.elementsUrl + path;
+
+        return this._httpGet(url, me._getHeaders(elementInstance.token));
+
+    },
+
     getJobs: function() {
         var me = this;
 
