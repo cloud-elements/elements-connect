@@ -54,6 +54,8 @@ var FormulaController = BaseController.extend({
         me.$scope.formulaInstances = {};
         me.$scope.selectedFormula = {};
         me.$scope.instanceTitle = me._application.isInstanceTitle();
+        me.$scope.pageTitle = me._application.isPageTitle();
+        me.$scope.pageSubTitle = me._application.isPageSubtitle();
 
         // load the formula templates
         me._maskLoader.show(me.$scope, 'Loading formula templates...');
@@ -382,6 +384,8 @@ var FormulaController = BaseController.extend({
             }
         }
         me.$scope.formulas = filteredFormulaTemplates;
+        me.$scope.selectedFormula = filteredFormulaTemplates;
+        me.$scope.selectedFormula.selected = filteredFormulaTemplates[0];
     },
 
     _onFormulaInstancesRefresh: function() {

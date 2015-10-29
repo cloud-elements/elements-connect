@@ -14,14 +14,14 @@
       <input type="text" name="{{config.key}}" ng-model="formulaInstanceData[config.key]" required
              ng-if="!config.properties">
 
-      <ui-select ng-model="config.properties.options.selected" theme="select2" ng-disabled="disabled"
+      <ui-select ng-model="formulaInstanceData[config.key]" theme="select2" ng-disabled="disabled"
                  ng-if="config.properties && config.properties.type == 'combo'" id="formulaInstanceDropdown">
-        <ui-select-match placeholder="Select ...">{{$select.selected.title}}</ui-select-match>
+        <ui-select-match placeholder="Select ...">{{$select.selected[config.properties.displayField]}}</ui-select-match>
         <ui-select-choices
-                repeat="option in config.properties.options | filter: {title: $select.search}">
-          <div ng-bind-html="option.title | highlight: $select.search"></div>
+                repeat="option in config.properties.options | filter: $select.search">
+          <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
           <small>
-            id: {{option.id}}
+            id: {{option[config.properties.valueField]}}
           </small>
         </ui-select-choices>
       </ui-select>

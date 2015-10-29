@@ -173,6 +173,23 @@ var Application = Class.extend({
         }
         return 'instances';
     },
+    isPageTitle: function() {
+        var me = this;
+        if(me.configuration.display.multipleInstance &&
+            !me._cloudElementsUtils.isEmpty(me.configuration.display.formulaTitlePicker)) {
+            return me.configuration.display.formulaTitlePicker;
+        }
+        return 'Select a Formula Template';
+    },
+    isPageSubtitle: function() {
+        var me = this;
+        if(me.configuration.display.multipleInstance &&
+            !me._cloudElementsUtils.isEmpty(me.configuration.display.formulaSubtitlePicker)) {
+            return me.configuration.display.formulaSubtitlePicker;
+        }
+        return 'That you would like to use with';
+    },
+
     ignoreMapper: function() {
         var me = this;
         if(me._cloudElementsUtils.isEmpty(me.configuration)) {

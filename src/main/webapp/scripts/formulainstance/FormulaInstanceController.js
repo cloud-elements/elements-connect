@@ -63,6 +63,15 @@ var FormulaInstanceController = BaseController.extend({
         var me = this;
         me._maskLoader.show(me.$scope, 'Creating formula instance...');
         var formulaInstanceName = me.$scope.formulaName + "-instance";
+        for(var i = 0; i < Object.keys(me.$scope.formulaInstanceData).length; i++){
+            if(typeof me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] == 'object'){
+                var obj = me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key];
+                var displayFieldKey = me.$scope.formulaConfiguration[i].properties.displayField;
+                var valueFieldKey = me.$scope.formulaConfiguration[i].properties.valueField;
+                formulaInstanceName = obj[displayFieldKey];
+                me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] = obj[valueFieldKey];
+            }
+        }
         me._formulaInstance.createFormulaInstance(formulaInstanceName, me.$scope.formulaInstanceData).
             then(me._handleFormulaInstanceSaved.bind(me));
     },
