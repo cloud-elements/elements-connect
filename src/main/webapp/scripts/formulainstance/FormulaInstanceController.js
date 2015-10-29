@@ -72,7 +72,7 @@ var FormulaInstanceController = BaseController.extend({
                 me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] = obj[valueFieldKey];
             }
         }
-        me._formulaInstance.createFormulaInstance(formulaInstanceName, me.$scope.formulaInstanceData).
+        me._formulaInstance.createFormulaInstance(formulaInstanceName, me.$scope.formulaName,me.$scope.formulaInstanceData).
             then(me._handleFormulaInstanceSaved.bind(me));
     },
 
