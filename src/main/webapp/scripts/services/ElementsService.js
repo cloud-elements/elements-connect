@@ -519,6 +519,13 @@ var ElementsService = Class.extend({
 
     findFormulaConfigOpts: function(path, elementInstance) {
         var me = this;
+
+        if(path.indexOf("{") > -1){
+            console.log('Formula config option path with was script');
+            var script = path.split("{").pop().split("}").shift();
+            var x = eval(script);
+            path = path.replace('{'+script+'}', x);
+        }
         console.log('Attempting to find instances of formula config options');
         var url = me._application.environment.elementsUrl + path;
 
