@@ -754,15 +754,17 @@ var MapperController = BaseController.extend({
         }
         //Get Script if available to save with the transformation
         //Populate it with the me.$scope.mapperdata
-        var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedSourceObject.name, me.$scope.selectedTargetObject.name);
-        if(!me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
-            var script = me._aceEditor.getValue();
-            if(me._cloudElementsUtils.isEmpty(script)) {
-                me.$scope.mapperdata.script = null;
-            } else {
-                targetMetaMapping["script"] = new Object();
-                targetMetaMapping["script"].body = script;
-                targetMetaMapping["script"].mimeType = "application/javascript";
+        if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedTargetObject)) {
+            var targetMetaMapping = me._mapper.getTargetMetaMapping(me._picker.targetElementInstance, me.$scope.selectedSourceObject.name, me.$scope.selectedTargetObject.name);
+            if(!me._cloudElementsUtils.isEmpty(targetMetaMapping)) {
+                var script = me._aceEditor.getValue();
+                if(me._cloudElementsUtils.isEmpty(script)) {
+                    me.$scope.mapperdata.script = null;
+                } else {
+                    targetMetaMapping["script"] = new Object();
+                    targetMetaMapping["script"].body = script;
+                    targetMetaMapping["script"].mimeType = "application/javascript";
+                }
             }
         }
     }
