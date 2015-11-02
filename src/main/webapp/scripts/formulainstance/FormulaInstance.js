@@ -40,9 +40,9 @@ var FormulaInstance = Class.extend({
         me._openedModal = null;
     },
 
-    createFormulaInstance: function(formulaInstanceName, formulaInstanceConfiguration) {
+    createFormulaInstance: function(formulaInstanceName, formulaName, formulaInstanceConfiguration) {
         var me = this;
-        return me._elementsService.createFormulaInstance(me.formulaTemplate.id, formulaInstanceName, formulaInstanceConfiguration).then(
+        return me._elementsService.createFormulaInstance(me.formulaTemplate.id, formulaInstanceName, formulaName, formulaInstanceConfiguration).then(
             me._formula.handleOnCreateFormulaInstance.bind(me._formula, me.formulaTemplate.name),
             me._formula.handleOnCreateFormulaInstanceError.bind(me._formula));
     }

@@ -481,7 +481,7 @@ var ElementsService = Class.extend({
         return this._httpPost(url, headers, job);
     },
 
-    createFormulaInstance: function(formulaId, name, configuration) {
+    createFormulaInstance: function(formulaId, name, formulaName, configuration) {
         var me = this;
         console.log('Attempting to create an instance of formula: ' + formulaId + ' with name: ' + name);
         var url = me._application.environment.elementsUrl + '/formulas/{id}/instances';
@@ -493,7 +493,7 @@ var ElementsService = Class.extend({
         };
 
         var headers = me._getHeaders();
-        return me._httpPost(url, headers, formulaInstance);
+        return me._httpPost(url, headers, formulaInstance).then(me._createAction(me, formulaName));
     },
 
     deleteFormulaInstance: function(formulaId, formulaInstanceId) {
@@ -591,6 +591,46 @@ var ElementsService = Class.extend({
         return this.$http({
             url: url, method: 'DELETE', headers: headers
         });
+    },
+
+    /*
+    Triggers a newly created workflow instance with a supplied body if configured.
+
+    Example JSON configuration:
+
+     "formulas": [
+        {
+            "name": "ReadyTalk to Marketo Workflow",
+            "sourceKey": "readytalk",
+            "targetKey": "marketo",
+            "actions": {
+                "onCreate": {
+                    "body": {}
+                }
+            }
+     */
+
+    _createAction: function(me, formulaName) {
+        var handler = function(response) {
+            var formulas = me._application.configuration.formulas;
+            for (var i=0;i<formulas.length;i++) {
+                if (formulas[i].name === formulaName) {
+                    if (formulas[i].actions && formulas[i].actions.onCreate) {
+                        console.log(formulas[i].actions.onCreate.body);
+                        var headers = me._getHeaders();
+                        var url = me._application.environment.elementsUrl;
+                        url = url + '/formulas/';
+                        url = url + response.data.formula.id;
+                        url = url + '/instances/';
+                        url = url + response.data.id;
+                        url = url + '/executions';
+                        me._httpPost(url, headers, formulas[i].actions.onCreate.body);
+                    }
+                }
+            }
+            return response;
+        }
+        return handler;
     }
 });
 
