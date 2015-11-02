@@ -40,7 +40,7 @@
       <li ng-repeat="instances in formulaInstances">
         <p>{{instances.name}}</p>
         <button class="circular mini ui red right floated icon button"
-                ng-click="onDeleteFormulaInstance(formula, $event, instances.id)">
+                ng-click="onDeleteFormulaInstance(formula, $event, instances.id)" ng-if="false">
           <i class="icon remove"></i>
         </button>
       </li>
