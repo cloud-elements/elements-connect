@@ -615,8 +615,11 @@ var ElementsService = Class.extend({
             var formulas = me._application.configuration.formulas;
             for (var i=0;i<formulas.length;i++) {
                 if (formulas[i].name === formulaName) {
-                    if (formulas[i].actions && formulas[i].actions.onCreate) {
-                        console.log(formulas[i].actions.onCreate.body);
+                    var onCreate = formulas[i].actions && formulas[i].actions.onCreate
+                    if (onCreate) {
+                        if (onCreate.elementKey) {
+                            onCreate.body.instance_id = response.data.configuration[onCreate.elementKey];
+                        }
                         var headers = me._getHeaders();
                         var url = me._application.environment.elementsUrl;
                         url = url + '/formulas/';
