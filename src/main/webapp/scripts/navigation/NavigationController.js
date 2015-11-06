@@ -52,6 +52,9 @@ var NavigationController = BaseController.extend({
         me.$scope.onJobHistory = me.onJobHistory.bind(me);
         me.$scope.onScheduledJobs = me.onScheduledJobs.bind(me);
         me.$scope.nextButtonText = 'Save and Schedule Job';
+        // Google Tag Manager for HubSpot only
+        me.$scope.hsanalytics = me._application.isHS();
+
         // change the name of the 'Next' button text if this is for the CAaaS
         if(me._application.isCAaaS()) {
             me.$scope.nextButtonText = 'Save and Configure Formula';

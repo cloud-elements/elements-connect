@@ -278,6 +278,7 @@ var CredentialsController = BaseController.extend({
 
     }
 
+
 });
 
 CredentialsController.$inject = ['$scope', 'CloudElementsUtils', 'Notifications', 'Credentials', 'MaskLoader', 'Application', 'Picker', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];

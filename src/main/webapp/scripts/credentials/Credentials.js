@@ -10,6 +10,7 @@ var Credentials = Class.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _application: null,
     credentialsView: 'login',
 
     _handleLoadError: function(error) {
@@ -124,6 +125,9 @@ var Credentials = Class.extend({
 
     _loadSignupSucceeded: function(signup, result) {
         var me = this;
+        if(me._application.isHS()){
+            trackSignup(signup.email, signup.firstName, signup.lastName);
+        }
         return me.login(signup);
     },
 
@@ -154,11 +158,12 @@ var Credentials = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', function(CloudElementsUtils, ElementsService, Notifications, Picker) {
+        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', 'Application', function(CloudElementsUtils, ElementsService, Notifications, Picker, Application) {
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
             this.instance._picker = Picker;
+            this.instance._application = Application;
             return this.instance;
         }]
     });
