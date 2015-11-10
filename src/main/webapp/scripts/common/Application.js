@@ -157,35 +157,54 @@ var Application = Class.extend({
         return true;
     },
 
-    isMultipleInstance: function() {
+    multipleInstanceConfig: function(key){
         var me = this;
-        if(me.configuration.display.multipleInstance) {
-            return true;
+        var obj = me.configuration.targets;
+
+        for (var i=0 ; i < obj.length ; i++)
+        {
+            if (obj[i]["elementKey"] == key) {
+                return obj[i].display;
+            }
+        }
+    },
+    isMultipleInstance: function(key) {
+        var me = this;
+        var config = me.multipleInstanceConfig(key);
+
+        if(!me._cloudElementsUtils.isEmpty(config) && config.multipleInstance) {
+            return config.multipleInstance;
         }
         return false;
     },
 
-    isInstanceTitle: function() {
+    isInstanceTitle: function(key) {
         var me = this;
-        if(me.configuration.display.multipleInstance &&
-            !me._cloudElementsUtils.isEmpty(me.configuration.display.formulaInstanceName)) {
-            return me.configuration.display.formulaInstanceName;
+        var config = me.multipleInstanceConfig(key);
+
+        if(!me._cloudElementsUtils.isEmpty(config) &&
+            !me._cloudElementsUtils.isEmpty(config.formulaInstanceName)) {
+            return config.formulaInstanceName;
         }
         return 'instances';
     },
-    isPageTitle: function() {
+    isPageTitle: function(key) {
         var me = this;
-        if(me.configuration.display.multipleInstance &&
-            !me._cloudElementsUtils.isEmpty(me.configuration.display.formulaTitlePicker)) {
-            return me.configuration.display.formulaTitlePicker;
+        var config = me.multipleInstanceConfig(key);
+
+        if(!me._cloudElementsUtils.isEmpty(config)  &&
+            !me._cloudElementsUtils.isEmpty(config.formulaTitlePicker)) {
+            return config.formulaTitlePicker;
         }
         return 'Select a Formula Template';
     },
-    isPageSubtitle: function() {
+    isPageSubtitle: function(key) {
         var me = this;
-        if(me.configuration.display.multipleInstance &&
-            !me._cloudElementsUtils.isEmpty(me.configuration.display.formulaSubtitlePicker)) {
-            return me.configuration.display.formulaSubtitlePicker;
+        var config = me.multipleInstanceConfig(key);
+
+        if(!me._cloudElementsUtils.isEmpty(config)  &&
+            !me._cloudElementsUtils.isEmpty(config.formulaSubtitlePicker)) {
+            return config.formulaSubtitlePicker;
         }
         return 'That you would like to use with';
     },

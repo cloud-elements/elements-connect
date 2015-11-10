@@ -48,14 +48,14 @@ var FormulaController = BaseController.extend({
         me.$scope.done = me.done.bind(this);
         me.$scope.formulas = [];
         me.$scope.branding = me._application.getBranding();
-        me.$scope.showFormulaInstaces = me._application.isMultipleInstance();
-        me.$scope.multipleInstance = me._application.isMultipleInstance();
+        me.$scope.multipleInstance = me._application.isMultipleInstance(me._picker.targetElementInstance.element.key);
+        me.$scope.showFormulaInstaces = me._application.isMultipleInstance(me._picker.targetElementInstance.element.key);
         me.$scope.refreshFormula = me.refreshFormula.bind(this);
         me.$scope.formulaInstances = {};
         me.$scope.selectedFormula = {};
-        me.$scope.instanceTitle = me._application.isInstanceTitle();
-        me.$scope.pageTitle = me._application.isPageTitle();
-        me.$scope.pageSubTitle = me._application.isPageSubtitle();
+        me.$scope.instanceTitle = me._application.isInstanceTitle(me._picker.targetElementInstance.element.key);
+        me.$scope.pageTitle = me._application.isPageTitle(me._picker.targetElementInstance.element.key);
+        me.$scope.pageSubTitle = me._application.isPageSubtitle(me._picker.targetElementInstance.element.key);
 
         // load the formula templates
         me._maskLoader.show(me.$scope, 'Loading formula templates...');
