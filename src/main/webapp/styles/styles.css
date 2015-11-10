@@ -189,23 +189,29 @@ md-tooltip span{
 body .header-navigation{
     background-color: #58bde8;
     position: relative;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: column;
     -webkit-flex-direction: column;
     flex-direction: column;
 }
 body .header-navigation .bottom_nav{
     height: 50px;
     position: relative;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
     background-color: rgba(0,0,0,.2);
 }
 body .page{
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: column;
     -webkit-flex-direction: column;
     flex-direction: column;
     top: 0;
@@ -368,8 +374,10 @@ body .header-navigation .ui.next.button:hover {
     width: 100%;
     top: 0;
     bottom: 0;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: column;
     -webkit-flex-direction: column;
     flex-direction: column;
     -webkit-flex: 1;
@@ -378,6 +386,7 @@ body .header-navigation .ui.next.button:hover {
     position: relative;
 }
 #formula-picker {
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
 }
@@ -713,6 +722,7 @@ body .header-navigation .ui.next.button:hover {
     -webkit-flex: 3;
     -ms-flex: 3;
     flex: 3;
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
     position: relative;
@@ -737,6 +747,7 @@ body .header-navigation .ui.next.button:hover {
     -webkit-flex: 3;
     -ms-flex: 3;
     flex: 3;
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
     position: relative;
@@ -805,8 +816,10 @@ body .header-navigation .ui.next.button:hover {
     position: absolute;
     top: 55px;
     bottom: 0;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
     left: 0;
@@ -1209,8 +1222,10 @@ body .header-navigation .ui.next.button:hover {
     position: absolute;
     top: 55px;
     bottom: 0;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
     left: 0;
@@ -1982,8 +1997,10 @@ div#data-list-body.disabled:after {
 #mapping-data-list-body .searchbarContainer{
     border: 1px solid #95a5a6;
     border-radius: 2px;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
     height: 40px;
@@ -2029,8 +2046,10 @@ div#data-list-body.disabled:after {
 #mapping-data-list-body #mapper-data-list-source{
     background-color: #333;
     padding: 0px 10px 5px 10px;
+    display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -ms-flex-direction: column;
     -webkit-flex-direction: column;
     flex-direction: column;
 }
@@ -2484,6 +2503,7 @@ li li.angular-ui-tree-placeholder{
     display: -ms-flexbox;
     display: flex;
     height: 300px;
+    -ms-flex-direction: column;
     -webkit-flex-direction: column;
     flex-direction: column;
     position: absolute;

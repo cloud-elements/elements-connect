@@ -4,6 +4,7 @@
 
 body {
     background: linear-gradient(#333, #222);
+    background-color: #222;
 }
 
 body, h2, h3, h4, h5, p, li {
