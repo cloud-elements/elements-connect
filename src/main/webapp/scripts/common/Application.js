@@ -131,13 +131,17 @@ var Application = Class.extend({
 
     isTargetHidden: function() {
         var me = this;
-        if(me._cloudElementsUtils.isEmpty(me.configuration)) {
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration) || me._cloudElementsUtils.isEmpty(me.configuration.display)) {
             return false;
         }
-        var show = me.configuration.showTarget;
+
+        var show = me.configuration.display.showTarget;
+
         if(me._cloudElementsUtils.isEmpty(show)) {
             show = false;
         }
+
         return !show;
     },
 
@@ -173,7 +177,7 @@ var Application = Class.extend({
         var config = me.multipleInstanceConfig(key);
 
         if(!me._cloudElementsUtils.isEmpty(config) && config.multipleInstance) {
-            return config.multipleInstance;
+            return config.display.multipleInstance;
         }
         return false;
     },

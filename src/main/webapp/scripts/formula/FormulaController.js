@@ -226,8 +226,18 @@ var FormulaController = BaseController.extend({
             me.$scope.selectedFormula.selected = formulaTemplates[0];
         }
 
-        // add any element instances we already know
-        me._addDefaultValuesForConfig();
+        if (!me._cloudElementsUtils.isEmpty(me.$scope.formulas)) {
+            for (var formulaIndex in me.$scope.formulas) {
+                var formulaTemplate = me.$scope.formulas[formulaIndex];
+
+                if (!me._cloudElementsUtils.isEmpty(formulaTemplate.corelateInstances) &&
+                        formulaTemplate.corelateInstances === true) {
+                    me._corelateElementInstances(formulaTemplate);
+                } else {
+                    me._addDefaultValuesForConfig(formulaTemplate);
+                }
+            }
+        }
 
         // check for existing formula instances
         if(!me.$scope.multipleInstance){
@@ -260,26 +270,101 @@ var FormulaController = BaseController.extend({
         }
     },
 
-    _addDefaultValuesForConfig: function() {
+    _getFormulaRefKey: function(objects, elementKey, type) {
+
         var me = this;
 
-        // go through each config on the formula template, and set default values with our target and source element instances, if possible
-        if(me.$scope.formulas) {
-            for(var i = 0; i < me.$scope.formulas.length; i++) {
-                var formulaTemplate = me.$scope.formulas[i];
-                if(formulaTemplate.configuration) {
-                    for(var k = 0; k < formulaTemplate.configuration.length; k++) {
-                        var formulaTemplateConfig = formulaTemplate.configuration[k];
-                        if(formulaTemplateConfig.type === 'elementInstance') {
-                            var configKey = formulaTemplateConfig.key;
-                            var elementKey = configKey.substr(0, configKey.indexOf('.'));
-                            console.log("Looking for source or target instance with key: " + elementKey);
+        if (me._cloudElementsUtils.isEmpty(objects)) {
+            return null;
+        }
 
-                            if(me._picker.selectedElementInstance.element.key === elementKey) {
-                                formulaTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
-                            } else if(me._picker.targetElementInstance.element.key === elementKey) {
-                                formulaTemplateConfig.defaultValue = me._picker.targetElementInstance.id;
-                            }
+        for (var index in objects) {
+            var object = objects[index];
+
+            if (me._cloudElementsUtils.isEmpty(object.formulaReferences)) {
+                continue;
+            }
+
+            if (object.elementKey === elementKey) {
+                for (var referenceIndex in object.formulaReferences) {
+                    var formulaReference = object.formulaReferences[referenceIndex];
+
+                    if (formulaReference.type === type) {
+                        return formulaReference.key;
+                    }
+                }
+            }
+        }
+
+        return null;
+    },
+
+    _corelateElementInstances: function(formulaTemplate) {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(formulaTemplate.configuration)) {
+            return;
+        }
+
+        var sourceFormulaRefKey = null;
+        var targetFormulaRefKey = null;
+
+        if (me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
+            sourceFormulaRefKey = me._getFormulaRefKey(me._picker.getSources(),
+                                                       me._picker.selectedElementInstance.element.key, "source");
+            targetFormulaRefKey = me._getFormulaRefKey(me._picker.getTargets(),
+                                                       me._picker.targetElementInstance.element.key, "target");
+        } else {
+            sourceFormulaRefKey = me._getFormulaRefKey(me._picker.getTargets(),
+                                                       me._picker.targetElementInstance.element.key, "source");
+            targetFormulaRefKey = me._getFormulaRefKey(me._picker.getSources(), formulaTemplate.targetKey, "target");
+        }
+
+        for (cIndex in formulaTemplate.configuration) {
+            var formulaTemplateConfiguration = formulaTemplate.configuration[cIndex];
+
+            if (formulaTemplateConfiguration.type !== "elementInstance") {
+                continue;
+            }
+
+            if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+                // If the Element Connect source is the source for the formula
+                if (formulaTemplateConfiguration.key === sourceFormulaRefKey) {
+                    formulaTemplateConfiguration.defaultValue = me._picker.selectedElementInstance.id;
+                } else if (formulaTemplateConfiguration.key === targetFormulaRefKey) {
+                    formulaTemplateConfiguration.defaultValue = me._picker.targetElementInstance.id;
+                }
+            } else {
+                // If the Element Connect target is the source for the formula
+                if (formulaTemplateConfiguration.key === sourceFormulaRefKey) {
+                    formulaTemplateConfiguration.defaultValue = me._picker.targetElementInstance.id;
+                } else if (formulaTemplateConfiguration.key === targetFormulaRefKey) {
+                    var elementInstance = me._picker.getInstance(formulaTemplate.targetKey);
+
+                    if (!me._cloudElementsUtils.isEmpty(elementInstance)) {
+                        formulaTemplateConfiguration.defaultValue = elementInstance.id;
+                    }
+                }
+            }
+        }
+    },
+
+    _addDefaultValuesForConfig: function(formulaTemplate) {
+        var me = this;
+
+        if (formulaTemplate.configuration) {
+            for(var k = 0; k < formulaTemplate.configuration.length; k++) {
+                var formulaTemplateConfig = formulaTemplate.configuration[k];
+                if(formulaTemplateConfig.type === 'elementInstance') {
+                    var configKey = formulaTemplateConfig.key;
+                    var elementKey = configKey.substr(0, configKey.indexOf('.'));
+                    console.log("Looking for source or target instance with key: " + elementKey);
+
+                    if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+                        if (me._picker.selectedElementInstance.element.key === elementKey) {
+                            formulaTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
+                        } else if (me._picker.targetElementInstance.element.key === elementKey) {
+                            formulaTemplateConfig.defaultValue = me._picker.targetElementInstance.id;
                         }
                     }
                 }
@@ -350,26 +435,63 @@ var FormulaController = BaseController.extend({
             else {
                 for(var j = 0; j < formulaTemplates.length; j++) {
                     var formulaTemplate = formulaTemplates[j];
+
                     if(formulaAppConfig.name === formulaTemplate.name) {
+
+                        if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.corelateInstances)) {
+                            formulaTemplate.corelateInstances = formulaAppConfig.corelateInstances;
+                        }
+
+                        if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.sourceKey)) {
+                            formulaTemplate.sourceKey = formulaAppConfig.sourceKey;
+                        }
+
+                        if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.targetKey)) {
+                            formulaTemplate.targetKey = formulaAppConfig.targetKey;
+                        }
+
                         if (formulaAppConfig.sourceKey && formulaAppConfig.targetKey) {
-                            if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key &&
-                                formulaAppConfig.targetKey === me._picker._target.elementKey) {
-                                if(!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
-                                    formulaTemplate.configuration = formulaAppConfig.configuration;
+                            if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+                                if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key &&
+                                    formulaAppConfig.targetKey === me._picker.getTarget().elementKey) {
+
+                                    if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                        formulaTemplate.configuration = formulaAppConfig.configuration;
+                                    }
+                                    filteredFormulaTemplates.push(formulaTemplate);
                                 }
-                                filteredFormulaTemplates.push(formulaTemplate);
+                            } else {
+                                if (formulaAppConfig.sourceKey === me._picker.targetElementInstance.element.key) {
+
+                                    if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                        formulaTemplate.configuration = formulaAppConfig.configuration;
+                                    }
+
+                                    filteredFormulaTemplates.push(formulaTemplate);
+                                }
                             }
                         }
                         else if (formulaAppConfig.sourceKey) {
-                            if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key) {
-                                if(!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
-                                    formulaTemplate.configuration = formulaAppConfig.configuration;
+                            if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+                                if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key) {
+                                    if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                        formulaTemplate.configuration = formulaAppConfig.configuration;
+                                    }
+                                    filteredFormulaTemplates.push(formulaTemplate);
                                 }
-                                filteredFormulaTemplates.push(formulaTemplate);
+                            } else {
+                                if (formulaAppConfig.sourceKey === me._picker.targetElementInstance.element.key) {
+
+                                    if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
+                                        formulaTemplate.configuration = formulaAppConfig.configuration;
+                                    }
+
+                                    filteredFormulaTemplates.push(formulaTemplate);
+                                }
                             }
                         }
                         else if (formulaAppConfig.targetKey) {
-                            if (formulaAppConfig.targetKey === me._picker._target.elementKey) {
+                            if (formulaAppConfig.targetKey === me._picker.getTarget().elementKey) {
                                 if(!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
                                     formulaTemplate.configuration = formulaAppConfig.configuration;
                                 }

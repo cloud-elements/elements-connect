@@ -371,6 +371,22 @@ var Picker = Class.extend({
             me._handleOnDeleteInstanceFailed.bind(me));
     },
 
+    getInstance: function(elementKey) {
+        var me = this;
+
+        if (me._cloudElementsUtils.isEmpty(elementKey) || me._cloudElementsUtils.isEmpty(me._elementInstances)) {
+            return null;
+        }
+
+        for (var key in me._elementInstances) {
+            if (key === elementKey) {
+                return me._elementInstances[key];
+            }
+        }
+
+        return null;
+    },
+
     _handleOnDeleteInstance: function(response) {
         var me = this;
         return true;
@@ -464,6 +480,18 @@ var Picker = Class.extend({
             }
         }
         return source.bulkSequence;
+    },
+
+    getSources: function() {
+        var me = this;
+
+        return me._sources;
+    },
+
+    getTargets: function() {
+        var me = this;
+
+        return me._targets;
     },
 
     getSubscription: function(){
