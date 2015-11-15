@@ -46,8 +46,6 @@ var FormulaInstance = Class.extend({
             me._formula.handleOnCreateFormulaInstance.bind(me._formula, me.formulaTemplate.name),
             me._formula.handleOnCreateFormulaInstanceError.bind(me._formula));
     }
-
-
 });
 
 /**

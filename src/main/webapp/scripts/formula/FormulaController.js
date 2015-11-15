@@ -2,6 +2,7 @@
  * Formula controller for showing the available formula templates and creating formula instances from them
  * @author jjwyse
  */
+
 var FormulaController = BaseController.extend({
     _notifications: null,
     _elementsService: null,
@@ -48,14 +49,14 @@ var FormulaController = BaseController.extend({
         me.$scope.done = me.done.bind(this);
         me.$scope.formulas = [];
         me.$scope.branding = me._application.getBranding();
-        me.$scope.multipleInstance = me._application.isMultipleInstance(me._picker.targetElementInstance.element.key);
-        me.$scope.showFormulaInstaces = me._application.isMultipleInstance(me._picker.targetElementInstance.element.key);
+        me.$scope.multipleInstance = me._application.isMultipleInstance(me._picker.getTargetElementInstance().element.key);
+        me.$scope.showFormulaInstaces = me._application.isMultipleInstance(me._picker.getTargetElementInstance().element.key);
         me.$scope.refreshFormula = me.refreshFormula.bind(this);
         me.$scope.formulaInstances = {};
         me.$scope.selectedFormula = {};
-        me.$scope.instanceTitle = me._application.isInstanceTitle(me._picker.targetElementInstance.element.key);
-        me.$scope.pageTitle = me._application.isPageTitle(me._picker.targetElementInstance.element.key);
-        me.$scope.pageSubTitle = me._application.isPageSubtitle(me._picker.targetElementInstance.element.key);
+        me.$scope.instanceTitle = me._application.isInstanceTitle(me._picker.getTargetElementInstance().element.key);
+        me.$scope.pageTitle = me._application.isPageTitle(me._picker.getTargetElementInstance().element.key);
+        me.$scope.pageSubTitle = me._application.isPageSubtitle(me._picker.getTargetElementInstance().element.key);
 
         // load the formula templates
         me._maskLoader.show(me.$scope, 'Loading formula templates...');
@@ -65,17 +66,23 @@ var FormulaController = BaseController.extend({
     defineListeners: function() {
         var me = this;
         me._notifications.addEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
-        me._notifications.addEventListener(bulkloader.events.NEW_FORMULA_INSTANCE_CREATED, me._onFormulaInstancesRefresh.bind(me), me.$scope.$id);
+        me._notifications.addEventListener(bulkloader.events.NEW_FORMULA_INSTANCE_CREATED,
+                                           me._onFormulaInstancesRefresh.bind(me), me.$scope.$id);
     },
 
     destroy: function() {
         var me = this;
         me._notifications.removeEventListener(bulkloader.events.ERROR, me._handleError.bind(me), me.$scope.$id);
-        me._notifications.removeEventListener(bulkloader.events.NEW_FORMULA_INSTANCE_CREATED, me._onFormulaInstancesRefresh.bind(me), me.$scope.$id);
+        me._notifications.removeEventListener(bulkloader.events.NEW_FORMULA_INSTANCE_CREATED,
+                                              me._onFormulaInstancesRefresh.bind(me), me.$scope.$id);
     },
 
     done: function() {
         var me = this;
+
+        me._picker.setSelectedElementInstance(null);
+        me._picker.setTargetElementInstance(null);
+
         me.$location.path('/');
     },
 
@@ -84,6 +91,9 @@ var FormulaController = BaseController.extend({
         if(me._application.ignoreMapper() == false) {
             me.$location.path('/mapper');
         } else {
+            me._picker.setSelectedElementInstance(null);
+            me._picker.setTargetElementInstance(null);
+
             me.$location.path('/');
         }
     },
@@ -214,7 +224,7 @@ var FormulaController = BaseController.extend({
     _handleFormulaTemplatesLoaded: function(formulaTemplates) {
         var me = this;
         me._maskLoader.hide();
-        console.log("Loaded " + formulaTemplates.length + " formula templates");
+        // console.log("Loaded " + formulaTemplates.length + " formula templates");
 
         if(me._application.configuration.formulas && me._application.configuration.formulas.length > 0) {
             // if there is a formulas section in the app configuration, then filter out any that are not specified there
@@ -270,7 +280,7 @@ var FormulaController = BaseController.extend({
         }
     },
 
-    _getFormulaRefKey: function(objects, elementKey, type) {
+    _getFormulaRefKey: function(objects, elementKey, formulaName) {
 
         var me = this;
 
@@ -289,7 +299,7 @@ var FormulaController = BaseController.extend({
                 for (var referenceIndex in object.formulaReferences) {
                     var formulaReference = object.formulaReferences[referenceIndex];
 
-                    if (formulaReference.type === type) {
+                    if (formulaReference.name === formulaName) {
                         return formulaReference.key;
                     }
                 }
@@ -309,15 +319,19 @@ var FormulaController = BaseController.extend({
         var sourceFormulaRefKey = null;
         var targetFormulaRefKey = null;
 
-        if (me._cloudElementsUtils.isEmpty(me._picker.targetElementInstance)) {
-            sourceFormulaRefKey = me._getFormulaRefKey(me._picker.getSources(),
-                                                       me._picker.selectedElementInstance.element.key, "source");
-            targetFormulaRefKey = me._getFormulaRefKey(me._picker.getTargets(),
-                                                       me._picker.targetElementInstance.element.key, "target");
-        } else {
+        if (me._cloudElementsUtils.isEmpty(me._picker.getSelectedElementInstance())) {
             sourceFormulaRefKey = me._getFormulaRefKey(me._picker.getTargets(),
-                                                       me._picker.targetElementInstance.element.key, "source");
-            targetFormulaRefKey = me._getFormulaRefKey(me._picker.getSources(), formulaTemplate.targetKey, "target");
+                                                       me._picker.getTargetElementInstance().element.key,
+                                                       formulaTemplate.name);
+            targetFormulaRefKey = me._getFormulaRefKey(me._picker.getSources(), formulaTemplate.targetKey,
+                                                       formulaTemplate.name);
+        } else {
+            sourceFormulaRefKey = me._getFormulaRefKey(me._picker.getSources(),
+                                                       me._picker.getSelectedElementInstance().element.key,
+                                                       formulaTemplate.name);
+            targetFormulaRefKey = me._getFormulaRefKey(me._picker.getTargets(),
+                                                       me._picker.getTargetElementInstance().element.key,
+                                                       formulaTemplate.name);
         }
 
         for (cIndex in formulaTemplate.configuration) {
@@ -327,17 +341,17 @@ var FormulaController = BaseController.extend({
                 continue;
             }
 
-            if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
+            if (!me._cloudElementsUtils.isEmpty(me._picker.getSelectedElementInstance())) {
                 // If the Element Connect source is the source for the formula
                 if (formulaTemplateConfiguration.key === sourceFormulaRefKey) {
-                    formulaTemplateConfiguration.defaultValue = me._picker.selectedElementInstance.id;
+                    formulaTemplateConfiguration.defaultValue = me._picker.getSelectedElementInstance().id;
                 } else if (formulaTemplateConfiguration.key === targetFormulaRefKey) {
-                    formulaTemplateConfiguration.defaultValue = me._picker.targetElementInstance.id;
+                    formulaTemplateConfiguration.defaultValue = me._picker.getTargetElementInstance().id;
                 }
             } else {
                 // If the Element Connect target is the source for the formula
                 if (formulaTemplateConfiguration.key === sourceFormulaRefKey) {
-                    formulaTemplateConfiguration.defaultValue = me._picker.targetElementInstance.id;
+                    formulaTemplateConfiguration.defaultValue = me._picker.getTargetElementInstance().id;
                 } else if (formulaTemplateConfiguration.key === targetFormulaRefKey) {
                     var elementInstance = me._picker.getInstance(formulaTemplate.targetKey);
 
@@ -358,13 +372,13 @@ var FormulaController = BaseController.extend({
                 if(formulaTemplateConfig.type === 'elementInstance') {
                     var configKey = formulaTemplateConfig.key;
                     var elementKey = configKey.substr(0, configKey.indexOf('.'));
-                    console.log("Looking for source or target instance with key: " + elementKey);
+                    // console.log("Looking for source or target instance with key: " + elementKey);
 
-                    if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
-                        if (me._picker.selectedElementInstance.element.key === elementKey) {
-                            formulaTemplateConfig.defaultValue = me._picker.selectedElementInstance.id;
-                        } else if (me._picker.targetElementInstance.element.key === elementKey) {
-                            formulaTemplateConfig.defaultValue = me._picker.targetElementInstance.id;
+                    if (!me._cloudElementsUtils.isEmpty(me._picker.getSelectedElementInstance())) {
+                        if (me._picker.getSelectedElementInstance().element.key === elementKey) {
+                            formulaTemplateConfig.defaultValue = me._picker.getSelectedElementInstance().id;
+                        } else if (me._picker.getTargetElementInstance().element.key === elementKey) {
+                            formulaTemplateConfig.defaultValue = me._picker.getTargetElementInstance().id;
                         }
                     }
                 }
@@ -417,7 +431,7 @@ var FormulaController = BaseController.extend({
     _filterFormulaTemplates: function(formulaTemplates) {
         var me = this;
 
-        console.log("Filtering out formulas based on application configuration");
+        // console.log("Filtering out formulas based on application configuration");
 
         var filteredFormulaTemplates = [];
         for(var i = 0; i < me._application.configuration.formulas.length; i++) {
@@ -451,8 +465,8 @@ var FormulaController = BaseController.extend({
                         }
 
                         if (formulaAppConfig.sourceKey && formulaAppConfig.targetKey) {
-                            if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
-                                if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key &&
+                            if (!me._cloudElementsUtils.isEmpty(me._picker.getSelectedElementInstance())) {
+                                if (formulaAppConfig.sourceKey === me._picker.getSelectedElementInstance().element.key &&
                                     formulaAppConfig.targetKey === me._picker.getTarget().elementKey) {
 
                                     if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
@@ -461,7 +475,7 @@ var FormulaController = BaseController.extend({
                                     filteredFormulaTemplates.push(formulaTemplate);
                                 }
                             } else {
-                                if (formulaAppConfig.sourceKey === me._picker.targetElementInstance.element.key) {
+                                if (formulaAppConfig.sourceKey === me._picker.getTargetElementInstance().element.key) {
 
                                     if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
                                         formulaTemplate.configuration = formulaAppConfig.configuration;
@@ -472,15 +486,15 @@ var FormulaController = BaseController.extend({
                             }
                         }
                         else if (formulaAppConfig.sourceKey) {
-                            if (!me._cloudElementsUtils.isEmpty(me._picker.selectedElementInstance)) {
-                                if (formulaAppConfig.sourceKey === me._picker.selectedElementInstance.element.key) {
+                            if (!me._cloudElementsUtils.isEmpty(me._picker.getSelectedElementInstance())) {
+                                if (formulaAppConfig.sourceKey === me._picker.getSelectedElementInstance().element.key) {
                                     if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
                                         formulaTemplate.configuration = formulaAppConfig.configuration;
                                     }
                                     filteredFormulaTemplates.push(formulaTemplate);
                                 }
                             } else {
-                                if (formulaAppConfig.sourceKey === me._picker.targetElementInstance.element.key) {
+                                if (formulaAppConfig.sourceKey === me._picker.getTargetElementInstance().element.key) {
 
                                     if (!me._cloudElementsUtils.isEmpty(formulaAppConfig.configuration)) {
                                         formulaTemplate.configuration = formulaAppConfig.configuration;
@@ -512,7 +526,7 @@ var FormulaController = BaseController.extend({
 
     _onFormulaInstancesRefresh: function() {
         var me = this;
-        console.log("Refreshing formula instances");
+        // console.log("Refreshing formula instances");
         me._highlightFormulaInstances();
     },
 

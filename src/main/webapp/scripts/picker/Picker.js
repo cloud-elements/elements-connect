@@ -438,6 +438,24 @@ var Picker = Class.extend({
         return me._target;
     },
 
+    getSelectedElementInstance: function() {
+        var me = this;
+
+        return me.selectedElementInstance;
+    },
+
+    setSelectedElementInstance: function(instance) {
+        var me = this;
+
+        me.selectedElementInstance = instance;
+    },
+
+    getTargetElementInstance: function() {
+        var me = this;
+
+        return me.targetElementInstance;
+    },
+
     setTargetElementInstance: function(instance) {
         var me = this;
         me.targetElementInstance = instance;
