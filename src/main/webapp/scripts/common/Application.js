@@ -161,7 +161,7 @@ var Application = Class.extend({
         return true;
     },
 
-    multipleInstanceConfig: function(key){
+    getTargetDisplayConfig: function(key){
         var me = this;
         var obj = me.configuration.targets;
 
@@ -172,44 +172,53 @@ var Application = Class.extend({
             }
         }
     },
+
     isMultipleInstance: function(key) {
         var me = this;
-        var config = me.multipleInstanceConfig(key);
+        var targetDisplayConfig = me.getTargetDisplayConfig(key);
 
-        if(!me._cloudElementsUtils.isEmpty(config) && config.multipleInstance) {
-            return config.display.multipleInstance;
+        if(!me._cloudElementsUtils.isEmpty(targetDisplayConfig) &&
+           !me._cloudElementsUtils.isEmpty(targetDisplayConfig.multipleInstance) &&
+           targetDisplayConfig.multipleInstance) {
+            return targetDisplayConfig.multipleInstance;
         }
+
         return false;
     },
 
     isInstanceTitle: function(key) {
         var me = this;
-        var config = me.multipleInstanceConfig(key);
+        var targetDisplayConfig = me.getTargetDisplayConfig(key);
 
-        if(!me._cloudElementsUtils.isEmpty(config) &&
-            !me._cloudElementsUtils.isEmpty(config.formulaInstanceName)) {
-            return config.formulaInstanceName;
+        if(!me._cloudElementsUtils.isEmpty(targetDisplayConfig) &&
+            !me._cloudElementsUtils.isEmpty(targetDisplayConfig.formulaInstanceName)) {
+            return targetDisplayConfig.formulaInstanceName;
         }
+
         return 'instances';
     },
+
     isPageTitle: function(key) {
         var me = this;
-        var config = me.multipleInstanceConfig(key);
+        var targetDisplayConfig = me.getTargetDisplayConfig(key);
 
-        if(!me._cloudElementsUtils.isEmpty(config)  &&
-            !me._cloudElementsUtils.isEmpty(config.formulaTitlePicker)) {
-            return config.formulaTitlePicker;
+        if(!me._cloudElementsUtils.isEmpty(targetDisplayConfig)  &&
+            !me._cloudElementsUtils.isEmpty(targetDisplayConfig.formulaTitlePicker)) {
+            return targetDisplayConfig.formulaTitlePicker;
         }
+
         return 'Select a Formula Template';
     },
+
     isPageSubtitle: function(key) {
         var me = this;
-        var config = me.multipleInstanceConfig(key);
+        var targetDisplayConfig = me.getTargetDisplayConfig(key);
 
-        if(!me._cloudElementsUtils.isEmpty(config)  &&
-            !me._cloudElementsUtils.isEmpty(config.formulaSubtitlePicker)) {
-            return config.formulaSubtitlePicker;
+        if(!me._cloudElementsUtils.isEmpty(targetDisplayConfig)  &&
+            !me._cloudElementsUtils.isEmpty(targetDisplayConfig.formulaSubtitlePicker)) {
+            return targetDisplayConfig.formulaSubtitlePicker;
         }
+
         return 'That you would like to use with';
     },
 
