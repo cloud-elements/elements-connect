@@ -449,8 +449,8 @@ body .header-navigation .ui.next.button:hover {
 #formula-picker .services-selections > a.highlightingElement{
     opacity:1;
     border: 1px solid #3498db;
-    -webkit-box-shadow: 0 0 5px rgba(52, 152, 219, 1);
-    box-shadow: 0 0 5px rgba(52, 152, 219, 1);
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0, .25);
+    box-shadow: 0 0 5px rgba(0,0,0, .25);
     -webkit-transform: scale(1.05);
         -ms-transform: scale(1.05);
             transform: scale(1.05);

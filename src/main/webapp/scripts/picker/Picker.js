@@ -531,8 +531,10 @@ var Picker = Class.extend({
         var colorOneBorder = '#picker .services-selections > a.highlightingElement, #formula-picker .services-selections > a.highlightingElement';
 
         var colorContrast = '#picker.show-target .picker-source h2 .content, #picker.show-target .picker-source h2 .icon, #picker.show-target .picker-source h2 .sub.header';
+        var colorContrastTarget = '#picker.show-target .picker-target h2 .content, #picker.show-target .picker-target h2 .icon, #picker.show-target .picker-target h2 .sub.header';
 
-        var colorTwoBkg = '#mapping-data-list-body #mapper-data-list-source,#mapper-header .dropdownmenu,#mapping-data-list-body ul,#mapping-data-list-body .ui-tree-heading,#picker.show-target .picker-target,#formula-picker.show-target .picker-target';
+        var colorTwoBkgPicker = '#picker.show-target .picker-target,#formula-picker.show-target .picker-target';
+        var colorTwoBkgMapper = '#mapping-data-list-body #mapper-data-list-source,#mapper-header .dropdownmenu,#mapping-data-list-body ul,#mapping-data-list-body .ui-tree-heading';
 
         var accentOneBkg = '#picker .services-selections > a:hover:before, #formula-picker .services-selections > a:hover:before, body .header-navigation #progressbar li.completed .step-incomplete i.step-complete, body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after, body .header-navigation .ui.next.button, body .header-navigation .ui.next.button:hover';
         var accentOneBorder = 'body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after';
@@ -548,7 +550,6 @@ var Picker = Class.extend({
         }
         if(!me._cloudElementsUtils.isEmpty(branding.color1)){
             me.addCSSRule(stylesheet, colorOneBkg, "background-color: #"+branding.color1 +" !important");
-            me.addCSSRule(stylesheet, colorOneBorder, "border-color: #"+branding.color1 +" !important");
 
             var contrastColor = branding.color1.charAt(2)
             if(contrastColor == 'a' || contrastColor == 'b' || contrastColor == 'c' || contrastColor == 'd' || contrastColor == 'e' || contrastColor == 'f'){
@@ -556,7 +557,15 @@ var Picker = Class.extend({
             }
         }
         if(!me._cloudElementsUtils.isEmpty(branding.color2)){
-            me.addCSSRule(stylesheet, colorTwoBkg, "background-color: #"+branding.color2 +" !important");
+            me.addCSSRule(stylesheet, colorTwoBkgPicker, "background-color: #"+branding.color2 +" !important");
+
+            var contrastColor = branding.color2.charAt(2)
+            if(contrastColor == 'a' || contrastColor == 'b' || contrastColor == 'c' || contrastColor == 'd' || contrastColor == 'e' || contrastColor == 'f'){
+                me.addCSSRule(stylesheet, colorContrastTarget, "color: #444444 !important");
+            }else{
+                me.addCSSRule(stylesheet, colorTwoBkgMapper, "background-color: #"+branding.color2 +" !important");
+            }
+
         }
         if(!me._cloudElementsUtils.isEmpty(branding.accent1)){
             me.addCSSRule(stylesheet, accentOneBkg, "background-color: #"+branding.accent1 +"!important");
@@ -567,6 +576,7 @@ var Picker = Class.extend({
             me.addCSSRule(stylesheet, accentTwoBkg, "background-color: #"+branding.accent2 +" !important");
             me.addCSSRule(stylesheet, accentTwoBorder, "border-color: #"+branding.accent2 +" !important");
             me.addCSSRule(stylesheet, accentTwoColor, "color: #"+branding.accent2 +" !important");
+            me.addCSSRule(stylesheet, colorOneBorder, "border-color: #"+branding.accent2 +" !important");
         }
 
         return true;
