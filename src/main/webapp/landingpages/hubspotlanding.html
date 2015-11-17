@@ -1,0 +1,176 @@
+<link rel="stylesheet" type="text/css" href="styles/normalize.css">
+<link rel="stylesheet" type="text/css" href="styles/hubspotmain.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<header>
+  <img id="logo" src="images/hubspot-logo.png" alt="Element Loader Logo" width="220px">
+  <h1 class="title">A DATA MIGRATION TOOL TO IMPORT CRM DATA</h1>
+  <h2 class="title">POWERED BY <img src="images/ce-logo-white.png" alt="Cloud Elements Logo"></h2>
+  <div class="buttonHolder">
+    <a class="btn-sign-up" ng-click="goToSignup()">SIGN UP</a>
+    <a class="btn-log-in" ng-click="goToLogin()">LOGIN</a>
+  </div>
+</header>
+<div id="wrapper">
+  <section>
+    <ul id="gallery">
+      <li>
+        <img src="images/mapping2.png" alt="Mapping">
+        <p>Pre-built integrations and mappings simplify
+          how you move your data into HubSpot</p>
+      </li>
+      <li>
+        <img src="images/upload2.png" alt="Upload">
+        <p>Load Accounts, Campaigns, Contacts and Leads across cloud services.</p>
+      </li>
+      <li>
+        <img src="images/security2.png" alt="Security">
+        <p>Data is secured using a complete 256 bit AES encryption scheme.</p>
+      </li>
+    </ul>
+  </section>
+  <section class="element-container">
+    <h2 class="element-headline">Map and Move Data from These Popular Cloud Services Right Into HubSpot</h2>
+    <img src="images/elements.png" alt="Cloud Services">
+  </section>
+  <h2 class="screenshot-headline">Easy to Use</h2>
+  <section class="screenshot-container">
+    <ul>
+      <li>
+        <p>Select the services you from which to map and
+          pull data into HubSpot.</p>
+        <img src="images/elementloader1.png">
+      </li>
+      <li>
+        <p>Drag and Drop the fields you wish to map
+          from each cloud service.</p>
+        <img style="float: left;" src="images/elementloader2.png">
+      </li>
+      <li>
+        <p>Flexible scheduling gives you the option to pull data from a day, week, month ago or more.</p>
+        <img src="images/elementloader3.png">
+      </li>
+    </ul>
+  </section>
+  <section>
+    <table class="table-row-hover" style="float:left;">
+      <caption>Currently Supported Objects</caption>
+      <thead>
+      <tr>
+        <th scope="col">HubSpot Resource</th>
+        <th scope="col">Also Known As</th>
+        <th scope="col">ZohoCRM</th>
+        <th scope="col">MS Dynamics CRM</th>
+        <th scope="col">SugarCRM</th>
+        <th scope="col">Close.io</th>
+        <th scope="col">Pipedrive</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="tooltips" data-title="A company's name"><strong>companies</strong></td>
+        <td class="tooltips" data-title="Companies are labeled accounts in all other services">accounts</td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+      </tr>
+      <tr>
+        <td class="tooltips" data-title="A person with a unique email address"><strong>contacts</strong></td>
+        <td></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+      </tr>
+      <tr>
+        <td class="tooltips" data-title="A potential deal"><strong>leads</strong></td>
+        <td></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td>Not Supported</td>
+      </tr>
+      <tr>
+        <td class="tooltips" data-title="The owner of a HubSpot contact"><strong>owners</strong></td>
+        <td class="tooltips" data-title="Owners are labeled as users in all other services">users</td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td>Not Supported</td>
+        <td>Not Supported</td>
+      </tr>
+      <tr>
+        <td class="tooltips" data-title="A contact with in sales cycle"><strong>deals</strong></td>
+        <td class="tooltips" data-title="Deals are labeled as potentials in ZohoCRM and opportunities in all other services">potentials, opportunities</td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+      </tr>
+      <tr>
+        <td class="tooltips" data-title="Activities performed by contact"><strong>interactions</strong></td>
+        <td class="tooltips" data-title="Interactions are labeled as tasks in Zoho and Close.io and activities in MS Dynamics, SugarCRM, and Pipedrive">tasks, activities</td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+        <td>Not Supported</td>
+        <td>Not Supported</td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+  <section id="contact-logo">
+    <ul>
+      <li>
+        <h2 class="headline">Powered By</h2>
+        <img src="images/ce-logo.jpg" alt="Cloud Elements Logo" width="300px">
+      </li>
+      <li>
+    </ul>
+  </section>
+  <section id="contact-info">
+    <h2 class="headline">Questions</h2>
+    <script type="application/javascript">
+      hbspt.forms.create({
+        portalId: '440197',
+        formId: '371563cd-717a-4546-a1dd-2b967b4352e0',
+        target: '#contact-info-form'
+      });
+    </script>
+    <div id="contact-info-form"></div>
+  </section>
+</div>
+<footer>
+  <p>&copy; Copyright 2015 Cloud Elements LLC. All rights reserved. 3001 Brighton Blvd. Suite #653, Denver, CO 80216 United States <a href="http://cloud-elements.com/privacy/">Privacy</a> and <a href="http://cloud-elements.com/security/">Security</a></p>
+</footer>
+<script type="application/javascript">
+  $(document).ready(function(){
+    $(".table-row-hover table").delegate('td','mouseover mouseleave', function(e) {
+      if (e.type == 'mouseover') {
+        $(this).parent().addClass("hover").parents('table').addClass('hovering');
+      }
+      else {
+        $(this).parent().removeClass("hover").parents('table').removeClass('hovering');
+      }
+    });
+
+    $("table").delegate('.tooltips','mouseover mouseleave', function(e) {
+      if (e.type === 'mouseover') {
+        $(this).addClass('hover');
+      }
+      else {
+        $(this).removeClass('hover');
+      }
+
+    })
+    $(function() {
+      //$( document ).tooltip().addClass( tooltip );
+    });
+  });
+</script>

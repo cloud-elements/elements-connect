@@ -5,98 +5,107 @@
  */
 var ElementsService = Class.extend({
 
-    instanceId: null,
-    _cloudElementsUtils:null,
-    selectedObjectName: null,
-    newobject: false,
-
-//    ENV_URL: 'https://qa.cloud-elements.com/elements/api-v2/',
-//    secrets:{
-//        'user' : '846708bb4a1da71d70286bc5bb0c51bf',
-//        'company': '98c89f16608df03b0248b74ecaf6a79b'
-//    },
-
-
-    ENV_URL: 'http://localhost:5050/elements/api-v2/',
-    secrets:{
-        'user' : 'CtRMK6ISlVJ0LH8pL8DX6I1lRVTDhMtF2Ofk7CTJuy8=',
-        'company': 'e8f910e423f9c34306027dfd147047e8'
-    },
-
-//    ENV_URL:null,
-//    secrets:null,
+    _cloudElementsUtils: null,
+    _application: null,
 
     /**
      * Initialize Service Properties
      */
-    init:function(){
-
+    init: function() {
     },
 
-    populateServiceDetails: function() {
+    loadOrgConfiguration: function() {
+        var me = this;
 
-        //Read the URL arguments for Orgnaization and User secrets and selected element instanceId
-        var pageParameters = this._cloudElementsUtils.pageParameters();
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.secrets)) {
-            this.secrets = angular.fromJson(pageParameters.secrets);
+        var headers = {
+            'Content-Type': 'application/json', 'Authorization': 'Bearer ' + me._application.environment.apiKey
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.user)) {
-            this.secrets.user = pageParameters.user;
+        var url = me._application.environment.elementsUrl + '/applications';
+
+        return me._httpGet(url, headers);
+    },
+
+    loadUserConfiguration: function() {
+
+        var me = this;
+
+        var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Organization ' + me._application.configuration.company + ', UserId ' + me._application.environment.userId
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.company)) {
-            this.secrets.company = pageParameters.company;
+        var url = me._application.environment.elementsUrl + '/applications/users';
+
+        return me._httpGet(url, headers);
+    },
+
+    loginAndloadConfiguration: function(email, password) {
+
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(password)) {
+            password = email;
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.defaultAccount)) {
-            this.secrets.defaultAccount = pageParameters.defaultAccount;
+        var headers = {
+            'Content-Type': 'application/json',
+            'Elements-User-Password': password
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.accountName)) {
-            this.secrets.accountName = decodeURI(pageParameters.accountName);
+        var url = me._application.environment.elementsUrl + '/applications/users/' + email;
+
+        return me._httpGet(url, headers);
+    },
+
+    updatePassword: function(email, password, newpassword) {
+
+        var me = this;
+
+        var headers = {
+            'Content-Type': 'application/json',
+            'Elements-User-Password': password,
+            'Elements-User-NewPassword': newpassword
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.accountId)) {
-            this.secrets.accountId = pageParameters.accountId;
+        var url = me._application.environment.elementsUrl + '/applications/users/' + email + '/updatepassword';
+        return me._httpPatch(url, headers);
+    },
+
+    resetPassword: function(user) {
+        var me = this;
+        var headers = {
+            'Content-Type': 'application/json'
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.instanceId)) {
-            this.instanceId = pageParameters.instanceId;
+        var url = me._application.environment.elementsUrl + '/applications/users/' + user.email + '/reset';
+
+        return me._httpPost(url, headers, user);
+    },
+
+    signup: function(user) {
+        var me = this;
+        var headers = {
+            'Content-Type': 'application/json',
+            'Elements-User-Password': user.password
         }
 
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.objectName)) {
-            this.selectedObjectName = pageParameters.objectName;
-        }
-
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.env)) {
-            this.ENV_URL = pageParameters.env;
-        }
-
-        if(this._cloudElementsUtils.isUndefinedOrNull(this.ENV_URL)) {
-            this.ENV_URL = '/elements/api-v2/';
-        }
-
-        if(!this._cloudElementsUtils.isUndefinedOrNull(pageParameters.newobject)) {
-            this.newobject = pageParameters.newobject;
-        }
+        var url = me._application.environment.elementsUrl + '/applications/users';
+        return this._httpPost(url, headers, user);
     },
 
     _getHeaders: function(token) {
+        var me = this;
         var headers = null;
-
-        if(token == null || token== undefined)
-        {
+        if(token == null || token == undefined) {
             headers = {
-                'Authorization' : 'User '+this.secrets.user+', Organization '+ this.secrets.company,
-                'Content-Type'  : 'application/json'
+                'Authorization': 'User ' + me._application.configuration.user + ', Organization ' + me._application.configuration.company,
+                'Content-Type': 'application/json'
             }
-        }
-        else
-        {
+        } else {
             headers = {
-                'Authorization' : 'Element '+token+', User '+this.secrets.user+', Organization '+ this.secrets.company,
-                'Content-Type'  : 'application/json'
+                'Authorization': 'Element ' + token + ', User ' + me._application.configuration.user + ', Organization ' +
+                    me._application.configuration.company, 'Content-Type': 'application/json'
             }
         }
         return headers;
@@ -106,151 +115,235 @@ var ElementsService = Class.extend({
      * Query server and returns element instances
      * @return Service handler
      */
-    loadElementInstances:function(){
-        var url = this.ENV_URL+'instances';
-        return this._httpGet(url,this._getHeaders());
+    loadElementInstances: function() {
+        var url = this._application.environment.elementsUrl + '/instances';
+        return this._httpGet(url, this._getHeaders());
     },
 
-    getOAuthUrl: function(elementKey, apiKey, apiSec, callbackUrl) {
+    getOAuthRequestToken: function(elementConfig) {
+        var me = this;
 
         var parameters = {
-            'elementKeyOrId': elementKey,
-            'apiKey' : apiKey,
-            'apiSecret': apiSec,
-            'callbackUrl': callbackUrl
+            'elementKeyOrId': elementConfig.elementKey,
+            'apiKey': elementConfig.apiKey,
+            'apiSecret': elementConfig.apiSecret,
+            'callbackUrl': elementConfig.callbackUrl
         };
 
-        var url = this.ENV_URL+'elements/'+elementKey+'/oauth/url';
+        if(!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)){
+            parameters.siteAddress = elementConfig.siteAddress;
+        }
 
-        return this._httpGet(url,this._getHeaders(), parameters);
+        if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
+            for(key in elementConfig.other) {
+                if(elementConfig.other.hasOwnProperty(key)) {
+                    parameters[key] = elementConfig.other[key];
+                }
+            }
+        }
+
+        var url = this._application.environment.elementsUrl + '/elements/' + elementConfig.elementKey + '/oauth/token';
+
+        return this._httpGet(url, this._getHeaders(), parameters);
     },
 
-    createInstance: function(elementKey, code, apiKey, apiSec, callbackUrl) {
+    getOAuthUrl: function(elementConfig) {
+        var me = this;
+
+        var parameters = {
+            'elementKeyOrId': elementConfig.elementKey,
+            'apiKey': elementConfig.apiKey,
+            'apiSecret': elementConfig.apiSecret,
+            'callbackUrl': elementConfig.callbackUrl
+        };
+
+        if(!me._cloudElementsUtils.isEmpty(elementConfig.siteAddress)){
+            parameters.siteAddress = elementConfig.siteAddress;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
+            for(key in elementConfig.other) {
+                if(elementConfig.other.hasOwnProperty(key)) {
+                    parameters[key] = elementConfig.other[key];
+                }
+            }
+        }
+
+        var url = this._application.environment.elementsUrl + '/elements/' + elementConfig.elementKey + '/oauth/url';
+
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    createInstance: function(elementConfig, providerData, instanceId, methodType) {
+        var me = this;
 
         var elementProvision = {
             'configuration': {
-                'oauth.api.key' : apiKey,
-                'oauth.api.secret' : apiSec,
-                'oauth.callback.url': callbackUrl
+                'oauth.api.key': elementConfig.apiKey,
+                'oauth.api.secret': elementConfig.apiSecret,
+                'oauth.callback.url': elementConfig.callbackUrl
             },
-            'providerData': {
-                'code': code
-            },
+            'providerData': providerData,
             'element': {
-                "key" : elementKey
-            },
-            'name': elementKey
+                'key': elementConfig.elementKey
+            }, 'name': elementConfig.elementKey
         };
 
-        return this._httpPost(this.ENV_URL+'instances/', this._getHeaders(), elementProvision);
+        if(me._cloudElementsUtils.isEmpty(elementConfig.other) == false) {
+            for(key in elementConfig.other) {
+                if(elementConfig.other.hasOwnProperty(key)) {
+                    elementProvision.configuration[key] = elementConfig.other[key];
+                }
+            }
+        }
+        if(me._cloudElementsUtils.isEmpty(methodType) || methodType == 'POST') {
+            return this._httpPost(this._application.environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+        } else {
+            return this._httpPut(this._application.environment.elementsUrl + '/instances/' + instanceId, this._getHeaders(), elementProvision);
+        }
     },
 
-    loadElementDefaultTransformations:function(elementInstance){
-        var url = this.ENV_URL+'elements/'+elementInstance.element.key+'/transformations';
-        return this._httpGet(url,this._getHeaders());
+    createNonOathInstance: function(elementProvision, instanceId, methodType) {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(methodType) || methodType == 'POST') {
+            return this._httpPost(this._application.environment.elementsUrl + '/instances/', this._getHeaders(), elementProvision);
+        } else {
+            return this._httpPut(this._application.environment.elementsUrl + '/instances/' + instanceId, this._getHeaders(), elementProvision);
+        }
+
     },
 
+    deleteInstance: function(elementInstance) {
+        var me = this;
+        return this._httpDelete(this._application.environment.elementsUrl + '/instances/' + elementInstance.id, this._getHeaders());
+    },
+
+    loadElementDefaultTransformations: function(elementInstance) {
+        var url = this._application.environment.elementsUrl + '/elements/' + elementInstance.element.key + '/transformations';
+        return this._httpGet(url, this._getHeaders());
+    },
 
     /**
      * Query server and returns element instance Objects
      * @return Service handler
      */
-    loadInstanceObjects:function(elementInstance){
+    loadInstanceObjects: function(elementInstance) {
 
-        var url = this.ENV_URL+'hubs/'+elementInstance.element.hub+'/objects';
-        return this._httpGet(url,this._getHeaders(elementInstance.token));
+        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects';
+        return this._httpGet(url, this._getHeaders(elementInstance.token));
+    },
+
+    loadInstanceObjectDefinitions: function(elementInstance) {
+        var url = this._application.environment.elementsUrl + '/instances/' + elementInstance.id + '/objects/definitions';
+        return this._httpGet(url, this._getHeaders());
     },
 
     loadAccountObjectDefinitions: function() {
-        var url = this.ENV_URL+'accounts/objects/definitions';
-        return this._httpGet(url,this._getHeaders());
+        var url = this._application.environment.elementsUrl + '/accounts/objects/definitions';
+        return this._httpGet(url, this._getHeaders());
     },
 
     loadOrganizationsObjectDefinitions: function() {
-        var url = this.ENV_URL+'organizations/objects/definitions';
-        return this._httpGet(url,this._getHeaders());
+        var url = this._application.environment.elementsUrl + '/organizations/objects/definitions';
+        return this._httpGet(url, this._getHeaders());
     },
 
     loadAccounts: function() {
-        var url = this.ENV_URL+'accounts?where=type=\'CompanyAccount\'';
-        return this._httpGet(url,this._getHeaders());
+        var url = this._application.environment.elementsUrl + '/accounts?where=type=\'CompanyAccount\'';
+        return this._httpGet(url, this._getHeaders());
+    },
+
+    /**
+     * Loads the formula templates that are configured for this user's CE account
+     * @returns {*} The list of formula templates or an empty list, if there are none
+     */
+    loadFormulaTemplates: function() {
+        var url = this._application.environment.elementsUrl + '/formulas';
+        return this._httpGet(url, this._getHeaders());
     },
 
     /**
      * Query server and returns Object metadata
      * @return Service handler
      */
-    loadObjectMetaData:function(elementInstance, objectName){
+    loadObjectMetaData: function(elementInstance, objectName, discoveryId) {
+        var me = this;
+        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects/' + objectName +
+            '/metadata';
 
-        var url = this.ENV_URL+'hubs/'+elementInstance.element.hub+'/objects/'+objectName+'/metadata';
+        if(!me._cloudElementsUtils.isEmpty(discoveryId)) {
+            url += '?discoveryId=' + discoveryId;
+        }
 
-        return this._httpGet(url,this._getHeaders(elementInstance.token));
+        return this._httpGet(url, this._getHeaders(elementInstance.token));
     },
 
-    loadInstanceTransformations:function(elementInstance){
+    loadInstanceTransformations: function(elementInstance) {
 
         // /instances/{id}/transformations
-        var url = this.ENV_URL+'instances/{id}/transformations';
+        var url = this._application.environment.elementsUrl + '/instances/{id}/transformations';
         url = url.replace('{id}', elementInstance.id);
 
-        return this._httpGet(url,this._getHeaders());
+        return this._httpGet(url, this._getHeaders());
     },
 
-    loadAccountTransformations:function(elementInstance, account){
+    loadAccountTransformations: function(elementInstance, account) {
 
         //  /accounts/{id}/elements/{key}/transformations
-        var url = this.ENV_URL+'accounts/{id}/elements/{key}/transformations';
+        var url = this._application.environment.elementsUrl + '/accounts/{id}/elements/{key}/transformations';
         url = url.replace('{id}', account.id);
         url = url.replace('{key}', elementInstance.element.key);
-        return this._httpGet(url,this._getHeaders());
+        return this._httpGet(url, this._getHeaders());
     },
 
-    loadOrganizationTransformations:function(elementInstance){
+    loadOrganizationTransformations: function(elementInstance) {
         //  /organizations/elements/{key}/transformations
-        var url = this.ENV_URL+'organizations/elements/{key}/transformations';
+        var url = this._application.environment.elementsUrl + '/organizations/elements/{key}/transformations';
         url = url.replace('{key}', elementInstance.element.key);
 
-        return this._httpGet(url,this._getHeaders());
+        return this._httpGet(url, this._getHeaders());
     },
 
     findAllObjectTransformations: function(objectName, scope, account) {
 
-        var url = this.ENV_URL+'organizations/objects/{objectName}/transformations';
-        if(scope !='organization') {
-            url = this.ENV_URL+'accounts/{id}/objects/{objectName}/transformations';
+        var url = this._application.environment.elementsUrl + '/organizations/objects/{objectName}/transformations';
+
+        if(scope != 'organization') {
+            url = this._application.environment.elementsUrl + '/accounts/{id}/objects/{objectName}/transformations';
             url = url.replace('{id}', account.id);
         }
+
         url = url.replace('{objectName}', objectName);
 
-        return this._httpGet(url,this._getHeaders());
+        return this._httpGet(url, this._getHeaders());
     },
 
-    saveObjectDefinition: function(objectName, objectDefinition, scope, methodType) {
+    saveObjectDefinition: function(selectedInstance, objectName, objectDefinition, scope, methodType) {
 
         // /organizations/objects/{objectName}/definitions
         // /accounts/{id}/objects/{objectName}/definitions
 
         var url;
+
         if(scope == 'organization') {
-            url = this.ENV_URL+'organizations/objects/{objectName}/definitions';
-        }
-        else {
-            url = this.ENV_URL+'accounts/{id}/objects/{objectName}/definitions';
-            url = url.replace('{id}', scope); //The scope that comes is account id
+            url = this._application.environment.elementsUrl + '/organizations/objects/{objectName}/definitions';
+        } else if(scope == 'account') {
+            url = this._application.environment.elementsUrl + '/accounts/objects/{objectName}/definitions';
+        } else if(scope == 'instance') {
+            url = this._application.environment.elementsUrl + '/instances/' + selectedInstance.id +
+                '/objects/{objectName}/definitions';
         }
 
         url = url.replace('{objectName}', objectName);
 
         if(methodType == 'POST') {
             return this._httpPost(url, this._getHeaders(), objectDefinition);
-        }
-        else {
+        } else {
             return this._httpPut(url, this._getHeaders(), objectDefinition);
         }
-
     },
 
-    saveObjectTransformation: function(elementInstance, account, objectName, objectTransformation, scope, methodType) {
+    saveObjectTransformation: function(elementInstance, objectName, objectTransformation, scope, methodType) {
 
         //  /organizations/elements/{key}/transformations
         //  /accounts/{id}/elements/{key}/transformations
@@ -258,17 +351,15 @@ var ElementsService = Class.extend({
 
         var url = null;
         if(scope == 'organization') {
-            url = this.ENV_URL+'organizations/elements/{key}/transformations/{objectName}';
+            url = this._application.environment.elementsUrl + '/organizations/elements/{key}/transformations/{objectName}';
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
-        }
-        else if(scope == 'instance') {
-            url = this.ENV_URL+'instances/{id}/transformations/{objectName}';
+        } else if(scope == 'instance') {
+            url = this._application.environment.elementsUrl + '/instances/{id}/transformations/{objectName}';
             url = url.replace('{id}', elementInstance.id);
             url = url.replace('{objectName}', objectName);
-        }
-        else {
-            url = this.ENV_URL+'accounts/{id}/elements/{key}/transformations/{objectName}';
+        } else {
+            url = this._application.environment.elementsUrl + '/accounts/{id}/elements/{key}/transformations/{objectName}';
             url = url.replace('{id}', scope); //The scope that comes is account id
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
@@ -276,8 +367,7 @@ var ElementsService = Class.extend({
 
         if(methodType == 'POST') {
             return this._httpPost(url, this._getHeaders(), objectTransformation);
-        }
-        else {
+        } else {
             return this._httpPut(url, this._getHeaders(), objectTransformation);
         }
     },
@@ -290,17 +380,15 @@ var ElementsService = Class.extend({
 
         var url = null;
         if(scope == 'organization') {
-            url = this.ENV_URL+'organizations/elements/{key}/transformations/{objectName}';
+            url = this._application.environment.elementsUrl + '/organizations/elements/{key}/transformations/{objectName}';
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
-        }
-        else if(scope == 'instance') {
-            url = this.ENV_URL+'instances/{id}/transformations/{objectName}';
+        } else if(scope == 'instance') {
+            url = this._application.environment.elementsUrl + '/instances/{id}/transformations/{objectName}';
             url = url.replace('{id}', elementInstance.id);
             url = url.replace('{objectName}', objectName);
-        }
-        else {
-            url = this.ENV_URL+'accounts/{id}/elements/{key}/transformations/{objectName}';
+        } else {
+            url = this._application.environment.elementsUrl + '/accounts/{id}/elements/{key}/transformations/{objectName}';
             url = url.replace('{id}', scope); //The scope that comes is account id
             url = url.replace('{key}', elementInstance.element.key);
             url = url.replace('{objectName}', objectName);
@@ -309,70 +397,268 @@ var ElementsService = Class.extend({
         return this._httpDelete(url, this._getHeaders());
     },
 
+    getHistory: function(jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/bulkloader';
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    getCaaasHistory: function(jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/formulas/instances';
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    getJobErrors: function(elementInstance, jobId) {
+
+        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/' + jobId + '/errors';
+
+        return this._httpGet(url, this._getHeaders(elementInstance.token));
+    },
+
+    getFormulaInstanceExecutions: function(formulaId, instanceId, jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/formulas/'+ formulaId +'/instances/'+ instanceId +'/executions';
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    getInstanceExecutionValues: function(formulaId, instanceId, executionId, jobId) {
+
+        var parameters = {
+            'page': 1,
+            'pageSize': 50
+        };
+
+        if(!this._cloudElementsUtils.isEmpty(jobId)) {
+            parameters.jobId = jobId;
+        }
+
+        var url = this._application.environment.elementsUrl + '/formulas/'+ formulaId +'/instances/'+ instanceId +'/executions/'+executionId;
+        return this._httpGet(url, this._getHeaders(), parameters);
+    },
+
+    /**
+     * Query server and returns Object metadata
+     * @return Service handler
+     */
+    scheduleJob: function(elementInstance, job, cronVal) {
+
+        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
+
+        console.log(JSON.stringify(job));
+        var headers = this._getHeaders(elementInstance.token);
+        if(!this._cloudElementsUtils.isEmpty(cronVal)) {
+            headers['Elements-Schedule-Request'] = cronVal;
+        }
+
+        return this._httpPost(url, headers, job);
+    },
+
+    createFormulaInstance: function(formulaId, name, formulaName, configuration) {
+        var me = this;
+        console.log('Attempting to create an instance of formula: ' + formulaId + ' with name: ' + name);
+        var url = me._application.environment.elementsUrl + '/formulas/{id}/instances';
+        url = url.replace('{id}', formulaId);
+
+        var formulaInstance = {
+            'name': name,
+            'configuration': configuration
+        };
+
+        var headers = me._getHeaders();
+        return me._httpPost(url, headers, formulaInstance).then(me._createAction(me, formulaName));
+    },
+
+    deleteFormulaInstance: function(formulaId, formulaInstanceId) {
+        var me = this;
+        console.log('Attempting to delete formula instance ' + formulaInstanceId);
+        var url = me._application.environment.elementsUrl + '/formulas/{id}/instances/{formulaInstanceId}';
+        url = url.replace('{id}', formulaId);
+        url = url.replace('{formulaInstanceId}', formulaInstanceId);
+
+        var headers = me._getHeaders();
+        return me._httpDelete(url, headers);
+    },
+
+    findFormulaInstances: function(formulaId) {
+        var me = this;
+        console.log('Attempting to find instances of formula: ' + formulaId);
+        var url = me._application.environment.elementsUrl + '/formulas/{id}/instances';
+        url = url.replace('{id}', formulaId);
+
+        var headers = me._getHeaders();
+        return me._httpGet(url, headers);
+    },
+
+    findFormulaConfigOpts: function(path, elementInstance) {
+        var me = this;
+
+        if(path.indexOf("{") > -1){
+            console.log('Formula config option path with was script');
+            var script = path.split("{").pop().split("}").shift();
+            var x = eval(script);
+            path = path.replace('{'+script+'}', x);
+        }
+        console.log('Attempting to find instances of formula config options');
+        var url = me._application.environment.elementsUrl + path;
+
+        return this._httpGet(url, me._getHeaders(elementInstance.token));
+
+    },
+
+    getJobs: function() {
+        var me = this;
+
+        var url = me._application.environment.elementsUrl + '/jobs';
+        return this._httpGet(url, this._getHeaders());
+    },
+
+    deleteJob: function(jobId) {
+        var me = this;
+        var url = me._application.environment.elementsUrl + '/jobs/' + jobId;
+        return this._httpDelete(url, this._getHeaders());
+    },
+
+    disableJob: function(jobId) {
+        var me = this;
+        var url = me._application.environment.elementsUrl + '/jobs/' + jobId + '/disable';
+        return this._httpPut(url, this._getHeaders());
+    },
+
+    enableJob: function(jobId) {
+        var me = this;
+        var url = me._application.environment.elementsUrl + '/jobs/' + jobId + '/enable';
+        return this._httpPut(url, this._getHeaders());
+    },
+
     _httpGet: function(url, headers, data) {
 
         return this.$http({
-            url: url,
-            method: 'GET',
-            headers: headers,
-            params: data
+            url: url, method: 'GET', headers: headers, params: data
         });
     },
 
     _httpPost: function(url, headers, data) {
 
         return this.$http({
-            url: url,
-            method: 'POST',
-            headers: headers,
-            data: data
+            url: url, method: 'POST', headers: headers, data: data
         });
     },
 
     _httpPut: function(url, headers, data) {
 
         return this.$http({
-            url: url,
-            method: 'PUT',
-            headers: headers,
-            data: data
+            url: url, method: 'PUT', headers: headers, data: data
+        });
+    },
+
+    _httpPatch: function(url, headers, data) {
+
+        return this.$http({
+            url: url, method: 'PATCH', headers: headers, data: data
         });
     },
 
     _httpDelete: function(url, headers) {
 
         return this.$http({
-            url: url,
-            method: 'DELETE',
-            headers: headers
+            url: url, method: 'DELETE', headers: headers
         });
+    },
+
+    /*
+    Triggers a newly created workflow instance with a supplied body if configured.
+
+    Example JSON configuration:
+
+     "formulas": [
+        {
+            "name": "ReadyTalk to Marketo Workflow",
+            "sourceKey": "readytalk",
+            "targetKey": "marketo",
+            "actions": {
+                "onCreate": {
+                    "body": {}
+                }
+            }
+     */
+
+    _createAction: function(me, formulaName) {
+        var handler = function(response) {
+            var formulas = me._application.configuration.formulas;
+            for (var i=0;i<formulas.length;i++) {
+                if (formulas[i].name === formulaName) {
+                    var onCreate = formulas[i].actions && formulas[i].actions.onCreate
+                    if (onCreate) {
+                        if (onCreate.elementKey) {
+                            onCreate.body.instance_id = response.data.configuration[onCreate.elementKey];
+                        }
+                        var headers = me._getHeaders();
+                        var url = me._application.environment.elementsUrl;
+                        url = url + '/formulas/';
+                        url = url + response.data.formula.id;
+                        url = url + '/instances/';
+                        url = url + response.data.id;
+                        url = url + '/executions';
+                        me._httpPost(url, headers, formulas[i].actions.onCreate.body);
+                    }
+                }
+            }
+            return response;
+        }
+        return handler;
     }
 });
-
-
 
 /**
  * Datamappers Service object creation
  *
  */
-(function (){
+(function() {
 
-	var ElementsServiceObject = Class.extend({
+    var ElementsServiceObject = Class.extend({
 
-		instance: new ElementsService(),
+        instance: new ElementsService(),
 
-		/**
-    	 * Initialize and configure
-     	*/
-		$get:['$http', 'CloudElementsUtils', function($http, CloudElementsUtils){
-			this.instance.$http = $http;
-            this.instance._cloudElementsUtils = CloudElementsUtils;
+        /**
+         * Initialize and configure
+         */
+        $get: [
+            '$http', 'Application', 'CloudElementsUtils', function($http, Application, CloudElementsUtils) {
+                this.instance.$http = $http;
+                this.instance._cloudElementsUtils = CloudElementsUtils;
+                this.instance._application = Application;
+                return this.instance;
+            }
+        ]
+    })
 
-            this.instance.populateServiceDetails();
-			return this.instance;
-		}]
-	})
-
-	angular.module('bulkloaderApp')
-		.provider('ElementsService',ElementsServiceObject);
+    angular.module('bulkloaderApp').provider('ElementsService', ElementsServiceObject);
 }());

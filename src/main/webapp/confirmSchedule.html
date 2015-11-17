@@ -1,0 +1,48 @@
+<!-- SCHEDULING Confirmation -->
+<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
+  <i class="close icon" ng-click="cancel()"></i>
+  <div class="header">
+    Export Data
+  </div>
+  <div class="content">
+    <div class="image">
+      <i class="wait icon"></i>
+    </div>
+    <div class="description">
+      <h2>How far back would you like to pull data from? Last recent successful pull: January 1, 2015</h2>
+
+      <div class="ui icon input fluid">
+        <input type="text" class="datepicker"  datepicker-popup="{{format}}" ng-model="queryStartDate"
+               placeholder="MMMM dd, yyyy" is-open="opened" min-date="minDate" datepicker-options="dateOptions"
+               show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
+        <span class="input-group-btn"  style="position: absolute;top: 0;right: 39px;">
+          <button type="button" class="btn btn-default" ng-click="open($event)"
+                  style="padding: 10px 11px 11px 13px;"><i class="calendar icon"></i></button>
+        </span>
+
+      </div>
+      <div class="warning">
+                        <span>
+                            20,000 Records Found in
+                          <div class="ui inline dropdown">
+                            <div class="text">Accounts</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                              <div class="item" data-text="Accounts">Accounts</div>
+                              <div class="item" data-text="Contacts">Contacts</div>
+                              <div class="item" data-text="Leads">Leads</div>
+                            </div>
+                          </div>
+                      </span>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="two fluid ui inverted buttons">
+      <button type="submit" class="ui red basic inverted button tiny" ng-click="cancel()">
+        <i class="remove icon"></i> Cancel</button>
+      <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
+        <i class="checkmark icon"></i> Schedule Job</button>
+    </div>
+  </div>
+</div>

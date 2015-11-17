@@ -1,0 +1,97 @@
+<div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
+     ng-include="'navigation.html'"></div>
+<!-- LIST SELECTION -->
+<section id="data-list" class="animated-panel">
+
+  <!-- FIXED LIST HEADER & SELECTION -->
+  <div id="data-list-header">
+    <div class="mapping-data-list" style="padding: .3rem 1rem;">
+      <div class="column sixteen wide padded" id="" style="padding: 0 30px;">
+        <!--<ui-select class="ui-select-datalist" ng-model="selectedObject.select" theme="select2" ng-disabled="disabled"-->
+                   <!--style="width: 100%;"-->
+                   <!--ng-change="refreshObjectMetaData()">-->
+          <!--<ui-select-match>{{$select.selected.name}}</ui-select-match>-->
+          <!--<ui-select-choices repeat="selectedObject in instanceObjects | filter: $select.search">-->
+            <!--<md-switch class="md-primary-green" aria-label="Enable Object"-->
+                       <!--ng-click="$event.stopPropagation()" ng-model="selectedObject.transformed">-->
+            <!--</md-switch>-->
+            <!--<div ng-bind-html="selectedObject.name | highlight: $select.search">-->
+            <!--</div>-->
+          <!--</ui-select-choices>-->
+        <!--</ui-select>-->
+
+        <div class="column eight wide padded target-source-link-img" style="float:left;">
+          <span style="background-image: url({{sourceLogo}})"></span>
+          <p style="float: left;padding: 0;line-height: 1.3em;padding-left: 5px;color: #333; font-weight: bold;">
+            <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
+            <br/>source</p>
+        </div>
+
+
+
+        <select
+            data-ng-model="selectedObject.select"
+            ng-options="o as o.name for o in instanceObjects"
+            ng-change="refreshObjectMetaData()" class="target-select" style="margin: 5px 30px; float: left;min-width: 200px;">
+        </select>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST BODY -->
+  <div id="data-list-body">
+
+    <script type="text/ng-template" id="objectFields.html">
+
+
+
+      <div ui-tree-handle data-nodrop class="tree-node ui toggle tree-root-li-li-container">
+        <button type="submit" ng-show="showTreeToggle(metadata)"
+                class="pull-left btn btn-success btn-xs toogle-tree-btn" data-nodrag ng-click="toggle(this)"><span
+                class="glyphicon glyphicon-remove"
+                ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></button>
+        <div ng-show="!showTreeToggle(metadata)" class="pull-left btn-spacer" data-nodrag> </div>
+        <md-switch ng-model="metadata.transform" class="md-primary-green" md-no-ink
+                   aria-label="metadata.vendorPath"
+                   ng-change="unCheckObject(metadata.transform, metadata, objectMetaData)">
+          <label>{{metadata.vendorPath}}</label>
+        </md-switch>
+
+        <span class="type">{{metadata.type}}</span>
+      </div>
+      <ul ui-tree-nodes="" data-nodrop ng-model="metadata.fields" ng-class="{hidden: collapsed}">
+        <li ng-repeat="metadata in metadata.fields" ui-tree-node data-nodrop ng-include="'objectFields.html'"
+            collapsed="false">
+        </li>
+      </ul>
+    </script>
+
+    <div ui-tree="fieldsTreeOptions" data-nodrop id="tree1-root" data-drag-enabled="false" ng-show="showTree" class="list">
+      <h1>{{selectedObject.select.name}}</h1>
+      <li class="tree-root-li">
+        <div class="tree-root-li-container">
+          <md-switch class="md-primary-green" aria-label="Enable Object"
+                     ng-change="checkAllInstance(cbObject.checked, objectMetaData)"
+                     ng-model="cbObject.checked">
+            <label>{{selectedObject.select.name}}</label>
+          </md-switch>
+          <span class="type">object</span>
+        </div>
+        <ul ui-tree-nodes="" data-nodrop ng-model="objectMetaData">
+          <li ng-repeat="metadata in objectMetaData"
+              ui-tree-node data-nodrop ng-include="'objectFields.html'"
+              collapsed="false">
+          </li>
+        </ul>
+      </li>
+
+    </div>
+
+  </div>
+
+</section>
+
+<md-sidenav class="md-sidenav-left" md-component-id="left" ng-include="'sidenav.html'"
+            ng-controller="NavigationController"></md-sidenav>
+

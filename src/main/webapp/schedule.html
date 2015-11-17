@@ -1,0 +1,170 @@
+<div class="header-navigation" ng-include="'branddingbar.html'"></div>
+<div class="header-navigation" ng-controller="NavigationController as other" ng-show="shownav"
+     ng-include="'navigation.html'"></div>
+<!-- LIST SELECTION -->
+<section id="scheduler" class="">
+  <div class="ui grid basic" style="margin: 100px auto; max-width: 80%;">
+
+    <!--<div class="header wide row">-->
+    <!--<h2 class="wide column">Schedule</h2>-->
+    <!--</div>-->
+    <div class="content wide row">
+      <div class="ui grid">
+        <div class="eight wide column ui grid" style="border-right: 1px solid #aaa;margin-right: 1rem;">
+          <div class="seven wide column" style="padding: 0;">
+            <div src="{{sourceLogo}}"
+                 style="background-image:url({{sourceLogo}});background-size: 3em;background-position: center center;background-repeat: no-repeat;display: inline-block;width: 5vw;height: 4vw;min-width: 40px;min-height: 40px;position: relative; float:left;"></div>
+            <p style="float: left;padding: 0;line-height: 1.3em;font-weight: bold;padding-left: 10px;">
+              <b style="font-weight: bold; text-transform: uppercase;">{{sourceName}}</b>
+              <br/>source</p>
+          </div>
+          <div ng-show="showTarget" class="one wide column">
+            <i class="long arrow right icon" style="font-size: 1.5rem;padding: 0;"></i>
+          </div>
+          <div ng-show="showTarget" class="seven wide column" style="padding: 0;">
+            <div src="{{sourceLogo}}"
+                 style="background-image:url({{targetLogo}});background-size: 3em;background-position: center center;background-repeat: no-repeat;display: inline-block;width: 5vw;height: 4vw;min-width: 40px;min-height: 40px;position: relative; float:left;"></div>
+            <p style="float: left;padding: 0;line-height: 1.3em;font-weight: bold; padding-left:10px;">
+              <b style="font-weight: bold; text-transform: uppercase;">{{targetName}}</b>
+              <br/> target</p>
+          </div>
+
+          <script type="text/ng-template" id="currentTransfomations.html">
+            <p class="fourteen wide column">{{metadata.sourceObject}} <i class="angle right icon"></i> {{metadata
+              .targetObject}}</p>
+            <md-switch class="two wide column md-primary-green"
+                       ng-model="metadata.transformed" aria-label></md-switch>
+          </script>
+          <p class="noteheader">Data for the selected objects will be loaded</p>
+          <div class="ui internally grid transformations" data-ng-model="currentTransfomations">
+            <div ng-repeat="metadata in currentTransfomations"
+                 ng-include="'currentTransfomations.html'" class="row"></div>
+          </div>
+        </div>
+
+        <md-radio-group class="eight wide column ui grid transfer-container" ng-model="datatransfer">
+
+          <!-- Transfer Now -->
+          <md-radio-button aria-label="" value="transfernow" class="md-large md-light md-checked-green">
+            <h3>Transfer data now</h3>
+          </md-radio-button>
+          <div ng-show="datatransfer=='transfernow'" class="ui icon input fluid" style="margin-bottom: 15px;">
+            <p class="ui">How far back?</p>
+
+            <div class="ui icon input fluid">
+              <input type="text" class="datepicker ui" datepicker-popup="{{format}}" ng-model="queryStartDate"
+                     placeholder="January 01, 2015" is-open="opened.transfernow" min-date="minDate"
+                     datepicker-options="dateOptions" close-on-date-selection="true"
+                     show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true" max-date="maxDate"
+                     close-text="Close" datepicker-append-to-body="false"/>
+            <span class="input-group-btn" style="position: absolute;top: 0;right: -1px; width: 47px;">
+              <button type="button" class="btn btn-default" ng-click="open($event, 'transfernow')"
+                      style="padding: 14px 11px 15px 13px;"><i class="calendar icon"></i></button>
+            </span>
+            </div>
+            <!--<div class="two fluid ui inverted buttons" style="margin: 15px 0;">-->
+            <!--<button type="submit" class="right floated ui green basic inverted button tiny " ng-click="save()"-->
+            <!--style="float: right;">-->
+            <!--<i class="checkmark icon"></i> Transfer Now-->
+            <!--</button>-->
+            <!--</div>-->
+          </div>
+
+          <!-- Schedule -->
+          <md-radio-button ng-show="showScheduling" aria-label="" value="schedule"
+                           class="md-large md-light md-checked-green">
+            <h3>Schedule Data Transfer</h3>
+          </md-radio-button>
+          <div ng-show="datatransfer=='schedule' && showScheduling" class="ui grid icon input fluid">
+
+            <div class="sixteen wide column">
+              <p>How often?</p>
+              <select class="bl-select" style="width: 100%;"
+                      ng-change="onSelectSchedule()" ng-options="type as type.name for type in scheduleTypes"
+                      ng-model="selectedScheduleType">
+              </select>
+            </div>
+
+            <div ng-show="selectedScheduleType.value == 'weekly'" class="sixteen wide column" style="padding-top: 0px;">
+              <p>Select day of the week</p>
+              <select class="bl-select" style="width: 100%;" ng-model="selectedScheduleType.typeValue">
+                <option value="MON">Monday</option>
+                <option value="TUE">Tuesday</option>
+                <option value="WED">Wednesday</option>
+                <option value="THU">Thursday</option>
+                <option value="FRI">Friday</option>
+                <option value="SAT">Saturday</option>
+                <option value="SUN">Sunday</option>
+              </select>
+            </div>
+
+            <div ng-show="selectedScheduleType.value == 'monthly'" class="sixteen wide column"
+                 style="padding-top: 0px;">
+              <p>Select day of the month</p>
+              <select class="bl-select" style="width: 100%;" ng-model="selectedScheduleType.typeValue">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+              </select>
+            </div>
+
+            <div style="margin-top: 10px;" class="sixteen wide column">
+              <p>How far for the first transfer?</p>
+
+              <div class="ui icon input fluid">
+                <input type="text" class="datepicker ui" datepicker-popup="{{format}}" ng-model="queryStartDate"
+                       placeholder="January 01, 2015" is-open="opened.schedule" min-date="minDate"
+                       datepicker-options="dateOptions" close-on-date-selection="true"
+                       show-button-bar="false" date-disabled="disabled(date, mode)" ng-required="true"
+                       max-date="maxDate"
+                       close-text="Close" datepicker-append-to-body="false"/>
+              <span class="input-group-btn" style="position: absolute;top: 0;right: -1px; width: 47px;">
+                <button type="button" class="btn btn-default" ng-click="open($event,'schedule')"
+                        style="padding: 14px 11px 15px 13px;"><i class="calendar icon"></i></button>
+              </span>
+              </div>
+            </div>
+
+            <!--<div class="two fluid ui inverted buttons" style="margin: 15px 0;">-->
+            <!--<button type="submit" class="right floated ui green basic inverted button tiny " ng-click="save()"-->
+            <!--style="float: right;">-->
+            <!--<i class="checkmark icon"></i> Schedule-->
+            <!--</button>-->
+            <!--</div>-->
+          </div>
+
+        </md-radio-group>
+      </div>
+    </div>
+  </div>
+</section>
+
+<md-sidenav class="md-sidenav-left" md-component-id="left"
+            ng-include="'sidenav.html'" ng-controller="NavigationController"></md-sidenav>

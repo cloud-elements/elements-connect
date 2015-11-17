@@ -1,0 +1,25 @@
+<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
+  <div class="header">
+    Enter your credentials to continue
+  </div>
+  <div class="content">
+    <div class="image">
+      <i class="key icon"></i>
+    </div>
+    <div class="description" style="vertical-align: middle;">
+      <div class="ui icon input fluid" style="margin-bottom: 10px;">
+        <input type="text" placeholder="Email" ng-model="userId"/>
+      </div>
+      <div class="ui icon input fluid">
+        <input type="text" placeholder="App Key" ng-model="apiKey"/>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="two fluid ui inverted buttons">
+      <div style="height: 20px; width: 50%; float: left;"></div>
+      <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
+        <i class="checkmark icon"></i> Continue</button>
+    </div>
+  </div>
+</div>

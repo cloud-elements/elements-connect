@@ -1,0 +1,38 @@
+<!-- create workflow instance modal -->
+<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
+  <i class="close icon" ng-click="cancel()"></i>
+
+  <div class="header">
+    Configure the <span class="highlightElement">{{formulaName}}</span> formula
+  </div>
+  <div class="content">
+    <div ng-repeat="config in formulaConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;"
+         ng-hide="{{config.hidden}}">
+
+      <p>{{config.name}}</p>
+
+      <input type="text" name="{{config.key}}" ng-model="formulaInstanceData[config.key]" required
+             ng-if="!config.properties">
+
+      <ui-select ng-model="formulaInstanceData[config.key]" theme="select2" ng-disabled="disabled"
+                 ng-if="config.properties && config.properties.type == 'combo'" id="formulaInstanceDropdown">
+        <ui-select-match placeholder="Select ...">{{$select.selected[config.properties.displayField]}}</ui-select-match>
+        <ui-select-choices
+                repeat="option in config.properties.options | filter: $select.search">
+          <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
+          <small>
+            id: {{option[config.properties.valueField]}}
+          </small>
+        </ui-select-choices>
+      </ui-select>
+
+    </div>
+  </div>
+  <div class="actions">
+    <div class="one fluid ui inverted buttons">
+      <button type="submit" class="ui green basic inverted button tiny" ng-click="save()">
+        <i class="checkmark icon"></i> Create
+      </button>
+    </div>
+  </div>
+</div>

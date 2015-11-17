@@ -1,0 +1,10 @@
+# IDEA IntelliJ files #
+#######################
+*.iml
+.idea
+
+# Build components #
+####################
+src/main/webapp/bower_components
+target-grunt
+src/main/webapp/scripts/config.js

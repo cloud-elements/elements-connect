@@ -17,19 +17,66 @@ var bulkloaderApp = angular
         'ngRoute',
         'ngSanitize',
         'ngTouch',
+        'ui.ace',
         'ui.tree',
+        'ui.tree-filter',
+        'ui.select',
+        'ui.grid',
+        'ui.grid.pagination',
+        'ui.grid.autoResize',
+        'ui.grid.selection',
+        'slick',
+        'ngMaterial',
+        'ui.bootstrap',
         'notifications',
-        'CloudElementsUtils'
+        'config',
+        'CloudElementsUtils',
+        'Application'
     ]);
-
 bulkloaderApp.config(function($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'scripts/picker/picker.html',
+            templateUrl: 'picker.html',
             controller: 'PickerController'
         })
+        .when('/credentials', {
+            templateUrl: 'credentials.html',
+            controller: 'CredentialsController'
+        })
         .when('/datalist', {
-            templateUrl: 'scripts/datalist/datalist.html',
+            templateUrl: 'datalist.html',
             controller: 'DatalistController'
+        })
+        .when('/mapper', {
+            templateUrl: 'mapper.html',
+            controller: 'MapperController'
+        })
+        .when('/schedule', {
+            templateUrl: 'schedule.html',
+            controller: 'ScheduleController'
+        })
+        .when('/jobhistory', {
+            templateUrl: 'jobhistory.html',
+            controller: 'JobHistoryController'
+        })
+        .when('/history', {
+            templateUrl: 'caaashistory.html',
+            controller: 'CAaaSHistoryController'
+        })
+        .when('/jobs', {
+            templateUrl: 'jobs.html',
+            controller: 'JobsController'
+        })
+        .when('/hubspotelementloader', {
+            templateUrl: 'landingpages/hubspotlanding.html',
+            controller: 'LandingController'
+        })
+        .when('/elementloader', {
+            templateUrl: 'landingpages/elementloader.html',
+            controller: 'LandingController'
+        })
+        .when('/formulas', {
+            templateUrl: 'formula.html',
+            controller: 'FormulaController'
         });
 });

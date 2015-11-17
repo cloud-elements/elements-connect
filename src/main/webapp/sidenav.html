@@ -1,0 +1,16 @@
+<a href class="history" ng-click='onJobHistory()'>
+  <i class="icon history"></i> History
+</a>
+<a ng-show="showScheduling" href class="scheduled pull-right" ng-click='onScheduledJobs()'>
+  <i class="wait icon"></i> Scheduled Jobs
+</a>
+<a href class="help" ng-click='onHelp($event)' ng-show="{{branding.showhelp || !branding}}">
+  <i class="icon help circle"></i> Help
+</a>
+<a href class="support" ng-click='contactSupport($event)'>
+  <i class="icon configure"></i> Contact Support
+</a>
+
+<a href class="history" style="margin-top: 50px;" ng-click='onSignout()'>
+  Sign out
+</a>

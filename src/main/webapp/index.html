@@ -1,25 +1,63 @@
-<!DOCTYPE html>
-<html data-ng-app="bulkloaderApp">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--[if IE]>
+<html class="no-js lt-ie9 lt-ie" data-ng-app="datambulkloaderAppapper">
+<![endif]-->
+<!--[if !IE]> -->
+<html class="no-js" data-ng-app="bulkloaderApp" lang="en">
+<!-- <![endif]-->
 
 <head>
-    <!-- Standard Meta -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <!-- Standard Metl
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <!-- Site Properities -->
-    <title>Wise.io BulkLoader Mockup</title>
+  <!-- Site Properties -->
+  <title>Cloud Elements</title>
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <!--<link rel="shortcut icon" href="images/fav.png">-->
+  <!-- Stylesheets -->
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="bower_components/angular-semantic-ui-master/semantic.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-tree/angular-ui-tree.min.css">
-    <link rel="stylesheet" type="text/css" href="styles/styles.css">
-    <link rel="stylesheet" type="text/css" href="styles/theme.css">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+  <!--Must manually include stlyesheets
+      To let bower auto include 'bower:css' and 'endbower'-->
+  <!-- build:css(.) styles/vendor.css -->
+  <link rel="stylesheet" type="text/css" href="bower_components/semantic-ui/dist/semantic.css">
+  <link rel="stylesheet" type="text/css" href="scripts/ux/angular-ui-tree/angular-ui-tree.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-busy/angular-busy.css">
+  <link rel="stylesheet" type="text/css"
+        href="bower_components/angular-material/modules/js/switch/switch-default-theme.min.css">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Select Style Component -->
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-select/dist/select.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.css">
+
+  <!-- build:css(.tmp) styles/main.css -->
+
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" type="text/css" href="scripts/ux/angular-ui-tree/tree.css">
+  <link rel="stylesheet" type="text/css" href="styles/select2.css">
+  <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick-theme.css">
+  <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick.css">
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="styles/theme.css">
+  <!-- endbuild -->
+
+  <!-- build:js(.) scripts/oldieshim.js -->
+  <!--[if lt IE 9]>
+  <script src="bower_components/es5-shim/es5-shim.js"></script>
+  <script src="bower_components/json3/lib/json3.js"></script>
+  <![endif]-->
+  <!-- endbuild -->
+
   <!-- build:js(.) scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/semantic-ui/dist/semantic.js"></script>
   <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
   <script src="bower_components/angular-messages/angular-messages.js"></script>
@@ -27,23 +65,51 @@
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="bower_components/angular-touch/angular-touch.js"></script>
-  <script src="bower_components/angular-ui-tree/angular-ui-tree.min.js"></script>
-  <script src="bower_components/angular-semantic-ui-master/semantic.js"></script>
+  <script src="bower_components/angular-busy/dist/angular-busy.js"></script>
+  <script src="bower_components/angular-aria/angular-aria.js"></script>
+  <script src="bower_components/angular-material/angular-material.js"></script>
+  <script src="bower_components/angular-ui-tree-filter/dist/angular-ui-tree-filter.js"></script>
+  <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+  <script src="bower_components/slick-carousel/slick/slick.js"></script>
+  <script src="bower_components/angular-slick/dist/slick.js"></script>
+  <script src="bower_components/ace-builds/src-noconflict/ace.js"></script>
+  <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+
+  <!--[if lte IE 8]>
+  <script charset="utf-8" src="//js.hsforms.net/forms/v2-legacy.js"></script>
+  <![endif]-->
+  <script charset="utf-8" src="//js.hsforms.net/forms/v2.js"></script>
 
 
+  <!-- build:js({.tmp,webapp}) scripts/scripts.js -->
+  <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+  <script src="scripts/ux/angular-ui-tree/angular-ui-tree.js"></script>
+  <script src="scripts/ux/select.js"></script>
+  <script src="scripts/config.js"></script>
   <script src="scripts/base/class.js"></script>
   <script src="scripts/base/namespace.js"></script>
   <script src="scripts/base/BaseController.js"></script>
   <script src="scripts/base/EventDispatcher.js"></script>
   <script src="scripts/base/Notifications.js"></script>
   <script src="scripts/common/CloudElementsUtils.js"></script>
-
-  <!--Loading the module bulkLoaderApp-->
+  <script src="scripts/common/Application.js"></script>
   <script src="scripts/app.js"></script>
+
+  <script src="scripts/directives/MaskLoader.js"></script>
 
   <script src="scripts/services/Service.js"></script>
   <script src="scripts/services/ElementsService.js"></script>
   <script src="scripts/services/BulkloaderService.js"></script>
+
+  <script src="scripts/landing/Landing.js"></script>
+  <script src="scripts/landing/LandingController.js"></script>
+
+  <script src="scripts/credentials/Credentials.js"></script>
+  <script src="scripts/credentials/CredentialsController.js"></script>
 
   <script src="scripts/picker/Picker.js"></script>
   <script src="scripts/picker/PickerController.js"></script>
@@ -51,18 +117,50 @@
   <script src="scripts/datalist/Datalist.js"></script>
   <script src="scripts/datalist/DatalistController.js"></script>
 
-  <!-- endbower -->
+  <script src="scripts/mapper/TransformationUtil.js"></script>
+  <script src="scripts/mapper/Mapper.js"></script>
+  <script src="scripts/mapper/MapperController.js"></script>
+
+  <script src="scripts/schedule/Schedule.js"></script>
+  <script src="scripts/schedule/ScheduleController.js"></script>
+
+  <script src="scripts/createinstance/CreateInstance.js"></script>
+  <script src="scripts/createinstance/CreateInstanceController.js"></script>
+
+  <script src="scripts/login/Login.js"></script>
+  <script src="scripts/login/LoginController.js"></script>
+
+  <script src="scripts/jobhistory/JobHistory.js"></script>
+  <script src="scripts/jobhistory/JobHistoryController.js"></script>
+
+  <script src="scripts/caaashistory/CAaaSHistory.js"></script>
+  <script src="scripts/caaashistory/CAaaSHistoryController.js"></script>
+
+  <script src="scripts/help/Help.js"></script>
+  <script src="scripts/help/HelpController.js"></script>
+
+  <script src="scripts/navigation/Navigation.js"></script>
+  <script src="scripts/navigation/NavigationController.js"></script>
+
+  <script src="scripts/jobs/Jobs.js"></script>
+  <script src="scripts/jobs/JobsController.js"></script>
+
+  <script src="scripts/formulainstance/FormulaInstance.js"></script>
+  <script src="scripts/formulainstance/FormulaInstanceController.js"></script>
+
+  <script src="scripts/formula/Formula.js"></script>
+  <script src="scripts/formula/FormulaController.js"></script>
   <!-- endbuild -->
 
+  <script type="application/javascript">
+    (function(d,w,o){w.docent=w.chmln=o;var s=d.createElement('script');s.async=true;s.src='https://cdn.trychameleon.com/east/'+chmln.token+'.min.js';d.head.appendChild(s);var n='setup alias track set'.split(' ');for(var i=0;i<n.length;i++){(function(){var t=o[n[i]+'_a']=[];o[n[i]]=function(){t.push(arguments);};})()}})(document,window,{token:'PyyauZo2lJqBICVOg-Yxj4WAKqTbPi4jJ6zF8r'});
+  </script>
+  <style id="customestyle" href="/"></style>
 
 </head>
 
-<body>
-
-  <div>
-    <div ng-view=""></div>
-  </div>
-
+<body ng-app="bulkloaderApp">
+<div class="page {{ pageClass }}" ng-view></div>
 </body>
 
 </html>
