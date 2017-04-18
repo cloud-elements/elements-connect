@@ -22,6 +22,7 @@
     <div class="jobslist">
       <h2 ng-hide="noJobsMessage" style="width: 100%;text-align: center;padding: 50px 0;color: #666;">No Jobs found</h2>
       <script type="text/ng-template" id="jobHistory.html">
+
         <div class="job-header">
           <span><i class="wait icon"></i> {{metadata.createdDate | date:'medium'}}</span>
           <span class="status {{metadata.status}}">{{metadata.status}}</span>
@@ -46,13 +47,18 @@
         <div class="job-footer" ng-if="metadata.status != 'RUNNING'">
           <span><b>downloaded:</b> {{metadata.sourceRecordCount}}</span>
           <span><b>failed:</b> {{metadata.targetErrorCount}}</span>
-        </div>
+          <span>
+            <a href="#" ng-click="showDetailed($index, $event)"
+               ng-show="metadata.sourceJobId == metadata.targetJobId && metadata.sourceRecordCount > 0"
+                    >Show Details</a>
+          </span>
 
+        </div>
       </script>
 
       <ul class="job-tree" ng-model="jobhistorydata">
         <li class="job-tree-node" ng-repeat="metadata in jobhistorydata" ng-include="'jobHistory.html'"
-            ng-click="onSelectJob($index);" ng-class="{'selectJob': $index == selectedIndex}">
+            ng-click="onSelectJob($index);" ng-class="{'selectJob': $index == selectedIndex, 'childjob': metadata.parentBulkLoaderId != null && metadata.parentBulkLoaderId > 0}">
         </li>
       </ul>
     </div>

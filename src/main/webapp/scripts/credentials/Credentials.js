@@ -12,6 +12,7 @@ var Credentials = Class.extend({
     _picker: null,
     _application: null,
     credentialsView: 'login',
+    hscrm: null,
 
     _handleLoadError: function(error) {
         //Ignore as these can be ignored or 404's
@@ -126,7 +127,7 @@ var Credentials = Class.extend({
     _loadSignupSucceeded: function(signup, result) {
         var me = this;
         if(me._application.isHS()){
-            trackSignup(signup.email, signup.firstName, signup.lastName);
+            trackSignup(signup.email, signup.firstName, signup.lastName, me.hscrm);
         }
         return me.login(signup);
     },

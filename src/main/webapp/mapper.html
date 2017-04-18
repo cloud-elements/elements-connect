@@ -61,7 +61,7 @@
     </div>
 
     <div class="searchbarContainer">
-      <input type="text" placeholder="Search" class="ui searchbar" data-ng-model="searchtarget"
+      <input type="text" placeholder="Search for a field..." class="ui searchbar" data-ng-model="searchtarget"
              ng-focus="hasFocus = true" ng-blur="hasFocus = false"/>
       <a class="btn btn-link" data-ng-click="searchtarget = '' " tabindex="0"
          ng-class="{'showBtn': hasFocus || searchtarget.length}">
@@ -73,6 +73,18 @@
         <label>{{configs.name}}</label>
         <input type="{{configs.type}}" name="{{configs.key}}" ng-model='configs.value' placeholder=" ">
       </div>
+    </div>
+
+    <div class="sixteen wide column ui inverted grid input field" ng-if="fileUpload" id="file-upload-label">
+      <small>The '{{selectedObject.select.name}}' entity requires a file</small>
+      </div>
+
+    <div class="sixteen wide column ui inverted grid input field" ng-if="fileUpload" id="file-upload">
+      <button type="file" ng-model="file" name="file" ngf-select="handleFileUploadSelect($file, $invalidFiles)"
+              ngf-pattern="'text/csv'"
+              ngf-accept="'text/csv'">Select a file...
+      </button>
+      <span>{{files[selectedObject.select.name].name}}</span>
     </div>
 
     <div class="ui grid fields configContainer" style="padding: 0;" ng-if="mapperMetaDataById">
@@ -144,7 +156,15 @@
   <div id="mapper-data-list-target" class="column ten wide ui grid">
     <label ng-show="showTargetObjectSelection" style="margin: 28px
      0 0;color: #444;font-size: 120%;padding-left: 20px;font-weight: bold;">Select target object:</label>
-
+    <p style="float: right;
+         padding: 0;line-height: 1.3em;padding-right: 5px;font-weight: bold; color: #333;">
+      Enable Object Selection
+      <md-switch class="two wide column md-primary-green"
+                 ng-model="showObjectSelection"
+                 ng-change="refreshTargetObject()"
+                 aria-label>
+      </md-switch>
+    </p>
     <select
             ng-show="showTargetObjectSelection" data-ng-model="selectedTargetObject"
             ng-options="o as o.displayName == null ? o.name : o.displayName for o in targetObjects"

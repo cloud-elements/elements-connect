@@ -16,9 +16,15 @@ var Mapper = Class.extend({
     _application: null,
     _objectMetadata: null,
     _objectMetadataFlat: null,
+    _hasFileUpload: false,
 
     //An Object which holds all the data at instance Level
     all: new Object,
+
+    _setFileUpload: function(bool) {
+        var me = this;
+        me._hasFileUpload = bool;
+    },
 
     _handleLoadError: function(error) {
         //Ignore as these can be ignored or 404's
@@ -164,14 +170,17 @@ var Mapper = Class.extend({
                 var objects = new Array();
                 var objectsVendorDisplayName = new Object();
                 var objectsWhere = new Object();
-                var objectDetails = new Array();
+                var objectDetails = new Object();
                 for(var i in srcObjects) {
                     var obj = srcObjects[i];
                     objects.push(obj.vendorPath);
-                    objectDetails.push({
+                    objectDetails[obj.vendorPath] = {
                         name: obj.vendorPath,
-                        displayName: obj.vendorDisplayName
-                    });
+                        displayName: obj.vendorDisplayName,
+                        fileUpload: obj.fileUpload ? true : false,
+                        parentObjectName: obj.parentObjectName,
+                        multipleUpload: obj.multipleUpload ? true : false
+                    };
 
                     if(!me._cloudElementsUtils.isEmpty(obj.vendorDisplayName)) {
                         objectsVendorDisplayName[obj.vendorPath] = obj.vendorDisplayName;
@@ -263,11 +272,11 @@ var Mapper = Class.extend({
         if(me._cloudElementsUtils.isEmpty(me.all[targetInstance.element.key].objects)) {
             me._loadTargetInstanceObjectsFromConfig(targetInstance);
         } else {
-            var objectDetails = new Array();
+            var objectDetails = new Object();
             for(var i in result.data) {
-                objectDetails.push({
+                objectDetails[result.data[i]] = {
                     name: result.data[i]
-                });
+                };
             }
             me.all[targetInstance.element.key].objectDetails = objectDetails;
         }
@@ -285,15 +294,15 @@ var Mapper = Class.extend({
         }
 
         var objects = new Array();
-        var objectDetails = new Array();
+        var objectDetails = new Object();
         var objectDisplayName = new Object();
         for(var i in targetElement.objects) {
             var obj = targetElement.objects[i];
             objects.push(obj.vendorPath);
-            objectDetails.push({
+            objectDetails[obj.vendorPath] = {
                 name: obj.vendorPath,
                 displayName: obj.vendorDisplayName
-            });
+            };
 
             objectDisplayName[obj.vendorPath] = obj.vendorDisplayName;
 
@@ -358,6 +367,14 @@ var Mapper = Class.extend({
                     obj.displayName = me.all[selectedInstance.element.key].objectDisplayName[selectObjectName];
                 }
                 obj.transformed = true;
+                if(!me._cloudElementsUtils.isEmpty(me.all[selectedInstance.element.key].objectDetails)) {
+                    var objDetails = me.all[selectedInstance.element.key].objectDetails;
+                    var matchingObject = objDetails[selectObjectName];
+                    if (matchingObject) {
+                        obj.fileUpload = matchingObject.fileUpload;
+                        obj.parentObjectName = matchingObject.parentObjectName;
+                    }
+                }
                 objectsAndTransformation[selectObjectName] = obj;
 
                 tempObjectNames[selectObjectName] = true;
@@ -424,6 +441,12 @@ var Mapper = Class.extend({
         }
 
         var objectMetadata = result.data;
+        //Check if the Element has any fields to be added addition to metadata and join those fields
+        var sourceElement = me._picker.getSourceElement(selectedInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(sourceElement.relations)) {
+            objectMetadata.fields = objectMetadata.fields.concat(sourceElement.relations);
+        }
+
         var objectMetadataFlat = new Object;
 
         angular.copy(objectMetadata, objectMetadataFlat);
@@ -711,6 +734,13 @@ var Mapper = Class.extend({
         }
 
         var objectMetadata = result.data;
+        //Check if the Element has any fields to be added addition to metadata and join those fields
+        var targetElement = me._picker.getTargetElement(targetInstance.element.key);
+        if(!me._cloudElementsUtils.isEmpty(targetElement.relations)
+            && !me._cloudElementsUtils.isEmpty(targetElement.relations[targetObjectName])) {
+            objectMetadata.fields = objectMetadata.fields.concat(targetElement.relations[targetObjectName]);
+        }
+
         var objectMetadataFlat = new Object;
 
         angular.copy(objectMetadata, objectMetadataFlat);

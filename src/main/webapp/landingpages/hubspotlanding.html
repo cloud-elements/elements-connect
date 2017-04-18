@@ -6,9 +6,10 @@
 <header>
   <img id="logo" src="images/hubspot-logo.png" alt="Element Loader Logo" width="220px">
   <h1 class="title">A DATA MIGRATION TOOL TO IMPORT CRM DATA</h1>
+  <h3>A Free Service for HubSpot Customers</h3>
   <h2 class="title">POWERED BY <img src="images/ce-logo-white.png" alt="Cloud Elements Logo"></h2>
   <div class="buttonHolder">
-    <a class="btn-sign-up" ng-click="goToSignup()">SIGN UP</a>
+    <!--<a class="btn-sign-up" ng-click="goToSignup()">SIGN UP</a>-->
     <a class="btn-log-in" ng-click="goToLogin()">LOGIN</a>
   </div>
 </header>
@@ -61,68 +62,78 @@
         <th scope="col">HubSpot Resource</th>
         <th scope="col">Also Known As</th>
         <th scope="col">ZohoCRM</th>
-        <th scope="col">MS Dynamics CRM</th>
         <th scope="col">SugarCRM</th>
-        <th scope="col">Close.io</th>
         <th scope="col">Pipedrive</th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td class="tooltips" data-title="A company's name"><strong>companies</strong></td>
-        <td class="tooltips" data-title="Companies are labeled accounts in all other services">accounts</td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-      </tr>
-      <tr>
-        <td class="tooltips" data-title="A person with a unique email address"><strong>contacts</strong></td>
-        <td></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-      </tr>
-      <tr>
-        <td class="tooltips" data-title="A potential deal"><strong>leads</strong></td>
-        <td></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td>Not Supported</td>
-      </tr>
-      <tr>
-        <td class="tooltips" data-title="The owner of a HubSpot contact"><strong>owners</strong></td>
-        <td class="tooltips" data-title="Owners are labeled as users in all other services">users</td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td>Not Supported</td>
-        <td>Not Supported</td>
-      </tr>
-      <tr>
-        <td class="tooltips" data-title="A contact with in sales cycle"><strong>deals</strong></td>
-        <td class="tooltips" data-title="Deals are labeled as potentials in ZohoCRM and opportunities in all other services">potentials, opportunities</td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-      </tr>
-      <tr>
-        <td class="tooltips" data-title="Activities performed by contact"><strong>interactions</strong></td>
-        <td class="tooltips" data-title="Interactions are labeled as tasks in Zoho and Close.io and activities in MS Dynamics, SugarCRM, and Pipedrive">tasks, activities</td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
-        <td>Not Supported</td>
-        <td>Not Supported</td>
-      </tr>
-      </tbody>
+            <tr>
+              <td class="tooltips" data-title="A company's name"><strong>companies</strong></td>
+              <!--<td class="tooltip" data-title="A company's name"><strong>companies</strong></td>-->
+              <td class="tooltips" data-title="Companies are labeled accounts in all other services">accounts</td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="A person with a unique email address"><strong>contacts</strong></td>
+              <td></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="A potential deal"><strong>leads</strong></td>
+              <td></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td>Not Supported</td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="The owner of a HubSpot contact"><strong>owners</strong></td>
+              <td class="tooltips" data-title="Owners are labeled as users in all other services">users</td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td>Not Supported</td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="A contact with in sales cycle"><strong>deals</strong></td>
+              <td class="tooltips"
+                  data-title="Deals are labeled as potentials in ZohoCRM and opportunities in all other services">potentials, opportunities</td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="Activities performed by contact"><strong>interactions</strong></td>
+              <td class="tooltips"
+                  data-title="Interactions are labeled as tasks in Zoho and activities in SugarCRM and Pipedrive">tasks, activities</td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i><br>(Tasks Only)</td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td>Not Supported</td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="Activities performed by contact"><strong>notes</strong></td>
+              <td></td>
+              <td>Not Supported</td>
+              <td>Not Supported</td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="Activities performed by contact"><strong>custom fields</strong></td>
+              <td></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+              <td style="color: #ED7023;"> <i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+              <td class="tooltips" data-title="Activities performed by contact"><strong>email messages</strong></td>
+              <td></td>
+              <td>Not Supported</td>
+              <td>Not Supported</td>
+              <td>Not Supported</td>
+            </tr>
+          </tbody>
     </table>
   </section>
   <section id="contact-logo">

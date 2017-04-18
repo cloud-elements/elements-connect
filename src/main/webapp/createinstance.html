@@ -1,5 +1,5 @@
 <!-- Create Instance MODAL -->
-<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;">
+<div class="ui basic modal" style="display: block; width: 100%; position: static; margin: 0; min-height: 500px;" ng-click="$event.stopPropagation();">
   <i class="close icon" ng-click="cancel()"></i>
 
   <div class="header">
@@ -11,7 +11,7 @@
            style="margin-bottom: 10px;">
         <p>{{configs.name}}</p>
         <input type="{{configs.type}}" name="{{configs.key}}" ng-model='elementData[configs.key]'
-               ng-required="{{configs.required}}" placeholder=" ">
+               ng-required="{{configs.required}}">
         <span style="color:red" ng-show="myForm.$dirty && myForm[configs.key].$error.required">{{configs.name}} is
           required.</span>
 

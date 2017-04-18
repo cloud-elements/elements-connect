@@ -38,7 +38,9 @@ var FormulaInstanceController = BaseController.extend({
         me.$scope.formulaName = me._formulaInstance.formulaTemplate.name;
         me.$scope.formulaConfiguration = me._formulaInstance.formulaTemplate.configuration;
 
-        me._getOptions(me._formulaInstance.formulaTemplate.configuration);
+        me._getExistingFormulaInstances().then(
+            me._getOptions.bind(me, me._formulaInstance.formulaTemplate.configuration)
+        );
     },
 
     defineListeners: function() {
@@ -61,17 +63,61 @@ var FormulaInstanceController = BaseController.extend({
 
     save: function() {
         var me = this;
+
         me._maskLoader.show(me.$scope, 'Creating formula instance...');
         var formulaInstanceName = me.$scope.formulaName + "-instance";
-        for(var i = 0; i < Object.keys(me.$scope.formulaInstanceData).length; i++){
+
+        // Adding new variables to handle the processing of secondary key form application JSON.
+        var secondaryKey = '';
+        var secondaryValue = '';
+        var formulaInstanceDataLength = Object.keys(me.$scope.formulaInstanceData).length;
+
+        for(var i = 0; i < formulaInstanceDataLength; i++){
             if(typeof me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] == 'object'){
                 var obj = me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key];
                 var displayFieldKey = me.$scope.formulaConfiguration[i].properties.displayField;
                 var valueFieldKey = me.$scope.formulaConfiguration[i].properties.valueField;
-                formulaInstanceName = obj[displayFieldKey];
-                me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] = obj[valueFieldKey];
+
+                /* Change for multi-select drop-down.
+                 * Drop-down will return an object in response to multiple selected values.
+                 * Extract the values from the object and create a single comma separated string to use it as
+                 * config variable in the formula.
+                 */
+
+                if(obj.length != null){
+                    //It is a multi-select response as an array.
+                    formulaInstanceName = obj[0][displayFieldKey];
+                    var objectList = "";
+                    for(var j = 0; j < obj.length; j++) {
+                        objectList = objectList.concat(obj[j].name);
+                        if(j != obj.length-1){
+                            objectList = objectList.concat(",");
+                        }
+                    }
+                    me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] = objectList;
+                }
+                else {
+                    formulaInstanceName = obj[displayFieldKey];
+                    me.$scope.formulaInstanceData[me.$scope.formulaConfiguration[i].key] = obj[valueFieldKey];
+
+                    /* If 'secondaryKey' parameter is present in application JSON, then store the key-value for specific
+                     * config variable in a temporary variable to assign later, after for-loop ends
+                     */
+                    if (typeof me.$scope.formulaConfiguration[i].secondaryKey == 'string'){
+                        secondaryKey = me.$scope.formulaConfiguration[i].secondaryKey;
+                        secondaryValue = obj[displayFieldKey];
+                    }
+                }
             }
         }
+
+        /*
+         * Check if  variable secondaryKey was assigned some value, then add a new config variable for instance creation
+         */
+        if(secondaryKey != ''){
+            me.$scope.formulaInstanceData[secondaryKey] = secondaryValue;
+        }
+
         me._formulaInstance.createFormulaInstance(formulaInstanceName, me.$scope.formulaName,me.$scope.formulaInstanceData).
             then(me._handleFormulaInstanceSaved.bind(me));
     },
@@ -85,6 +131,19 @@ var FormulaInstanceController = BaseController.extend({
             }
         }
         return defaultConfiguration;
+    },
+
+    _getExistingFormulaInstances: function() {
+        var me = this;
+        return me._elementsService.findFormulaInstances(me._formulaInstance.formulaTemplate.id).then(
+            me._handleLoadFormulaInstances.bind(me),
+            me._handleLoadError.bind(me));
+    },
+
+    _handleLoadFormulaInstances: function(httpResult) {
+        var me = this;
+
+        me._formulaInstances = httpResult.data;
     },
 
     _getOptions: function(configs) {
@@ -102,6 +161,14 @@ var FormulaInstanceController = BaseController.extend({
                 me._elementsService.findFormulaConfigOpts(configs[i].properties.path, instance).
                     then(me._handleGetOpts.bind(me, i));
             }
+            /*
+             * Added ELSE block for Static Lists (multiple/single select) while creating formula instance.
+             * The options would be present in the Application JSON.
+             */
+            else if(configs[i].properties && configs[i].properties.options){
+                var staticOptions = configs[i].properties.options;
+                me._handleGetOpts.bind(me, staticOptions);
+            }
         }
     },
 
@@ -114,7 +181,30 @@ var FormulaInstanceController = BaseController.extend({
     _handleGetOpts: function(indx, httpResult) {
         var me = this;
         me._maskLoader.hide();
-        me.$scope.formulaConfiguration[indx].properties.options = httpResult.data;
+        var formulaInstanceConfigKey = me.$scope.formulaConfiguration[indx].key;
+        var optionKey = me.$scope.formulaConfiguration[indx].properties.valueField;
+        if (!formulaInstanceConfigKey || !optionKey) {
+            me.$scope.formulaConfiguration[indx].properties.options = httpResult.data;
+            return;
+        }
+        var options = [];
+        for (var i = 0;i < httpResult.data.length;i++) {
+            var option = httpResult.data[i];
+            var optionKeyValue = option[optionKey];
+            var alreadyExists = false;
+            for (var j = 0;j < me._formulaInstances.length;j++) {
+                var formulaInstanceConfig = me._formulaInstances[j].configuration;
+                var formulaInstanceConfigKeyValue = formulaInstanceConfig[formulaInstanceConfigKey];
+                if (formulaInstanceConfigKeyValue === optionKeyValue) {
+                    alreadyExists = true;
+                    break;
+                }
+            }
+            if (!alreadyExists) {
+                options.push(httpResult.data[i]);
+            }
+        }
+        me.$scope.formulaConfiguration[indx].properties.options = options;
     }
 });
 

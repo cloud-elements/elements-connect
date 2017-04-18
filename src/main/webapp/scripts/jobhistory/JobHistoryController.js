@@ -43,6 +43,7 @@ var JobHistoryController = BaseController.extend({
         me.$scope.onSelectJob = me.onSelectJob.bind(this);
         me.$scope.close = me.close.bind(this);
         me.$scope.refresh = me.getHistory.bind(this);
+        me.$scope.showDetailed = me.getChildJobs.bind(this);
 
         me.$scope.jobExecutionsOptions = {
             data: 'jobExecutions',
@@ -56,7 +57,7 @@ var JobHistoryController = BaseController.extend({
                 {field: 'rowNum', width: 120, name: 'Row number'},
                 {field: 'status', width: 450, cellTooltip: function(row, col) {
                     return 'Click to read more';
-                }, cellTemplate: '<code class="error">{{row.entity.status}}</code>', cellClass: 'errorCell'},
+                }, cellTemplate: '<code class="error">{{row.entity.status == "ERROR" ? row.entity.error == null ? "ERROR" : row.entity.error : row.entity.status}}</code>', cellClass: 'errorCell'},
                 {field: 'response', cellTooltip: function(row, col) {
                     return 'Click to read more';
                 }, cellTemplate: '<code class="error">{{row.entity.response}}</code>', cellClass: 'errorCell'}
@@ -109,6 +110,31 @@ var JobHistoryController = BaseController.extend({
     _handleGetHistory: function(results) {
         var me = this;
         me.$scope.jobhistorydata = results;
+    },
+
+    getChildJobs: function($index, $event) {
+        var me = this;
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        me.$scope.selectedJob = me.$scope.jobhistorydata[$index];
+        me.$scope.selectedIndex = $index;
+        me._history.getHistoryForParent(me.$scope.selectedJob).then(me._handleGetChildJobs.bind(me));
+    },
+
+    _handleGetChildJobs: function(results) {
+        var me = this;
+        if(!me._cloudElementsUtils.isEmpty(results) && results.length >0) {
+            for (var i in results) {
+                var res = results[i];
+                me.$scope.jobhistorydata.splice(me.$scope.selectedIndex+1, 0, res);
+            }
+
+            if(!me._cloudElementsUtils.isEmpty(me._refreshtimer)) {
+                me.$interval.cancel(me._refreshtimer);
+                me._refreshtimer = null;
+            }
+        }
     },
 
     onSelectJob: function($index) {

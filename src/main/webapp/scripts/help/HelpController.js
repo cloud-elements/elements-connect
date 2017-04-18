@@ -36,7 +36,103 @@ var HelpController = BaseController.extend({
         var me = this;
         me.$scope.cancel = me.cancel.bind(me);
 
-        if (me._application.getView() == 'mapper') {
+        if(me._application.getConfigName() == 'swiftpage') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/SelectSource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/BigCommerce.png', steps:[{text:'BigCommerce.'},{text:'For additional information on where to find these values:'}, {link:'http://swiftpage-docs.cloud-elements.com/docs/services/bigcommerce/bigcommerce-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/Ecwid.png', steps:[{text:'Ecwid'},{text:'To set up your Ecwid account, please sign in and go to:'},{link:'https://my.ecwid.com/cp/CP.html#legacy_api'},{text:'For additional information on where to find these values:'}, {link:'http://swiftpage-docs.cloud-elements.com/docs/services/ecwid/ecwid-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/Etsy.png', steps:[{text:'Etsy'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/etsy/etsy-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/Shopify.png', steps:[{text:'Shopify'}, {text:'Enter Store Name, Username, and Password'}]},
+                {imageURL: 'swiftpage-help-images/Volusion.png', steps:[{text:'Volusion'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/volusion/volusion-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/WooCommerce.png', steps:[{text:'WooCommerce'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/woocommerce/woocommerce-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/SelectTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/ClickMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/ClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/History.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if(me._application.getConfigName() == 'bigcommerce.actpremium') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/BCSource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/BigCommerce.png', steps:[{text:'BigCommerce.'},{text:'For additional information on where to find these values:'}, {link:'http://swiftpage-docs.cloud-elements.com/docs/services/bigcommerce/bigcommerce-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/BCTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/BCMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/BCClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/BCHistory.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if(me._application.getConfigName() == 'ecwid.actpremium') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/EcwidSource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/Ecwid.png', steps:[{text:'Ecwid'},{text:'To set up your Ecwid account, please sign in and go to:'},{link:'https://my.ecwid.com/cp/CP.html#legacy_api'},{text:'For additional information on where to find these values:'}, {link:'http://swiftpage-docs.cloud-elements.com/docs/services/ecwid/ecwid-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/EcwidTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/EcwidMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/EcwidClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/EcwidHistory.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if(me._application.getConfigName() == 'etsy.actpremium') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/EtsySource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/Etsy.png', steps:[{text:'Etsy'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/etsy/etsy-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/EtsyTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/EtsyMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/EtsyClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/EtsyHistory.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if(me._application.getConfigName() == 'shopify.actpremium') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/ShopifySource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/Shopify.png', steps:[{text:'Shopify'}, {text:'Enter Store Name, Username, and Password'}]},
+                {imageURL: 'swiftpage-help-images/ShopifyTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/ShopifyMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/ShopifyClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/ShopifyHistory.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if(me._application.getConfigName() == 'volusion.actpremium') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/VolusionSource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/Volusion.png', steps:[{text:'Volusion'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/volusion/volusion-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/VolusionTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/VolusionMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/VolusionClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/VolusionHistory.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if(me._application.getConfigName() == 'woocommerce.actpremium') {
+            me.$scope.helpList = [
+                {imageURL: 'swiftpage-help-images/WCSource.png', steps:[{text:'Select a service, the source of your data.'}]},
+                {imageURL: 'swiftpage-help-images/WooCommerce.png', steps:[{text:'WooCommerce'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/woocommerce/woocommerce-endpoint-setup.html'}]},
+                {imageURL: 'swiftpage-help-images/WCTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
+                {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
+                {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
+                {imageURL: 'swiftpage-help-images/WCMenu.png', steps:[{text:'Click Menu in the upper left corner.'}]},
+                {imageURL: 'swiftpage-help-images/WCClickHistory.png', steps:[{text:'Click History.'}]},
+                {imageURL: 'swiftpage-help-images/WCHistory.png', steps:[{text:'This is where you can view active connections.'},{text:'By selecting a connection, you can view when it has executed.'}]}
+            ]
+        } else if (me._application.getView() == 'mapper') {
             me.$scope.helpList = [
                 {imageURL: 'help-images/BulkloaderClickThrough-1.png', steps:[{text:'1. Select a service, the source of your data.'}]},
                 {imageURL: 'help-images/BulkloaderClickThrough-2.png', steps:[{text:'2. Enter Zoho Username'}, {text:'3. Enter Zoho Password.'}, {text:'4. Click "Create".'}]},

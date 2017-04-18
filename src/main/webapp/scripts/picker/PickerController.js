@@ -126,8 +126,14 @@ var PickerController = BaseController.extend({
         me._maskLoader.hide();
         me._instances = me._picker._elementInstances;
 
-        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).addClass('highlightingElement');
-        angular.element(document.querySelector('#' + bulkloader.Picker.oauthElementKey)).attr('data-instance', me._instances[bulkloader.Picker.oauthElementKey].element.name);
+        if(!me._cloudElementsUtils.isEmpty(me._instances)) {
+            var keys = Object.keys(me._instances);
+            for(var i = 0; i < keys.length; i++) {
+                angular.element(document.querySelector('#' + keys[i])).addClass('highlightingElement');
+                var elementName = me.findConfigNameForInstance(keys[i]);
+                angular.element(document.querySelector('#' + keys[i])).attr('data-instance', elementName ? elementName : me._instances[keys[i]].element.name);
+            }
+        }
 
         if(!me._cloudElementsUtils.isEmpty(bulkloader.Picker.oauthElementKey)) {
             me.onSelect(bulkloader.Picker.oauthElementKey, me._lastSelection);
@@ -172,13 +178,37 @@ var PickerController = BaseController.extend({
             var keys = Object.keys(me._instances);
             for(var i = 0; i < keys.length; i++) {
                 angular.element(document.querySelector('#' + keys[i])).addClass('highlightingElement');
-                angular.element(document.querySelector('#' + keys[i])).attr('data-instance', me._instances[keys[i]].element.name);
+                var elementName = me.findConfigNameForInstance(keys[i]);
+                angular.element(document.querySelector('#' + keys[i])).attr('data-instance', elementName ? elementName : me._instances[keys[i]].element.name);
             }
         }
     },
 
-    onSelect: function(elementKey, selection) {
+    findConfigNameForInstance: function(elementKey) {
         var me = this;
+        var name = null;
+        me._picker._targets.forEach(function(target) {
+            if (target.elementKey === elementKey) {
+                name = target.name;
+            }
+        });
+        if (name !== null) {
+            return name;
+        }
+        me._picker._sources.forEach(function(source) {
+            if (source.elementKey === elementKey) {
+                name = source.name;
+            }
+        });
+        return name;
+    },
+
+    onSelect: function(elementKey, selection, $event) {
+        var me = this;
+
+        $event.preventDefault();
+        $event.stopPropagation();
+
         me._lastSelection = selection;
         //Check to see if the element instance is created, if so then move the view to dataselect
         //If there is no instance, do the OAUTH flow and then land to the dataselect page
@@ -231,6 +261,9 @@ var PickerController = BaseController.extend({
 
             me._onElementInstanceSelect();
         }
+        $event.preventDefault();
+        $event.stopPropagation();
+
     },
 
     _handleOnOAuthUrl: function(oauthurl) {

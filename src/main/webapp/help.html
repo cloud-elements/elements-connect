@@ -10,12 +10,16 @@
       <div style="width:100%; margin-top: 20px;">
         <p style="color: #fff;" ng-modal="items.steps" ng-repeat="step in items.steps"
            ng-include="'helpsteps.html'"></p>
+
+
       </div>
     </script>
 
     <script type="text/ng-template" id="helpsteps.html">
-      {{step.text}}
+      <span ng-show="step.text != null">{{step.text}}</span>
+      <a href="{{step.link}}" target="_blank" ng-show="step.link != null">{{step.link}}</a>
     </script>
+
 
     <slick infinite="false" slides-to-show="1" slides-to-scroll="1" arrows="true" ng-modal="helpList">
       <div ng-repeat="items in helpList" ng-include="'helpimages.html'">

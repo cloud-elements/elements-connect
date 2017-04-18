@@ -1,7 +1,7 @@
 <div class="bottom_nav">
   <div ng-include="'hsgoogletag.html'" ng-if="hsanalytics" style="display: hidden;"></div>
   <!-- Menu Button -->
-  <button type="submit" class="btn btn-link navButton" ng-click="openSideNav('left')">
+  <button class="btn btn-link navButton" ng-click="openSideNav('left', $event)">
     <i class="icon sidebar"></i> Menu
   </button>
   <a href class="help" ng-click='onHelp($event)' ng-show="{{branding.showhelp || !branding}}">

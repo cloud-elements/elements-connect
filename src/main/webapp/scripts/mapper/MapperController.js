@@ -34,6 +34,44 @@ var MapperController = BaseController.extend({
         me.$mdDialog = $mdDialog;
         me.$filter = $filter;
         me._super($scope);
+        me._mapper.all[me._picker.selectedElementInstance.element.key].files =
+            me._mapper.all[me._picker.selectedElementInstance.element.key].files || {};
+    },
+
+    handleFileUploadSelect: function(file, errors) {
+        var me = this;
+        if (file === null) {
+            return;
+        }
+        var objectName = me.$scope.selectedObject.select.name;
+        me._mapper.all[me._picker.selectedElementInstance.element.key].files[objectName] = file;
+        me.$scope.files[objectName] = file;
+        me._mapper._setFileUpload(true);
+        var fileReader = new FileReader();
+        fileReader.onload = function(event) {
+            var fileContent = event.target.result;
+            var headers = fileContent.split(/\r\n|\n/)[0].split(',');
+            var fieldDataFromHeaders = me.convertHeadersToFieldData(headers);
+            var selectedElementInstance = me._picker.selectedElementInstance;
+            var targetElementInstance = me._picker.targetElementInstance;
+            var fieldDataFiltered = me._mapper._stripSelectedInstanceMetadata(selectedElementInstance, targetElementInstance, me.$scope.selectedObject.select.name, fieldDataFromHeaders);
+            me._handleOnMetadataLoad(me.$scope.selectedObject, fieldDataFiltered);
+        };
+        fileReader.readAsText(file);
+    },
+
+    convertHeadersToFieldData: function(headers) {
+        var fields = [];
+        headers.forEach(function(header) {
+            var headerFieldObject = {};
+            header = header.replace(/"/g, '');
+            headerFieldObject.actualVendorPath = header;
+            headerFieldObject.path = header;
+            headerFieldObject.type = "string";
+            headerFieldObject.vendorPath = header;
+            fields.push(headerFieldObject);
+        });
+        return {fields: fields};
     },
 
     defineScope: function() {
@@ -55,6 +93,8 @@ var MapperController = BaseController.extend({
         me.$scope.cbInstance = {};
         me.$scope.mapperwhere = [];
         me.$scope.mapperMetaDataById = null;
+        me.$scope.fileUpload = false;
+        me.$scope.files = {};
 
         //Mapping of UI actions to methods to be invoked
         me.$scope.refreshObjectMetaData = me.refreshObjectMetaData.bind(this);
@@ -64,12 +104,14 @@ var MapperController = BaseController.extend({
         me.$scope.aceLoaded = me._aceLoaded.bind(this);
         me.$scope.jsCustomization = me._jsCustomization.bind(this);
         me.$scope.closeJS = me._closeJS.bind(this);
+        me.$scope.handleFileUploadSelect = me.handleFileUploadSelect.bind(this);
 
         // Handling Booleans to display and hide UI
         me.$scope.showTree = false;
         me.$scope.showJSEditor = false;
         me.$scope.showTargetTree = false;
         me.$scope.bidirectionalMapping = false;
+        me.$scope.showObjectSelection = false;
 
         //Handling Action Methods
         me.$scope.save = me.save.bind(this);
@@ -82,6 +124,7 @@ var MapperController = BaseController.extend({
 
         me.$scope.unCheckObject = me.unCheckObject.bind(this);
         me.$scope.showTargetObjectSelection = false;
+        //me.$scope.showTargetObjectSelection = true;
         me.$scope.processtep = 'mapper';
 
         this.$scope.mapperTreeOptions = {
@@ -262,6 +305,16 @@ var MapperController = BaseController.extend({
     refreshObjectMetaData: function(checkWhereFields, checkRequired) {
         var me = this;
 
+        var objectName = me.$scope.selectedObject.select.name;
+        if (me._mapper.all[me._picker.selectedElementInstance.element.key].files[objectName]) {
+            var objectDetails = me._picker.getElementObjectDetails(me._picker.selectedElementInstance.element.key, 'source', me.$scope.selectedObject.select.name);
+            me.$scope.fileUpload = objectDetails.fileUpload;
+            me._maskLoader.show(me.$scope, "Loading Object fields...");
+            me.handleFileUploadSelect(me._mapper.all[me._picker.selectedElementInstance.element.key].files[objectName]);
+            me._maskLoader.hide();
+            return;
+        }
+
         //First check if existing Where condition mandatory ones are filled, if not warn user
         if((me._cloudElementsUtils.isEmpty(checkWhereFields) || checkWhereFields == true)
             && !me._cloudElementsUtils.isEmpty(me.$scope.mapperwhere)) {
@@ -325,6 +378,13 @@ var MapperController = BaseController.extend({
             me.$scope.mapperMetaDataById = null;
         }
 
+        if(!me._cloudElementsUtils.isEmpty(objectDetails)) {
+            me.$scope.parentOpbjetName = objectDetails.parentObjectName;
+            me.$scope.fileUpload = objectDetails.fileUpload;
+        } else {
+            me.$scope.parentOpbjetName = null;
+            me.$scope.fileUpload = null;
+        }
         me._maskLoader.show(me.$scope, "Loading Object fields...");
         me.$scope.showTargetObjectSelection = false;
         me.$scope.selectedSourceObject = me.$scope.selectedObject.select;
@@ -421,7 +481,13 @@ var MapperController = BaseController.extend({
                 }
 
             }
-            me.$scope.showTargetObjectSelection = false;
+                        if (me.$scope.showObjectSelection == true){
+                            me.$scope.showTargetObjectSelection = true;
+                        } else {
+                            me.$scope.showTargetObjectSelection = false;
+                        }
+
+            //me.$scope.showTargetObjectSelection = false;
         } else {
             me.$scope.showTargetObjectSelection = true;
         }
@@ -472,9 +538,19 @@ var MapperController = BaseController.extend({
         }
 
         me.$scope.instanceObjects = data;
-        me.$scope.targetObjects = me._mapper.all[me._picker.targetElementInstance.element.key].objectDetails;
+        me.$scope.targetObjects = me.buildTargetObjects();
         me.$scope.selectedObject.select = me.$scope.instanceObjects[0];
         me.refreshObjectMetaData(me.$scope.selectedObject.select.name);
+    },
+
+    buildTargetObjects: function() {
+        var me = this;
+        var objects = [];
+        var objectDetails = me._mapper.all[me._picker.targetElementInstance.element.key].objectDetails;
+        for (var key in objectDetails) {
+           objects.push(objectDetails[key]);
+        }
+        return objects;
     },
 
     cancel: function() {

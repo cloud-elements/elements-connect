@@ -26,6 +26,35 @@
         </ui-select-choices>
       </ui-select>
 
+      <!-- Change Code for multi/single-select static list dropdown options while formula instance creation-->
+      <!-- Multiple select static list-->
+      <ui-select multiple ng-model="formulaInstanceData[config.key]" theme="select2" ng-disabled="disabled"
+                 ng-if="config.properties && config.properties.type == 'multiple'"
+                 id="formulaInstanceDropdown">
+        <ui-select-match placeholder="Select ..."> {{$item.name}}</ui-select-match>
+        <ui-select-choices
+                repeat="option in config.properties.options | filter: $select.search">
+          <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
+          <small>
+            id: {{option[config.properties.valueField]}}
+          </small>
+        </ui-select-choices>
+      </ui-select>
+
+      <!-- Single select static list-->
+      <ui-select ng-model="formulaInstanceData[config.key]" theme="select2" ng-disabled="disabled"
+                 ng-if="config.properties && config.properties.type == 'single'"
+                 id="formulaInstanceDropdown">
+        <ui-select-match placeholder="Select ...">{{$select.selected[config.properties.displayField]}}</ui-select-match>
+        <ui-select-choices
+                repeat="option in config.properties.options | filter: $select.search">
+          <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
+          <small>
+            id: {{option[config.properties.valueField]}}
+          </small>
+        </ui-select-choices>
+      </ui-select>
+
     </div>
   </div>
   <div class="actions">

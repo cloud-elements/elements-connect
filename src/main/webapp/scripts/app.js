@@ -25,6 +25,7 @@ var bulkloaderApp = angular
         'ui.grid.pagination',
         'ui.grid.autoResize',
         'ui.grid.selection',
+        'ngFileUpload',
         'slick',
         'ngMaterial',
         'ui.bootstrap',
@@ -74,6 +75,10 @@ bulkloaderApp.config(function($routeProvider) {
         .when('/elementloader', {
             templateUrl: 'landingpages/elementloader.html',
             controller: 'LandingController'
+        })
+        .when('/signup', {
+            templateUrl: 'credentials.html',
+            controller: 'CredentialsController'
         })
         .when('/formulas', {
             templateUrl: 'formula.html',

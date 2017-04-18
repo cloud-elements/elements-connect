@@ -30,10 +30,14 @@
           </div>
 
           <script type="text/ng-template" id="currentTransfomations.html">
-            <p class="fourteen wide column">{{metadata.sourceObject}} <i class="angle right icon"></i> {{metadata
+            <p class="eight wide column">{{metadata.sourceObject}} <i class="angle right icon"></i> {{metadata
               .targetObject}}</p>
+            <p class="six wide column">
+             <span ng-if="!metadata.fileUploadReady" class="red">No file found</span>
+            </p>
             <md-switch class="two wide column md-primary-green"
-                       ng-model="metadata.transformed" aria-label></md-switch>
+                       ng-model="metadata.transformed"
+                       ng-disabled="!metadata.fileUploadReady" aria-label></md-switch>
           </script>
           <p class="noteheader">Data for the selected objects will be loaded</p>
           <div class="ui internally grid transformations" data-ng-model="currentTransfomations">

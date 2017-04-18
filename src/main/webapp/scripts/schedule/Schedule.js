@@ -10,6 +10,7 @@ var Schedule = Class.extend({
     _notifications: null,
     _cloudElementsUtils: null,
     _picker: null,
+    _mapper: null,
     _application: null,
     _navigation: null,
 
@@ -135,6 +136,7 @@ var Schedule = Class.extend({
         var me = this;
         var query = null;
         var selectObjectName = null;
+        var composite = me._application.isCompositeMetadata();
         if(me._application.getView() == 'datalist') {
             var fieldsList = me._buildFieldList(fields, allObjects, selectedInstance, objectName);
             if(me._cloudElementsUtils.isEmpty(fieldsList) || fieldsList.length == 0) {
@@ -161,11 +163,29 @@ var Schedule = Class.extend({
 
         var job = new Object();
 
+        var objectDetails = {};
+        if(!me._cloudElementsUtils.isEmpty(allObjects[selectedInstance.element.key].objectDetails)) {
+            objectDetails = allObjects[selectedInstance.element.key].objectDetails[selectObjectName];
+        }
+
         job.query = query;
         job.from = startDate;
         job.objectName = selectObjectName;
         job.elementKey = selectedInstance.element.key;
         job.statusCheckInterval = statusCheckInterval;
+        job.fileUpload = objectDetails.fileUpload;
+        job.composite = composite;
+        job.jobId = objectDetails.jobId;
+        job.parentObjectName = objectDetails.parentObjectName;
+
+        var target = me._picker.getTarget();
+        //Check if the multiUpload is true for Target as well
+        if(!me._cloudElementsUtils.isEmpty(objectDetails.multipleUpload) && objectDetails.multipleUpload
+            && !me._cloudElementsUtils.isEmpty(target.multipleUpload) && target.multipleUpload) {
+            job.multipleUpload = objectDetails.multipleUpload;
+        } else {
+            job.multipleUpload = false;
+        }
 
         var source = me._picker.getSourceElement(selectedInstance.element.key);
         if(!me._cloudElementsUtils.isEmpty(source.path)) {
@@ -177,12 +197,15 @@ var Schedule = Class.extend({
 
         var targetConfiguration = new Object();
 
-        var target = me._picker.getTarget();
         if(me._cloudElementsUtils.isEmpty(target.appendObjectName) ||
             target.appendObjectName == false) {
             targetConfiguration.path = target.path;
         } else {
-            targetConfiguration.path = target.path + '/' + objectName;
+            if (target.path.indexOf('{objectName}') != -1) {
+                targetConfiguration.path = target.path.replace("{objectName}", objectName);
+            } else {
+                targetConfiguration.path = target.path + '/' + objectName;
+            }
         }
 
         targetConfiguration.method = target.method;
@@ -211,6 +234,22 @@ var Schedule = Class.extend({
         }
 
         targetConfiguration.objectName = objectName;
+
+        //Check if the Target elements has any bulkMetadata to be sent as part of the target configuration
+        if(!me._cloudElementsUtils.isEmpty(target.bulkMetadata)) {
+
+            if(!me._cloudElementsUtils.isEmpty(target.bulkMetadata[objectName])) {
+                targetConfiguration.metaData = target.bulkMetadata[objectName];
+            } else {
+                //Check if the metadata is for the custom Objects
+                var split = objectName.split('_');
+                var customObjectName = split[0]+'_'+split[1]+'_'+'*';
+
+                if(!me._cloudElementsUtils.isEmpty(target.bulkMetadata[customObjectName])) {
+                    targetConfiguration.metaData = target.bulkMetadata[customObjectName];
+                }
+            }
+        }
 
         job.targetConfiguration = targetConfiguration;
 
@@ -251,11 +290,38 @@ var Schedule = Class.extend({
                     continue;
                 }
 
+                var sourceObjectDetails = allObjects[selectedInstance.element.key].objectDetails;
+                var targetObjectDetails = allObjects[targetInstance.element.key].objectDetails;
+
                 var o = objects[i].split('_');
                 var mapping = new Object();
-                mapping.transformed = true;
-                mapping.sourceObject = o[1];
-                mapping.targetObject = o[2];
+                var sourceName = o[1];
+                var targetName = o[2];
+                //If length is > 3 that means object has '_' in it, append the remaining objects to get the target
+                if(o.length > 3) {
+                    var ar2 = o.slice(2, o.length);
+                    targetName = ar2.join('_');
+                }
+
+                var file = me._mapper.all[me._picker.selectedElementInstance.element.key].files[sourceName];
+                var fileUpload = false;
+                var sourceDisplayName = null;
+                if(!me._cloudElementsUtils.isEmpty(sourceObjectDetails) && !me._cloudElementsUtils.isEmpty(sourceObjectDetails[sourceName])) {
+                    fileUpload = sourceObjectDetails[sourceName].fileUpload;
+                    sourceDisplayName = sourceObjectDetails[sourceName].displayName;
+                }
+
+                var targetDisplayName = null;
+                if(!me._cloudElementsUtils.isEmpty(targetObjectDetails) && !me._cloudElementsUtils.isEmpty(targetObjectDetails[targetName])) {
+                    targetDisplayName = targetObjectDetails[targetName].displayName;
+                }
+
+                if (!targetDisplayName) {targetDisplayName = targetName}
+                if (!sourceDisplayName) {sourceDisplayName = sourceName}
+                mapping.transformed = fileUpload ? file ? true : false : true;
+                mapping.fileUploadReady = fileUpload ? file ? true : false : true;
+                mapping.sourceObject = sourceDisplayName;
+                mapping.targetObject = targetDisplayName;
                 mapping.name = objects[i];
                 schedulemappings.push(mapping);
 
@@ -379,7 +445,7 @@ var Schedule = Class.extend({
             if(me._cloudElementsUtils.isEmpty(fields) || fields.length <= 0) {
                 continue;
             }
-            var jo = me._getScheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 60000);
+            var jo = me._getScheduleObjectJob(selectedInstance, targetInstance, m.name, fields, allObjects, startDate, 20000);
             if(jo == false) {
                 //Something broke, stopping doing other stuff
                 allGoodForSave = false;
@@ -462,6 +528,20 @@ var Schedule = Class.extend({
         var me = this;
     },
 
+    getScheduleHeaders: function() {
+        var me = this;
+        var scheduleDisplay = me._application.getSchedule();
+        if(!me._cloudElementsUtils.isEmpty(scheduleDisplay)
+            && !me._cloudElementsUtils.isEmpty(scheduleDisplay['Elements-Async-Callback-Url'])) {
+
+            var headers = new Object();
+            headers['Elements-Async-Callback-Url'] = scheduleDisplay['Elements-Async-Callback-Url'];
+            return headers;
+        }
+
+        return null;
+    },
+
     scheduleJobs: function(selectedInstance, targetInstance, jobs, cronVal) {
         var me = this;
 
@@ -476,7 +556,7 @@ var Schedule = Class.extend({
                 var js = new Array();
                 js.push(jobs[key]);
 
-                me._elementsService.scheduleJob(selectedInstance, js, cronVal)
+                me._elementsService.scheduleJob(selectedInstance, js, cronVal, me.getScheduleHeaders())
                     .then(me._handleJobScheduled.bind(me, selectedInstance),
                     me._handleJobSchedulingError.bind(me, selectedInstance));
             }
@@ -514,7 +594,7 @@ var Schedule = Class.extend({
                 }
             }
 
-            me._elementsService.scheduleJob(selectedInstance, js, cronVal)
+            me._elementsService.scheduleJob(selectedInstance, js, cronVal, me.getScheduleHeaders())
                 .then(me._handleJobScheduled.bind(me, selectedInstance),
                 me._handleJobSchedulingError.bind(me, selectedInstance));
         }
@@ -556,7 +636,7 @@ var Schedule = Class.extend({
         /**
          * Initialize and configure
          */
-        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', 'Application', 'Navigation', '$modal', '$mdDialog', function(CloudElementsUtils, ElementsService, Notifications, Picker, Application, Navigation, $modal, $mdDialog) {
+        $get: ['CloudElementsUtils', 'ElementsService', 'Notifications', 'Picker', 'Application', 'Navigation', '$modal', '$mdDialog', 'Mapper', function(CloudElementsUtils, ElementsService, Notifications, Picker, Application, Navigation, $modal, $mdDialog, Mapper) {
             this.instance._cloudElementsUtils = CloudElementsUtils;
             this.instance._elementsService = ElementsService;
             this.instance._notifications = Notifications;
@@ -565,6 +645,7 @@ var Schedule = Class.extend({
             this.instance._picker = Picker;
             this.instance._application = Application;
             this.instance._navigation = Navigation;
+            this.instance._mapper = Mapper;
 
             return this.instance;
         }]

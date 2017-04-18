@@ -315,6 +315,10 @@ var Picker = Class.extend({
         var elementKey = bulkloader.Picker.oauthElementKey;
         var elementConfig = me.getElementConfig(elementKey);
 
+        if (pageParameters.code) {
+          pageParameters.code = decodeURI(pageParameters.code);
+        }
+
         if(me._cloudElementsUtils.isEmpty(elementConfig)) {
             //Throw an error
             me._notifications.notify(bulkloader.events.ERROR, "Element config for elementKey: " + bulkloader.Picker.oauthElementKey + " not found.");

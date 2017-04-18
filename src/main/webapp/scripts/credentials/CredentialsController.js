@@ -40,6 +40,7 @@ var CredentialsController = BaseController.extend({
         me.$scope.showNewPassword = false;
         me.$scope.login = {};
         me.$scope.signup = {};
+        me.$scope.hscrm = {};
         me.$scope.forgotpassword = {};
         me.$scope.newpassword = null;
         me.$scope.newpasswordagain = null;
@@ -54,8 +55,18 @@ var CredentialsController = BaseController.extend({
         me.$scope.onForgot = me.onForgot.bind(me);
         me.$scope.onSetNewPassword = me.onSetNewPassword.bind(me);
         me.$scope.hsanalytics = me._application.isHS();
+        me.$scope.hsformfields = me._application.isHS();
+        me.$scope.btNoNewAccountLink = me._application.isBT();
 
-        me.changeCredentialView(me._credentials.credentialsView);
+        var a = me.$location.path();
+        var b = me.$location.path();
+        var c = me._credentials.credentialsView;
+        if (me.$location.path() === '/signup') {
+            me.changeCredentialView('signup');
+        }
+        else {
+            me.changeCredentialView(me._credentials.credentialsView);
+        }
         me.credentialsBranding(me._application.isST());
 
     },
@@ -235,6 +246,19 @@ var CredentialsController = BaseController.extend({
             return;
         }
 
+        // This is for HS only - if dropdown is not selected
+        if( me._application.isHS() && me._cloudElementsUtils.isEmpty(me.$scope.hscrm.selected)){
+            var confirm = me.$mdDialog.alert()
+                .title('Missing values')
+                .content('Select your Source CRM is required.')
+                .ok('OK');
+
+            me.$mdDialog.show(confirm);
+            return;
+        }
+        if( me._application.isHS()){
+            me._credentials.hscrm = me.$scope.hscrm.selected;
+        }
         me._maskLoader.show(me.$scope, 'Creating account...');
         me._credentials.signup(me.$scope.signup).then(me._handleConfigurationLoad.bind(me));
     },

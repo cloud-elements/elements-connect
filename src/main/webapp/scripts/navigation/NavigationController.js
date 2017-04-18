@@ -62,8 +62,7 @@ var NavigationController = BaseController.extend({
 
         me.seedSteps();
 
-        if(!me._cloudElementsUtils.isEmpty(me._application.configuration) && !me._cloudElementsUtils.isEmpty(me._application.getDisplay())
-            && me._application.getDisplay().scheduling == true) {
+        if(me._application.showScheduling()) {
             me.$scope.showScheduling = true;
         } else {
             me.$scope.showScheduling = false;
@@ -88,13 +87,21 @@ var NavigationController = BaseController.extend({
         var me = this;
         $event.preventDefault();
         $event.stopPropagation();
-        window.open("http://support.cloud-elements.com/hc/en-us/requests/new?preview%5Btheme_id%5D=203658075&preview_as_role=end_user&use_theme_settings=false", "_blank");
+        var supportURL = "http://support.cloud-elements.com/hc/en-us/requests/new?preview%5Btheme_id%5D=203658075&preview_as_role=end_user&use_theme_settings=false";
+        if (me._application.configuration.supportURL) {
+            supportURL = me._application.configuration.supportURL;
+        }
+        window.open(supportURL, "_blank");
         me.$mdSidenav('left').close();
     },
 
-    openSideNav: function(navID) {
+    openSideNav: function(navID, $event) {
         var me = this;
-        me.$mdSidenav(navID).toggle();
+        $event.preventDefault();
+        $event.stopPropagation();
+        console.log('click menu');
+        return me.$mdSidenav(navID).toggle();
+
     },
 
     seedSteps: function() {

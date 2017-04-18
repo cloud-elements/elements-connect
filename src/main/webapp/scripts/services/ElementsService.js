@@ -271,8 +271,14 @@ var ElementsService = Class.extend({
         var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects/' + objectName +
             '/metadata';
 
+        var composite = me._application.isCompositeMetadata();
         if(!me._cloudElementsUtils.isEmpty(discoveryId)) {
             url += '?discoveryId=' + discoveryId;
+            if(composite === true) {
+                url += '&composite=true';
+            }
+        } else if(composite === true) {
+            url += '?composite=true';
         }
 
         return this._httpGet(url, this._getHeaders(elementInstance.token));
@@ -397,15 +403,19 @@ var ElementsService = Class.extend({
         return this._httpDelete(url, this._getHeaders());
     },
 
-    getHistory: function(jobId) {
+    getHistory: function(jobId, parentJobId) {
 
         var parameters = {
             'page': 1,
-            'pageSize': 50
+            'pageSize': 100
         };
 
         if(!this._cloudElementsUtils.isEmpty(jobId)) {
             parameters.jobId = jobId;
+        }
+
+        if(!this._cloudElementsUtils.isEmpty(parentJobId)) {
+            parameters.parentBulkLoaderId = parentJobId;
         }
 
         var url = this._application.environment.elementsUrl + '/bulkloader';
@@ -468,17 +478,25 @@ var ElementsService = Class.extend({
      * Query server and returns Object metadata
      * @return Service handler
      */
-    scheduleJob: function(elementInstance, job, cronVal) {
-
-        var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
+    scheduleJob: function(elementInstance, job, cronVal, scheduleHeaders) {
+        var me = this;
+        var url = me._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/bulk/workflows';
 
         console.log(JSON.stringify(job));
+
         var headers = this._getHeaders(elementInstance.token);
-        if(!this._cloudElementsUtils.isEmpty(cronVal)) {
+        if(!me._cloudElementsUtils.isEmpty(scheduleHeaders)) {
+            var keys = Object.keys(scheduleHeaders);
+            for(var i=0; i<keys.length; i++) {
+                headers[keys[i]] = scheduleHeaders[keys[i]];
+            }
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(cronVal)) {
             headers['Elements-Schedule-Request'] = cronVal;
         }
 
-        return this._httpPost(url, headers, job);
+        return me._httpPost(url, headers, job);
     },
 
     createFormulaInstance: function(formulaId, name, formulaName, configuration) {

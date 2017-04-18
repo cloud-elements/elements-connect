@@ -606,7 +606,26 @@ body .header-navigation .ui.next.button:hover {
     border-radius: 0 0 6px 6px;
     font-size: 80%;
     z-index:100;
+
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    background: rgba(0,0,0,0);
+    height: 30px;
+    width: 43%;
+    line-height: 32px;
+    color: #000;
+    border-radius: 0 0 6px 6px;
+    font-size: 80%;
+    z-index: 100;
+    cursor: pointer;
 }
+#picker .services-selections > a i.write span,
+#formula-picker .services-selections > a i.write span{
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
 #picker .services-selections > a i.write:hover,
 #formula-picker .services-selections > a i.write:hover{
     background: rgba(0,0,0,.05);
@@ -866,6 +885,16 @@ body .header-navigation .ui.next.button:hover {
 #jobhistory .jobslist .job-tree-node:hover{
     border: 1px solid #389dc8;
 }
+
+#jobhistory .jobslist .job-tree-node.childjob{
+    position: relative;
+    border-left: 10px solid #389dc8;
+}
+
+#jobhistory .jobslist .job-tree-node.childjob:hover{
+    border-left: 10px solid #389dc8;
+}
+
 #jobhistory .jobslist .job-tree-node div{
     display: block;
     float: left;
@@ -960,7 +989,7 @@ body .header-navigation .ui.next.button:hover {
     background-color: #58bde8;
 }
 #jobhistory .jobslist .job-tree-node div.job-footer span{
-    width: 50%;
+    width: 33%;
     display: inline-block;
     float: left;
     padding: 7px 10px;
@@ -1985,6 +2014,7 @@ div#data-list-body.disabled:after {
 #mapping-data-list-body .list {
     background: #fff;
     padding: 0px;
+    margin-top: 25px;
     box-shadow: 0 1px 2px rgba(0,0,0,.5);
     position: absolute;
     top: 65px;
@@ -2354,7 +2384,6 @@ div#data-list-body.disabled:after {
     line-height: 1;
     border: 0;
     border-radius: 0;
-    color: #fff;
     height: 66px;
     cursor: pointer;
 
@@ -2400,6 +2429,21 @@ div#data-list-body.disabled:after {
 
 #select-dropdown-container > select option{
     text-align: center;
+    color: #000000;
+}
+
+#file-upload {
+    padding-top: 0 !important;
+}
+
+#file-upload span {
+    color: #fff !important;
+}
+
+#file-upload-label {
+    padding-bottom: .5rem !important;
+    padding-left: 0 !important;
+    color: #58bde8 !important;
 }
 
 div#data-list-body.disabled:after {
@@ -3255,6 +3299,10 @@ Slick Plugin override
     font-family: 'Icons';
 }
 
+.red {
+    color: rgba(212,63,58,.9);
+}
+
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi){
     .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
@@ -3274,66 +3322,132 @@ Slick Plugin override
     height: 30px;
 }
 
-/* BAR COLOR */
-#branding-bar{
+
+/**************************/
+
+@media all and (device-width: 1024px) and (device-height: 768px) and (orientation:landscape){
+    #picker .services-selections > a:hover, #formula-picker .services-selections > a:hover {
+        opacity: 1;
+        box-shadow: 0 0px 2px rgba(0,0,0,.5);
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+        text-decoration: none;
+    }
+    #picker .services-selections > a i.write,
+    #formula-picker .services-selections > a i.write {
+        position: absolute;
+        bottom: -31px;
+        left: 0;
+        background: rgba(0,0,0,.6);
+        height: 30px;
+        width: 48%;
+        line-height: 32px;
+        color: rgba(255,255,255,1);
+        border-radius: 0 0 6px 6px;
+        font-size: 70%;
+        z-index: 100;
+    }
+    #picker .services-selections > a i.trash,
+    #formula-picker .services-selections > a i.trash {
+        content: 'Delete';
+        position: absolute;
+        right: -2px;
+        bottom: -31px;
+        background-color: rgba(212,63,58,.6);
+        height: 30px;
+        width: 48%;
+        line-height: 32px;
+        color: rgba(255,255,255,1);
+        border-radius: 0 0 6px 6px;
+        font-size: 70%;
+        z-index: 100;
+    }
+
+    #picker a i.wait,
+    #picker a i.write,
+    #picker a i.trash,
+    #formula-picker a i.wait,
+    #formula-picker a i.write,
+    #formula-picker a i.trash {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+    #picker a.highlightingElement i.wait,
+    #picker a.highlightingElement i.write,
+    #picker a.highlightingElement i.trash,
+    #formula-picker a.highlightingElement i.wait,
+    #formula-picker a.highlightingElement i.write,
+    #formula-picker a.highlightingElement i.trash {
+        visibility: visible;
+    }
+
+    #mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes .tree-node.angular-ui-tree-handle > .btn.pull-right {
+        visibility: visible;
+    }
 }
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+    #picker .services-selections > a:hover, #formula-picker .services-selections > a:hover {
+        opacity: 1;
+        box-shadow: 0 0px 2px rgba(0,0,0,.5);
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+        text-decoration: none;
+    }
+    #picker .services-selections > a i.write,
+    #formula-picker .services-selections > a i.write {
+        position: absolute;
+        bottom: -31px;
+        left: 0;
+        background: rgba(0,0,0,.6);
+        height: 30px;
+        width: 48%;
+        line-height: 32px;
+        color: rgba(255,255,255,1);
+        border-radius: 0 0 6px 6px;
+        font-size: 70%;
+        z-index: 100;
+    }
+    #picker .services-selections > a i.trash,
+    #formula-picker .services-selections > a i.trash {
+        content: 'Delete';
+        position: absolute;
+        right: -2px;
+        bottom: -31px;
+        background-color: rgba(212,63,58,.6);
+        height: 30px;
+        width: 48%;
+        line-height: 32px;
+        color: rgba(255,255,255,1);
+        border-radius: 0 0 6px 6px;
+        font-size: 70%;
+        z-index: 100;
+    }
 
+    #picker a i.wait,
+    #picker a i.write,
+    #picker a i.trash,
+    #formula-picker a i.wait,
+    #formula-picker a i.write,
+    #formula-picker a i.trash {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+    #picker a.highlightingElement i.wait,
+    #picker a.highlightingElement i.write,
+    #picker a.highlightingElement i.trash,
+    #formula-picker a.highlightingElement i.wait,
+    #formula-picker a.highlightingElement i.write,
+    #formula-picker a.highlightingElement i.trash {
+        visibility: visible;
+    }
 
-/* COLOR 1 */
-body .header-navigation,body .header-navigation #progressbar li .step-incomplete,#picker .picker-source,.md-sidenav-left{
+    #mapping-data-list-body #mapper-data-list-target .tree-root-li ul.angular-ui-tree-nodes .tree-node.angular-ui-tree-handle > .btn.pull-right {
+        visibility: visible;
+    }
 }
-#picker .services-selections > a.highlightingElement{
-}
-
-/* COLOR 2 */
-#mapping-data-list-body #mapper-data-list-source,#mapper-header .dropdownmenu,#mapping-data-list-body ul,#mapping-data-list-body .ui-tree-heading,#picker.show-target .picker-target{
-}
-
-
-
-/* ACCENT 1 */
-body .header-navigation #progressbar li.completed .step-incomplete i.step-complete, body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after, body .header-navigation .ui.next.button, body .header-navigation .ui.next.button:hover {
-}
-body .header-navigation #progressbar li.completed .step-incomplete, body .header-navigation #progressbar li.completed:after {
-}
-.dropdown-menu .btn-info.active{}
-
-
-
-
-
-/* ACCENT 2 */
-#mapping-data-list-body li li.mapped div.tree-root-li-li-container:before, li li.angular-ui-tree-placeholder{
-}
-#mapping-data-list-body #mapper-data-list-target li li div.tree-root-li-li-container span.source{
-}
-.angular-ui-tree-drag .angular-ui-tree-node .tree-node.angular-ui-tree-handle{
-}
-
-
-/*contrast color*/
-#picker.show-target .picker-source h2 .content, #picker.show-target .picker-source h2 .icon, #picker.show-target .picker-source h2 .sub.header{
-}
-
-
-/*****************************/
-/* Credentials Customization */
-/*****************************/
-
-#credentials{
-}
-#credentials .credentials-logo{
-}
-#credentials .credentials-container p > a{
-}
-
-#credentials .buttons .ui.inverted.green.basic.button{
-
-}
-#credentials .buttons .ui.inverted.green.basic.button:hover{
-
-}
-#credentials .buttons .ui.inverted.green.basic.button:active{
-
-}
-

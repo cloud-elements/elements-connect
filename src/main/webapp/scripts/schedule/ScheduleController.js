@@ -19,7 +19,7 @@ var ScheduleController = BaseController.extend({
     $mdDialog: null,
     _maskLoader: null,
 
-    init: function($scope, CloudElementsUtils, Picker, Application, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog) {
+    init: function($scope, CloudElementsUtils, Picker, Application, Datalist, Mapper, Schedule, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog, Upload, $q) {
         var me = this;
 
         me._notifications = Notifications;
@@ -34,6 +34,8 @@ var ScheduleController = BaseController.extend({
         me.$window = $window;
         me._maskLoader = MaskLoader;
         me.$location = $location;
+        me.Upload = Upload;
+        me.$q = $q;
         me._super($scope);
 
         me._getMappingTransformations();
@@ -154,8 +156,7 @@ var ScheduleController = BaseController.extend({
     _seedSchedule: function() {
         var me = this;
 
-        if(!me._cloudElementsUtils.isEmpty(me._application.getDisplay())
-            && me._application.getDisplay().scheduling == true) {
+        if(me._application.showScheduling()) {
             me.$scope.showScheduling = true;
         } else {
             me.$scope.showScheduling = false;
@@ -217,9 +218,29 @@ var ScheduleController = BaseController.extend({
             jobs = me._schedule.runDatalistScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
                 me._datalist.all, startdt, me.$scope.currentTransfomations, cronVal);
         } else {
-            jobs = me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
-                me._mapper.all, startdt, me.$scope.currentTransfomations, cronVal);
+            if (me._mapper._hasFileUpload) {
+                me.$q.all(me.uploadFilesForJob())
+                    .then(function(response) {
+                        response.forEach(function (responseObject) {
+                            var data = responseObject.data;
+                            var jobId = data.jobId;
+                            var objectName = data.objectName;
+                            me._mapper.all[me._picker.selectedElementInstance.element.key].objectDetails[objectName].jobId = jobId;
+                        });
+                        me.finishScheduleJobs(jobs, startdt, cronVal);
+                    });
+            } else {
+                me.finishScheduleJobs(jobs, startdt, cronVal);
+            }
         }
+    },
+
+    finishScheduleJobs: function(jobs, startdt, cronVal) {
+        var me = this;
+
+        jobs = me._schedule.runMapperScheduledJob(me._picker.selectedElementInstance, me._picker.targetElementInstance,
+            me._mapper.all, startdt, me.$scope.currentTransfomations, cronVal);
+
         if(jobs != false) {
             me._schedule.scheduleJobs(me._picker.selectedElementInstance, me._picker.targetElementInstance, jobs, cronVal);
 
@@ -230,6 +251,46 @@ var ScheduleController = BaseController.extend({
             }
         }
         me._maskLoader.hide();
+    },
+
+    uploadFilesForJob: function () {
+        var me = this;
+        var objectDetails = me._mapper.all[me._picker.selectedElementInstance.element.key].objectDetails;
+        var currentTransformations = me.$scope.currentTransfomations;
+        var promises = [];
+        currentTransformations.forEach(function (transformation) {
+            var objectDetailsForTransformation = me.getObjectDetails(transformation, objectDetails);
+            var file = me._mapper.all[me._picker.selectedElementInstance.element.key].files[transformation.sourceObject];
+            if (objectDetailsForTransformation.fileUpload && file) {
+                promises.push(me.Upload.upload({
+                    url: me.buildRequestUrl(objectDetailsForTransformation.name),
+                    data: {file: file},
+                    method: 'POST',
+                    headers: {
+                        Authorization: me.buildAuthHeaders()
+                    }
+                }));
+            }
+        });
+        return promises;
+    },
+
+    buildAuthHeaders: function() {
+        var me = this;
+        return me._schedule._elementsService._getHeaders().Authorization + ', Element ' + me._picker.selectedElementInstance.token;
+    },
+
+    buildRequestUrl: function(objectName) {
+        var me = this;
+        return me._schedule._application.environment.elementsUrl
+            + '/hubs/'
+            + me._picker.selectedElementInstance.element.hub
+            + '/bulk/workflows/fileUpload/'
+            + objectName;
+    },
+
+    getObjectDetails: function(transformationObject, objectDetails) {
+        return objectDetails[transformationObject.sourceObject];
     },
 
     clear: function() {
@@ -276,7 +337,7 @@ var ScheduleController = BaseController.extend({
 
 });
 
-ScheduleController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Application', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
+ScheduleController.$inject = ['$scope', 'CloudElementsUtils', 'Picker', 'Application', 'Datalist', 'Mapper', 'Schedule', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog', 'Upload', '$q'];
 
 angular.module('bulkloaderApp')
     .controller('ScheduleController', ScheduleController);

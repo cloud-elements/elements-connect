@@ -92,17 +92,29 @@ var CreateInstanceController = BaseController.extend({
             if(me._cloudElementsUtils.isEmpty(elementConfig.other)) {
                 elementConfig.other = new Object();
             }
+
+            // merge elementData into other
             var keys = Object.keys(me.$scope.elementData);
             for (key in keys) {
                 elementConfig.other[keys[key]] = me.$scope.elementData[keys[key]];
+            }
 
+            for (var i = 0;i<elementConfig.configs.length;i++) {
+                if (elementConfig.configs[i].alias) {
+                    elementConfig.other[elementConfig.configs[i].alias] =
+                        elementConfig.other[elementConfig.configs[i].key];
+                }
+            }
+
+            keys = Object.keys(elementConfig.other);
+            for (key in keys) {
                 //This is the special case for Marketo where apikey/secret differs for every user
                 if('oauth.api.key' === keys[key]) {
-                    elementConfig.apiKey = me.$scope.elementData[keys[key]];
+                    elementConfig.apiKey = elementConfig.other[keys[key]];
                 } else if('oauth.api.secret' === keys[key]) {
-                    elementConfig.apiSecret = me.$scope.elementData[keys[key]];
+                    elementConfig.apiSecret = elementConfig.other[keys[key]];
                 } else if('site.address' === keys[key]) {
-                    elementConfig.siteAddress = me.$scope.elementData[keys[key]];
+                    elementConfig.siteAddress = elementConfig.other[keys[key]];
                 }
             }
             me.openedWindow = me.$window.open('', '_blank');

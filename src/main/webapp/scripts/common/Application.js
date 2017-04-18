@@ -115,6 +115,45 @@ var Application = Class.extend({
         return me.configuration.display;
     },
 
+    getConfigName: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)
+            || me._cloudElementsUtils.isEmpty(me.configuration.name)){
+            return null;
+        }
+        return me.configuration.name;
+    },
+
+    getSchedule: function() {
+        var me = this;
+        if(me._cloudElementsUtils.isEmpty(me.configuration)
+            || me._cloudElementsUtils.isEmpty(me.configuration.display)
+            || me._cloudElementsUtils.isEmpty(me.configuration.display.schedule)) {
+            return null;
+        }
+        return me.configuration.display.schedule;
+    },
+
+    showScheduling: function() {
+        var me = this;
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration)
+            || me._cloudElementsUtils.isEmpty(me.configuration.display)) {
+            return false;
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(me.getDisplay())
+            && !me._cloudElementsUtils.isEmpty(me.getDisplay().scheduling)) {
+            return (me.getDisplay().scheduling == true);
+        }
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration.display.schedule)) {
+            return false;
+        }
+
+        return (me.configuration.display.schedule.scheduling == true);
+    },
+
     getMapper: function() {
         var me = this;
         return me.configuration.mapper;
@@ -132,17 +171,36 @@ var Application = Class.extend({
     isTargetHidden: function() {
         var me = this;
 
-        if(me._cloudElementsUtils.isEmpty(me.configuration) || me._cloudElementsUtils.isEmpty(me.configuration.display)) {
+        if(me._cloudElementsUtils.isEmpty(me.configuration)) {
+            return false;
+        }
+        //Checking for backward compatibility
+        if(!me._cloudElementsUtils.isEmpty(me.configuration.showTarget)) {
+            return !me.configuration.showTarget;
+        }
+
+        if(me._cloudElementsUtils.isEmpty(me.configuration.display)) {
             return false;
         }
 
         var show = me.configuration.display.showTarget;
-
         if(me._cloudElementsUtils.isEmpty(show)) {
             show = false;
         }
 
         return !show;
+    },
+
+    isCompositeMetadata: function() {
+        var me = this;
+        if (me._cloudElementsUtils.isEmpty(me.configuration)) {
+            return false;
+        } else if (me._cloudElementsUtils.isEmpty(me.configuration.metadata)) {
+            return false;
+        } else if (me.configuration.metadata.composite === true) {
+            return true;
+        }
+        return false;
     },
 
     isJSEditorHidden: function() {
@@ -274,7 +332,15 @@ var Application = Class.extend({
 
         return false;
     },
+    //This is very dirty way as there is no other option of adding Brighttalk only credentials branding
+    isBT: function() {
+        var me = this;
+        if(window.location.href.indexOf('brighttalk') > -1) {
+            return true;
+        }
 
+        return false;
+    },
     getTransferNowMessage: function() {
         var me = this;
 
@@ -284,6 +350,11 @@ var Application = Class.extend({
 
         if(!me._cloudElementsUtils.isEmpty(me.configuration.display.transferNowMessage)) {
             return me.configuration.display.transferNowMessage;
+        }
+
+        if(!me._cloudElementsUtils.isEmpty(me.configuration.display.schedule)
+            && !me._cloudElementsUtils.isEmpty(me.configuration.display.schedule.transferNowMessage)) {
+            return me.configuration.display.schedule.transferNowMessage;
         }
 
         return null;

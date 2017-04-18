@@ -13,7 +13,7 @@ var CloudElementsUtils = Class.extend({
      * @returns {boolean}
      */
     isEmpty: function(obj) {
-        return !angular.isDefined(obj) || obj===null;
+        return !angular.isDefined(obj) || obj===null || obj.length === 0;
     },
 
     /**

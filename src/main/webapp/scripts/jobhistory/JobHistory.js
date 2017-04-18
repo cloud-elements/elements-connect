@@ -32,6 +32,13 @@ var JobHistory = Class.extend({
         }
     },
 
+    getHistoryForParent: function(parentJob) {
+        var me = this;
+        return me._elementsService.getHistory(null, parentJob.bulkLoaderId).then(
+            me._handleGetHistorySucceeded.bind(me),
+            me._handleGetHistoryFailed.bind(me));
+    },
+
     getHistory: function() {
         var me = this;
         return me._elementsService.getHistory().then(

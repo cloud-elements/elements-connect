@@ -535,7 +535,11 @@ disabled look for disabled choices in the results dropdown
 
     font-size: 1px;
     outline: none;
-    background: url('select2.png') right top no-repeat;
+    background: url('../images/select2.png') right top no-repeat;
+    /*
+     * Changed the url of image from select2.png to ../images/select2.png
+     * It appears as a cross(x) for removing options from multi-select list
+     */
 }
 
 .select2-container-multi .select2-search-choice-close {

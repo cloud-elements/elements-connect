@@ -16,13 +16,13 @@
       </h2>
 
       <div class="services-selections" ng-init="isDisabled = false">
-        <a href ng-repeat="source in sources"
-           ng-click='onSelect("{{source.elementKey}}", "source")'
+        <a ng-repeat="source in sources"
+           data-ng-click='onSelect("{{source.elementKey}}", "source", $event)'
            id="{{source.elementKey}}"
            data-instance="Connect to {{source.name}}"
            style='background-image: url("{{source.image}}");'>
           <!--<i ng-show="showWait" class="icon wait" ng-click='onSelectSchedule("{{source.elementKey}}", $event)'></i>-->
-          <i class="icon write" ng-click='onEditInstance("{{source.elementKey}}", "source", $event)'> Edit</i>
+          <i class="icon write" ng-click='onEditInstance("{{source.elementKey}}", "source", $event)'> <span>Edit</span></i>
           <i class="icon trash" ng-click='onDeleteInstance("{{source.elementKey}}", "target", $event)'></i>
         </a>
       </div>
@@ -55,13 +55,13 @@
 
       <div class="services-selections">
         <a href ng-repeat="target in targets"
-           ng-click='onSelect("{{target.elementKey}}", "target")'
+           data-ng-click='onSelect("{{target.elementKey}}", "target", $event)'
            id="{{target.elementKey}}"
            data-instance="Connect to {{target.name}}"
            style='background-image: url("{{target.image}}");'>
           <!--<i ng-show="showWait" class="icon wait"-->
           <!--ng-click='onSelectSchedule("{{target.elementKey}}", $event)'></i>-->
-          <i class="icon write" ng-click='onEditInstance("{{target.elementKey}}", "target", $event)'> Edit</i>
+          <i class="icon write" ng-click='onEditInstance("{{target.elementKey}}", "target", $event)'> <span>Edit</span></i>
           <i class="icon trash" ng-click='onDeleteInstance("{{target.elementKey}}", "target", $event)'></i>
         </a>
       </div>
