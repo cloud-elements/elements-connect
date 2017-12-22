@@ -1,7 +1,7 @@
 /* GOOGLE FONTS */
 @import url(https://fonts.googleapis.com/css?family=Lato);
 
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -25,7 +25,9 @@ time, mark, audio, video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -48,6 +50,10 @@ q:before, q:after {
 table {
     border-collapse: collapse;
     border-spacing: 0;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 /*******************************/
@@ -100,8 +106,8 @@ h1 {
     position:absolute;
     top:50%;
     -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 .horizontal-align {
@@ -142,6 +148,7 @@ md-tooltip span{
 /* CREDENTIALS LOGIN/SIGNUP */
 /***********************/
 #credentials {
+    overflow: auto;
     color: #fff;
     text-align: center;
     padding: 0px;
@@ -158,8 +165,8 @@ md-tooltip span{
     min-width: 250px;
     left: 50%;
     -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-            transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
     top:30%;
 }
 .credentials-container > .header {
@@ -176,6 +183,32 @@ md-tooltip span{
 }
 .credentials-container p > a{
     color: #58bde8;
+}
+.popup {
+    z-index:1;
+    position:absolute;
+    width: 50%;
+    height:65%;
+    padding:3%;
+    background-color:white;
+    font-size:25px;
+    color:black;
+    align:center;
+    border-radius:25px;
+    border: 5px solid gray;
+    margin-left:25%;
+    margin-top:3%;
+    text-align: center;
+}
+.text{
+    margin-bottom:2%;
+}
+.close_popup {
+    color:gray;
+    border: 1px solid gray;
+    margin-top:5px;
+    border-radius:30px;
+
 }
 
 /***********************/
@@ -207,7 +240,9 @@ body .header-navigation .bottom_nav{
     flex-direction: row;
     background-color: rgba(0,0,0,.2);
 }
+
 body .page{
+    overflow: scroll;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
@@ -419,7 +454,7 @@ body .header-navigation .ui.next.button:hover {
     opacity:.5;
     position:relative;
     -webkit-transition: all 150ms ease-in;
-            transition: all 150ms ease-in;
+    transition: all 150ms ease-in;
 }
 #picker .picker-source,
 #formula-picker .picker-source{
@@ -443,7 +478,7 @@ body .header-navigation .ui.next.button:hover {
     opacity:.5;
     position:relative;
     -webkit-transition: all 150ms ease-in;
-            transition: all 150ms ease-in;
+    transition: all 150ms ease-in;
 }
 #picker .services-selections > a.highlightingElement,
 #formula-picker .services-selections > a.highlightingElement{
@@ -452,8 +487,8 @@ body .header-navigation .ui.next.button:hover {
     -webkit-box-shadow: 0 0 5px rgba(0,0,0, .25);
     box-shadow: 0 0 5px rgba(0,0,0, .25);
     -webkit-transform: scale(1.05);
-        -ms-transform: scale(1.05);
-            transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 #picker .services-selections > a:hover,
@@ -461,8 +496,8 @@ body .header-navigation .ui.next.button:hover {
     opacity:1;
     box-shadow: 0 0px 2px rgba(0,0,0,.5);
     -webkit-transform: scale(1.1);
-        -ms-transform: scale(1.1);
-            transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
     text-decoration: none;
 }
 #picker .services-selections > a:focus,
@@ -473,8 +508,8 @@ body .header-navigation .ui.next.button:hover {
 #formula-picker .services-selections > a.highlightingElement.selectedTarget{
     border: 3px solid #8dc63f;
     -webkit-transform: scale(1.1);
-        -ms-transform: scale(1.1);
-            transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
     box-shadow: 0 0px 2px rgba(0,0,0,.5);
 }
 
@@ -494,10 +529,10 @@ body .header-navigation .ui.next.button:hover {
     margin-left:-50px;
     bottom:-15px;
     -webkit-transition: all 250ms ease-in;
-            transition: all 250ms ease-in;
+    transition: all 250ms ease-in;
     -webkit-transform: rotateX(90deg);
-        -ms-transform: rotateX(90deg);
-            transform: rotateX(90deg);
+    -ms-transform: rotateX(90deg);
+    transform: rotateX(90deg);
 }
 
 #picker .services-selections > a.add-new:before,
@@ -518,10 +553,10 @@ body .header-navigation .ui.next.button:hover {
     left: 0;
     top: 0;
     -webkit-transition: all 250ms ease-in;
-            transition: all 250ms ease-in;
+    transition: all 250ms ease-in;
     -webkit-transform: translateY(-40px);
-        -ms-transform: translateY(-40px);
-            transform: translateY(-40px);
+    -ms-transform: translateY(-40px);
+    transform: translateY(-40px);
     right: 0;
     width: 100%;
     border-radius: 6px 6px 0 0;
@@ -543,8 +578,8 @@ body .header-navigation .ui.next.button:hover {
 #picker .services-selections > a:hover:before,
 #formula-picker .services-selections > a:hover:before {
     -webkit-transform: translateY(0px);
-        -ms-transform: translateY(0px);
-            transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    transform: translateY(0px);
     opacity:1;
 }
 
@@ -552,8 +587,8 @@ body .header-navigation .ui.next.button:hover {
 #formula-picker .services-selections > a.selectedTarget:before {
     background: #8dc63f;
     -webkit-transform: translateY(0px);
-        -ms-transform: translateY(0px);
-            transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    transform: translateY(0px);
     opacity: 1;
     border-radius: 3px 3px 0 0;
     border: none;
@@ -644,14 +679,14 @@ body .header-navigation .ui.next.button:hover {
     opacity: .5;
     box-shadow: 0 1px 2px rgba(0,0,0,.5);
     -webkit-transform: scale(1);
-        -ms-transform: scale(1);
-            transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
 }
 #picker .picker-target.disabled .services-selections > a:hover:before,
 #formula-picker .picker-target.disabled .services-selections > a:hover:before {
     -webkit-transform: translateY(-40px);
-        -ms-transform: translateY(-40px);
-            transform: translateY(-40px);
+    -ms-transform: translateY(-40px);
+    transform: translateY(-40px);
     opacity:0;
 }
 
@@ -697,10 +732,10 @@ body .header-navigation .ui.next.button:hover {
     opacity: 0;
     visibility: hidden;
     -webkit-transform: scale(.8);
-        -ms-transform: scale(.8);
-            transform: scale(.8);
+    -ms-transform: scale(.8);
+    transform: scale(.8);
     -webkit-transition: all 350ms ease-in;
-            transition: all 350ms ease-in;
+    transition: all 350ms ease-in;
 }
 
 #picker a.highlightingElement:hover i.wait,
@@ -720,8 +755,8 @@ body .header-navigation .ui.next.button:hover {
 #formula-picker a:hover i.trash {
     opacity: 1;
     -webkit-transform: scale(1);
-        -ms-transform: scale(1);
-            transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
 
 }
 
@@ -775,6 +810,7 @@ body .header-navigation .ui.next.button:hover {
 #picker.show-target .picker-source h2{
 }
 #picker.show-target .picker-target h2{
+    margin: 2rem 0em 1rem;
 }
 #formula-picker.show-target #multipleFormula h1{
     padding: 5px;
@@ -1109,7 +1145,7 @@ body .header-navigation .ui.next.button:hover {
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .ui-grid-canvas{
     /* background-color: #efe4e5; */
-     height: inherit;
+    height: inherit;
 }
 #jobhistory div.executionslist .ui-grid.errorJobHistoryGrid .errorCell{
     line-height: 2rem;
@@ -1473,18 +1509,18 @@ body .header-navigation .ui.next.button:hover {
 /* ANIMATION STYLES     */
 /************************/
 /*.animated-panel {*/
-    /*position:absolute;*/
-    /*left:0;*/
-    /*width: 100%;*/
-    /*top: 0;*/
-    /*bottom: 0;*/
-    /*background: #fff;*/
+/*position:absolute;*/
+/*left:0;*/
+/*width: 100%;*/
+/*top: 0;*/
+/*bottom: 0;*/
+/*background: #fff;*/
 
-    /*-webkit-transform: scale(1) rotateX(0deg);*/
-        /*-ms-transform: scale(1) rotateX(0deg);*/
-            /*transform: scale(1) rotateX(0deg);*/
-    /*-webkit-transition:all 450ms ease-in;*/
-            /*transition:all 450ms ease-in;*/
+/*-webkit-transform: scale(1) rotateX(0deg);*/
+/*-ms-transform: scale(1) rotateX(0deg);*/
+/*transform: scale(1) rotateX(0deg);*/
+/*-webkit-transition:all 450ms ease-in;*/
+/*transition:all 450ms ease-in;*/
 /*}*/
 
 .from-right.animated-panel {
@@ -1496,18 +1532,18 @@ body .header-navigation .ui.next.button:hover {
     background: #fff;
 
     -webkit-transform: scale(.8) rotateZ(90deg);
-        -ms-transform: scale(.8) rotateZ(90deg);
-            transform: scale(.8) rotateZ(90deg);
+    -ms-transform: scale(.8) rotateZ(90deg);
+    transform: scale(.8) rotateZ(90deg);
 }
 
 .animated-card {
     -webkit-transition: all 350ms ease-in;
-            transition: all 350ms ease-in;
+    transition: all 350ms ease-in;
 }
 .animated-card.push-back {
     -webkit-transform: scale(.9) rotateX(40deg);
-        -ms-transform: scale(.9) rotateX(40deg);
-            transform: scale(.9) rotateX(40deg);
+    -ms-transform: scale(.9) rotateX(40deg);
+    transform: scale(.9) rotateX(40deg);
     opacity:.4;
 }
 
@@ -1869,7 +1905,7 @@ body .header-navigation .ui.next.button:hover {
     color: rgba(0, 0, 0, 0.8);
     border-radius: 0.2857rem;
     -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     box-shadow: none;
     background-image: url('../images/select2x2.png') !important;
     background-repeat: no-repeat !important;
@@ -2060,7 +2096,7 @@ div#data-list-body.disabled:after {
     color: #bbb;
     opacity: 0;
 }#mapping-data-list-body .searchbarContainer .btn.showBtn{
-    opacity: 1;
+     opacity: 1;
  }
 #mapping-data-list-body .searchbarContainer .btn:hover{
     text-decoration: none;
@@ -2419,7 +2455,7 @@ div#data-list-body.disabled:after {
     color: rgba(0, 0, 0, 0.8);
     border-radius: 0.2857rem;
     -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     box-shadow: none;
     background-image: url('../images/select2x2.png') !important;
     background-repeat: no-repeat !important;
@@ -2483,7 +2519,7 @@ li li.angular-ui-tree-placeholder{
     border-radius: 8px;
     position: relative;
     -webkit-transition: all 150ms ease-in;
-            transition: all 150ms ease-in;
+    transition: all 150ms ease-in;
     width: 40px;
     height: 40px;
     float: left;
@@ -2581,7 +2617,7 @@ li li.angular-ui-tree-placeholder{
 /* END MAPPER          */
 /***********************/
 .bulkloaderModalWindow .ui.basic.modal > .close {
-    right: 0;
+    right: 4rem;
 }
 .bulkloaderModalWindow .header{
     padding-left: 0 !important;
@@ -2848,7 +2884,7 @@ dropdown > div.show > div.dropdown-list {
     cursor: pointer;
     opacity: .9;
     -webkit-transition: all 250ms ease-in;
-            transition: all 250ms ease-in;
+    transition: all 250ms ease-in;
     height: 35px;
     margin: 20px 0 0 19px;
     border: none;
@@ -3177,49 +3213,49 @@ This is the actual bar with stripes
     -ms-box-sizing:border-box;
     box-sizing:border-box;
     background-image:
-    -webkit-linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, .4) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, .4) 50%,
-            rgba(255, 255, 255, .4) 75%,
-            transparent 75%,
-            transparent
-    );
+            -webkit-linear-gradient(
+                    -45deg,
+                    rgba(255, 255, 255, .4) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, .4) 50%,
+                    rgba(255, 255, 255, .4) 75%,
+                    transparent 75%,
+                    transparent
+            );
     background-image:
-    -moz-linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, .4) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, .4) 50%,
-            rgba(255, 255, 255, .4) 75%,
-            transparent 75%,
-            transparent
-    );
+            -moz-linear-gradient(
+                    -45deg,
+                    rgba(255, 255, 255, .4) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, .4) 50%,
+                    rgba(255, 255, 255, .4) 75%,
+                    transparent 75%,
+                    transparent
+            );
     background-image:
-    -ms-linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, .4) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, .4) 50%,
-            rgba(255, 255, 255, .4) 75%,
-            transparent 75%,
-            transparent
-    );
+            -ms-linear-gradient(
+                    -45deg,
+                    rgba(255, 255, 255, .4) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, .4) 50%,
+                    rgba(255, 255, 255, .4) 75%,
+                    transparent 75%,
+                    transparent
+            );
     background-image:
-    linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, .4) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, .4) 50%,
-            rgba(255, 255, 255, .4) 75%,
-            transparent 75%,
-            transparent
-    );
+            linear-gradient(
+                    -45deg,
+                    rgba(255, 255, 255, .4) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, .4) 50%,
+                    rgba(255, 255, 255, .4) 75%,
+                    transparent 75%,
+                    transparent
+            );
     -webkit-background-size:50px 50px;
     -moz-background-size:50px 50px;
     -ms-background-size:50px 50px;

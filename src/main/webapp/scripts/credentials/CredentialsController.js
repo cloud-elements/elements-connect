@@ -58,6 +58,8 @@ var CredentialsController = BaseController.extend({
         me.$scope.hsformfields = me._application.isHS();
         me.$scope.btNoNewAccountLink = me._application.isBT();
 
+
+
         var a = me.$location.path();
         var b = me.$location.path();
         var c = me._credentials.credentialsView;
@@ -68,6 +70,8 @@ var CredentialsController = BaseController.extend({
             me.changeCredentialView(me._credentials.credentialsView);
         }
         me.credentialsBranding(me._application.isST());
+        me.credentialsBranding2(me._application.isSP());
+
 
     },
 
@@ -298,6 +302,33 @@ var CredentialsController = BaseController.extend({
             me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button', "background: #00cced !important; background-clip: padding-box !important; box-shadow: 0 4px #0399B1 !important; text-transform: uppercase !important; font-weight: bold !important;");
             me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:hover', "box-shadow: 0 3px #0399B1 !important; top: 2px !important; color: #fff !important;");
             me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:active', "box-shadow: 0 0 #0399B1 !important; top: 6px !important; outline: none !important; color: #fff !important;");
+        }
+
+    },
+    credentialsBranding2: function(isSP){
+        var me = this;
+        var stylesheet = document.getElementById('customestyle');
+            stylesheet = stylesheet.sheet;
+        if(isSP){
+            me.$scope.appName="Act! eCommerce Connections";
+            me._picker.addCSSRule(stylesheet, '#credentials', "background-color: #CDCDC8 !important;");
+            // me._picker.addCSSRule(stylesheet, '#credentials .content p', "color: #adadad !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .credentials-logo', "background-image:" +
+                " url('http://cloud-elements.github.io/formulas/assets/act-circle-logo.png') !important; width: 100%" +
+                " !important;" +
+                " height: 250px !important; display: block !important; background-repeat: no-repeat !important;" +
+                " background-position: center center !important; -webkit-background-size: contain !important;" +
+                " -moz-background-size: contain !important; -o-background-size: contain !important; background-size: contain !important;");
+            // me._picker.addCSSRule(stylesheet, '#credentials .header', "visibility: hidden !important");
+            me._picker.addCSSRule(stylesheet, '#credentials .header', "color: #000000 !important");
+            // me._picker.addCSSRule(stylesheet, '#credentials', "inner-html: "Welcome to test" !important");
+            me._picker.addCSSRule(stylesheet, '#credentials .credentials-container p > a', "color: #000000" +
+                " !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button', "background: #328CC3 !important; background-clip: padding-box !important; box-shadow: 0 4px #0399B1 !important; text-transform: uppercase !important; font-weight: bold !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:hover', "box-shadow: 0 3px #0399B1 !important; top: 2px !important; color: #fff !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:active', "box-shadow: 0 0 #0399B1 !important; top: 6px !important; outline: none !important; color: #fff !important;");
+            me._picker.addCSSRule(stylesheet, '.credentials-container', "top: 10% !important;");
+
         }
 
     }

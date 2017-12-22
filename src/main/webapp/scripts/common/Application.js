@@ -332,6 +332,15 @@ var Application = Class.extend({
 
         return false;
     },
+    //This is very dirty way as there is no other option of adding SwiftPage only credentials branding
+    isSP: function() {
+        var me = this;
+        if(window.location.href.indexOf('swiftpage') > -1 || window.location.href.indexOf('actpremium')> -1) {
+            return true;
+        }
+
+        return false;
+    },
     //This is very dirty way as there is no other option of adding Brighttalk only credentials branding
     isBT: function() {
         var me = this;

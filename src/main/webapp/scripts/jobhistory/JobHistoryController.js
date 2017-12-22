@@ -171,20 +171,24 @@ var JobHistoryController = BaseController.extend({
         me.$scope.jobExecutions = results;
         var err = null;
         if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.sourceStatusMessage)) {
+            channel=channelId(me);
             err = me.$scope.selectedJob.sourceStatusMessage
         }
 
         if(!me._cloudElementsUtils.isEmpty(me.$scope.selectedJob.targetStatusMessage)) {
+          channel=channelId(me);
             if(err == null) {
                 err = '';
             } else {
                 err += '<BR>'
             }
+
             err = me.$scope.selectedJob.targetStatusMessage
         }
 
         if(me.$scope.selectedJob.status == 'ERROR') {
-            err = me.$scope.selectedJob.statusMessage;
+            channel=channelId(me);
+             err = me.$scope.selectedJob.statusMessage;
         }
 
         if(err == null
@@ -202,8 +206,10 @@ var JobHistoryController = BaseController.extend({
         }
 
         if(err != null) {
+
             me.$scope.showNoErrors = true;
-            me.$scope.errorMessage = err;
+            me.$scope.errorMessage = err+channel;
+
         }
 
         if(results.length > 0) {
@@ -223,6 +229,17 @@ var JobHistoryController = BaseController.extend({
     }
 
 });
+function channelId(me){
+if(me.$scope.selectedJob.sourceElementKey==='brighttalk'){
+  var channel =angular.fromJson(me.$scope.selectedJob.payload)
+  channel=channel.query.split("where")[1];
+
+}
+else{
+  channel="";
+}
+return channel;
+}
 
 JobHistoryController.$inject = ['$scope', 'CloudElementsUtils', 'Application', 'JobHistory', 'Notifications', 'Credentials', 'MaskLoader', '$window', '$location', '$interval', '$filter', '$route', '$mdDialog'];
 

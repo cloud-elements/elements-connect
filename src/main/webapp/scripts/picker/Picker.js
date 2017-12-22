@@ -316,7 +316,7 @@ var Picker = Class.extend({
         var elementConfig = me.getElementConfig(elementKey);
 
         if (pageParameters.code) {
-          pageParameters.code = decodeURI(pageParameters.code);
+          pageParameters.code = decodeURIComponent(pageParameters.code);
         }
 
         if(me._cloudElementsUtils.isEmpty(elementConfig)) {

@@ -209,6 +209,9 @@ var Schedule = Class.extend({
         }
 
         targetConfiguration.method = target.method;
+        if (target.addToCampaign){
+            targetConfiguration.addToCampaign=true;
+        }
 
         if(me._cloudElementsUtils.isEmpty(target.elementToken) == false) {
             targetConfiguration.token = target.elementToken;
@@ -219,6 +222,8 @@ var Schedule = Class.extend({
         }
 
         var parameters = new Object();
+
+
 
         if(me._cloudElementsUtils.isEmpty(target.other) == false) {
             for(key in target.other) {

@@ -46,7 +46,10 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/Volusion.png', steps:[{text:'Volusion'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/volusion/volusion-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/WooCommerce.png', steps:[{text:'WooCommerce'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/woocommerce/woocommerce-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/SelectTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
+
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
@@ -59,7 +62,9 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/BCSource.png', steps:[{text:'Select a service, the source of your data.'}]},
                 {imageURL: 'swiftpage-help-images/BigCommerce.png', steps:[{text:'BigCommerce.'},{text:'For additional information on where to find these values:'}, {link:'http://swiftpage-docs.cloud-elements.com/docs/services/bigcommerce/bigcommerce-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/BCTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
@@ -72,7 +77,9 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/EcwidSource.png', steps:[{text:'Select a service, the source of your data.'}]},
                 {imageURL: 'swiftpage-help-images/Ecwid.png', steps:[{text:'Ecwid'},{text:'To set up your Ecwid account, please sign in and go to:'},{link:'https://my.ecwid.com/cp/CP.html#legacy_api'},{text:'For additional information on where to find these values:'}, {link:'http://swiftpage-docs.cloud-elements.com/docs/services/ecwid/ecwid-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/EcwidTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
@@ -85,7 +92,9 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/EtsySource.png', steps:[{text:'Select a service, the source of your data.'}]},
                 {imageURL: 'swiftpage-help-images/Etsy.png', steps:[{text:'Etsy'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/etsy/etsy-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/EtsyTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
@@ -98,7 +107,9 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/ShopifySource.png', steps:[{text:'Select a service, the source of your data.'}]},
                 {imageURL: 'swiftpage-help-images/Shopify.png', steps:[{text:'Shopify'}, {text:'Enter Store Name, Username, and Password'}]},
                 {imageURL: 'swiftpage-help-images/ShopifyTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
@@ -111,7 +122,9 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/VolusionSource.png', steps:[{text:'Select a service, the source of your data.'}]},
                 {imageURL: 'swiftpage-help-images/Volusion.png', steps:[{text:'Volusion'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/volusion/volusion-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/VolusionTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},
@@ -124,7 +137,9 @@ var HelpController = BaseController.extend({
                 {imageURL: 'swiftpage-help-images/WCSource.png', steps:[{text:'Select a service, the source of your data.'}]},
                 {imageURL: 'swiftpage-help-images/WooCommerce.png', steps:[{text:'WooCommerce'},{text:'For additional information on where to find these values:'},{link:'http://swiftpage-docs.cloud-elements.com/docs/services/woocommerce/woocommerce-endpoint-setup.html'}]},
                 {imageURL: 'swiftpage-help-images/WCTarget.png', steps:[{text:'Select a service, the target of your data.'}]},
-                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act! Premium URL, Username, Password, and Database Name'}]},
+                {imageURL: 'swiftpage-help-images/ActPremium.png', steps:[{text:'Act! Premium'},{text:'Enter Act!' +
+                ' Premium URL, Username, Password, and Database Name. For additional information on where to find' +
+                ' these values:'},{link:'http://kb.act.com/app/answers/detail/a_id/38287'}]},
                 {imageURL: 'swiftpage-help-images/SelectFormula.png', steps:[{text:'Select a formula to use'}]},
                 {imageURL: 'swiftpage-help-images/Create.png', steps:[{text:'Create the connection.'}]},
                 {imageURL: 'swiftpage-help-images/ClickDone.png', steps:[{text:'Click Done in the upper right corner.'}]},

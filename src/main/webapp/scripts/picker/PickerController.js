@@ -43,13 +43,13 @@ var PickerController = BaseController.extend({
         document.title = me._application.getApplicationName();
         me.$scope.branding = me._application.getBranding();
         me.checkKey();
-
 //        me.getBranding();
     },
 
     defineScope: function() {
         var me = this;
         // This is for transitions
+
         me.$scope.pageClass = 'page-picker';
         me.$scope.processtep = 'picker';
         me.$scope.shownext = false;
@@ -61,6 +61,10 @@ var PickerController = BaseController.extend({
         me.$scope.onEditInstance = me.onEditInstance.bind(me);
         me.$scope.onDeleteInstance = me.onDeleteInstance.bind(me);
         me.$scope.appName = me._application.getApplicationName();
+        me.$scope.service="Select a Service";
+        me.$scope.connection= "That you would like to use";
+        me.$scope.target_connect="Connect to your Account at";
+
 
         // Add this class to show Target section
         me.$scope.withTarget = '';
@@ -142,6 +146,20 @@ var PickerController = BaseController.extend({
 
     _handleConfigurationLoad: function(instances) {
         var me = this;
+        if(window.location.href.indexOf('swiftpage') > -1 || window.location.href.indexOf('actpremium')> -1) {
+            var me = this;
+            me.$scope.appName = "Act! eCommerce Connections";
+            me.$scope.service = "Log into your account";
+            me.$scope.connection="";
+            me.$scope.target_connect="Now log into Act!";
+        }
+
+        if(me._application.configuration.display["signup-popup"]) {
+            console.log("TEST", me._application.configuration.display["signup-popup"]);
+
+            me.$scope.popup = me._application.configuration.display["signup-popup"];
+        }
+
         if(!me._cloudElementsUtils.isEmpty(instances) && instances == false) {
             return;
         }
@@ -440,6 +458,7 @@ var PickerController = BaseController.extend({
         me._maskLoader.show(me.$scope, 'Refreshing...');
         me._picker.loadElementInstances().then(me._handleInstancesLoad.bind(me));
     }
+
 });
 
 PickerController.$inject = ['$scope', 'ElementsService', 'CloudElementsUtils', 'Picker',
