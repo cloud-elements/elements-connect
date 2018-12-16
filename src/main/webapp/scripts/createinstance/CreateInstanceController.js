@@ -35,7 +35,6 @@ var CreateInstanceController = BaseController.extend({
 
     defineScope:function() {
         var me = this;
-
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
         me.$scope.elementConfigs = me._createinstance.element.configs;

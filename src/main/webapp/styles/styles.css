@@ -1657,7 +1657,15 @@ body .header-navigation .ui.next.button:hover {
     min-height: 400px;
     margin-bottom:45px;
 }
-
+.addField{
+    color: white;
+    background-color: #003366;
+    padding-top: 1px;
+}
+.customFieldContainer{
+  color: black;
+  padding-top: 1px;
+}
 #data-list-body ul,
 #data-list-body li{}
 
@@ -2105,6 +2113,7 @@ div#data-list-body.disabled:after {
     overflow: hidden;
     margin: 10px 0;
 }
+
 #mapping-data-list-body .angular-ui-tree h1, #mapping-data-list-body .angular-ui-tree .searchbar{
     width: 50%;
     display: inline-block;

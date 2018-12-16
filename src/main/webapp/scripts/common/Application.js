@@ -167,6 +167,36 @@ var Application = Class.extend({
         }
         return  me.configuration.mapper.bidirectional;
     },
+    isCustomConfig: function(){
+        var me = this;
+        return me.configuration.mapper && me.configuration.mapper.customFieldContainer;
+
+    },
+
+    getTargetenumFields: function() {
+        var me = this;
+        return me.configuration.mapper && me.configuration.mapper.TargetenumFields;
+    },
+
+    getSourceenumFields: function() {
+        var me = this;
+        return me.configuration.mapper && me.configuration.mapper.SourceenumFields;
+    },
+
+    getdisplaySourceObject: function() {
+        var me = this;
+        return me.configuration.mapper && me.configuration.mapper.displaySourceObject;
+    },
+
+    getdisplayTargetObject: function() {
+        var me = this;
+        return me.configuration.mapper && me.configuration.mapper.displayTargetObject;
+    },
+
+    isAllowdrop: function() {
+        var me = this;
+        return me.configuration.mapper && me.configuration.mapper.allowdrop;
+    },
 
     isTargetHidden: function() {
         var me = this;
@@ -332,6 +362,15 @@ var Application = Class.extend({
 
         return false;
     },
+    //This is very dirty way as there is no other option of adding Act-On only credentials branding
+    isAO: function() {
+        var me = this;
+        if(window.location.href.indexOf('act-on') > -1) {
+            return true;
+        }
+
+        return false;
+    },
     //This is very dirty way as there is no other option of adding SwiftPage only credentials branding
     isSP: function() {
         var me = this;
@@ -350,6 +389,7 @@ var Application = Class.extend({
 
         return false;
     },
+
     getTransferNowMessage: function() {
         var me = this;
 

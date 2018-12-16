@@ -269,18 +269,17 @@ var ElementsService = Class.extend({
     loadObjectMetaData: function(elementInstance, objectName, discoveryId) {
         var me = this;
         var url = this._application.environment.elementsUrl + '/hubs/' + elementInstance.element.hub + '/objects/' + objectName +
-            '/metadata';
+            '/metadata?includePath=false';
 
         var composite = me._application.isCompositeMetadata();
         if(!me._cloudElementsUtils.isEmpty(discoveryId)) {
-            url += '?discoveryId=' + discoveryId;
+            url += '&discoveryId=' + discoveryId;
             if(composite === true) {
                 url += '&composite=true';
             }
         } else if(composite === true) {
-            url += '?composite=true';
+            url += '&composite=true';
         }
-
         return this._httpGet(url, this._getHeaders(elementInstance.token));
     },
 

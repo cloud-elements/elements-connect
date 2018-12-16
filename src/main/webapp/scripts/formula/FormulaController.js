@@ -345,6 +345,8 @@ var FormulaController = BaseController.extend({
                 // If the Element Connect source is the source for the formula
                 if (formulaTemplateConfiguration.key === sourceFormulaRefKey) {
                     formulaTemplateConfiguration.defaultValue = me._picker.getSelectedElementInstance().id;
+                    formulaTemplateConfiguration.defaultValue = sourceFormulaRefKey;
+
                 } else if (formulaTemplateConfiguration.key === targetFormulaRefKey) {
                     formulaTemplateConfiguration.defaultValue = me._picker.getTargetElementInstance().id;
                 }
@@ -388,7 +390,6 @@ var FormulaController = BaseController.extend({
 
     _handleLoadFormulaInstances: function(formulaTemplate, httpResult) {
         var me = this;
-
         var formulaInstances = httpResult.data;
 
         // Handle multiple Instance

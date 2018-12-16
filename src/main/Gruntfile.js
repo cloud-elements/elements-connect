@@ -98,6 +98,18 @@ module.exports = function(grunt) {
                     }
                 }
             },
+            euproduction: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js'
+                },
+                constants: {
+                    ENV: {
+                        appName: 'Bulk Loader',
+                        name: 'production',
+                        elementsUrl: 'https://api.cloud-elements.co.uk/elements/api-v2'
+                    }
+                }
+            },
             localCaaas: {
                 options: {
                     dest: '<%= yeoman.app %>/scripts/config.js'
@@ -155,6 +167,18 @@ module.exports = function(grunt) {
                         appName: 'Element Connect',
                         name: 'production',
                         elementsUrl: 'https://api.cloud-elements.com/elements/api-v2'
+                    }
+                }
+            },
+            euproductionCaaas: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js'
+                },
+                constants: {
+                    ENV: {
+                        appName: 'Element Connect',
+                        name: 'production',
+                        elementsUrl: 'https://api.cloud-elements.co.uk/elements/api-v2'
                     }
                 }
             }
@@ -662,6 +686,25 @@ module.exports = function(grunt) {
         'copy:mvfonts'
     ]);
 
+    grunt.registerTask('euproduction', [
+        'clean:dist',
+        'ngconstant:euproduction',
+        'wiredep',
+        'useminPrepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngAnnotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
     grunt.registerTask('localCaaas', [
         'clean:dist',
         'ngconstant:localCaaas',
@@ -741,6 +784,25 @@ module.exports = function(grunt) {
     grunt.registerTask('productionCaaas', [
         'clean:dist',
         'ngconstant:productionCaaas',
+        'wiredep',
+        'useminPrepare',
+        'concurrent:dist',
+        'autoprefixer',
+        'concat',
+        'ngAnnotate',
+        'copy:dist',
+        'cdnify',
+        'cssmin',
+        'uglify',
+        'filerev',
+        'usemin',
+        'htmlmin',
+        'copy:mvfonts'
+    ]);
+
+    grunt.registerTask('euproductionCaaas', [
+        'clean:dist',
+        'ngconstant:euproductionCaaas',
         'wiredep',
         'useminPrepare',
         'concurrent:dist',

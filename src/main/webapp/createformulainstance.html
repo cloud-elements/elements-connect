@@ -9,7 +9,7 @@
     <div ng-repeat="config in formulaConfiguration" class="two ui icon input fluid" style="margin-bottom: 10px;"
          ng-hide="{{config.hidden}}">
 
-      <p>{{config.name}}</p>
+      <p>{{config.name}} </p>
 
       <input type="text" name="{{config.key}}" ng-model="formulaInstanceData[config.key]" required
              ng-if="!config.properties">
@@ -20,7 +20,7 @@
         <ui-select-choices
                 repeat="option in config.properties.options | filter: $select.search">
           <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
-          <small>
+          <small ng-hide="config.properties.HideId">
             id: {{option[config.properties.valueField]}}
           </small>
         </ui-select-choices>
@@ -35,7 +35,7 @@
         <ui-select-choices
                 repeat="option in config.properties.options | filter: $select.search">
           <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
-          <small>
+          <small ng-hide="config.properties.HideId">
             id: {{option[config.properties.valueField]}}
           </small>
         </ui-select-choices>
@@ -49,7 +49,7 @@
         <ui-select-choices
                 repeat="option in config.properties.options | filter: $select.search">
           <div ng-bind-html="option[config.properties.displayField] | highlight: $select.search"></div>
-          <small>
+          <small ng-hide="config.properties.HideId">
             id: {{option[config.properties.valueField]}}
           </small>
         </ui-select-choices>

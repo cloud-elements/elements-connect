@@ -71,6 +71,8 @@ var CredentialsController = BaseController.extend({
         }
         me.credentialsBranding(me._application.isST());
         me.credentialsBranding2(me._application.isSP());
+        me.credentialsBranding3(me._application.isAO());
+
 
 
     },
@@ -329,6 +331,22 @@ var CredentialsController = BaseController.extend({
             me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:active', "box-shadow: 0 0 #0399B1 !important; top: 6px !important; outline: none !important; color: #fff !important;");
             me._picker.addCSSRule(stylesheet, '.credentials-container', "top: 10% !important;");
 
+        }
+
+    },
+    credentialsBranding3: function(isAO){
+        var me = this;
+        var stylesheet = document.getElementById('customestyle');
+            stylesheet = stylesheet.sheet;
+        if(isAO){
+            me._picker.addCSSRule(stylesheet, '#credentials', "background-color: #EBEEF0 !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .content p', "color: #478BAA !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .credentials-logo', "background-image: url('https://cdn2.act-on.com/wp-content/uploads/2016/04/Act-On_logo-2016_two-tone.png') !important; width: 100% !important; height: 70px !important; display: block !important; background-repeat: no-repeat !important; background-position: center center !important; -webkit-background-size: contain !important; -moz-background-size: contain !important; -o-background-size: contain !important; background-size: contain !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .header', "visibility: hidden !important");
+            me._picker.addCSSRule(stylesheet, '#credentials .credentials-container p > a', "color: #edaf4f !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button', "background: #08314c !important; background-clip: padding-box !important; box-shadow: 0 4px #0399B1 !important; text-transform: uppercase !important; font-weight: bold !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:hover', "box-shadow: 0 3px #0399B1 !important; top: 2px !important; color: #fff !important;");
+            me._picker.addCSSRule(stylesheet, '#credentials .buttons .ui.inverted.green.basic.button:active', "box-shadow: 0 0 #0399B1 !important; top: 6px !important; outline: none !important; color: #fff !important;");
         }
 
     }

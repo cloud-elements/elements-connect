@@ -8,13 +8,12 @@ var FormulaInstanceController = BaseController.extend({
     _elementsService: null,
     _formulaInstance: null,
     _picker: null,
+    _application: null,
     $modal: null,
     $mdDialog: null,
     _maskLoader: null,
-
-    init: function($scope, CloudElementsUtils, ElementsService, Picker, FormulaInstance, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog) {
+    init: function($scope, CloudElementsUtils, ElementsService, Picker, FormulaInstance, Notifications, MaskLoader, $window, $location, $filter, $route, $modal, $mdDialog, Mapper, Application) {
         var me = this;
-
         me._notifications = Notifications;
         me._elementsService = ElementsService;
         me._cloudElementsUtils = CloudElementsUtils;
@@ -26,11 +25,11 @@ var FormulaInstanceController = BaseController.extend({
         me._maskLoader = MaskLoader;
         me.$location = $location;
         me._super($scope);
-    },
 
+
+    },
     defineScope: function() {
         var me = this;
-
         // model that will be populated in the UI
         me.$scope.cancel = me.cancel.bind(this);
         me.$scope.save = me.save.bind(this);
@@ -38,11 +37,14 @@ var FormulaInstanceController = BaseController.extend({
         me.$scope.formulaName = me._formulaInstance.formulaTemplate.name;
         me.$scope.formulaConfiguration = me._formulaInstance.formulaTemplate.configuration;
 
+
+
         me._getExistingFormulaInstances().then(
             me._getOptions.bind(me, me._formulaInstance.formulaTemplate.configuration)
         );
-    },
 
+
+    },
     defineListeners: function() {
         var me = this;
     },
@@ -120,6 +122,7 @@ var FormulaInstanceController = BaseController.extend({
 
         me._formulaInstance.createFormulaInstance(formulaInstanceName, me.$scope.formulaName,me.$scope.formulaInstanceData).
             then(me._handleFormulaInstanceSaved.bind(me));
+
     },
 
     _parseDefaults: function(formulaTemplate) {
@@ -148,7 +151,6 @@ var FormulaInstanceController = BaseController.extend({
 
     _getOptions: function(configs) {
         var me = this;
-
         for(var i = 0; i < configs.length; i++) {
             if(configs[i].properties && configs[i].properties.path){
                 var instance;
@@ -177,6 +179,7 @@ var FormulaInstanceController = BaseController.extend({
         me._maskLoader.hide();
         me._formulaInstance.closeModal();
     },
+
 
     _handleGetOpts: function(indx, httpResult) {
         var me = this;
@@ -208,7 +211,7 @@ var FormulaInstanceController = BaseController.extend({
     }
 });
 
-FormulaInstanceController.$inject = ['$scope', 'CloudElementsUtils', 'ElementsService', 'Picker', 'FormulaInstance', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog'];
+FormulaInstanceController.$inject = ['$scope', 'CloudElementsUtils', 'ElementsService', 'Picker', 'FormulaInstance', 'Notifications', 'MaskLoader', '$window', '$location', '$filter', '$route', '$modal', '$mdDialog', 'Mapper', 'Application'];
 
 angular.module('bulkloaderApp')
     .controller('FormulaInstanceController', FormulaInstanceController);

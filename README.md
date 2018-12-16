@@ -86,8 +86,7 @@ limitations under the License.
 `https://console.cloud-elements.com/elements/api-v2/applications/{appId}`.
 2. Take the response body from the previous request and replace the following fields: 
     - `referrer` should become `http://localhost:63342/bulkloader.io/src/main/webapp/index.html?key={clientId}`.
-    - All instances of `something.callbackUrl` should be replaced with `http://localhost:63342/bulkloader.io/callback
-  .html`.
+    - All instances of `something.callbackUrl` should be replaced with `http://localhost:63342/bulkloader.io/callback`.
     - `company.id` should become `1`.
 3. Send the modified body in a POST request to `http://localhost:8080/elements/api-v2/applications`. Soba must be 
 running at this point. 
