@@ -464,7 +464,8 @@ body .header-navigation .ui.next.button:hover {
 #picker .picker-source .services-selections > a,
 #formula-picker .picker-source .services-selections > a{
     background-size:5em;
-    background-position: center center;
+    background-position: top;
+    padding: 82px;
     background-repeat:no-repeat;
     display:inline-block;
     width: 12vw;
@@ -499,6 +500,8 @@ body .header-navigation .ui.next.button:hover {
     -ms-transform: scale(1.1);
     transform: scale(1.1);
     text-decoration: none;
+    padding: 81px;
+    background-position: center center;
 }
 #picker .services-selections > a:focus,
 #formula-picker .services-selections > a:focus{
@@ -2627,6 +2630,10 @@ li li.angular-ui-tree-placeholder{
 /***********************/
 .bulkloaderModalWindow .ui.basic.modal > .close {
     right: 4rem;
+}
+.bulkloaderModalWindow .ui.basic.modal.create-instance > .close {
+    top: -0.8rem;
+    right: -0.9rem;
 }
 .bulkloaderModalWindow .header{
     padding-left: 0 !important;
