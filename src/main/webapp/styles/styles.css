@@ -500,7 +500,7 @@ body .header-navigation .ui.next.button:hover {
     -ms-transform: scale(1.1);
     transform: scale(1.1);
     text-decoration: none;
-    padding: 81px;
+    padding: 88px;
     background-position: center center;
 }
 #picker .services-selections > a:focus,
@@ -584,6 +584,7 @@ body .header-navigation .ui.next.button:hover {
     -ms-transform: translateY(0px);
     transform: translateY(0px);
     opacity:1;
+    padding: 5px;
 }
 
 #picker .services-selections > a.selectedTarget:before,
