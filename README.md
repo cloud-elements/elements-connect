@@ -92,3 +92,5 @@ limitations under the License.
 running at this point. 
 4. In a browser, visit the referrerUrl from the response body. IntelliJ should prompt you to copy an authorization Url
  to your clipboard. Copy it and paste it into the browser. You should arrive at the client's Elements Connect app.   
+
+.
